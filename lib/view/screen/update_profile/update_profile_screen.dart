@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:ui';
 
+import 'package:astro_brahmand/view/screen/splash/controller/config_controller.dart';
 import 'package:astro_brahmand/view/widget/custom_round_network_image.dart';
 import 'package:astro_brahmand/view/widget/custom_text_regular.dart';
 import 'package:flutter/material.dart';
@@ -33,6 +34,8 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
   final FocusNode _birthDateFocusNode = FocusNode();
   final FocusNode _birthTimeFocusNode = FocusNode();
   File? _customerImg;
+
+  ConfigController configController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -342,6 +345,7 @@ class UpdateProfileScreen extends GetView<UpdateProfileController> {
                                   GestureDetector(
                                     onTap: () async {
                                       String? placeApiKey = await SharedPreferencesHelper.getData(AppConstants.placeApiKey);
+                                      // String? placeApiKey = await SharedPreferencesHelper.getData(AppConstants.placeApiKey);
                                       var result = await Get.to(SearchPlaceScreen(placeApiKey.toString()));
                                       if (result != null) {
                                         controller.birthPlaceController.text = result['name'].toString();

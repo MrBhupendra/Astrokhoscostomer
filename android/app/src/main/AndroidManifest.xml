@@ -47,7 +47,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="astro.synilogictech.com" />
+                <data android:scheme="https" android:host="astrobrahmand.com" />
             </intent-filter>
         </activity>
         <!--FB app event-->

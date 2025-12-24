@@ -14,8 +14,8 @@ class ColorResources {
   static const Color colorSecondaryDark = Color(0xffe30000);
 
   //Table
-  static const Color colorTableRow = Color(0xFFECF8EC);//0xFFEDFAED
-  static const Color colorChart = Color(0xfff4fff4);//0xFFEDFAED
+  static const Color colorChart = Color(0xffe3e1f8);//0xFFEDFAED
+  static const Color colorTableRow = Color(0xffe3e1f8);
 
   static const Color toolbarText = Color(0xFFFFFFFF);//0xFFFFFFFF
   static const Color colorFontRed = Color(0xFFD32F2F);
