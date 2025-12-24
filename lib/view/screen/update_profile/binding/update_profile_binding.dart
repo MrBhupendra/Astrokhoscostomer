@@ -1,0 +1,10 @@
+import 'package:get/get.dart';
+import 'package:astro_brahmand/view/screen/update_profile/controller/update_profile_controller.dart';
+
+class UpdateProfileBinding extends Bindings{
+  @override
+  void dependencies() {
+    Get.lazyPut(() => UpdateProfileController());
+  }
+
+}

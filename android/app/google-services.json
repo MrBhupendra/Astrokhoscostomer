@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "464748727346",
+    "project_id": "astrobrahmand-760c9",
+    "storage_bucket": "astrobrahmand-760c9.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464748727346:android:32cf59ffff785378bf802b",
+        "android_client_info": {
+          "package_name": "com.astrobrahmand.customer"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ9R4pPxIw7W0NztwIoX7iqiFGZD4pOGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
