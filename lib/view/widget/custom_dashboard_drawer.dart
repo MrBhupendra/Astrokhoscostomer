@@ -18,6 +18,7 @@ import '../../utill/dimensions.dart';
 import '../../utill/shared_preference.dart';
 import '../screen/webview/webview_screen.dart';
 import 'custom_dialog_widget.dart';
+import 'custom_drawer_item.dart';
 import 'custom_progress_indicator.dart';
 import 'custom_text_regular.dart';
 import 'package:astro_brahmand/utill/common_methods.dart';
@@ -63,7 +64,6 @@ class CustomDashboardDrawer extends StatelessWidget {
       );
     }
   }
-
 
   final AuthController authController = Get.put<AuthController>(AuthController());
   final DashboardController dashboardController = Get.put<DashboardController>(DashboardController());
@@ -181,7 +181,10 @@ class CustomDashboardDrawer extends StatelessWidget {
                     ),
                   ),
                   const Gap(Dimensions.gapLarge),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.myProfile,
+                    title: AppStrings.myProfile.tr,
                     onTap: () async {
                       bool isLogin = await SharedPreferencesHelper.getIsLogin();
                       String? mobile = await SharedPreferencesHelper.getData(
@@ -193,48 +196,24 @@ class CustomDashboardDrawer extends StatelessWidget {
                         Get.toNamed('/login');
                       }
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.myProfile,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular(AppStrings.myProfile.tr,
-                              color: ColorResources.black1),
-                        ),
-                      ],
-                    ),
                   ),
-                  const Gap(Dimensions.gapDrawerDefault),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.orders,
+                    title: AppStrings.orders.tr,
                     onTap: () async {
                       bool isLogin = await SharedPreferencesHelper.getIsLogin();
                       if (isLogin) {
-                        Get.toNamed('/orders_tab_screen', arguments: {
-                          'index': 0
-                        });
+                        Get.toNamed('/orders_tab_screen', arguments: {'index': 0});
                       } else {
                         Get.toNamed('/login');
                       }
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.orders,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular(AppStrings.orders.tr,
-                              color: ColorResources.black1),
-                        ),
-                      ],
-                    ),
                   ),
-                  const Gap(Dimensions.gapDrawerDefault),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.queueList,
+                    title: AppStrings.myQueueList.tr,
                     onTap: () async {
                       bool isLogin = await SharedPreferencesHelper.getIsLogin();
                       if (isLogin) {
@@ -243,22 +222,11 @@ class CustomDashboardDrawer extends StatelessWidget {
                         Get.toNamed('/login');
                       }
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.queueList,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular(AppStrings.myQueueList.tr,
-                              color: ColorResources.black1),
-                        )
-                      ],
-                    ),
                   ),
-                  const Gap(Dimensions.gapDrawerDefault),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.chatHistory,
+                    title: AppStrings.chatHistory.tr,
                     onTap: () async {
                       bool isLogin = await SharedPreferencesHelper.getIsLogin();
                       if (isLogin) {
@@ -267,229 +235,85 @@ class CustomDashboardDrawer extends StatelessWidget {
                         Get.toNamed('/login');
                       }
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.chatHistory,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular(AppStrings.chatHistory.tr,
-                              color: ColorResources.black1),
-                        ),
-                      ],
-                    ),
                   ),
-                  const Gap(Dimensions.gapDrawerDefault),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.chatWithAstro,
+                    title: AppStrings.chatwithAstrologer.tr,
                     onTap: () async {
                       Get.toNamed("/search");
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.chatWithAstro,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular(
-                              AppStrings.chatwithAstrologer.tr,
-                              color: ColorResources.black1),
-                        ),
-                      ],
-                    ),
                   ),
-                  const Gap(Dimensions.gapDrawerDefault),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     CommonMethods().shareApp("astrologerApp");
-                  //   },
-                  //   child: Row(
-                  //     children: [
-                  //       const Gap(Dimensions.gapLarge),
-                  //       Image.asset(Images.signupAstro,
-                  //           height: Dimensions.drawerIconSize,
-                  //           color: ColorResources.black2),
-                  //       const Gap(Dimensions.gapMedium),
-                  //       Expanded(
-                  //         child: CustomTextRegular(
-                  //             AppStrings.signupasAstrologer.tr,
-                  //             color: ColorResources.black1),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
-                  // const Gap(Dimensions.gapDrawerDefault),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.share,
+                    title: AppStrings.shareApp.tr,
                     onTap: () {
                       CommonMethods().shareApp("app");
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.share,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular(AppStrings.shareApp.tr,
-                              color: ColorResources.black1),
-                        ),
-                      ],
-                    ),
                   ),
-                  const Gap(Dimensions.gapDrawerDefault),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.privacy,
+                    title: AppStrings.privacyPolicy.tr,
                     onTap: () {
                       Get.to(WebViewScreen(AppStrings.privacyPolicy.tr,
                           AppConstants.privacyPolicyUrl));
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.privacy,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular(AppStrings.privacyPolicy.tr,
-                              color: ColorResources.black1),
-                        ),
-                      ],
-                    ),
                   ),
-                  const Gap(Dimensions.gapDrawerDefault),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.appRating,
+                    title: "Rate App",
                     onTap: () {
                       requestReview();
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.appRating,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular("Rate App",
-                              color: ColorResources.black1),
-                        ),
-                      ],
-                    ),
                   ),
-                  const Gap(Dimensions.gapDrawerDefault),
-                  GestureDetector(
+
+                  CustomDrawerItem(
+                    iconPath: Images.contactUs,
+                    title: AppStrings.contactus.tr,
                     onTap: () {
                       Get.toNamed("/contact_us");
                     },
-                    child: Row(
-                      children: [
-                        const Gap(Dimensions.gapLarge),
-                        Image.asset(Images.contactUs,
-                            height: Dimensions.drawerIconSize,
-                            color: ColorResources.black2),
-                        const Gap(Dimensions.gapMedium),
-                        Expanded(
-                          child: CustomTextRegular(AppStrings.contactus.tr,
-                              color: ColorResources.black1),
-                        ),
-                      ],
-                    ),
                   ),
 
                   // Setting
-                  if(AppFeatures.privateSetting)
-                  Visibility(
-                      visible: authController.isLogin && AppFeatures.privateSetting,
-                      child: const Gap(Dimensions.gapDrawerDefault)
-                  ),
-                  Visibility(
+                  CustomDrawerItem(
+                    iconPath: Images.settings,
+                    title: AppStrings.settings.tr,
                     visible: authController.isLogin && AppFeatures.privateSetting,
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.toNamed("/settingScreen");
-                      },
-                      child: Row(
-                        children: [
-                          const Gap(Dimensions.gapLarge),
-                          Image.asset(Images.settings,
-                              height: Dimensions.drawerIconSize,
-                              color: ColorResources.black2
-                          ),
-                          const Gap(Dimensions.gapMedium),
-                          Expanded(
-                            child: CustomTextRegular(
-                                AppStrings.settings.tr,
-                                color: ColorResources.black1
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    onTap: () {
+                      Get.toNamed('/settingScreen');
+                    },
                   ),
 
-
-                  const Gap(Dimensions.gapDrawerDefault),
-                  Visibility(
+                  CustomDrawerItem(
+                    iconPath: Images.logout,
+                    title: AppStrings.logout.tr,
                     visible: authController.isLogin,
-                    child: GestureDetector(
-                      onTap: () {
-                        // CustomDefaultDialog.showDialog(
-                        //     AppStrings.logout.tr, AppStrings.logoutPopUP.tr,
-                        //     () async {
-                        //   await SharedPreferencesHelper.logoutSession();
-                        // }, () {
-                        //   Get.back();
-                        // });
-                        Get.dialog(
-                            CustomDialogWidget(
-                                imagePath: Images.logout,
-                                title: AppStrings.logout.tr,
-                                onYesPressed: () async {
-                                  await SharedPreferencesHelper.logoutSession();
-                                },
-                                description: AppStrings.logoutPopUP.tr
-                            ),
-                            barrierDismissible: false
-                        );
-                      },
-                      child: Row(
-                        children: [
-                          const Gap(Dimensions.gapLarge),
-                          Image.asset(Images.logout,
-                              height: Dimensions.drawerIconSize,
-                              color: ColorResources.black2),
-                          const Gap(Dimensions.gapMedium),
-                          Expanded(
-                            child: CustomTextRegular(AppStrings.logout.tr,
-                                color: ColorResources.black1),
-                          ),
-                        ],
-                      ),
-                    ),
+                    onTap: () {
+                      Get.dialog(
+                        CustomDialogWidget(
+                          imagePath: Images.logout,
+                          title: AppStrings.logout.tr,
+                          description: AppStrings.logoutPopUP.tr,
+                          onYesPressed: () async {
+                            await SharedPreferencesHelper.logoutSession();
+                          },
+                        ),
+                        barrierDismissible: false,
+                      );
+                    },
                   ),
-                  Visibility(
+
+                  CustomDrawerItem(
+                    iconPath: Images.login,
+                    title: AppStrings.login.tr,
                     visible: authController.isLogin == false,
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.toNamed('/login');
-                      },
-                      child: Row(
-                        children: [
-                          const Gap(Dimensions.gapLarge),
-                          Image.asset(Images.login,
-                              height: Dimensions.drawerIconSize,
-                              color: ColorResources.black2),
-                          const Gap(Dimensions.gapMedium),
-                          Expanded(
-                            child: CustomTextRegular(AppStrings.login.tr,
-                                color: ColorResources.black1),
-                          ),
-                        ],
-                      ),
-                    ),
+                    onTap: () {
+                      Get.toNamed('/login');
+                    },
                   ),
                 ],
               ),

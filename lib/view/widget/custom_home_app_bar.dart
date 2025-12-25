@@ -13,10 +13,10 @@ import '../screen/dashboard/controller/dashboard_controller.dart';
 import '../screen/splash/controller/config_controller.dart';
 
 class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
-  DashboardController controller;
+  final DashboardController controller;
   final double height;
 
-  CustomHomeAppBar(
+  const CustomHomeAppBar(
     this.controller, {
     super.key,
     this.height = kToolbarHeight,

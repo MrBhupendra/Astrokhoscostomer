@@ -2235,4 +2235,19 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
   //     isScrollControlled: true, // Ensures full-screen scrollable bottom sheet
   //   );
   // }
+
+  Widget _infoItem(IconData icon, String value, String label) {
+    return Column(
+      children: [
+        CircleAvatar(
+          radius: 20,
+          backgroundColor: Colors.teal.shade50,
+          child: Icon(icon, color: Colors.teal),
+        ),
+        const SizedBox(height: 4),
+        Text(value, style: const TextStyle(fontWeight: FontWeight.w600)),
+        Text(label, style: const TextStyle(fontSize: 12, color: Colors.grey)),
+      ],
+    );
+  }
 }
