@@ -205,8 +205,7 @@ class KundliAshtakvargaScreen extends StatelessWidget {
                           ),
                         ],
                         headingRowColor: WidgetStateColor.resolveWith((states) {
-                          // Change the color only for the enabled state (default state)
-                          return ColorResources.colorPrimaryLight; // Change to any color you desire
+                          return ColorResources.colorTableHeading;
                         }),
                       ),
                     ),

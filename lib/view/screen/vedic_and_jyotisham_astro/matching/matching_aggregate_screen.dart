@@ -17,13 +17,14 @@ import '../widget/custom_matching_score.dart';
 import '../widget/matching_aggregate_data_widget.dart';
 
 class MatchingAggregateScreen extends StatelessWidget {
- final KundliMatchData data;
-  MatchingAggregateScreen(this.data ,{super.key});
+  final KundliMatchData data;
+  MatchingAggregateScreen(this.data, {super.key});
 
-  MatchingController  controller = Get.find();
+  final MatchingController controller = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    // Load data - controller will check if data has changed internally
     controller.getAggregate(data);
     return Obx(() {
         if (controller.isAggregateSuccess.isTrue) {

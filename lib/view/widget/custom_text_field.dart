@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -54,8 +55,9 @@ class CustomTextField extends StatelessWidget {
       child: SizedBox(
         child: TextFormField(
           controller: controller,
-
-          style: const TextStyle(color: ColorResources.black,fontSize: Dimensions.fontSizeDefault),
+          style: const TextStyle(
+              color: ColorResources.black,
+              fontSize: Dimensions.fontSizeDefault),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: const TextStyle(
@@ -68,11 +70,14 @@ class CustomTextField extends StatelessWidget {
             isDense: true,
             suffixIcon: suffixIcon != null ? Icon(suffixIcon) : null,
             // prefixIcon: prefixIcon != null ? Icon(prefixIcon) : null,
-            prefixIcon: prefixIcon != null ? Icon(prefixIcon, size: prefixIconSize) : null,
+            prefixIcon: prefixIcon != null
+                ? Icon(prefixIcon, size: prefixIconSize)
+                : null,
           ),
           enabled: enabled,
           keyboardType: keyboardType,
-          textCapitalization: textCapitalization ?? TextCapitalization.sentences,
+          textCapitalization:
+              textCapitalization ?? TextCapitalization.sentences,
           validator: validator ?? _defaultValidator,
           onChanged: onChanged,
           inputFormatters: inputFormatters,
@@ -105,18 +110,15 @@ class CustomText extends StatelessWidget {
     return RichText(
       text: TextSpan(
         style: const TextStyle(
-          fontSize: Dimensions.fontSizeDefault,
-          color: ColorResources.black,
-            fontFamily: "EuclidRegular"
-        ),
+            fontSize: Dimensions.fontSizeDefault,
+            color: ColorResources.black,
+            fontFamily: "EuclidRegular"),
         children: [
           TextSpan(text: hintText),
           const TextSpan(
             text: ' *',
             style: TextStyle(
-              color: ColorResources.red,
-              fontFamily: "EuclidRegular"
-            ),
+                color: ColorResources.red, fontFamily: "EuclidRegular"),
           ),
         ],
       ),
@@ -124,3 +126,112 @@ class CustomText extends StatelessWidget {
   }
 }
 
+/// Reusable TextFormField widget matching the styling used in
+/// kundli_submit_screen, matching_submit_screen, and chat_intake_form_screen
+class CustomFormTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final IconData? prefixIcon;
+  final String? Function(String?)? validator;
+  final bool enabled;
+  final FocusNode? focusNode;
+  final Function(String)? onFieldSubmitted;
+  final VoidCallback? onTap;
+  final EdgeInsetsGeometry? contentPadding;
+  final TextStyle? textStyle;
+  final TextInputType? keyboardType;
+  final List<TextInputFormatter>? inputFormatters;
+  final TextCapitalization textCapitalization;
+
+  const CustomFormTextField({
+    super.key,
+    required this.controller,
+    required this.hintText,
+    this.prefixIcon,
+    this.validator,
+    this.enabled = true,
+    this.focusNode,
+    this.onFieldSubmitted,
+    this.onTap,
+    this.contentPadding,
+    this.textStyle,
+    this.keyboardType,
+    this.inputFormatters,
+    this.textCapitalization = TextCapitalization.words,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final textFormField = TextFormField(
+      controller: controller,
+      style: textStyle ??
+          const TextStyle(
+            color: ColorResources.black1,
+            fontSize: Dimensions.fontSizeDefault,
+          ),
+      decoration: InputDecoration(
+        contentPadding: contentPadding ?? const EdgeInsets.all(0.0),
+        filled: false,
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            color: Colors.grey,
+            width: 1.0,
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            color: Colors.grey,
+            width: 1.0,
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            color: Colors.grey,
+            width: 1.5,
+          ),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8.0),
+          borderSide: const BorderSide(
+            color: Colors.grey,
+            width: 1.0,
+          ),
+        ),
+        hintText: hintText,
+        hintStyle: const TextStyle(
+          fontSize: Dimensions.fontSizeDefault,
+          fontWeight: FontWeight.w400,
+          letterSpacing: 0.5,
+          color: ColorResources.black1,
+        ),
+        prefixIcon: prefixIcon != null
+            ? Icon(
+                prefixIcon,
+                color: ColorResources.colorPrimaryDark,
+                size: 20,
+              )
+            : null,
+      ),
+      enabled: enabled,
+      focusNode: focusNode,
+      onFieldSubmitted: onFieldSubmitted,
+      validator: validator,
+      keyboardType: keyboardType,
+      inputFormatters: inputFormatters,
+      textCapitalization: textCapitalization,
+    );
+
+    // If onTap is provided, wrap with GestureDetector
+    if (onTap != null) {
+      return GestureDetector(
+        onTap: onTap,
+        child: textFormField,
+      );
+    }
+
+    return textFormField;
+  }
+}

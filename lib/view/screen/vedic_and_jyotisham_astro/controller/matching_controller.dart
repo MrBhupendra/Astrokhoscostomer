@@ -43,16 +43,19 @@ class MatchingController extends GetxController {
   final isAsthakootLoading = false.obs;
   final isAsthakootSuccess = false.obs;
   MatchingAshtakootModel asthakootModel = MatchingAshtakootModel();
+  KundliMatchData? _currentAsthakootData;
 
   //Dashakoot
   final isDashakootLoading = false.obs;
   final isDashakootSuccess = false.obs;
   MatchingDashakootModel dashakootModel = MatchingDashakootModel();
+  KundliMatchData? _currentDashakootData;
 
   //Aggregate
   final isAggregateLoading = false.obs;
   final isAggregateSuccess = false.obs;
   MatchingAggregateModel aggregateModel = MatchingAggregateModel();
+  KundliMatchData? _currentAggregateData;
 
   //Nakshatra
   final isNakshatraLoading = false.obs;
@@ -61,6 +64,38 @@ class MatchingController extends GetxController {
   var girlSelectedNumber = (-1).obs;
   RxBool showButton = true.obs;
   MatchingNakshatraModel nakshatraModel = MatchingNakshatraModel();
+  KundliMatchData? _currentNakshatraData;
+
+  // Reset methods for each tab
+  void resetAsthakootState() {
+    isAsthakootSuccess(false);
+    isAsthakootLoading(false);
+    _currentAsthakootData = null;
+  }
+
+  void resetDashakootState() {
+    isDashakootSuccess(false);
+    isDashakootLoading(false);
+    _currentDashakootData = null;
+  }
+
+  void resetAggregateState() {
+    isAggregateSuccess(false);
+    isAggregateLoading(false);
+    _currentAggregateData = null;
+  }
+
+  void resetNakshatraState(KundliMatchData? newData) {
+    // Check if data has changed
+    if (newData != null && _isDataDifferent(_currentNakshatraData, newData)) {
+      isNakshatraSuccess(false);
+      isNakshatraLoading(false);
+      boySelectedNumber(-1);
+      girlSelectedNumber(-1);
+      showButton(true);
+      _currentNakshatraData = newData;
+    }
+  }
 
   void updateBoySelectedNumber(int selectedIndex) {
     boySelectedNumber.value = selectedIndex;
@@ -258,8 +293,29 @@ class MatchingController extends GetxController {
     }
   }
 
+  // Helper method to check if data is different
+  bool _isDataDifferent(KundliMatchData? currentData, KundliMatchData newData) {
+    if (currentData == null) return true;
+    return currentData.boyName != newData.boyName ||
+        currentData.boyDob != newData.boyDob ||
+        currentData.boyTob != newData.boyTob ||
+        currentData.girlName != newData.girlName ||
+        currentData.girlDob != newData.girlDob ||
+        currentData.girlTob != newData.girlTob;
+  }
+
   //Ashtakoot
   Future<void> getAsthakoot(KundliMatchData data) async {
+    // Check if data has changed, if yes reset state
+    if (_isDataDifferent(_currentAsthakootData, data)) {
+      isAsthakootSuccess(false);
+      isAsthakootLoading(false);
+      _currentAsthakootData = data;
+    } else if (isAsthakootSuccess.isTrue) {
+      // If same data and already loaded, don't reload
+      return;
+    }
+    
     isAsthakootLoading(true);
     try {
       String? activeKundliApi = configController.config.data?.activeKundliApi.toString();
@@ -306,6 +362,16 @@ class MatchingController extends GetxController {
 
   //Dashakoot
   Future<void> getDashakoot(KundliMatchData data) async {
+    // Check if data has changed, if yes reset state
+    if (_isDataDifferent(_currentDashakootData, data)) {
+      isDashakootSuccess(false);
+      isDashakootLoading(false);
+      _currentDashakootData = data;
+    } else if (isDashakootSuccess.isTrue) {
+      // If same data and already loaded, don't reload
+      return;
+    }
+    
     isDashakootLoading(true);
     try {
       String? activeKundliApi = configController.config.data?.activeKundliApi.toString();
@@ -351,6 +417,16 @@ class MatchingController extends GetxController {
 
   //Aggregate
   Future<void> getAggregate(KundliMatchData data) async {
+    // Check if data has changed, if yes reset state
+    if (_isDataDifferent(_currentAggregateData, data)) {
+      isAggregateSuccess(false);
+      isAggregateLoading(false);
+      _currentAggregateData = data;
+    } else if (isAggregateSuccess.isTrue) {
+      // If same data and already loaded, don't reload
+      return;
+    }
+    
     isAggregateLoading(true);
     try {
       String? activeKundliApi = configController.config.data?.activeKundliApi.toString();

@@ -62,22 +62,22 @@ class KundliBasicsScreen extends StatelessWidget {
                         CustomTableTwoRowWidget(
                             title: "Name",
                             data: data.name,
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: "D.O.B",
                             data: data.dob,
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: "T.O.B",
                             data: data.tob,
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: "P.O.B",
                             data: data.place,
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                       ],
                     ),
@@ -106,117 +106,117 @@ class KundliBasicsScreen extends StatelessWidget {
                         CustomTableTwoRowWidget(
                             title: AppStrings.nakshatraPada.tr,
                             data: "${controller.basicsDetailsModel.response?.nakshatraPada}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.gana.tr,
                             data: "${controller.basicsDetailsModel.response?.gana}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.nadi.tr,
                             data: "${controller.basicsDetailsModel.response?.nadi}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.nakshatra.tr,
                             data: "${controller.basicsDetailsModel.response?.nakshatra}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.nakshatraLord.tr,
                             data: "${controller.basicsDetailsModel.response?.nakshatraLord}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.singLord.tr,
                             data: "${controller.basicsDetailsModel.response?.rasiLord}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.tithi.tr,
                             data: "${controller.basicsDetailsModel.response?.tithi}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.varna.tr,
                             data: "${controller.basicsDetailsModel.response?.varna}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.vashya.tr,
                             data: "${controller.basicsDetailsModel.response?.vasya}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.yog.tr,
                             data: "${controller.basicsDetailsModel.response?.yoga}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.yoni.tr,
                             data: "${controller.basicsDetailsModel.response?.yoni}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.ascendants.tr,
                             data: "${controller.basicsDetailsModel.response?.ascendantSign}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.nameAlphabet.tr,
                             data: "${controller.basicsDetailsModel.response?.nameStart}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.paya.tr,
                             data: "${controller.basicsDetailsModel.response?.paya}",
-                            color:ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.sunSing.tr,
                             data: "${controller.basicsDetailsModel.response?.sunSign}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.tatva.tr,
                             data: "${controller.basicsDetailsModel.response?.tatva}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.fortuneStone.tr,
                             data: "${controller.basicsDetailsModel.response?.fortuneStone}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.ascendantNakshatra.tr,
                             data: "${controller.basicsDetailsModel.response?.ascendantNakshatra}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.rasi.tr,
                             data: "${controller.basicsDetailsModel.response?.rasi}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.karana.tr,
                             data: "${controller.basicsDetailsModel.response?.karana}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.lifeStone.tr,
                             data: "${controller.basicsDetailsModel.response?.lifeStone}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.luckyStone.tr,
                             data: "${controller.basicsDetailsModel.response?.luckyStone}",
-                            color: ColorResources.colorTableRow
+                            color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
                             title: AppStrings.rasiLoard.tr,
                             data: "${controller.basicsDetailsModel.response?.rasiLord}",
-                            color: ColorResources.colorPrimaryLight
+                            color: ColorResources.colorTableRowEven
                         ),
 
                       ],

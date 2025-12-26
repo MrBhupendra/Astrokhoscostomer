@@ -20,19 +20,24 @@ class CurrentMahadasha extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      // Set the width as needed
-      // Set the height as needed
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: ColorResources.colorPrimary,
-            width: 1.0,
-          ),
-          color: ColorResources.colorPrimaryLight, // Background color
-          borderRadius: const BorderRadius.all(
-            Radius.circular(
-                Dimensions.borderRadiusDefault), // Adjust the radius as needed
-          ),
+      decoration: BoxDecoration(
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 1,
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          )
+        ],
+        border: Border.all(
+          color: Colors.grey.withOpacity(0.3),
+          width: 1.0,
         ),
+        color: ColorResources.white,
+        borderRadius: const BorderRadius.all(
+          Radius.circular(Dimensions.borderRadiusDefault),
+        ),
+      ),
         child: Padding(
           padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
           child: Row(

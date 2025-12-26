@@ -14,10 +14,20 @@ class ColorResources {
   static const Color colorSecondaryDark = Color(0xffe30000);
 
   //Table
-  static const Color colorChart = Color(0xffe3e1f8);//0xFFEDFAED
+  static const Color colorChart = Color(0xffe3e1f8); //0xFFEDFAED
   static const Color colorTableRow = Color(0xffe3e1f8);
 
-  static const Color toolbarText = Color(0xFFFFFFFF);//0xFFFFFFFF
+  // Table Row Alternating Colors (easily changeable from here)
+  static const Color colorTableRowEven =
+      Color(0xFFFFFFFF); // White for even rows
+  static const Color colorTableRowOdd =
+      Color(0xFFF5F5F5); // Light grey for odd rows
+
+  // Table Heading Color (professional soft grey-blue)
+  static const Color colorTableHeading =
+      Color(0xFFC9C7C7); // Soft grey-blue for table headers
+
+  static const Color toolbarText = Color(0xFFFFFFFF); //0xFFFFFFFF
   static const Color colorFontRed = Color(0xFFD32F2F);
   static const Color colorRatingIcon = Color(0xFFFFA500);
 
@@ -79,13 +89,12 @@ class ColorResources {
   static Color compassArrow = const Color.fromRGBO(229, 74, 54, 1.0);
   static Color redTransparent = const Color(0xFFffe6e6);
   static Color greenTransparent = const Color(0xFFD5EAD6);
-  static Color blueTransparent= const Color(0xFFccf5ff);
-  static Color blackTransparent= const Color(0xFFd9d9d9);
-  static Color effectBg= const Color(0xFFff9999);
-  static Color effectText= const Color(0xffe1bfbf);
+  static Color blueTransparent = const Color(0xFFccf5ff);
+  static Color blackTransparent = const Color(0xFFd9d9d9);
+  static Color effectBg = const Color(0xFFff9999);
+  static Color effectText = const Color(0xffe1bfbf);
   static Color treatmentText = const Color(0xFFb3d9ff);
-  static Color treatmentBg= const Color(0xFFe6f2ff);
+  static Color treatmentBg = const Color(0xFFe6f2ff);
   static Color homeZoneMidText = const Color(0xff518ac5);
   static Color homeZoneTextBg = const Color(0xfffffdfd);
-
 }

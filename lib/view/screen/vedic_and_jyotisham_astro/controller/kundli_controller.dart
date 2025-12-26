@@ -739,7 +739,7 @@ class KundliController extends GetxController {
         String? jyotishamApiKey = await SharedPreferencesHelper.getData(AppConstants.jyotishamApiKey);
         String? language = await SharedPreferencesHelper.getData(AppConstants.appLanguage);
         setHeader(jyotishamApiKey.toString());
-        final response = await _dio.get('${AppConstants.getJyotishamAstroKundliAshtakvarga}date=${data.dob}&time=${data.tob}&latitude=${data.latitude}&longitude=${data.longitude}&tz=${data.timeZone}&lang=$language');
+        final response = await _dio.get('${AppConstants.getJyotishamAstroKundliAshtakvarga}date=${data.dob}&time=${CommonMethods().convertTimeInputVedic(data.tob)}&latitude=${data.latitude}&longitude=${data.longitude}&tz=${data.timeZone}&lang=$language');
         if (response.statusCode == AppConstants.vedicSuccess) {
           ashtakvargaModel = KundliAshtakvargaModel.fromJson(response.data);
           if (ashtakvargaModel.status == AppConstants.vedicSuccess) {

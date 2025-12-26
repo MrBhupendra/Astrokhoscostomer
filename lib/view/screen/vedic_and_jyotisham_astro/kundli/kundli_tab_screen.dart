@@ -84,7 +84,7 @@ class KundliTabScreen extends StatelessWidget {
           body: Column(
             children: [
               Container(
-                color: ColorResources.colorPrimaryLight,
+                color: ColorResources.grey,
                 child: TabBar(
                   labelColor: ColorResources.colorPrimaryDark,
                   dividerColor: ColorResources.colorPrimary,

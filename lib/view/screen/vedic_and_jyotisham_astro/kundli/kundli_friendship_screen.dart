@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import '../../../../utill/app_strings.dart';
 import '../../../../utill/color_resources.dart';
+import '../../../../utill/dimensions.dart';
 import '../../../widget/custom_empty_screen.dart';
 import '../../../widget/custom_text_bold.dart';
 import '../../../widget/custom_text_medium.dart';
@@ -15,6 +16,14 @@ class KundliFriendshipScreen extends StatelessWidget {
   KundliFriendshipScreen(this.data, {super.key});
 
   final KundliController controller = Get.find();
+
+  // Helper function to format list without brackets and handle empty lists
+  String _formatList(List<String>? list) {
+    if (list == null || list.isEmpty) {
+      return "None";
+    }
+    return list.join(", ");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +42,7 @@ class KundliFriendshipScreen extends StatelessWidget {
           );
         } else if(controller.isFriendshipSuccess.isTrue){
           return Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: Dimensions.paddingSizeDefault),
             child: Column(
               children: [
                Container(
@@ -41,20 +50,27 @@ class KundliFriendshipScreen extends StatelessWidget {
                      color: ColorResources.white,
                      boxShadow: [
                        BoxShadow(
-                         color: Colors.grey.withOpacity(0.5),
+                         color: Colors.grey.withOpacity(0.2),
                          spreadRadius: 1,
-                         blurRadius: 2,
+                         blurRadius: 4,
                          offset: const Offset(0, 2),
                        )
                      ],
-                     borderRadius: BorderRadius.circular(10)
+                     borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                     border: Border.all(
+                       color: Colors.grey.withOpacity(0.3),
+                       width: 1,
+                     ),
                  ),
 
                  child:Padding(
                    padding: const EdgeInsets.all(8.0),
                    child: Column(
                      children: [
-                       CustomTextBold(AppStrings.permanentFriendShip.tr,fontSize: 16,),
+                       CustomTextBold(
+                         AppStrings.permanentFriendShip.tr,
+                         fontSize: Dimensions.fontSizeLarge,
+                       ),
 
                        const Gap(10),
                        Container(
@@ -62,13 +78,17 @@ class KundliFriendshipScreen extends StatelessWidget {
                              color: ColorResources.white,
                              boxShadow: [
                                BoxShadow(
-                                 color: Colors.grey.withOpacity(0.5),
+                                 color: Colors.grey.withOpacity(0.2),
                                  spreadRadius: 1,
-                                 blurRadius: 2,
+                                 blurRadius: 4,
                                  offset: const Offset(0, 2),
                                )
                              ],
-                             borderRadius: BorderRadius.circular(10)
+                             borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                          ),
                          child: Padding(
                            padding: const EdgeInsets.all(12.0),
@@ -93,7 +113,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                     const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.sun?.friends?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.sun?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -106,7 +129,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.sun?.neutral?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.sun?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -119,7 +145,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.sun?.enemies?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.sun?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -134,13 +163,17 @@ class KundliFriendshipScreen extends StatelessWidget {
                              color: ColorResources.white,
                              boxShadow: [
                                BoxShadow(
-                                 color: Colors.grey.withOpacity(0.5),
+                                 color: Colors.grey.withOpacity(0.2),
                                  spreadRadius: 1,
-                                 blurRadius: 2,
+                                 blurRadius: 4,
                                  offset: const Offset(0, 2),
                                )
                              ],
-                             borderRadius: BorderRadius.circular(10)
+                             borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                          ),
                          child: Padding(
                            padding: const EdgeInsets.all(12.0),
@@ -161,7 +194,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.moon?.friends?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.moon?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -174,7 +210,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.moon?.neutral?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.moon?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -187,7 +226,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.moon?.enemies?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.moon?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -202,13 +244,17 @@ class KundliFriendshipScreen extends StatelessWidget {
                              color: ColorResources.white,
                              boxShadow: [
                                BoxShadow(
-                                 color: Colors.grey.withOpacity(0.5),
+                                 color: Colors.grey.withOpacity(0.2),
                                  spreadRadius: 1,
-                                 blurRadius: 2,
+                                 blurRadius: 4,
                                  offset: const Offset(0, 2),
                                )
                              ],
-                             borderRadius: BorderRadius.circular(10)
+                             borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                          ),
                          child: Padding(
                            padding: const EdgeInsets.all(12.0),
@@ -229,7 +275,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.mars?.friends?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.mars?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -242,7 +291,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.mars?.neutral?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.mars?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -255,7 +307,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.mars?.enemies?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.mars?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -270,13 +325,17 @@ class KundliFriendshipScreen extends StatelessWidget {
                              color: ColorResources.white,
                              boxShadow: [
                                BoxShadow(
-                                 color: Colors.grey.withOpacity(0.5),
+                                 color: Colors.grey.withOpacity(0.2),
                                  spreadRadius: 1,
-                                 blurRadius: 2,
+                                 blurRadius: 4,
                                  offset: const Offset(0, 2),
                                )
                              ],
-                             borderRadius: BorderRadius.circular(10)
+                             borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                          ),
                          child: Padding(
                            padding: const EdgeInsets.all(12.0),
@@ -297,7 +356,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.mercury?.friends?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.mercury?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -310,7 +372,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.mercury?.neutral?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.mercury?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -323,7 +388,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.mercury?.enemies?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.mercury?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -338,13 +406,17 @@ class KundliFriendshipScreen extends StatelessWidget {
                              color: ColorResources.white,
                              boxShadow: [
                                BoxShadow(
-                                 color: Colors.grey.withOpacity(0.5),
+                                 color: Colors.grey.withOpacity(0.2),
                                  spreadRadius: 1,
-                                 blurRadius: 2,
+                                 blurRadius: 4,
                                  offset: const Offset(0, 2),
                                )
                              ],
-                             borderRadius: BorderRadius.circular(10)
+                             borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                          ),
                          child: Padding(
                            padding: const EdgeInsets.all(12.0),
@@ -366,7 +438,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.jupiter?.friends?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.jupiter?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -379,7 +454,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.jupiter?.neutral?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.jupiter?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -392,7 +470,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.jupiter?.enemies?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.jupiter?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -407,13 +488,17 @@ class KundliFriendshipScreen extends StatelessWidget {
                              color: ColorResources.white,
                              boxShadow: [
                                BoxShadow(
-                                 color: Colors.grey.withOpacity(0.5),
+                                 color: Colors.grey.withOpacity(0.2),
                                  spreadRadius: 1,
-                                 blurRadius: 2,
+                                 blurRadius: 4,
                                  offset: const Offset(0, 2),
                                )
                              ],
-                             borderRadius: BorderRadius.circular(10)
+                             borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                          ),
                          child: Padding(
                            padding: const EdgeInsets.all(12.0),
@@ -434,7 +519,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.venus?.friends?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.venus?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -447,7 +535,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.venus?.neutral?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.venus?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -460,7 +551,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.venus?.enemies?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.venus?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -475,13 +569,17 @@ class KundliFriendshipScreen extends StatelessWidget {
                              color: ColorResources.white,
                              boxShadow: [
                                BoxShadow(
-                                 color: Colors.grey.withOpacity(0.5),
+                                 color: Colors.grey.withOpacity(0.2),
                                  spreadRadius: 1,
-                                 blurRadius: 2,
+                                 blurRadius: 4,
                                  offset: const Offset(0, 2),
                                )
                              ],
-                             borderRadius: BorderRadius.circular(10)
+                             borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                          ),
                          child: Padding(
                            padding: const EdgeInsets.all(12.0),
@@ -503,7 +601,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.saturn?.friends?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.saturn?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -516,7 +617,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.saturn?.neutral?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.saturn?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -529,7 +633,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                    ),
                                    const Gap(5),
                                    Expanded(
-                                       child: CustomTextMedium("${controller.friendshipModel.response?.permanentTable?.saturn?.enemies?.toString()}",fontSize: 12,)
+                                       child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.permanentTable?.saturn?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                    )
                                  ],
                                ),
@@ -561,7 +668,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        CustomTextBold(AppStrings.temporaryFriendShip.tr,fontSize: 16,),
+                        CustomTextBold(
+                          AppStrings.temporaryFriendShip.tr,
+                          fontSize: Dimensions.fontSizeLarge,
+                        ),
                         const Gap(10),
                         Container(
                           decoration: BoxDecoration(
@@ -574,7 +684,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -599,7 +713,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.sun?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.sun?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -612,7 +729,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.sun?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.sun?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -633,7 +753,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -654,7 +778,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.moon?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.moon?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -667,7 +794,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.moon?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.moon?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -688,7 +818,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -709,7 +843,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.mars?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.mars?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -722,7 +859,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.mars?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.mars?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -743,7 +883,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -764,7 +908,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.mercury?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.mercury?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -777,7 +924,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.mercury?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.mercury?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -798,7 +948,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -820,7 +974,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.jupiter?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.jupiter?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -833,7 +990,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.jupiter?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.jupiter?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -854,7 +1014,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -875,7 +1039,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.venus?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.venus?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -888,7 +1055,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.venus?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.venus?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -909,7 +1079,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -931,7 +1105,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.saturn?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.saturn?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -944,7 +1121,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.temporaryTable?.saturn?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.temporaryTable?.saturn?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -976,7 +1156,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                     padding: const EdgeInsets.all(8.0),
                     child: Column(
                       children: [
-                        CustomTextBold(AppStrings.fiveFoldFriendShip.tr,fontSize: 16,),
+                        CustomTextBold(
+                          AppStrings.fiveFoldFriendShip.tr,
+                          fontSize: Dimensions.fontSizeLarge,
+                        ),
                         const Gap(10),
                         Container(
                           decoration: BoxDecoration(
@@ -989,7 +1172,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -1014,7 +1201,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.sun?.intimateFriend?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.sun?.intimateFriend),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1027,7 +1217,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.sun?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.sun?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1040,7 +1233,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.sun?.neutral?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.sun?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1053,7 +1249,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.sun?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.sun?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1066,7 +1265,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.sun?.bitterEnemy?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.sun?.bitterEnemy),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1087,7 +1289,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -1108,7 +1314,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.moon?.intimateFriend?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.moon?.intimateFriend),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1121,7 +1330,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.moon?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.moon?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1134,7 +1346,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.moon?.neutral?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.moon?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1147,7 +1362,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.moon?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.moon?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1160,7 +1378,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.moon?.bitterEnemy?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.moon?.bitterEnemy),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1181,7 +1402,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -1202,7 +1427,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mars?.intimateFriend?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mars?.intimateFriend),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1215,7 +1443,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mars?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mars?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1228,7 +1459,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mars?.neutral?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mars?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1241,7 +1475,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mars?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mars?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1254,7 +1491,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mars?.bitterEnemy?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mars?.bitterEnemy),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1275,7 +1515,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -1296,7 +1540,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mercury?.intimateFriend?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mercury?.intimateFriend),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1309,7 +1556,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mercury?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mercury?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1322,7 +1572,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mercury?.neutral?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mercury?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1335,7 +1588,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mercury?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mercury?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1348,7 +1604,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.mercury?.bitterEnemy?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.mercury?.bitterEnemy),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1369,7 +1628,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -1391,7 +1654,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.jupiter?.intimateFriend?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.jupiter?.intimateFriend),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1404,7 +1670,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.jupiter?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.jupiter?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1417,7 +1686,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.jupiter?.neutral?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.jupiter?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1430,7 +1702,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.jupiter?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.jupiter?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1443,7 +1718,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.jupiter?.bitterEnemy?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.jupiter?.bitterEnemy),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1464,7 +1742,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -1485,7 +1767,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.venus?.intimateFriend?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.venus?.intimateFriend),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1498,7 +1783,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.venus?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.venus?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1511,7 +1799,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.venus?.neutral?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.venus?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1524,7 +1815,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.venus?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.venus?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1537,7 +1831,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.venus?.bitterEnemy?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.venus?.bitterEnemy),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1558,7 +1855,11 @@ class KundliFriendshipScreen extends StatelessWidget {
                                   offset: const Offset(0, 2),
                                 )
                               ],
-                              borderRadius: BorderRadius.circular(10)
+                              borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                             border: Border.all(
+                               color: Colors.grey.withOpacity(0.3),
+                               width: 1,
+                             ),
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(12.0),
@@ -1580,7 +1881,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.saturn?.intimateFriend?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.saturn?.intimateFriend),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1593,7 +1897,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.saturn?.friends?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.saturn?.friends),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1606,7 +1913,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.saturn?.neutral?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.saturn?.neutral),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1619,7 +1929,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.saturn?.enemies?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.saturn?.enemies),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),
@@ -1632,7 +1945,10 @@ class KundliFriendshipScreen extends StatelessWidget {
                                     ),
                                     const Gap(5),
                                     Expanded(
-                                        child: CustomTextMedium("${controller.friendshipModel.response?.fiveFoldTable?.saturn?.bitterEnemy?.toString()}",fontSize: 12,)
+                                        child: CustomTextMedium(
+                                         _formatList(controller.friendshipModel.response?.fiveFoldTable?.saturn?.bitterEnemy),
+                                         fontSize: Dimensions.fontSizeDefault,
+                                       )
                                     )
                                   ],
                                 ),

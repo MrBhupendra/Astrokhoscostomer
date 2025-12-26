@@ -120,6 +120,7 @@ import 'package:facebook_app_events/facebook_app_events.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -200,8 +201,7 @@ void main() async {
           defaultColor: ColorResources.colorPrimary,
           locked: true,
           defaultPrivacy: NotificationPrivacy.Public,
-          criticalAlerts: false
-      ),
+          criticalAlerts: false),
     ],
   );
 
@@ -219,10 +219,23 @@ void main() async {
     return true;
   };
 
-  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-    statusBarColor: ColorResources.colorPrimaryDark,
-    statusBarIconBrightness: Brightness.light,
-  ));
+  // Set status bar style for both Android and iOS
+  if (Platform.isAndroid) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: ColorResources.colorPrimaryDark,
+      statusBarIconBrightness:
+          Brightness.light, // Light icons (white) for Android
+      statusBarBrightness: Brightness.dark,
+      systemNavigationBarColor: ColorResources.colorPrimaryDark,
+      systemNavigationBarIconBrightness: Brightness.light,
+    ));
+  } else if (Platform.isIOS) {
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: ColorResources.colorPrimaryDark,
+      statusBarBrightness:
+          Brightness.dark, // Dark style = light content (white icons) for iOS
+    ));
+  }
 
   configureFirebaseMessaging();
   FacebookAppEvents().setAutoLogAppEventsEnabled(true);
@@ -245,7 +258,8 @@ Future<void> configureFirebaseMessaging() async {
 
   // Handle the received message when the app is in foreground
   FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    debugPrint("main notification (onMessage) Data-> ${message.data.toString()}");
+    debugPrint(
+        "main notification (onMessage) Data-> ${message.data.toString()}");
 
     String? title;
     String? body;
@@ -485,36 +499,36 @@ Future<void> configureFirebaseMessaging() async {
                 autoDismissible: true),
           ]);
       startListeningNotificationEvents();
-    }else if (type == "message") {
+    } else if (type == "message") {
       NotificationService().showMessageNotification(message);
       startListeningNotificationEvents();
     } else if (type == "android") {
       if (image.isNotEmpty) {
         AwesomeNotifications().createNotification(
             content: NotificationContent(
-              id: notificationId,
-              channelKey: "alert_channel",
-              icon: 'resource://drawable/ic_notification',
-              color: ColorResources.colorPrimary,
-              title: title,
-              body: body,
-              backgroundColor: ColorResources.colorPrimary,
-              largeIcon: logo,
-              bigPicture: image,
-              notificationLayout: NotificationLayout.BigPicture,
-            ));
+          id: notificationId,
+          channelKey: "alert_channel",
+          icon: 'resource://drawable/ic_notification',
+          color: ColorResources.colorPrimary,
+          title: title,
+          body: body,
+          backgroundColor: ColorResources.colorPrimary,
+          largeIcon: logo,
+          bigPicture: image,
+          notificationLayout: NotificationLayout.BigPicture,
+        ));
       } else {
         AwesomeNotifications().createNotification(
             content: NotificationContent(
-              id: notificationId,
-              channelKey: "alert_channel",
-              icon: 'resource://drawable/ic_notification',
-              color: ColorResources.colorPrimary,
-              title: title,
-              body: body,
-              backgroundColor: ColorResources.colorPrimary,
-              largeIcon: logo,
-            ));
+          id: notificationId,
+          channelKey: "alert_channel",
+          icon: 'resource://drawable/ic_notification',
+          color: ColorResources.colorPrimary,
+          title: title,
+          body: body,
+          backgroundColor: ColorResources.colorPrimary,
+          largeIcon: logo,
+        ));
       }
     } else if (type == "cancel") {
       cancelNotification(notificationId);
@@ -532,7 +546,8 @@ Future<void> configureFirebaseMessaging() async {
   });
 
   FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-    debugPrint("main notification (onMessageOpenedApp) Data-> ${message.data.toString()}");
+    debugPrint(
+        "main notification (onMessageOpenedApp) Data-> ${message.data.toString()}");
     String type = "alert";
     if (message.data.isNotEmpty) {
       type = message.data['type'];
@@ -564,7 +579,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  debugPrint("main notification (onBackgroundMessage) Data-> ${message.data.toString()}");
+  debugPrint(
+      "main notification (onBackgroundMessage) Data-> ${message.data.toString()}");
   String? title;
   String? body;
   String type = "alert";
@@ -803,64 +819,64 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
               autoDismissible: true),
         ]);
     startListeningNotificationEvents();
-  }else if (type == "message") {
+  } else if (type == "message") {
     if (image.isNotEmpty) {
       AwesomeNotifications().createNotification(
           content: NotificationContent(
-            id: notificationId,
-            channelKey: "alert_channel",
-            icon: 'resource://drawable/ic_notification',
-            color: ColorResources.colorPrimary,
-            title: title,
-            body: body,
-            backgroundColor: ColorResources.colorPrimary,
-            largeIcon: logo,
-            bigPicture: image,
-            notificationLayout: NotificationLayout.BigPicture,
-            payload: {'url': url},
-          ));
+        id: notificationId,
+        channelKey: "alert_channel",
+        icon: 'resource://drawable/ic_notification',
+        color: ColorResources.colorPrimary,
+        title: title,
+        body: body,
+        backgroundColor: ColorResources.colorPrimary,
+        largeIcon: logo,
+        bigPicture: image,
+        notificationLayout: NotificationLayout.BigPicture,
+        payload: {'url': url},
+      ));
     } else {
       AwesomeNotifications().createNotification(
           content: NotificationContent(
-            id: notificationId,
-            channelKey: "alert_channel",
-            icon: 'resource://drawable/ic_notification',
-            color: ColorResources.colorPrimary,
-            title: title,
-            body: body,
-            backgroundColor: ColorResources.colorPrimary,
-            largeIcon: logo,
-            payload: {'url': url},
-          ));
+        id: notificationId,
+        channelKey: "alert_channel",
+        icon: 'resource://drawable/ic_notification',
+        color: ColorResources.colorPrimary,
+        title: title,
+        body: body,
+        backgroundColor: ColorResources.colorPrimary,
+        largeIcon: logo,
+        payload: {'url': url},
+      ));
     }
     startListeningNotificationEvents();
   } else if (type == "android") {
     if (image.isNotEmpty) {
       AwesomeNotifications().createNotification(
           content: NotificationContent(
-            id: notificationId,
-            channelKey: "alert_channel",
-            icon: 'resource://drawable/ic_notification',
-            color: ColorResources.colorPrimary,
-            title: title,
-            body: body,
-            backgroundColor: ColorResources.colorPrimary,
-            largeIcon: logo,
-            bigPicture: image,
-            notificationLayout: NotificationLayout.BigPicture,
-          ));
+        id: notificationId,
+        channelKey: "alert_channel",
+        icon: 'resource://drawable/ic_notification',
+        color: ColorResources.colorPrimary,
+        title: title,
+        body: body,
+        backgroundColor: ColorResources.colorPrimary,
+        largeIcon: logo,
+        bigPicture: image,
+        notificationLayout: NotificationLayout.BigPicture,
+      ));
     } else {
       AwesomeNotifications().createNotification(
           content: NotificationContent(
-            id: notificationId,
-            channelKey: "alert_channel",
-            icon: 'resource://drawable/ic_notification',
-            color: ColorResources.colorPrimary,
-            title: title,
-            body: body,
-            backgroundColor: ColorResources.colorPrimary,
-            largeIcon: logo,
-          ));
+        id: notificationId,
+        channelKey: "alert_channel",
+        icon: 'resource://drawable/ic_notification',
+        color: ColorResources.colorPrimary,
+        title: title,
+        body: body,
+        backgroundColor: ColorResources.colorPrimary,
+        largeIcon: logo,
+      ));
     }
   } else if (type == "cancel") {
     cancelNotification(notificationId);
@@ -879,7 +895,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 Future<void> startListeningNotificationEvents() async {
   debugPrint('main notification (startListeningNotificationEvents)');
-  AwesomeNotifications().setListeners(onActionReceivedMethod: onActionReceivedMethod);
+  AwesomeNotifications()
+      .setListeners(onActionReceivedMethod: onActionReceivedMethod);
 }
 
 @pragma('vm:entry-point')
@@ -888,9 +905,10 @@ Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
   return onActionReceivedImplementationMethod(receivedAction);
 }
 
-
-Future<void> onActionReceivedImplementationMethod(ReceivedAction receivedAction) async {
-  debugPrint('main notification (onActionReceivedImplementationMethod) $receivedAction');
+Future<void> onActionReceivedImplementationMethod(
+    ReceivedAction receivedAction) async {
+  debugPrint(
+      'main notification (onActionReceivedImplementationMethod) $receivedAction');
   if (receivedAction.actionLifeCycle == NotificationLifeCycle.Foreground) {
     debugPrint('Notification tapped in foreground.');
     if (receivedAction.buttonKeyPressed == "ACCEPT") {
@@ -906,18 +924,18 @@ Future<void> onActionReceivedImplementationMethod(ReceivedAction receivedAction)
     } else if (receivedAction.buttonKeyPressed == "REJECT ARCHITECT") {
       Get.toNamed("/architect_orders_tab_screen");
     } else {
-        Map<String, String?>? payload = receivedAction.payload;
-        if (payload != null && payload.containsKey('url')) {
-          String url = payload['url']!;
-          debugPrint('URL found in payload: $url');
-          if (url.isNotEmpty) {
-            navigateBasedOnUri(url);
-          }
-        } else{
-          Get.toNamed('/dashboard');
+      Map<String, String?>? payload = receivedAction.payload;
+      if (payload != null && payload.containsKey('url')) {
+        String url = payload['url']!;
+        debugPrint('URL found in payload: $url');
+        if (url.isNotEmpty) {
+          navigateBasedOnUri(url);
         }
+      } else {
+        Get.toNamed('/dashboard');
+      }
     }
-  }else{
+  } else {
     Get.toNamed('/dashboard');
   }
 }
@@ -933,7 +951,8 @@ void navigateBasedOnUri(String url) {
       String astrologerId = uri.pathSegments[2].toString();
       Get.toNamed('/productDetail/$productSlug/$astrologerId');
     }
-  } else if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'services') {
+  } else if (uri.pathSegments.isNotEmpty &&
+      uri.pathSegments.first == 'services') {
     if (uri.pathSegments.length == 2) {
       String serviceSlug = uri.pathSegments[1].toString();
       Get.toNamed('/serviceDetail/$serviceSlug');
@@ -958,571 +977,546 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GetMaterialApp(
-      locale: const Locale('en', 'IN'),
-      translations: EnglishToHindiTranslationClass(),
-      localeResolutionCallback: (locale, supportedLocales) {
-        if (supportedLocales.contains(locale)) {
-          return locale;
-        } else {
-          return const Locale('en', 'IN');
-        }
-      },
-      supportedLocales: const [
-        Locale('en', 'IN'),
-        Locale('hi', 'IN'),
-        Locale('mr', 'IN'),
-        Locale('gr', 'IN'),
-        Locale('te', 'IN'),
-        Locale('ml', 'IN'),
-        Locale('be', 'IN'),
-        Locale('ta', 'IN'),
-        Locale('ka', 'IN'),
-      ],
-      enableLog: true,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: ColorResources.colorPrimary),
-        useMaterial3: true,
-        fontFamily: 'EuclidRegular',
+    return AnnotatedRegion<SystemUiOverlayStyle>(
+      value: const SystemUiOverlayStyle(
+        statusBarColor: ColorResources.colorPrimaryDark,
+        statusBarIconBrightness:
+            Brightness.light, // Android: Light icons (white)
+        statusBarBrightness:
+            Brightness.dark, // iOS: Dark status bar style (light content)
       ),
-      initialRoute: '/splash',
-      getPages: [
-        GetPage(
-          name: '/splash',
-          page: () => SplashScreen(),
-          binding: SplashBinding(),
+      child: GetMaterialApp(
+        locale: const Locale('en', 'IN'),
+        translations: EnglishToHindiTranslationClass(),
+        localeResolutionCallback: (locale, supportedLocales) {
+          if (supportedLocales.contains(locale)) {
+            return locale;
+          } else {
+            return const Locale('en', 'IN');
+          }
+        },
+        supportedLocales: const [
+          Locale('en', 'IN'),
+          Locale('hi', 'IN'),
+          Locale('mr', 'IN'),
+          Locale('gr', 'IN'),
+          Locale('te', 'IN'),
+          Locale('ml', 'IN'),
+          Locale('be', 'IN'),
+          Locale('ta', 'IN'),
+          Locale('ka', 'IN'),
+        ],
+        enableLog: true,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme:
+              ColorScheme.fromSeed(seedColor: ColorResources.colorPrimary),
+          useMaterial3: true,
+          fontFamily: 'EuclidRegular',
         ),
-        GetPage(
-          name: '/login',
-          page: () => LoginScreen(),
-          binding: LoginBinding(),
-        ),
-        GetPage(
-          name: '/verifyOtp',
-          page: () => const VerifyOtpScreen(),
-          binding: LoginBinding(),
-        ),
-        GetPage(
-          name: '/updateProfile',
-          page: () => UpdateProfileScreen(),
-          binding: UpdateProfileBinding(),
-        ),
-        GetPage(
-          name: '/dashboard',
-          page: () => DashboardScreen(),
-          binding: DashboardBinding(),
-        ),
-        GetPage(
-            name: '/astroProfile',
-            page: () => AstrologerProfileScreen(),
-            binding: AstrologerProfileBinding()
-        ),
-        GetPage(
-            name: '/wallet',
-            page: () => const WalletScreen(),
-            binding: RechargeVoucherBinding()
-        ),
-        GetPage(
-            name: '/sanjeeviniList',
-            page: () => const SanjeeviniListScreen(),
-            binding: SanjeeviniBinding()
-        ),
-        GetPage(
-          name: '/sanjeeviniDetail',
-          page: () => const SanjeeviniDetailScreen(),
-        ),
-        GetPage(
-            name: '/switchList',
-            page: () => const SwitchListScreen(),
-            binding: SwitchWordBinding()
-        ),
-        GetPage(
-          name: '/switchDetail',
-          page: () => const SwitchDetailScreen(),
-        ),
-        GetPage(
-          name: '/vastu_zones',
-          page: () => const HomeVastuZonesScreen(),
-        ),
-        GetPage(
-          name: '/vastu_zone_detail',
-          page: () => HomeVastuZoneDetail("Home Entrance"),
-        ),
-        GetPage(
-          name: '/home_vastu',
-          page: () => const HomeVastuScreen(),
-        ),
-        GetPage(
-          name: '/zonal_chart',
-          page: () => const ZonalChartScreen(),
-        ),
-        GetPage(
-          name: '/32zone_compass_screen',
-          page: () => const Zone32CompassScreen(),
-        ),
-        GetPage(
-          name: '/office_vastu',
-          page: () => const OfficeVastuZonesScreen(),
-        ),
-        GetPage(
-            name: '/daily_quote',
-            page: () => const DailyQuoteScreen(),
-            binding: DailyQuoteBinding()
-        ),
-        
-        //tarot
-        GetPage(
-          name: '/dailyTarotReading',
-          page: () => dailyTarotReading(),
-        ),
-        GetPage(
-          name: '/dailyTarotDetail',
-          page: () => DailyTarotDetail(),
-        ),
-        
-        GetPage(
-          name: '/booksCategory',
-          page: () => const BooksCategoryListScreen(),
-        ),
-        GetPage(
-          name: '/booksList',
-          page: () => const BooksListScreen(),
-        ),
-        GetPage(
-          name: '/bookDetail',
-          page: () => BookPdfDetailScreen(),
-        ),
-        GetPage(
-            name: '/blog',
-            page: () => const BlogScreen(),
-            binding: BlogBinding()
-        ),
-        GetPage(
-          name: '/blog_detail',
-          page: () => BlogDetailScreen(),
-        ),
-        GetPage(
-            name: '/video_list',
-            page: () => const VideoListScreen(),
-            binding: VideoBinding()
-        ),
-        GetPage(
-            name: '/products_category',
-            page: () => const ProductsCategoryListScreen(),
-            binding: ProductsBinding()
-        ),
-        GetPage(
-            name: '/products',
-            page: () => const ProductsListScreen(),
-            binding: ProductsBinding()
-        ),
-        GetPage(
-          name: '/product_detail',
-          page: () => const ProductDetailScreen(),
-        ),
-        GetPage(
-          name: '/save_address',
-          page: () => const SaveAddressScreen(),
-        ),
-        GetPage(
-          name: '/add_address',
-          page: () => AddAddressScreen(),
-        ),
-        GetPage(
-          name: '/payment_summary',
-          page: () => PaymentSummaryScreen(),
-        ),
-        GetPage(
-          name: '/numerology_submit',
-          page: () => NumerologySubmitScreen(),
-        ),
-        GetPage(
-          name: '/numerology_detail',
-          page: () => NumerologyDetailScreen(),
-        ),
+        initialRoute: '/splash',
+        getPages: [
+          GetPage(
+            name: '/splash',
+            page: () => SplashScreen(),
+            binding: SplashBinding(),
+          ),
+          GetPage(
+            name: '/login',
+            page: () => LoginScreen(),
+            binding: LoginBinding(),
+          ),
+          GetPage(
+            name: '/verifyOtp',
+            page: () => const VerifyOtpScreen(),
+            binding: LoginBinding(),
+          ),
+          GetPage(
+            name: '/updateProfile',
+            page: () => UpdateProfileScreen(),
+            binding: UpdateProfileBinding(),
+          ),
+          GetPage(
+            name: '/dashboard',
+            page: () => DashboardScreen(),
+            binding: DashboardBinding(),
+          ),
+          GetPage(
+              name: '/astroProfile',
+              page: () => AstrologerProfileScreen(),
+              binding: AstrologerProfileBinding()),
+          GetPage(
+              name: '/wallet',
+              page: () => const WalletScreen(),
+              binding: RechargeVoucherBinding()),
+          GetPage(
+              name: '/sanjeeviniList',
+              page: () => const SanjeeviniListScreen(),
+              binding: SanjeeviniBinding()),
+          GetPage(
+            name: '/sanjeeviniDetail',
+            page: () => const SanjeeviniDetailScreen(),
+          ),
+          GetPage(
+              name: '/switchList',
+              page: () => const SwitchListScreen(),
+              binding: SwitchWordBinding()),
+          GetPage(
+            name: '/switchDetail',
+            page: () => const SwitchDetailScreen(),
+          ),
+          GetPage(
+            name: '/vastu_zones',
+            page: () => const HomeVastuZonesScreen(),
+          ),
+          GetPage(
+            name: '/vastu_zone_detail',
+            page: () => HomeVastuZoneDetail("Home Entrance"),
+          ),
+          GetPage(
+            name: '/home_vastu',
+            page: () => const HomeVastuScreen(),
+          ),
+          GetPage(
+            name: '/zonal_chart',
+            page: () => const ZonalChartScreen(),
+          ),
+          GetPage(
+            name: '/32zone_compass_screen',
+            page: () => const Zone32CompassScreen(),
+          ),
+          GetPage(
+            name: '/office_vastu',
+            page: () => const OfficeVastuZonesScreen(),
+          ),
+          GetPage(
+              name: '/daily_quote',
+              page: () => const DailyQuoteScreen(),
+              binding: DailyQuoteBinding()),
 
-        // Horoscope
-        GetPage(
-          name: '/horoscopeTabScreen',
-          page: () => HoroscopeTabScreen(),
-        ),
-        GetPage(
-          name: '/horoscopeDailyScreen',
-          page: () => const HoroscopeDailyScreen(),
-        ),
-        GetPage(
-          name: '/horoscopeWeeklyScreen',
-          page: () => const HoroscopeWeeklyScreen(),
-        ),
-        GetPage(
-          name: '/horoscopeMonthlyScreen',
-          page: () => const HoroscopeMonthalyScreen(),
-        ),
-        GetPage(
-          name: '/horoscopeYearlyScreen',
-          page: () => const HoroscopeYearlyScreen(),
-        ),
+          //tarot
+          GetPage(
+            name: '/dailyTarotReading',
+            page: () => dailyTarotReading(),
+          ),
+          GetPage(
+            name: '/dailyTarotDetail',
+            page: () => DailyTarotDetail(),
+          ),
 
-        //Matching
-        GetPage(
-          name: '/matchingSubmitScreen',
-          page: () => MatchingSubmitScreen(),
-        ),
-        GetPage(
-          name: '/matchingTabScreen',
-          page: () => MatchingTabScreen(),
-        ),
-        GetPage(
-          name: '/saveMatchingKundliScreen',
-          page: () => MatchingSavedScreen(),
-        ),
+          GetPage(
+            name: '/booksCategory',
+            page: () => const BooksCategoryListScreen(),
+          ),
+          GetPage(
+            name: '/booksList',
+            page: () => const BooksListScreen(),
+          ),
+          GetPage(
+            name: '/bookDetail',
+            page: () => BookPdfDetailScreen(),
+          ),
+          GetPage(
+              name: '/blog',
+              page: () => const BlogScreen(),
+              binding: BlogBinding()),
+          GetPage(
+            name: '/blog_detail',
+            page: () => BlogDetailScreen(),
+          ),
+          GetPage(
+              name: '/video_list',
+              page: () => const VideoListScreen(),
+              binding: VideoBinding()),
+          GetPage(
+              name: '/products_category',
+              page: () => const ProductsCategoryListScreen(),
+              binding: ProductsBinding()),
+          GetPage(
+              name: '/products',
+              page: () => const ProductsListScreen(),
+              binding: ProductsBinding()),
+          GetPage(
+            name: '/product_detail',
+            page: () => const ProductDetailScreen(),
+          ),
+          GetPage(
+            name: '/save_address',
+            page: () => const SaveAddressScreen(),
+          ),
+          GetPage(
+            name: '/add_address',
+            page: () => AddAddressScreen(),
+          ),
+          GetPage(
+            name: '/payment_summary',
+            page: () => PaymentSummaryScreen(),
+          ),
+          GetPage(
+            name: '/numerology_submit',
+            page: () => NumerologySubmitScreen(),
+          ),
+          GetPage(
+            name: '/numerology_detail',
+            page: () => NumerologyDetailScreen(),
+          ),
 
-        GetPage(
-          name: '/panchang_detail',
-          page: () => PanchangDetailScreen(),
-        ),
-        GetPage(
-          name: '/shubhmuhrat_details',
-          page: () => const ShubhMuhratTabScreen(),
-        ),
-        GetPage(
-          name: '/love_compatibility_submit_screen',
-          page: () => LoveCompatibilitySubmitScreen(),
-        ),
-        GetPage(
-          name: '/Love_compatibility',
-          page: () => LoveCompatibilityScreen(),
-        ),
+          // Horoscope
+          GetPage(
+            name: '/horoscopeTabScreen',
+            page: () => HoroscopeTabScreen(),
+          ),
+          GetPage(
+            name: '/horoscopeDailyScreen',
+            page: () => const HoroscopeDailyScreen(),
+          ),
+          GetPage(
+            name: '/horoscopeWeeklyScreen',
+            page: () => const HoroscopeWeeklyScreen(),
+          ),
+          GetPage(
+            name: '/horoscopeMonthlyScreen',
+            page: () => const HoroscopeMonthalyScreen(),
+          ),
+          GetPage(
+            name: '/horoscopeYearlyScreen',
+            page: () => const HoroscopeYearlyScreen(),
+          ),
 
-        //Kundli
-        GetPage(
-          name: '/savedKundliScreen',
-          page: () => KundliSavedScreen(),
-        ),
-        GetPage(
-          name: '/kundliSubmitScreen',
-          page: () => KundliSubmitScreen(),
-        ),
-        GetPage(
-          name: '/kundliTabScreen',
-          page: () => KundliTabScreen(),
-        ),
+          //Matching
+          GetPage(
+            name: '/matchingSubmitScreen',
+            page: () => MatchingSubmitScreen(),
+          ),
+          GetPage(
+            name: '/matchingTabScreen',
+            page: () => MatchingTabScreen(),
+          ),
+          GetPage(
+            name: '/saveMatchingKundliScreen',
+            page: () => MatchingSavedScreen(),
+          ),
 
-        //Services
-        GetPage(
-            name: '/services_category',
-            page: () => const ServiceCategoryListScreen(),
-            binding: ServiceBinding()
-        ),
-        GetPage(
-            name: '/services',
-            page: () => const ServiceListScreen(),
-            binding: ServiceBinding()
-        ),
-        GetPage(
-            name: '/service_detail',
-            page: () => const ServiceDetailScreen(),
-            binding: ServiceBinding()
-        ),
-        GetPage(
-            name: '/service_astrologer_list',
-            page: () => const ServiceAstrologerListScreen(),
-            binding: ServiceBinding()
-        ),
-        GetPage(
-          name: '/chat_intake_form',
-          page: () => ChatIntakeFormScreen(),
-        ),
-        GetPage(
-          name: '/chat_screen',
-          page: () => ChatScreen(),
-        ),
-        GetPage(
-            name: '/chatChannels',
-            page: () => const ChatChannelListScreen(),
-            binding: ChatHistoryBinding()
-        ),
-        GetPage(
-            name: '/chatHistory',
-            page: () => ChatHistoryScreen(),
-            binding: ChatHistoryBinding()
-        ),
-        GetPage(
+          GetPage(
+            name: '/panchang_detail',
+            page: () => PanchangDetailScreen(),
+          ),
+          GetPage(
+            name: '/shubhmuhrat_details',
+            page: () => const ShubhMuhratTabScreen(),
+          ),
+          GetPage(
+            name: '/love_compatibility_submit_screen',
+            page: () => LoveCompatibilitySubmitScreen(),
+          ),
+          GetPage(
+            name: '/Love_compatibility',
+            page: () => LoveCompatibilityScreen(),
+          ),
+
+          //Kundli
+          GetPage(
+            name: '/savedKundliScreen',
+            page: () => KundliSavedScreen(),
+          ),
+          GetPage(
+            name: '/kundliSubmitScreen',
+            page: () => KundliSubmitScreen(),
+          ),
+          GetPage(
+            name: '/kundliTabScreen',
+            page: () => KundliTabScreen(),
+          ),
+
+          //Services
+          GetPage(
+              name: '/services_category',
+              page: () => const ServiceCategoryListScreen(),
+              binding: ServiceBinding()),
+          GetPage(
+              name: '/services',
+              page: () => const ServiceListScreen(),
+              binding: ServiceBinding()),
+          GetPage(
+              name: '/service_detail',
+              page: () => const ServiceDetailScreen(),
+              binding: ServiceBinding()),
+          GetPage(
+              name: '/service_astrologer_list',
+              page: () => const ServiceAstrologerListScreen(),
+              binding: ServiceBinding()),
+          GetPage(
+            name: '/chat_intake_form',
+            page: () => ChatIntakeFormScreen(),
+          ),
+          GetPage(
+            name: '/chat_screen',
+            page: () => ChatScreen(),
+          ),
+          GetPage(
+              name: '/chatChannels',
+              page: () => const ChatChannelListScreen(),
+              binding: ChatHistoryBinding()),
+          GetPage(
+              name: '/chatHistory',
+              page: () => ChatHistoryScreen(),
+              binding: ChatHistoryBinding()),
+          GetPage(
             name: '/remedies',
             page: () => const RemediesScreen(),
-        ),
-        // Profile topics
-        GetPage(
-            name: '/orders_tab_screen',
-            page: () => OrdersTabScreen(),
-            binding: OrderBinding()
-        ),
-        GetPage(
-            name: '/paid_orders_tab_screen',
-            page: () => const PaidServiceOrdersTabScreen(),
-            binding: PaidServiceOrderBinding()
-        ),
-        GetPage(
-            name: '/live_orders_tab_screen',
-            page: () => const LiveOrdersTabScreen(),
-            binding: OrderBinding()
-        ),
-        GetPage(
-            name: '/product_order_detail_screen',
-            page: () => ProductOrderDetailScreen()
-        ),
-        GetPage(
-          name: '/queue_list',
-          page: () => const QueueListScreen(),
-          binding: QueueBinding(),
-        ),
-        GetPage(
-          name: '/contact_us',
-          page: () => const ContactUsScreen(),
-        ),
-        GetPage(
-          name: '/language_screen',
-          page: () => const AppLanguageScreen(),
-          binding: AppLanguageBinding(),
-        ),
-        GetPage(
-          name: '/mobile_numerology',
-          page: () => MobileNumerologySubmitScreen(),
-        ),
-        GetPage(
-          name: '/mobile_numerology_detail',
-          page: () => const MobileNumerologyDetailScreen(),
-        ),
-        GetPage(
-          name: '/reportListScreen',
-          page: () => const ReportListScreen(),
-        ),
-        GetPage(
-          name: '/report_horo_submit',
-          page: () => ReportHoroSubmitScreen(),
-        ),
-        GetPage(
-          name: '/report_detail_screen',
-          page: () => ReportDetailScreen(),
-        ),
-        GetPage(
-          name: '/report_order_list',
-          page: () => const ReportOrderListScreen(),
-        ),
-        GetPage(
-          name: '/report_order_list_vedic',
-          page: () => const ReportOrderListScreenVedic(),
-        ),
-        GetPage(
-          name: '/pdf_viewer',
-          page: () => PdfViewerScreen(),
-        ),
-        //Architects
-        GetPage(
-          name: '/architect_new_old_screen',
-          page: () => const ArchitectNewOldScreen(),
-          binding: ArchitectScreenBinding(),
-        ),
-        GetPage(
-          name: '/architect_list_screen',
-          page: () => const ArchitectListScreen(),
-          binding: ArchitectScreenBinding(),
-        ),
-        GetPage(
-          name: '/architect_profile_screen',
-          page: () => ArchitectProfileScreen(),
-          binding: ArchitectProfileBinding(),
-        ),
-        GetPage(
-            name: '/architect_orders_tab_screen',
-            page: () => const ArchitectOrdersTabScreen(),
-            binding: ArchitectOrderBinding()
-        ),
-        GetPage(
-          name: '/architect_chat_screen',
-          page: () => ArchitectChatScreen(),
-        ),
-        GetPage(
-          name: '/architectVideoCallScreen',
-          page: () => ArchitectVideoCallScreen(),
-        ),
-        //Homeopathy
-        GetPage(
-          name: '/homeopathy_screen',
-          page: () => const ElectroHomeopathyScreen(),
-        ),
-        GetPage(
-          name: '/homeopathy_list_screen',
-          page: () => const ElectroHomeopathyList(),
-        ),
-        //AskQuestion
-        GetPage(
-          name: '/ask_question_screen',
-          page: () => AskQuestionScreen(),
-          binding: AskQuestionBinding(),
-        ),
-        GetPage(
-          name: '/ask_question_profile_screen',
-          page: () => AskQuestionProfileScreen(),
-          binding: AskQuestionProfileBinding(),
-        ),
-        GetPage(
-          name: '/ask_question_screen_new',
-          page: () => AskQuestionScreenNew(),
-          binding: AskQuestionBinding(),
-        ),
-        //AskAstrologerQuestion
-        GetPage(
-          name: '/ask_question_order_screen',
-          page: () => const AskQuestionCustomerListScreen(),
-          binding: AskAstrologerQuestionBinding(),
-        ),
-        //Following
-        GetPage(
-          name: '/following_list',
-          page: () => FollowingListScreen(),
-          binding: FollowingScreenBinding(),
-        ),
-        //Search Astrologer
-        GetPage(
-          name: '/search',
-          page: () => SearchScreen(),
-        ),
+          ),
+          // Profile topics
+          GetPage(
+              name: '/orders_tab_screen',
+              page: () => OrdersTabScreen(),
+              binding: OrderBinding()),
+          GetPage(
+              name: '/paid_orders_tab_screen',
+              page: () => const PaidServiceOrdersTabScreen(),
+              binding: PaidServiceOrderBinding()),
+          GetPage(
+              name: '/live_orders_tab_screen',
+              page: () => const LiveOrdersTabScreen(),
+              binding: OrderBinding()),
+          GetPage(
+              name: '/product_order_detail_screen',
+              page: () => ProductOrderDetailScreen()),
+          GetPage(
+            name: '/queue_list',
+            page: () => const QueueListScreen(),
+            binding: QueueBinding(),
+          ),
+          GetPage(
+            name: '/contact_us',
+            page: () => const ContactUsScreen(),
+          ),
+          GetPage(
+            name: '/language_screen',
+            page: () => const AppLanguageScreen(),
+            binding: AppLanguageBinding(),
+          ),
+          GetPage(
+            name: '/mobile_numerology',
+            page: () => MobileNumerologySubmitScreen(),
+          ),
+          GetPage(
+            name: '/mobile_numerology_detail',
+            page: () => const MobileNumerologyDetailScreen(),
+          ),
+          GetPage(
+            name: '/reportListScreen',
+            page: () => const ReportListScreen(),
+          ),
+          GetPage(
+            name: '/report_horo_submit',
+            page: () => ReportHoroSubmitScreen(),
+          ),
+          GetPage(
+            name: '/report_detail_screen',
+            page: () => ReportDetailScreen(),
+          ),
+          GetPage(
+            name: '/report_order_list',
+            page: () => const ReportOrderListScreen(),
+          ),
+          GetPage(
+            name: '/report_order_list_vedic',
+            page: () => const ReportOrderListScreenVedic(),
+          ),
+          GetPage(
+            name: '/pdf_viewer',
+            page: () => PdfViewerScreen(),
+          ),
+          //Architects
+          GetPage(
+            name: '/architect_new_old_screen',
+            page: () => const ArchitectNewOldScreen(),
+            binding: ArchitectScreenBinding(),
+          ),
+          GetPage(
+            name: '/architect_list_screen',
+            page: () => const ArchitectListScreen(),
+            binding: ArchitectScreenBinding(),
+          ),
+          GetPage(
+            name: '/architect_profile_screen',
+            page: () => ArchitectProfileScreen(),
+            binding: ArchitectProfileBinding(),
+          ),
+          GetPage(
+              name: '/architect_orders_tab_screen',
+              page: () => const ArchitectOrdersTabScreen(),
+              binding: ArchitectOrderBinding()),
+          GetPage(
+            name: '/architect_chat_screen',
+            page: () => ArchitectChatScreen(),
+          ),
+          GetPage(
+            name: '/architectVideoCallScreen',
+            page: () => ArchitectVideoCallScreen(),
+          ),
+          //Homeopathy
+          GetPage(
+            name: '/homeopathy_screen',
+            page: () => const ElectroHomeopathyScreen(),
+          ),
+          GetPage(
+            name: '/homeopathy_list_screen',
+            page: () => const ElectroHomeopathyList(),
+          ),
+          //AskQuestion
+          GetPage(
+            name: '/ask_question_screen',
+            page: () => AskQuestionScreen(),
+            binding: AskQuestionBinding(),
+          ),
+          GetPage(
+            name: '/ask_question_profile_screen',
+            page: () => AskQuestionProfileScreen(),
+            binding: AskQuestionProfileBinding(),
+          ),
+          GetPage(
+            name: '/ask_question_screen_new',
+            page: () => AskQuestionScreenNew(),
+            binding: AskQuestionBinding(),
+          ),
+          //AskAstrologerQuestion
+          GetPage(
+            name: '/ask_question_order_screen',
+            page: () => const AskQuestionCustomerListScreen(),
+            binding: AskAstrologerQuestionBinding(),
+          ),
+          //Following
+          GetPage(
+            name: '/following_list',
+            page: () => FollowingListScreen(),
+            binding: FollowingScreenBinding(),
+          ),
+          //Search Astrologer
+          GetPage(
+            name: '/search',
+            page: () => SearchScreen(),
+          ),
 
-        //VideoCall
-        GetPage(
-          name: '/videoCallScreen',
-          page: () => VideoCallScreen(),
-        ),
+          //VideoCall
+          GetPage(
+            name: '/videoCallScreen',
+            page: () => VideoCallScreen(),
+          ),
 
-        //VoiceCall
-        GetPage(
-          name: '/voiceCallScreen',
-          page: () => VoiceCallScreen(),
-        ),
+          //VoiceCall
+          GetPage(
+            name: '/voiceCallScreen',
+            page: () => VoiceCallScreen(),
+          ),
 
-        //ServiceVideoCall
-        GetPage(
-          name: '/serviceVideoCallScreen',
-          page: () => ServiceVideoCallScreen(),
-        ),
+          //ServiceVideoCall
+          GetPage(
+            name: '/serviceVideoCallScreen',
+            page: () => ServiceVideoCallScreen(),
+          ),
 
-        //Feedback
-        GetPage(
-            name: '/feedbackScreen',
-            page: () => FeedbackScreen("", "", "", "")),
+          //Feedback
+          GetPage(
+              name: '/feedbackScreen',
+              page: () => FeedbackScreen("", "", "", "")),
 
-        //LiveStream
-        GetPage(
-          name: '/liveStreamScreen',
-          page: () => LiveStreamScreen(),
-        ),
+          //LiveStream
+          GetPage(
+            name: '/liveStreamScreen',
+            page: () => LiveStreamScreen(),
+          ),
 
-        GetPage(
-          name: '/notificationScreen',
-          page: () => const NotificationScreen(),
-        ),
-        //ChatAssistant
-        GetPage(
-          name: '/assistantChatScreen',
-          page: () => AssistantChatScreen(),
-        ),
-        GetPage(
-          name: '/supportTabScreen',
-          page: () => const SupportTabScreen(),
-        ),
-        //Slot Availability
-        GetPage(
-          name: '/slotAvailabilityScreen',
-          page: () => SlotAvailabilityScreen(),
-        ),
-        GetPage(
-          name: '/slot_chat_screen',
-          page: () => SlotChatScreen(),
-        ),
-        GetPage(
-          name: '/slotVideoCallScreen',
-          page: () => SlotVideoCallScreen(),
-        ),
-        //Deeplink Pages
-        //Astrologer
-        GetPage(
-            name: '/astrologerDetail/:id',
-            page: () => const DeeplinkAstrologerDetail()
-        ),
-        //Product
-        GetPage(
-            name: '/productDetail/:slug',
-            page: () => const DeeplinkProductDetail()
-        ),
-        GetPage(
-            name: '/productDetail/:slug/:id',
-            page: () => const DeeplinkProductDetail()
-        ),
-        //Service
-        GetPage(
-            name: '/serviceDetail/:slug',
-            page: () => const DeeplinkServiceDetail()
-        ),
-        GetPage(
-            name: '/serviceDetail/:slug/:id',
-            page: () => const DeeplinkServiceDetail()
-        ),
-        GetPage(
-            name: '/tipScreen',
-            page: () => TipScreen()
-        ),
-        //GroupPooja
-        GetPage(
-            name: '/group_pooja_category',
-            page: () => const GroupPoojaCategoryListScreen(),
-            binding: GroupPoojaBinding()
-        ),
-        GetPage(
-            name: '/group_pooja_list_screen',
-            page: () => const GroupPoojaListScreen(),
-            binding: GroupPoojaBinding()
-        ),
-        GetPage(
-            name: '/group_pooja_detail',
-            page: () => const GroupPoojaDetailScreen(),
-            binding: GroupPoojaBinding()
-        ),
-        GetPage(
-            name: '/group_pooja_astrologer_list',
-            page: () => const GroupPoojaAstrologerListScreen(),
-            binding: GroupPoojaBinding()
-        ),
-        GetPage(
-          name: '/groupPoojaLiveStreamScreen',
-          page: () => GroupPoojaLiveStreamScreen(),
-        ),
-        GetPage(
-          name: '/settingScreen',
-          page: () => SettingScreen(),
-        ),
+          GetPage(
+            name: '/notificationScreen',
+            page: () => const NotificationScreen(),
+          ),
+          //ChatAssistant
+          GetPage(
+            name: '/assistantChatScreen',
+            page: () => AssistantChatScreen(),
+          ),
+          GetPage(
+            name: '/supportTabScreen',
+            page: () => const SupportTabScreen(),
+          ),
+          //Slot Availability
+          GetPage(
+            name: '/slotAvailabilityScreen',
+            page: () => SlotAvailabilityScreen(),
+          ),
+          GetPage(
+            name: '/slot_chat_screen',
+            page: () => SlotChatScreen(),
+          ),
+          GetPage(
+            name: '/slotVideoCallScreen',
+            page: () => SlotVideoCallScreen(),
+          ),
+          //Deeplink Pages
+          //Astrologer
+          GetPage(
+              name: '/astrologerDetail/:id',
+              page: () => const DeeplinkAstrologerDetail()),
+          //Product
+          GetPage(
+              name: '/productDetail/:slug',
+              page: () => const DeeplinkProductDetail()),
+          GetPage(
+              name: '/productDetail/:slug/:id',
+              page: () => const DeeplinkProductDetail()),
+          //Service
+          GetPage(
+              name: '/serviceDetail/:slug',
+              page: () => const DeeplinkServiceDetail()),
+          GetPage(
+              name: '/serviceDetail/:slug/:id',
+              page: () => const DeeplinkServiceDetail()),
+          GetPage(name: '/tipScreen', page: () => TipScreen()),
+          //GroupPooja
+          GetPage(
+              name: '/group_pooja_category',
+              page: () => const GroupPoojaCategoryListScreen(),
+              binding: GroupPoojaBinding()),
+          GetPage(
+              name: '/group_pooja_list_screen',
+              page: () => const GroupPoojaListScreen(),
+              binding: GroupPoojaBinding()),
+          GetPage(
+              name: '/group_pooja_detail',
+              page: () => const GroupPoojaDetailScreen(),
+              binding: GroupPoojaBinding()),
+          GetPage(
+              name: '/group_pooja_astrologer_list',
+              page: () => const GroupPoojaAstrologerListScreen(),
+              binding: GroupPoojaBinding()),
+          GetPage(
+            name: '/groupPoojaLiveStreamScreen',
+            page: () => GroupPoojaLiveStreamScreen(),
+          ),
+          GetPage(
+            name: '/settingScreen',
+            page: () => SettingScreen(),
+          ),
 
-        // Call Image List
-        GetPage(
-            name: '/call_image_list_screen',
-            page: () => const CallImageListScreen()
-        ),
+          // Call Image List
+          GetPage(
+              name: '/call_image_list_screen',
+              page: () => const CallImageListScreen()),
 
-
-        // Subscription
-        GetPage(
+          // Subscription
+          GetPage(
             name: '/subscription_list_screen',
             page: () => const SubscriptionListScreen(),
             binding: SubscriptionBinding(),
-        ),
-        GetPage(
+          ),
+          GetPage(
             name: '/subscription_purchase_list',
             page: () => const SubscriptionPurchaseListScreen(),
             binding: SubscriptionBinding(),
-        ),
-
-      ],
+          ),
+        ],
+      ),
     );
   }
 }

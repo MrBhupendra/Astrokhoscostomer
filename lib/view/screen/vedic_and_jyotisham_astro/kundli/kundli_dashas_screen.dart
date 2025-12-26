@@ -31,115 +31,119 @@ class KundliDashaScreen extends StatelessWidget {
             const Gap(5),
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
-              child:   Row(
+              child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Obx(() => GestureDetector(
-                    onTap: () {
-                      controller.dashaSelectedType.value = "Current Mahadasha";
-                      controller.getMahaDasha(data);
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.all(Dimensions.marginSizeSmall),
-                      decoration: BoxDecoration(
-                          color: controller.dashaSelectedType.value ==
-                              "Current Mahadasha"
-                              ? ColorResources.colorPrimary
-                              : ColorResources.white,
-                          borderRadius: BorderRadius.circular(
-                              Dimensions.borderRadiusSmall),
-                          border: Border.all(
-                              width: 1, color: ColorResources.colorPrimary)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(
-                            Dimensions.paddingSizeExtraSmall),
-                        child: CustomTextRegular(
-                          "Current Mahadasha",
-
-                          color: controller.dashaSelectedType.value ==
-                              "Current Mahadasha"
-                              ? ColorResources
-                              .toolbarText // Set text color to white when selected
-                              : ColorResources.black,
-
-
+                        onTap: () {
+                          controller.dashaSelectedType.value =
+                              "Current Mahadasha";
+                          controller.getMahaDasha(data);
+                        },
+                        child: Container(
+                          margin:
+                              const EdgeInsets.all(Dimensions.marginSizeSmall),
+                          decoration: BoxDecoration(
+                              color: controller.dashaSelectedType.value ==
+                                      "Current Mahadasha"
+                                  ? ColorResources.colorPrimary
+                                  : ColorResources.white,
+                              borderRadius: BorderRadius.circular(
+                                  Dimensions.borderRadiusSmall),
+                              border: Border.all(
+                                  width: 1,
+                                  color: ColorResources.colorPrimary)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                                Dimensions.paddingSizeExtraSmall),
+                            child: CustomTextRegular(
+                              "Current Mahadasha",
+                              color: controller.dashaSelectedType.value ==
+                                      "Current Mahadasha"
+                                  ? ColorResources
+                                      .toolbarText // Set text color to white when selected
+                                  : ColorResources.black,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )),
+                      )),
                   Obx(() => GestureDetector(
-                    onTap: () {
-                      controller.dashaSelectedType.value =
-                      "Specific Dasha";
-                      controller.getSpecificDasha(data, "", "", "", "", "mahadasha");
-                    },
-                    child: Container(
-                      margin:
-                      const EdgeInsets.all(Dimensions.marginSizeSmall),
-                      decoration: BoxDecoration(
-                          color: controller.dashaSelectedType.value ==
-                              "Specific Dasha"
-                              ? ColorResources.colorPrimary
-                              : ColorResources.white,
-                          borderRadius: BorderRadius.circular(
-                              Dimensions.borderRadiusSmall),
-                          border: Border.all(
-                              width: 1, color: ColorResources.colorPrimary)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(
-                            Dimensions.paddingSizeExtraSmall),
-                        child: CustomTextRegular(
-                          "Specific Dasha",
-                          color: controller.dashaSelectedType.value ==
-                              "Specific Dasha"
-                              ? ColorResources
-                              .white // Set text color to white when selected
-                              : ColorResources.black,
+                        onTap: () {
+                          controller.dashaSelectedType.value = "Specific Dasha";
+                          controller.getSpecificDasha(
+                              data, "", "", "", "", "mahadasha");
+                        },
+                        child: Container(
+                          margin:
+                              const EdgeInsets.all(Dimensions.marginSizeSmall),
+                          decoration: BoxDecoration(
+                              color: controller.dashaSelectedType.value ==
+                                      "Specific Dasha"
+                                  ? ColorResources.colorPrimary
+                                  : ColorResources.white,
+                              borderRadius: BorderRadius.circular(
+                                  Dimensions.borderRadiusSmall),
+                              border: Border.all(
+                                  width: 1,
+                                  color: ColorResources.colorPrimary)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                                Dimensions.paddingSizeExtraSmall),
+                            child: CustomTextRegular(
+                              "Specific Dasha",
+                              color: controller.dashaSelectedType.value ==
+                                      "Specific Dasha"
+                                  ? ColorResources
+                                      .white // Set text color to white when selected
+                                  : ColorResources.black,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )),
+                      )),
                   Obx(() => GestureDetector(
-                    onTap: () {
-                      controller.dashaSelectedType.value = "Mahadasha Full";
-                      controller.getCurrentMahaDashaFull(data);
-                    },
-                    child: Container(
-                      margin:
-                      const EdgeInsets.all(Dimensions.marginSizeSmall),
-                      decoration: BoxDecoration(
-                          color: controller.dashaSelectedType.value == "Mahadasha Full"
-                              ? ColorResources.colorPrimary
-                              : ColorResources.white,
-                          borderRadius: BorderRadius.circular(
-                              Dimensions.borderRadiusSmall),
-                          border: Border.all(
-                              width: 1, color: ColorResources.colorPrimary)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(
-                            Dimensions.paddingSizeExtraSmall),
-                        child: CustomTextRegular(
-                          "Mahadasha Full",
-                          color: controller.dashaSelectedType.value ==
-                              "Mahadasha Full"
-                              ? ColorResources
-                              .white // Set text color to white when selected
-                              : ColorResources.black,
+                        onTap: () {
+                          controller.dashaSelectedType.value = "Mahadasha Full";
+                          controller.getCurrentMahaDashaFull(data);
+                        },
+                        child: Container(
+                          margin:
+                              const EdgeInsets.all(Dimensions.marginSizeSmall),
+                          decoration: BoxDecoration(
+                              color: controller.dashaSelectedType.value ==
+                                      "Mahadasha Full"
+                                  ? ColorResources.colorPrimary
+                                  : ColorResources.white,
+                              borderRadius: BorderRadius.circular(
+                                  Dimensions.borderRadiusSmall),
+                              border: Border.all(
+                                  width: 1,
+                                  color: ColorResources.colorPrimary)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                                Dimensions.paddingSizeExtraSmall),
+                            child: CustomTextRegular(
+                              "Mahadasha Full",
+                              color: controller.dashaSelectedType.value ==
+                                      "Mahadasha Full"
+                                  ? ColorResources
+                                      .white // Set text color to white when selected
+                                  : ColorResources.black,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                  )),
+                      )),
                 ],
               ),
             ),
             Obx(
               () {
                 if (controller.isDashaSuccess.isTrue) {
-                  return controller.dashaSelectedType.value == "Current Mahadasha"
+                  return controller.dashaSelectedType.value ==
+                          "Current Mahadasha"
                       ? _widgetMahadasha()
                       : controller.dashaSelectedType.value == "Specific Dasha"
-                      ?  _widgetSpecificDasha()
-                      : _widgetMahadashaFull();
+                          ? _widgetSpecificDasha()
+                          : _widgetMahadashaFull();
                 } else if (controller.isDashaLoading.value) {
                   return ListView.builder(
                     itemCount: 10,
@@ -162,7 +166,8 @@ class KundliDashaScreen extends StatelessWidget {
 
   Widget _widgetMahadasha() {
     return Padding(
-      padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+      padding: const EdgeInsets.symmetric(
+          horizontal: 10, vertical: Dimensions.paddingSizeDefault),
       child: Column(
         children: [
           const Gap(Dimensions.gapDefault),
@@ -170,7 +175,6 @@ class KundliDashaScreen extends StatelessWidget {
             AppStrings.currentMahadasha.tr,
             fontSize: Dimensions.fontSizeExtraLarge,
           ),
-
           const Gap(Dimensions.gapDefault),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -189,7 +193,6 @@ class KundliDashaScreen extends StatelessWidget {
             end: "${controller.mahadashaModel.response?.mahadasha?.end}",
             isForward: false,
           ),
-
           const Gap(Dimensions.gapDefault),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -208,7 +211,6 @@ class KundliDashaScreen extends StatelessWidget {
             end: "${controller.mahadashaModel.response?.antardasha?.end}",
             isForward: false,
           ),
-
           const Gap(Dimensions.gapDefault),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -228,7 +230,6 @@ class KundliDashaScreen extends StatelessWidget {
             end: "${controller.mahadashaModel.response?.paryantardasha?.end}",
             isForward: false,
           ),
-
           const Gap(Dimensions.gapDefault),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -249,7 +250,6 @@ class KundliDashaScreen extends StatelessWidget {
             end: "${controller.mahadashaModel.response?.shookshamadasha?.end}",
             isForward: false,
           ),
-
           const Gap(Dimensions.gapDefault),
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -268,7 +268,6 @@ class KundliDashaScreen extends StatelessWidget {
             end: "${controller.mahadashaModel.response?.pranadasha?.end}",
             isForward: false,
           ),
-
           const Gap(Dimensions.gapOverLarge),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -279,33 +278,44 @@ class KundliDashaScreen extends StatelessWidget {
               ),
             ],
           ),
-
           const Gap(Dimensions.gapDefault),
           CurrentMahadasha(
-            name: "${controller.mahadashaModel.response?.orderOfDashas?.major?.name}",
-            start: "${controller.mahadashaModel.response?.orderOfDashas?.major?.start}",
-            end: "${controller.mahadashaModel.response?.orderOfDashas?.major?.end}",
+            name:
+                "${controller.mahadashaModel.response?.orderOfDashas?.major?.name}",
+            start:
+                "${controller.mahadashaModel.response?.orderOfDashas?.major?.start}",
+            end:
+                "${controller.mahadashaModel.response?.orderOfDashas?.major?.end}",
             isForward: false,
           ),
           const Gap(Dimensions.gapDefault),
           CurrentMahadasha(
-            name: "${controller.mahadashaModel.response?.orderOfDashas?.minor?.name}",
-            start: "${controller.mahadashaModel.response?.orderOfDashas?.minor?.start}",
-            end: "${controller.mahadashaModel.response?.orderOfDashas?.minor?.end}",
+            name:
+                "${controller.mahadashaModel.response?.orderOfDashas?.minor?.name}",
+            start:
+                "${controller.mahadashaModel.response?.orderOfDashas?.minor?.start}",
+            end:
+                "${controller.mahadashaModel.response?.orderOfDashas?.minor?.end}",
             isForward: false,
           ),
           const Gap(Dimensions.gapDefault),
           CurrentMahadasha(
-            name: "${controller.mahadashaModel.response?.orderOfDashas?.subMinor?.name}",
-            start: "${controller.mahadashaModel.response?.orderOfDashas?.subMinor?.start}",
-            end: "${controller.mahadashaModel.response?.orderOfDashas?.subMinor?.end}",
+            name:
+                "${controller.mahadashaModel.response?.orderOfDashas?.subMinor?.name}",
+            start:
+                "${controller.mahadashaModel.response?.orderOfDashas?.subMinor?.start}",
+            end:
+                "${controller.mahadashaModel.response?.orderOfDashas?.subMinor?.end}",
             isForward: false,
           ),
           const Gap(Dimensions.gapDefault),
           CurrentMahadasha(
-            name: "${controller.mahadashaModel.response?.orderOfDashas?.subSubMinor?.name}",
-            start: "${controller.mahadashaModel.response?.orderOfDashas?.subSubMinor?.start}",
-            end: "${controller.mahadashaModel.response?.orderOfDashas?.subSubMinor?.end}",
+            name:
+                "${controller.mahadashaModel.response?.orderOfDashas?.subSubMinor?.name}",
+            start:
+                "${controller.mahadashaModel.response?.orderOfDashas?.subSubMinor?.start}",
+            end:
+                "${controller.mahadashaModel.response?.orderOfDashas?.subSubMinor?.end}",
             isForward: false,
           ),
         ],
@@ -321,15 +331,15 @@ class KundliDashaScreen extends StatelessWidget {
     String? selecteShookshamadasha;
     // controller.getSpecificDasha(data, "", "", "", "", show);
     return Obx(
-          () {
+      () {
         if (controller.isMahaDashaLoading.value) {
           return const Center(child: CircularProgressIndicator());
-        }
-        else if (controller.mahadashaSuccess.value) {
+        } else if (controller.mahadashaSuccess.value) {
           return Visibility(
             visible: show == "mahadasha",
             child: Padding(
-              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: Dimensions.paddingSizeDefault),
               child: Column(
                 children: [
                   const Gap(15),
@@ -342,30 +352,32 @@ class KundliDashaScreen extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     itemCount:
-                    controller.dashaMahadasha.response!.mahadasha?.length,
+                        controller.dashaMahadasha.response!.mahadasha?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding:
-                        const EdgeInsets.only(top:  Dimensions.paddingSizeDefault),
+                        padding: const EdgeInsets.only(
+                            top: Dimensions.paddingSizeDefault),
                         child: GestureDetector(
                           onTap: () {
-                            selectedMahadasha = controller.dashaMahadasha.response!.mahadasha![index].name.toString();
+                            selectedMahadasha = controller
+                                .dashaMahadasha.response!.mahadasha![index].name
+                                .toString();
                             show = "antardasha";
                             controller.getSpecificDasha(
-                                data,
-                                selectedMahadasha,
-                                "",
-                                "",
-                                "",
-                                show);
+                                data, selectedMahadasha, "", "", "", show);
                           },
-
-                          child:CurrentMahadasha(
-                            name: controller.dashaMahadasha.response!.mahadasha![index].name.toString(),
-                            start: controller.dashaMahadasha.response!.mahadasha![index].start.toString(),
-                            end: controller.dashaMahadasha.response!.mahadasha![index].end.toString(),
+                          child: CurrentMahadasha(
+                            name: controller
+                                .dashaMahadasha.response!.mahadasha![index].name
+                                .toString(),
+                            start: controller.dashaMahadasha.response!
+                                .mahadasha![index].start
+                                .toString(),
+                            end: controller
+                                .dashaMahadasha.response!.mahadasha![index].end
+                                .toString(),
                             isForward: true,
-                          ) ,
+                          ),
                         ),
                       );
                     },
@@ -374,12 +386,12 @@ class KundliDashaScreen extends StatelessWidget {
               ),
             ),
           );
-        }
-        else if (controller.antardashaSuccess.value) {
+        } else if (controller.antardashaSuccess.value) {
           return Visibility(
             visible: show == "antardasha",
             child: Padding(
-              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: Dimensions.paddingSizeDefault),
               child: Column(
                 children: [
                   const Gap(15),
@@ -389,7 +401,7 @@ class KundliDashaScreen extends StatelessWidget {
                   ),
                   const Gap(Dimensions.gapDefault),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       show = "mahadasha";
                       controller.antardashaSuccess(false);
                       controller.mahadashaSuccess(true);
@@ -407,10 +419,12 @@ class KundliDashaScreen extends StatelessWidget {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
-                    itemCount: controller.dashaAntardasha.response!.antardasha?.length,
+                    itemCount:
+                        controller.dashaAntardasha.response!.antardasha?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding: const EdgeInsets.only(top:  Dimensions.paddingSizeSmall),
+                        padding: const EdgeInsets.only(
+                            top: Dimensions.paddingSizeSmall),
                         child: GestureDetector(
                           onTap: () {
                             selecteAntardasha = controller.dashaAntardasha
@@ -420,13 +434,18 @@ class KundliDashaScreen extends StatelessWidget {
                             controller.getSpecificDasha(data, selectedMahadasha,
                                 selecteAntardasha, "", "", show);
                           },
-                          child:CurrentMahadasha(
-                            name: controller.dashaAntardasha.response!.antardasha![index].name.toString(),
-                            start:  controller.dashaAntardasha.response!.antardasha![index].start.toString(),
-                            end: controller.dashaAntardasha.response!.antardasha![index].end.toString(),
+                          child: CurrentMahadasha(
+                            name: controller.dashaAntardasha.response!
+                                .antardasha![index].name
+                                .toString(),
+                            start: controller.dashaAntardasha.response!
+                                .antardasha![index].start
+                                .toString(),
+                            end: controller.dashaAntardasha.response!
+                                .antardasha![index].end
+                                .toString(),
                             isForward: true,
                           ),
-
                         ),
                       );
                     },
@@ -435,12 +454,12 @@ class KundliDashaScreen extends StatelessWidget {
               ),
             ),
           );
-        }
-        else if (controller.paryantardashaSuccess.value) {
+        } else if (controller.paryantardashaSuccess.value) {
           return Visibility(
             visible: show == "paryatnadasha",
             child: Padding(
-              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: Dimensions.paddingSizeDefault),
               child: Column(
                 children: [
                   const Gap(15),
@@ -449,7 +468,7 @@ class KundliDashaScreen extends StatelessWidget {
                     fontSize: Dimensions.fontSizeExtraLarge,
                   ),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       show = "antardasha";
                       controller.mahadashaSuccess(false);
                       controller.paryantardashaSuccess(false);
@@ -469,24 +488,39 @@ class KundliDashaScreen extends StatelessWidget {
                   ListView.builder(
                     shrinkWrap: true,
                     physics: BouncingScrollPhysics(),
-                    itemCount:
-                    controller.dashaParyantardasha.response!.paryantardasha?.length,
+                    itemCount: controller
+                        .dashaParyantardasha.response!.paryantardasha?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding:
-                        const EdgeInsets.only(top:  Dimensions.paddingSizeSmall),
+                        padding: const EdgeInsets.only(
+                            top: Dimensions.paddingSizeSmall),
                         child: GestureDetector(
                           onTap: () {
-                            selecteParyantardasha = controller.dashaParyantardasha.response!.paryantardasha![index].name
+                            selecteParyantardasha = controller
+                                .dashaParyantardasha
+                                .response!
+                                .paryantardasha![index]
+                                .name
                                 .toString();
                             show = "shookshamadasha";
-                            controller.getSpecificDasha(data, selectedMahadasha,
-                                selecteAntardasha, selecteParyantardasha, "", show);
+                            controller.getSpecificDasha(
+                                data,
+                                selectedMahadasha,
+                                selecteAntardasha,
+                                selecteParyantardasha,
+                                "",
+                                show);
                           },
-                          child:CurrentMahadasha(
-                            name:  controller.dashaParyantardasha.response!.paryantardasha![index].name.toString(),
-                            start: controller.dashaParyantardasha.response!.paryantardasha![index].start.toString(),
-                            end: controller.dashaParyantardasha.response!.paryantardasha![index].end.toString(),
+                          child: CurrentMahadasha(
+                            name: controller.dashaParyantardasha.response!
+                                .paryantardasha![index].name
+                                .toString(),
+                            start: controller.dashaParyantardasha.response!
+                                .paryantardasha![index].start
+                                .toString(),
+                            end: controller.dashaParyantardasha.response!
+                                .paryantardasha![index].end
+                                .toString(),
                             isForward: true,
                           ),
                         ),
@@ -497,12 +531,12 @@ class KundliDashaScreen extends StatelessWidget {
               ),
             ),
           );
-        }
-        else if (controller.shookshamadashaSuccess.value) {
+        } else if (controller.shookshamadashaSuccess.value) {
           return Visibility(
             visible: show == "shookshamadasha",
             child: Padding(
-              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: Dimensions.paddingSizeDefault),
               child: Column(
                 children: [
                   const Gap(15),
@@ -512,7 +546,7 @@ class KundliDashaScreen extends StatelessWidget {
                   ),
                   const Gap(Dimensions.gapDefault),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       show = "paryatnadasha";
                       controller.mahadashaSuccess(false);
                       controller.antardashaSuccess(false);
@@ -530,27 +564,43 @@ class KundliDashaScreen extends StatelessWidget {
                     ),
                   ),
                   ListView.builder(
-                    shrinkWrap: true, physics: BouncingScrollPhysics(),
-                    itemCount: controller.dashaShookshamadasha.response!.shookshamadasha?.length,
+                    shrinkWrap: true,
+                    physics: BouncingScrollPhysics(),
+                    itemCount: controller
+                        .dashaShookshamadasha.response!.shookshamadasha?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding:
-                        const EdgeInsets.only(top: Dimensions.paddingSizeSmall),
+                        padding: const EdgeInsets.only(
+                            top: Dimensions.paddingSizeSmall),
                         child: GestureDetector(
                           onTap: () {
-                            selecteShookshamadasha = controller.dashaShookshamadasha.response!.shookshamadasha![index].name
+                            selecteShookshamadasha = controller
+                                .dashaShookshamadasha
+                                .response!
+                                .shookshamadasha![index]
+                                .name
                                 .toString();
                             show = "pranadasha";
-                            controller.getSpecificDasha(data, selectedMahadasha,
-                                selecteAntardasha, selecteParyantardasha, selecteShookshamadasha, show);
+                            controller.getSpecificDasha(
+                                data,
+                                selectedMahadasha,
+                                selecteAntardasha,
+                                selecteParyantardasha,
+                                selecteShookshamadasha,
+                                show);
                           },
-                          child:CurrentMahadasha(
-                            name: controller.dashaShookshamadasha.response!.shookshamadasha![index].name.toString(),
-                            start: controller.dashaShookshamadasha.response!.shookshamadasha![index].start.toString(),
-                            end: controller.dashaShookshamadasha.response!.shookshamadasha![index].end.toString(),
+                          child: CurrentMahadasha(
+                            name: controller.dashaShookshamadasha.response!
+                                .shookshamadasha![index].name
+                                .toString(),
+                            start: controller.dashaShookshamadasha.response!
+                                .shookshamadasha![index].start
+                                .toString(),
+                            end: controller.dashaShookshamadasha.response!
+                                .shookshamadasha![index].end
+                                .toString(),
                             isForward: true,
                           ),
-
                         ),
                       );
                     },
@@ -559,12 +609,12 @@ class KundliDashaScreen extends StatelessWidget {
               ),
             ),
           );
-        }
-        else if (controller.pranadashaSuccess.value) {
+        } else if (controller.pranadashaSuccess.value) {
           return Visibility(
             visible: show == "pranadasha",
             child: Padding(
-              padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              padding: const EdgeInsets.symmetric(
+                  horizontal: 10, vertical: Dimensions.paddingSizeDefault),
               child: Column(
                 children: [
                   const Gap(15),
@@ -574,7 +624,7 @@ class KundliDashaScreen extends StatelessWidget {
                   ),
                   const Gap(Dimensions.gapDefault),
                   GestureDetector(
-                    onTap: (){
+                    onTap: () {
                       show = "shookshamadasha";
                       controller.mahadashaSuccess(false);
                       controller.antardashaSuccess(false);
@@ -596,19 +646,23 @@ class KundliDashaScreen extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const BouncingScrollPhysics(),
                     itemCount:
-                    controller.dashaPranadasha.response!.pranadasha?.length,
+                        controller.dashaPranadasha.response!.pranadasha?.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
-                        padding:
-                        const EdgeInsets.only(top: Dimensions.paddingSizeSmall),
-
-                        child:CurrentMahadasha(
-                          name: controller.dashaPranadasha.response!.pranadasha![index].name.toString(),
-                          start: controller.dashaPranadasha.response!.pranadasha![index].start.toString(),
-                          end: controller.dashaPranadasha.response!.pranadasha![index].end.toString(),
+                        padding: const EdgeInsets.only(
+                            top: Dimensions.paddingSizeSmall),
+                        child: CurrentMahadasha(
+                          name: controller
+                              .dashaPranadasha.response!.pranadasha![index].name
+                              .toString(),
+                          start: controller.dashaPranadasha.response!
+                              .pranadasha![index].start
+                              .toString(),
+                          end: controller
+                              .dashaPranadasha.response!.pranadasha![index].end
+                              .toString(),
                           isForward: false,
                         ),
-
                       );
                     },
                   )
@@ -616,8 +670,7 @@ class KundliDashaScreen extends StatelessWidget {
               ),
             ),
           );
-        }
-        else {
+        } else {
           return Center(
             child: Column(
               children: [
@@ -639,7 +692,8 @@ class KundliDashaScreen extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       } else if (controller.isCurrentMahaDashaFullSuccess.isTrue) {
         return Padding(
-          padding: const EdgeInsets.all(10),
+          padding: const EdgeInsets.symmetric(
+              horizontal: 10, vertical: Dimensions.paddingSizeDefault),
           child: Column(
             children: [
               const Gap(Dimensions.gapDefault),
@@ -661,7 +715,7 @@ class KundliDashaScreen extends StatelessWidget {
               const Gap(Dimensions.gapDefault),
               ListView.builder(
                   itemCount:
-                  controller.mahadashafullModel.response?.mahadasha?.length,
+                      controller.mahadashafullModel.response?.mahadasha?.length,
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
                   itemBuilder: (context, index) {
@@ -669,26 +723,24 @@ class KundliDashaScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           bottom: Dimensions.paddingSizeDefault),
                       child: Container(
-                        // Set the width as needed
-                        // Set the height as needed
+                          // Set the width as needed
+                          // Set the height as needed
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
+                                color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 1,
-                                blurRadius: 2,
+                                blurRadius: 4,
                                 offset: const Offset(0, 2),
                               )
                             ],
                             border: Border.all(
-                              color: ColorResources.colorPrimary,
+                              color: Colors.grey.withOpacity(0.3),
                               width: 1.0,
                             ),
-                            color: ColorResources.colorPrimaryLight,
-                            // Background color
+                            color: ColorResources.white,
                             borderRadius: const BorderRadius.all(
-                              Radius.circular(Dimensions
-                                  .borderRadiusDefault), // Adjust the radius as needed
+                              Radius.circular(Dimensions.borderRadiusDefault),
                             ),
                           ),
                           child: Padding(
@@ -745,26 +797,24 @@ class KundliDashaScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           bottom: Dimensions.paddingSizeDefault),
                       child: Container(
-                        // Set the width as needed
-                        // Set the height as needed
+                          // Set the width as needed
+                          // Set the height as needed
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
+                                color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 1,
-                                blurRadius: 2,
+                                blurRadius: 4,
                                 offset: const Offset(0, 2),
                               )
                             ],
                             border: Border.all(
-                              color: ColorResources.colorPrimary,
+                              color: Colors.grey.withOpacity(0.3),
                               width: 1.0,
                             ),
-                            color: ColorResources.colorPrimaryLight,
-                            // Background color
+                            color: ColorResources.white,
                             borderRadius: const BorderRadius.all(
-                              Radius.circular(Dimensions
-                                  .borderRadiusDefault), // Adjust the radius as needed
+                              Radius.circular(Dimensions.borderRadiusDefault),
                             ),
                           ),
                           child: Padding(
@@ -820,26 +870,24 @@ class KundliDashaScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           bottom: Dimensions.paddingSizeDefault),
                       child: Container(
-                        // Set the width as needed
-                        // Set the height as needed
+                          // Set the width as needed
+                          // Set the height as needed
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
+                                color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 1,
-                                blurRadius: 2,
+                                blurRadius: 4,
                                 offset: const Offset(0, 2),
                               )
                             ],
                             border: Border.all(
-                              color: ColorResources.colorPrimary,
+                              color: Colors.grey.withOpacity(0.3),
                               width: 1.0,
                             ),
-                            color: ColorResources.colorPrimaryLight,
-                            // Background color
+                            color: ColorResources.white,
                             borderRadius: const BorderRadius.all(
-                              Radius.circular(Dimensions
-                                  .borderRadiusDefault), // Adjust the radius as needed
+                              Radius.circular(Dimensions.borderRadiusDefault),
                             ),
                           ),
                           child: Padding(
@@ -895,26 +943,24 @@ class KundliDashaScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           bottom: Dimensions.paddingSizeDefault),
                       child: Container(
-                        // Set the width as needed
-                        // Set the height as needed
+                          // Set the width as needed
+                          // Set the height as needed
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
+                                color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 1,
-                                blurRadius: 2,
+                                blurRadius: 4,
                                 offset: const Offset(0, 2),
                               )
                             ],
                             border: Border.all(
-                              color: ColorResources.colorPrimary,
+                              color: Colors.grey.withOpacity(0.3),
                               width: 1.0,
                             ),
-                            color: ColorResources.colorPrimaryLight,
-                            // Background color
+                            color: ColorResources.white,
                             borderRadius: const BorderRadius.all(
-                              Radius.circular(Dimensions
-                                  .borderRadiusDefault), // Adjust the radius as needed
+                              Radius.circular(Dimensions.borderRadiusDefault),
                             ),
                           ),
                           child: Padding(
@@ -970,26 +1016,24 @@ class KundliDashaScreen extends StatelessWidget {
                       padding: const EdgeInsets.only(
                           bottom: Dimensions.paddingSizeDefault),
                       child: Container(
-                        // Set the width as needed
-                        // Set the height as needed
+                          // Set the width as needed
+                          // Set the height as needed
                           decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
+                                color: Colors.grey.withOpacity(0.2),
                                 spreadRadius: 1,
-                                blurRadius: 2,
+                                blurRadius: 4,
                                 offset: const Offset(0, 2),
                               )
                             ],
                             border: Border.all(
-                              color: ColorResources.colorPrimary,
+                              color: Colors.grey.withOpacity(0.3),
                               width: 1.0,
                             ),
-                            color: ColorResources.colorPrimaryLight,
-                            // Background color
+                            color: ColorResources.white,
                             borderRadius: const BorderRadius.all(
-                              Radius.circular(Dimensions
-                                  .borderRadiusDefault), // Adjust the radius as needed
+                              Radius.circular(Dimensions.borderRadiusDefault),
                             ),
                           ),
                           child: Padding(
@@ -1032,5 +1076,4 @@ class KundliDashaScreen extends StatelessWidget {
       }
     });
   }
-
 }

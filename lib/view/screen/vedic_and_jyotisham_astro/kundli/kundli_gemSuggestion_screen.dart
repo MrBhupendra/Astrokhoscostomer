@@ -13,7 +13,7 @@ import '../model/vedic_data.dart';
 
 class KundliGemsuggestionScreen extends StatelessWidget {
   final KundliData data;
-   KundliGemsuggestionScreen(this.data,{super.key});
+  KundliGemsuggestionScreen(this.data, {super.key});
 
   final KundliController controller = Get.find();
 
@@ -21,9 +21,9 @@ class KundliGemsuggestionScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     controller.getGemSuggestion(data);
 
-    return  SingleChildScrollView(
-      child: Obx((){
-        if(controller.isGemSuggestionsLoading.isTrue){
+    return SingleChildScrollView(
+      child: Obx(() {
+        if (controller.isGemSuggestionsLoading.isTrue) {
           return ListView.builder(
             itemCount: 10,
             shrinkWrap: true,
@@ -32,72 +32,117 @@ class KundliGemsuggestionScreen extends StatelessWidget {
               return const SimmerListView();
             },
           );
-        }else if(controller.isGemSuggestionsSuccess.isTrue){
-          return  Padding(
-            padding: const EdgeInsets.all(10),
+        } else if (controller.isGemSuggestionsSuccess.isTrue) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(
+                horizontal: 10, vertical: Dimensions.paddingSizeDefault),
             child: Column(
               children: [
                 Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
+                              color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 1,
-                              blurRadius: 2,
+                              blurRadius: 4,
                               offset: const Offset(0, 2),
                             )
                           ],
-                          color: ColorResources.colorPrimaryLight,
-                          borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault), // Adjust the radius as needed
+                          color: ColorResources.colorTableRowEven,
+                          borderRadius: BorderRadius.circular(
+                              Dimensions.borderRadiusDefault),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.3),
+                            width: 1,
+                          ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(
+                              Dimensions.paddingSizeDefault),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CustomTextMedium(AppStrings.name.tr),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.name}",color: ColorResources.black3,fontSize:13,),
-                              const Gap(Dimensions.gapMedium),
-                              CustomTextMedium(AppStrings.gem.tr),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.gem}",color: ColorResources.black3,fontSize: 13),
-
+                              CustomTextMedium(
+                                AppStrings.name.tr,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
+                              const Gap(Dimensions.gapSmall),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.name}",
+                                color: ColorResources.black2,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
+                              const Gap(Dimensions.gapDefault),
+                              CustomTextMedium(
+                                AppStrings.gem.tr,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
+                              const Gap(Dimensions.gapSmall),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.gem}",
+                                color: ColorResources.black2,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
                             ],
                           ),
-                        ) ,
+                        ),
                       ),
                     ),
-                    Gap(Dimensions.gapExtraLarge),
+                    const Gap(Dimensions.gapDefault),
                     Expanded(
                       child: Container(
                         decoration: BoxDecoration(
                           boxShadow: [
                             BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
+                              color: Colors.grey.withOpacity(0.2),
                               spreadRadius: 1,
-                              blurRadius: 2,
+                              blurRadius: 4,
                               offset: const Offset(0, 2),
                             )
                           ],
-                          color: ColorResources.black9,
-                          borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault), // Adjust the radius as needed
+                          color: ColorResources.colorPrimaryVariant,
+                          borderRadius: BorderRadius.circular(
+                              Dimensions.borderRadiusDefault),
+                          border: Border.all(
+                            color: Colors.grey.withOpacity(0.3),
+                            width: 1,
+                          ),
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(
+                              Dimensions.paddingSizeDefault),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CustomTextMedium(AppStrings.planet.tr,color: ColorResources.white,),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.planet}",color:ColorResources.white,fontSize: 13,),
-                              const Gap(Dimensions.gapMedium),
-                              CustomTextMedium(AppStrings.ortherName.tr,color: ColorResources.white),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.otherName}",color: ColorResources.white,fontSize:13,),
+                              CustomTextMedium(
+                                AppStrings.planet.tr,
+                                color: ColorResources.white,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
+                              const Gap(Dimensions.gapSmall),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.planet}",
+                                color: ColorResources.white,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
+                              const Gap(Dimensions.gapDefault),
+                              CustomTextMedium(
+                                AppStrings.ortherName.tr,
+                                color: ColorResources.white,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
+                              const Gap(Dimensions.gapSmall),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.otherName}",
+                                color: ColorResources.white,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
                             ],
                           ),
-                        ) ,
+                        ),
                       ),
                     ),
                   ],
@@ -107,143 +152,161 @@ class KundliGemsuggestionScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.grey.withOpacity(0.2),
                         spreadRadius: 1,
-                        blurRadius: 2,
+                        blurRadius: 4,
                         offset: const Offset(0, 2),
                       )
                     ],
                     color: ColorResources.white,
-                    borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault), // Adjust the radius as needed
-                    // border: Border.all(
-                    //   color: ColorResources.colorPrimaryVariant,
-                    //   width: 1, // Adjust the border width as needed
-                    // ),
-                  ),
-                  child: Container(
-                    decoration:  BoxDecoration(
-                        color: ColorResources.colorPrimaryLight,
-                      borderRadius: BorderRadius.circular(10)
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.3),
+                      width: 1,
                     ),
-                    child: Column(
-                      children: [
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                                width: Get.width * 0.5,
-                                decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),topLeft: Radius.circular(10)),
-                                    color: ColorResources.colorPrimary
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  child: CustomTextMedium(AppStrings.description.tr,fontSize: Dimensions.fontSizeLarge,color: ColorResources.toolbarText,textAlign: TextAlign.center,),
-                                )
-                            ),
-                          ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft:
+                                Radius.circular(Dimensions.borderRadiusDefault),
+                            topRight:
+                                Radius.circular(Dimensions.borderRadiusDefault),
+                          ),
+                          color: ColorResources.colorPrimary,
                         ),
-                        const Gap(Dimensions.gapDefault),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: CustomTextRegular("${controller.gemSuggestionsModel.response?.description}",),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Dimensions.paddingSizeSmall,
+                            horizontal: Dimensions.paddingSizeDefault,
+                          ),
+                          child: CustomTextMedium(
+                            AppStrings.description.tr,
+                            fontSize: Dimensions.fontSizeLarge,
+                            color: ColorResources.toolbarText,
+                            textAlign: TextAlign.left,
+                          ),
                         ),
-                      ],
-                    )
-                    ,
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                        child: CustomTextRegular(
+                          "${controller.gemSuggestionsModel.response?.description}",
+                          fontSize: Dimensions.fontSizeDefault,
+                          color: ColorResources.black2,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                // Container(
-                //  decoration: BoxDecoration(
-                //     boxShadow: [
-                //       BoxShadow(
-                //         color: Colors.grey.withOpacity(0.5),
-                //         spreadRadius: 1,
-                //         blurRadius: 2,
-                //         offset: const Offset(0, 2),
-                //       )
-                //     ],
-                //     color: ColorResources.white,
-                //     borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault), // Adjust the radius as needed
-                //     border: Border.all(
-                //       color: ColorResources.colorPrimaryVariant,
-                //       width: 1, // Adjust the border width as needed
-                //     ),
-                //   ),
-                //   child: Container(
-                //     decoration:  BoxDecoration(
-                //         color: ColorResources.colorPrimaryLight,
-                //         borderRadius: BorderRadius.circular(10)
-                //     ),
-                //     child: Column(
-                //       children: [
-                //         Padding(
-                //           padding: const EdgeInsets.all(10),
-                //           child: CustomTextRegular("${controller.gemSuggestionsModel.response?.goodResults}",),
-                //         ),
-                //       ],
-                //     )
-                //     ,
-                //   ),
-                // ),
                 const Gap(Dimensions.gapLarge),
                 Container(
-                  width: Get.width,
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.grey.withOpacity(0.2),
                         spreadRadius: 1,
-                        blurRadius: 2,
+                        blurRadius: 4,
                         offset: const Offset(0, 2),
                       )
                     ],
-                    color: ColorResources.colorPrimaryLight,
-                    borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault), // Adjust the radius as needed
-                    // border: Border.all(
-                    //   color: ColorResources.colorPrimaryVariant,
-                    //   width: 1, // Adjust the border width as needed
-                    // ),
+                    color: ColorResources.white,
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.3),
+                      width: 1,
+                    ),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.all(10),
+                    padding:
+                        const EdgeInsets.all(Dimensions.paddingSizeDefault),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextMedium(AppStrings.finger.tr),
-                            const Gap(Dimensions.gapDefault),
-                            CustomTextMedium(AppStrings.weight.tr),
-                            const Gap(Dimensions.gapDefault),
-                            CustomTextMedium("${AppStrings.day.tr} -",),
-                            const Gap(Dimensions.gapDefault),
-                            CustomTextMedium(AppStrings.metal.tr,),
-                            const Gap(Dimensions.gapDefault),
-                            CustomTextMedium(AppStrings.key.tr,),
-                            const Gap(Dimensions.gapDefault),
-                            CustomTextMedium(AppStrings.mantra.tr,),
-                            const Gap(Dimensions.gapDefault),
-                          ],
-                        ),
-                        const Gap(Dimensions.gapDefault),
                         Expanded(
+                          flex: 2,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.finger}",),
+                              CustomTextMedium(
+                                AppStrings.finger.tr,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
                               const Gap(Dimensions.gapDefault),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.weight}",),
+                              CustomTextMedium(
+                                AppStrings.weight.tr,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
                               const Gap(Dimensions.gapDefault),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.day}",),
+                              CustomTextMedium(
+                                "${AppStrings.day.tr}:",
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
                               const Gap(Dimensions.gapDefault),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.metal}",),
+                              CustomTextMedium(
+                                AppStrings.metal.tr,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
                               const Gap(Dimensions.gapDefault),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.key}",),
+                              CustomTextMedium(
+                                AppStrings.key.tr,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
                               const Gap(Dimensions.gapDefault),
-                              CustomTextRegular("${controller.gemSuggestionsModel.response?.mantra}",),
-
+                              CustomTextMedium(
+                                AppStrings.mantra.tr,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Gap(Dimensions.gapDefault),
+                        Expanded(
+                          flex: 3,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.finger}",
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black2,
+                              ),
+                              const Gap(Dimensions.gapDefault),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.weight}",
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black2,
+                              ),
+                              const Gap(Dimensions.gapDefault),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.day}",
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black2,
+                              ),
+                              const Gap(Dimensions.gapDefault),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.metal}",
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black2,
+                              ),
+                              const Gap(Dimensions.gapDefault),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.key}",
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black2,
+                              ),
+                              const Gap(Dimensions.gapDefault),
+                              CustomTextRegular(
+                                "${controller.gemSuggestionsModel.response?.mantra}",
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black2,
+                              ),
                             ],
                           ),
                         ),
@@ -256,99 +319,137 @@ class KundliGemsuggestionScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.grey.withOpacity(0.2),
                         spreadRadius: 1,
-                        blurRadius: 2,
+                        blurRadius: 4,
                         offset: const Offset(0, 2),
                       )
                     ],
                     color: ColorResources.white,
-
-                    // border: Border.all(
-                    //   color: ColorResources.colorPrimaryVariant,
-                    //   width: 1, // Adjust the border width as needed
-                    // ),
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.3),
+                      width: 1,
+                    ),
                   ),
                   child: ListView.builder(
-                      itemCount: controller.gemSuggestionsModel.response?.flawResults?.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return Column(
-                          children: [
-                            Container(
-                              width: Get.width,
-                              color: ColorResources.colorPrimaryLight,
-                              child: Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    CustomTextMedium(AppStrings.flawType.tr),
-                                    CustomTextRegular(controller.gemSuggestionsModel.response!.flawResults![index].flawType.toString()),
-                                    const Gap(Dimensions.gapExtraSmall),
-                                    CustomTextMedium(AppStrings.flawEffects.tr),
-                                    CustomTextRegular(controller.gemSuggestionsModel.response!.flawResults![index].flawEffects.toString()),
-                                  ],
-                                ),
+                    itemCount: controller.gemSuggestionsModel.response
+                            ?.flawResults?.length ??
+                        0,
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        margin: EdgeInsets.only(
+                          bottom: index ==
+                                  (controller.gemSuggestionsModel.response
+                                              ?.flawResults?.length ??
+                                          1) -
+                                      1
+                              ? 0
+                              : Dimensions.gapDefault,
+                        ),
+                        decoration: BoxDecoration(
+                          color: index % 2 == 0
+                              ? ColorResources.colorTableRowEven
+                              : ColorResources.colorTableRowOdd,
+                          borderRadius: BorderRadius.circular(
+                              Dimensions.borderRadiusSmall),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(
+                              Dimensions.paddingSizeDefault),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextMedium(
+                                AppStrings.flawType.tr,
+                                fontSize: Dimensions.fontSizeDefault,
                               ),
-                            ),
-                            const Gap(Dimensions.gapExtraExtraLarge)
-                          ],
-                        );
-                      }
+                              const Gap(Dimensions.gapSmall),
+                              CustomTextRegular(
+                                controller.gemSuggestionsModel.response!
+                                    .flawResults![index].flawType
+                                    .toString(),
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black2,
+                              ),
+                              const Gap(Dimensions.gapDefault),
+                              CustomTextMedium(
+                                AppStrings.flawEffects.tr,
+                                fontSize: Dimensions.fontSizeDefault,
+                              ),
+                              const Gap(Dimensions.gapSmall),
+                              CustomTextRegular(
+                                controller.gemSuggestionsModel.response!
+                                    .flawResults![index].flawEffects
+                                    .toString(),
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black2,
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const Gap(Dimensions.gapLarge),
+                Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey.withOpacity(0.2),
+                        spreadRadius: 1,
+                        blurRadius: 4,
+                        offset: const Offset(0, 2),
+                      )
+                    ],
+                    color: ColorResources.white,
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft:
+                                Radius.circular(Dimensions.borderRadiusDefault),
+                            topRight:
+                                Radius.circular(Dimensions.borderRadiusDefault),
+                          ),
+                          color: ColorResources.colorPrimary,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Dimensions.paddingSizeSmall,
+                            horizontal: Dimensions.paddingSizeDefault,
+                          ),
+                          child: CustomTextMedium(
+                            AppStrings.timeToWear.tr,
+                            fontSize: Dimensions.fontSizeLarge,
+                            color: ColorResources.toolbarText,
+                            textAlign: TextAlign.left,
+                          ),
+                        ),
                       ),
-                ),
-                const Gap(Dimensions.gapLarge),
-                Container(
-                  decoration: BoxDecoration(
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
-                        spreadRadius: 1,
-                        blurRadius: 2,
-                        offset: const Offset(0, 2),
-                      )
+                      Padding(
+                        padding:
+                            const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                        child: CustomTextRegular(
+                          "${controller.gemSuggestionsModel.response?.timeToWear}",
+                          fontSize: Dimensions.fontSizeDefault,
+                          color: ColorResources.black2,
+                        ),
+                      ),
                     ],
-                    color: ColorResources.white,
-                    borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault), // Adjust the radius as needed
-                    // border: Border.all(
-                    //   color: ColorResources.colorPrimaryVariant,
-                    //   width: 1, // Adjust the border width as needed
-                    // ),
-                  ),
-                  child: Container(
-                    decoration:  BoxDecoration(
-                        color: ColorResources.colorPrimaryLight,
-                        borderRadius: BorderRadius.circular(10)
-                    ),
-                    child: Column(
-                      children: [
-
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                                width: Get.width * 0.5,
-                                decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),topLeft: Radius.circular(10)),
-                                    color: ColorResources.colorPrimary
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  child: CustomTextMedium(AppStrings.timeToWear.tr,fontSize: Dimensions.fontSizeLarge,color: ColorResources.toolbarText,textAlign: TextAlign.center,),
-                                )
-                            ),
-                          ],
-                        ),
-                        const Gap(Dimensions.gapDefault),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: CustomTextRegular("${controller.gemSuggestionsModel.response?.timeToWear}",),
-                        ),
-                      ],
-                    )
-                    ,
                   ),
                 ),
                 const Gap(Dimensions.gapLarge),
@@ -356,61 +457,65 @@ class KundliGemsuggestionScreen extends StatelessWidget {
                   decoration: BoxDecoration(
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.grey.withOpacity(0.5),
+                        color: Colors.grey.withOpacity(0.2),
                         spreadRadius: 1,
-                        blurRadius: 2,
+                        blurRadius: 4,
                         offset: const Offset(0, 2),
                       )
                     ],
                     color: ColorResources.white,
-                    borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault), // Adjust the radius as needed
-                    // border: Border.all(
-                    //   color: ColorResources.colorPrimaryVariant,
-                    //   width: 1, // Adjust the border width as needed
-                    // ),
-                  ),
-                  child: Container(
-                    decoration:  BoxDecoration(
-                        color: ColorResources.colorPrimaryLight,
-                        borderRadius: BorderRadius.circular(10)
+                    borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                    border: Border.all(
+                      color: Colors.grey.withOpacity(0.3),
+                      width: 1,
                     ),
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                                width: Get.width * 0.5,
-                                decoration: const BoxDecoration(
-                                    borderRadius: BorderRadius.only(bottomRight: Radius.circular(15),topLeft: Radius.circular(10)),
-                                    color: ColorResources.colorPrimary
-                                ),
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8),
-                                  child: CustomTextMedium(AppStrings.methods.tr,fontSize: Dimensions.fontSizeLarge,color: ColorResources.toolbarText,textAlign: TextAlign.center,),
-                                )
-                            ),
-                          ],
+                  ),
+                  child: Column(
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topLeft:
+                                Radius.circular(Dimensions.borderRadiusDefault),
+                            topRight:
+                                Radius.circular(Dimensions.borderRadiusDefault),
+                          ),
+                          color: ColorResources.colorPrimary,
                         ),
-                        const Gap(Dimensions.gapDefault),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: CustomTextRegular("${controller.gemSuggestionsModel.response?.methods}",),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Dimensions.paddingSizeSmall,
+                            horizontal: Dimensions.paddingSizeDefault,
+                          ),
+                          child: CustomTextMedium(
+                            AppStrings.methods.tr,
+                            fontSize: Dimensions.fontSizeLarge,
+                            color: ColorResources.toolbarText,
+                            textAlign: TextAlign.left,
+                          ),
                         ),
-                      ],
-                    )
-                    ,
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.all(Dimensions.paddingSizeDefault),
+                        child: CustomTextRegular(
+                          "${controller.gemSuggestionsModel.response?.methods}",
+                          fontSize: Dimensions.fontSizeDefault,
+                          color: ColorResources.black2,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-
               ],
             ),
           );
-        }else{
+        } else {
           return const EmptyScreen();
         }
       }),
     );
   }
 }
-

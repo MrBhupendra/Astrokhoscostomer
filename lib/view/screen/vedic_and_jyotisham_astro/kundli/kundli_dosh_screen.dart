@@ -25,27 +25,29 @@ class KundliDoshScreen extends StatelessWidget {
     controller.getPitraDosh(data);
 
     return SingleChildScrollView(
-      child: Column(
-        children: [
-          const Gap(Dimensions.gapDefault),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Container(
-                  width: Get.width * 0.4,
-                  decoration: const BoxDecoration(
-                      borderRadius: BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)),
-                      color: ColorResources.colorPrimary
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
-                    child: CustomTextMedium(AppStrings.mangalDosh.tr,fontSize: Dimensions.fontSizeLarge,color: ColorResources.toolbarText,textAlign: TextAlign.center,),
-                  )
-              ),
-            ],
-          ),
-          Padding(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: Dimensions.paddingSizeDefault),
+        child: Column(
+          children: [
+            const Gap(Dimensions.gapDefault),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Container(
+                    width: Get.width * 0.4,
+                    decoration: const BoxDecoration(
+                        borderRadius: BorderRadius.only(topRight: Radius.circular(20),bottomRight: Radius.circular(20)),
+                        color: ColorResources.colorPrimary
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      child: CustomTextMedium(AppStrings.mangalDosh.tr,fontSize: Dimensions.fontSizeLarge,color: ColorResources.toolbarText,textAlign: TextAlign.center,),
+                    )
+                ),
+              ],
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 0, vertical: Dimensions.paddingSizeExtraSmall),
             child: Obx(() {
               if (controller.isMangalDoshLoading.isTrue) {
                 return ListView.builder(
@@ -63,15 +65,19 @@ class KundliDoshScreen extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         color: ColorResources.white,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
                             blurRadius: 4,
-                            offset: const Offset(0, 3),
+                            offset: const Offset(0, 2),
                           ),
                         ],
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.3),
+                          width: 1,
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(Dimensions.gapDefault),
@@ -114,7 +120,7 @@ class KundliDoshScreen extends StatelessWidget {
                               ],
                             ),
                             const Gap(Dimensions.gapDefault),
-                            CustomTextRegular("${controller.mangalDoshModel.response?.botResponse}", textAlign: TextAlign.center)
+                            CustomTextRegular("${controller.mangalDoshModel.response?.botResponse}", textAlign: TextAlign.left)
                           ],
                         ),
                       ),
@@ -149,7 +155,7 @@ class KundliDoshScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomTextMedium(AppStrings.moon.tr, color: ColorResources.colorPrimaryDark, fontSize: 15),
-                                    CustomTextRegular("${controller.mangalDoshModel.response?.factors?.moon}")
+                                    CustomTextRegular("${controller.mangalDoshModel.response?.factors?.moon}", textAlign: TextAlign.left)
                                   ],
                                 ),
                               ),
@@ -160,7 +166,7 @@ class KundliDoshScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomTextMedium(AppStrings.venus.tr, color: ColorResources.colorPrimaryDark, fontSize: 15),
-                                    CustomTextRegular("${controller.mangalDoshModel.response?.factors?.venus}")
+                                    CustomTextRegular("${controller.mangalDoshModel.response?.factors?.venus}", textAlign: TextAlign.left)
                                   ],
                                 ),
                               ),
@@ -171,7 +177,7 @@ class KundliDoshScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomTextMedium(AppStrings.saturn.tr, color: ColorResources.colorPrimaryDark, fontSize: 15),
-                                    CustomTextRegular("${controller.mangalDoshModel.response?.factors?.saturn}")
+                                    CustomTextRegular("${controller.mangalDoshModel.response?.factors?.saturn}", textAlign: TextAlign.left)
                                   ],
                                 ),
                               ),Visibility(
@@ -180,7 +186,7 @@ class KundliDoshScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomTextMedium(AppStrings.mars.tr, color: ColorResources.colorPrimaryDark, fontSize: 15),
-                                    CustomTextRegular("${controller.mangalDoshModel.response?.factors?.mars}")
+                                    CustomTextRegular("${controller.mangalDoshModel.response?.factors?.mars}", textAlign: TextAlign.left)
                                   ],
                                 ),
                               ),
@@ -221,7 +227,7 @@ class KundliDoshScreen extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: Dimensions.paddingSizeExtraSmall),
             child: Obx(() {
               if(controller.isKaalsarpDoshSuccess.isTrue){
                 return Column(
@@ -236,35 +242,43 @@ class KundliDoshScreen extends StatelessWidget {
                     const Gap(Dimensions.gapDefault),
                     Container(
                       decoration: BoxDecoration(
-                        color: ColorResources.colorPrimaryLight,
-                        borderRadius: BorderRadius.circular(5),
+                        color: ColorResources.colorTableRowEven,
+                        borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
                             blurRadius: 4,
-                            offset: const Offset(0, 3),
+                            offset: const Offset(0, 2),
                           ),
                         ],
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.3),
+                          width: 1,
+                        ),
                       ),
                       child: Padding(
                         padding:  const EdgeInsets.all(Dimensions.gapDefault),
-                        child: CustomTextRegular("${controller.kaalsarpDoshModel.response?.botResponse}"),
+                        child: CustomTextRegular("${controller.kaalsarpDoshModel.response?.botResponse}", textAlign: TextAlign.left),
                       ),
                     ),
                     const Gap(Dimensions.gapDefault),
                     Container(
                       decoration: BoxDecoration(
-                        color: ColorResources.colorPrimaryLight,
-                        borderRadius: BorderRadius.circular(5),
+                        color: ColorResources.colorTableRowEven,
+                        borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
                             blurRadius: 4,
-                            offset: const Offset(0, 3),
+                            offset: const Offset(0, 2),
                           ),
                         ],
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.3),
+                          width: 1,
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -277,7 +291,7 @@ class KundliDoshScreen extends StatelessWidget {
                               ],
                             ),
                             const Gap(Dimensions.gapDefault),
-                            CustomTextRegular("${controller.kaalsarpDoshModel.response?.remedies}")
+                            CustomTextRegular("${controller.kaalsarpDoshModel.response?.remedies}", textAlign: TextAlign.left)
                           ],
                         ),
                       ),
@@ -323,7 +337,7 @@ class KundliDoshScreen extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: Dimensions.paddingSizeExtraSmall),
             child: Obx(() {
               if (controller.isManglikDoshLoading.isTrue) {
                 return ListView.builder(
@@ -341,15 +355,19 @@ class KundliDoshScreen extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         color: ColorResources.white,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
                             blurRadius: 4,
-                            offset: const Offset(0, 3),
+                            offset: const Offset(0, 2),
                           ),
                         ],
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.3),
+                          width: 1,
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(Dimensions.gapDefault),
@@ -393,7 +411,7 @@ class KundliDoshScreen extends StatelessWidget {
                               ],
                             ),
                             const Gap(Dimensions.gapDefault),
-                            CustomTextRegular("${controller.manglikModel.response?.botResponse}", textAlign: TextAlign.center)
+                            CustomTextRegular("${controller.manglikModel.response?.botResponse}", textAlign: TextAlign.left)
                           ],
                         ),
                       ),
@@ -402,19 +420,23 @@ class KundliDoshScreen extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         color: ColorResources.white,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
                             blurRadius: 4,
-                            offset: const Offset(0, 3),
+                            offset: const Offset(0, 2),
                           ),
                         ],
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.3),
+                          width: 1,
+                        ),
                       ),
                       child: Padding(
                           padding: const EdgeInsets.all(Dimensions.gapDefault),
-                          child: CustomTextRegular("${controller.manglikModel.response?.aspects}", textAlign: TextAlign.center)
+                          child: CustomTextRegular("${controller.manglikModel.response?.aspects}", textAlign: TextAlign.left)
                       ),
                     ),
                   ],
@@ -449,7 +471,7 @@ class KundliDoshScreen extends StatelessWidget {
             ],
           ),
           Padding(
-            padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
+            padding: const EdgeInsets.symmetric(horizontal: 0, vertical: Dimensions.paddingSizeExtraSmall),
             child: Obx(() {
               if (controller.isPitraDoshLoading.isTrue) {
                 return ListView.builder(
@@ -467,15 +489,19 @@ class KundliDoshScreen extends StatelessWidget {
                     Container(
                       decoration: BoxDecoration(
                         color: ColorResources.white,
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
                         boxShadow: [
                           BoxShadow(
-                            color: Colors.grey.withOpacity(0.5),
-                            spreadRadius: 2,
+                            color: Colors.grey.withOpacity(0.2),
+                            spreadRadius: 1,
                             blurRadius: 4,
-                            offset: const Offset(0, 3),
+                            offset: const Offset(0, 2),
                           ),
                         ],
+                        border: Border.all(
+                          color: Colors.grey.withOpacity(0.3),
+                          width: 1,
+                        ),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(Dimensions.gapDefault),
@@ -494,7 +520,7 @@ class KundliDoshScreen extends StatelessWidget {
                               ],
                             ),
                             const Gap(Dimensions.gapDefault),
-                            CustomTextRegular("${controller.pitraDoshModel.response?.botResponse}", textAlign: TextAlign.center)
+                            CustomTextRegular("${controller.pitraDoshModel.response?.botResponse}", textAlign: TextAlign.left)
                           ],
                         ),
                       ),
@@ -521,7 +547,7 @@ class KundliDoshScreen extends StatelessWidget {
                               children: [
                                 CustomTextMedium(AppStrings.effects.tr,color: ColorResources.colorPrimaryDark,),
                                 const Gap(Dimensions.gapDefault),
-                                CustomTextRegular("${controller.pitraDoshModel.response?.effects}", textAlign: TextAlign.center),
+                                CustomTextRegular("${controller.pitraDoshModel.response?.effects}", textAlign: TextAlign.left),
                               ],
                             )
                         ),
@@ -549,7 +575,7 @@ class KundliDoshScreen extends StatelessWidget {
                               children: [
                                 CustomTextMedium(AppStrings.remedies.tr,color: ColorResources.colorPrimaryDark,),
                                 const Gap(Dimensions.gapDefault),
-                                CustomTextRegular("${controller.pitraDoshModel.response?.remedies}", textAlign: TextAlign.center),
+                                CustomTextRegular("${controller.pitraDoshModel.response?.remedies}", textAlign: TextAlign.left),
                               ],
                             )
                         ),
@@ -570,6 +596,7 @@ class KundliDoshScreen extends StatelessWidget {
             }),
           ),
         ],
+        ),
       ),
     );
 

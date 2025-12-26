@@ -98,31 +98,11 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const Gap(Dimensions.gapExtraLarge),
                     CustomText(hintText: AppStrings.name.tr),
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
-                    TextFormField(
+                    CustomFormTextField(
                       controller: _maleNameController,
+                      hintText: 'Enter your full name',
+                      prefixIcon: Icons.person,
                       focusNode: _maleNameFocusNode,
-                      decoration: InputDecoration(
-
-                        contentPadding: const EdgeInsets.all(0.0),
-                        filled: true,
-                        fillColor: ColorResources.colorPrimaryLight,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        hintText: 'Enter your full name',
-                        hintStyle: const TextStyle(
-                          fontSize: Dimensions.fontSizeDefault,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.5,
-                          color: ColorResources.black1,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.person,
-                          color: ColorResources.colorPrimaryDark,
-                          size: 20,
-                        ),
-                      ),
                       onFieldSubmitted: (_) => _maleBirthdateFocusNode.requestFocus(),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -137,111 +117,56 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const Gap(Dimensions.gapLarge),
                     CustomText(hintText: AppStrings.dateOfBirth.tr),
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
-
-                    GestureDetector(
+                    CustomFormTextField(
+                      controller: _maleBirthDateController,
+                      hintText: 'Select date',
+                      prefixIcon: CupertinoIcons.calendar,
+                      enabled: false,
+                      focusNode: _maleBirthdateFocusNode,
+                      onFieldSubmitted: (_) => _maleBirthTimeFocusNode.requestFocus(),
+                      contentPadding: const EdgeInsets.only(left: 8.0),
                       onTap: () async {
-                        CommonMethods().showDatePickerDialog(context,_maleBirthDateController);
+                        CommonMethods().showDatePickerDialog(context, _maleBirthDateController);
                       },
-                      child:TextFormField(
-                          controller: _maleBirthDateController,
-                          style: const TextStyle(
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeDefault),
-                          decoration: InputDecoration(
-                            contentPadding:
-                            const EdgeInsets.only(left: 8.0),
-                            filled: true,
-                            fillColor:
-                            ColorResources.colorPrimaryLight,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(8.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: 'Select date',
-                            hintStyle: const TextStyle(
-                                fontSize:
-                                Dimensions.fontSizeDefault,
-                                fontWeight: FontWeight.w400,
-                                letterSpacing: 0.5,
-                                color: ColorResources.black1),
-                            enabled: false,
-                            prefixIcon: const Icon(
-                              CupertinoIcons.calendar,
-                              color:
-                              ColorResources.colorPrimaryDark,
-                              size: 20,
-                            ),
-                          ),
-                        onFieldSubmitted: (_) => _maleBirthTimeFocusNode.requestFocus(),
-                          focusNode: _maleBirthdateFocusNode,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppStrings.formError.tr;
-                            }
-                            return null;
-                          },
-                        )
-
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppStrings.formError.tr;
+                        }
+                        return null;
+                      },
                     ),
 
                     const Gap(Dimensions.gapLarge),
                     CustomText(hintText: AppStrings.timeOfBirth.tr),
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
-
-                    GestureDetector(
+                    CustomFormTextField(
+                      controller: _maleBirthTimeController,
+                      hintText: 'Select time',
+                      prefixIcon: CupertinoIcons.clock_fill,
+                      enabled: false,
+                      focusNode: _maleBirthTimeFocusNode,
+                      onFieldSubmitted: (_) => _maleBirthPlaceFocusNode.requestFocus(),
+                      contentPadding: const EdgeInsets.only(left: 8.0),
                       onTap: () async {
-                        CommonMethods().showTimerPickerDialog(context,_maleBirthTimeController);
+                        CommonMethods().showTimerPickerDialog(context, _maleBirthTimeController);
                       },
-                      child: TextFormField(
-                          controller: _maleBirthTimeController,
-                          style: const TextStyle(
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeDefault),
-                          decoration: InputDecoration(
-                            contentPadding:
-                            const EdgeInsets.only(left: 8.0),
-                            filled: true,
-                            fillColor:
-                            ColorResources.colorPrimaryLight,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(8.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: 'Select time',
-                            hintStyle: const TextStyle(
-                                fontSize:
-                                Dimensions.fontSizeDefault,
-                                fontWeight: FontWeight.w400,
-                                letterSpacing: 0.5,
-                                color: ColorResources.black1),
-                            enabled: false,
-                            prefixIcon: const Icon(
-                              CupertinoIcons.clock_fill,
-                              color:
-                              ColorResources.colorPrimaryDark,
-                              size: 20,
-                            ),
-                          ),
-                          onFieldSubmitted: (_) => _maleBirthPlaceFocusNode.requestFocus(),
-                          focusNode: _maleBirthTimeFocusNode,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppStrings.formError.tr;
-                            }
-                            return null;
-                          },
-
-                        )
-
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppStrings.formError.tr;
+                        }
+                        return null;
+                      },
                     ),
 
                     const Gap(Dimensions.gapLarge),
                     CustomText(hintText: AppStrings.placeOfBirth.tr),
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
-
-                    GestureDetector(
+                    CustomFormTextField(
+                      controller: _maleBirthPlaceController,
+                      hintText: 'Select birth place',
+                      prefixIcon: CupertinoIcons.building_2_fill,
+                      enabled: false,
+                      focusNode: _maleBirthPlaceFocusNode,
                       onTap: () async {
                         String? placeApiKey = await SharedPreferencesHelper.getData(AppConstants.placeApiKey);
                         var result = await Get.to(SearchPlaceScreen(placeApiKey.toString()));
@@ -252,41 +177,12 @@ class MatchingSubmitScreen extends StatelessWidget {
                           _maleTimezone.text = result['offset'].toString();
                         }
                       },
-                      child: TextFormField(
-                          controller: _maleBirthPlaceController,
-                          style: const TextStyle(
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeDefault),
-                          decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.all(0.0),
-                              filled: true,
-                              fillColor: ColorResources.colorPrimaryLight,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide.none,
-                              ),
-                              hintText: 'Select birth place',
-                              hintStyle: const TextStyle(
-                                  fontSize: Dimensions.fontSizeDefault,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 0.5,
-                                  color: ColorResources.black1),
-                              prefixIcon: const Icon(
-                                CupertinoIcons.building_2_fill,
-                                color: ColorResources.colorPrimaryDark,
-                                size: 20,
-                              ),
-                              enabled: false),
-                          focusNode: _maleBirthPlaceFocusNode,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppStrings.formError.tr;
-                            }
-                            return null;
-                          },
-                        )
-
-
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppStrings.formError.tr;
+                        }
+                        return null;
+                      },
                     ),
 
                   ],
@@ -313,31 +209,11 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const Gap(Dimensions.gapExtraLarge),
                     CustomText(hintText: AppStrings.name.tr),
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
-                    TextFormField(
+                    CustomFormTextField(
                       controller: _femaleNameController,
+                      hintText: 'Enter your full name',
+                      prefixIcon: Icons.person,
                       focusNode: _femaleNameFocusNode,
-                      decoration: InputDecoration(
-
-                        contentPadding: const EdgeInsets.all(0.0),
-                        filled: true,
-                        fillColor: ColorResources.colorPrimaryLight,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.0),
-                          borderSide: BorderSide.none,
-                        ),
-                        hintText: 'Enter your full name',
-                        hintStyle: const TextStyle(
-                          fontSize: Dimensions.fontSizeDefault,
-                          fontWeight: FontWeight.w400,
-                          letterSpacing: 0.5,
-                          color: ColorResources.black1,
-                        ),
-                        prefixIcon: const Icon(
-                          Icons.person,
-                          color: ColorResources.colorPrimaryDark,
-                          size: 20,
-                        ),
-                      ),
                       onFieldSubmitted: (_) => _femaleBirthdateFocusNode.requestFocus(),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
@@ -350,110 +226,56 @@ class MatchingSubmitScreen extends StatelessWidget {
                     ),
 
                     const Gap(Dimensions.gapLarge),
-                    CustomText(hintText:AppStrings.dateOfBirth.tr),
+                    CustomText(hintText: AppStrings.dateOfBirth.tr),
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
-                    GestureDetector(
+                    CustomFormTextField(
+                      controller: _femaleBirthDateController,
+                      hintText: 'Select date',
+                      prefixIcon: CupertinoIcons.calendar,
+                      enabled: false,
+                      focusNode: _femaleBirthdateFocusNode,
+                      onFieldSubmitted: (_) => _femaleBirthTimeFocusNode.requestFocus(),
+                      contentPadding: const EdgeInsets.only(left: 8.0),
                       onTap: () async {
-                        CommonMethods().showDatePickerDialog(context,_femaleBirthDateController);
+                        CommonMethods().showDatePickerDialog(context, _femaleBirthDateController);
                       },
-                      child: TextFormField(
-                          controller: _femaleBirthDateController,
-                          style: const TextStyle(
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeDefault),
-                          decoration: InputDecoration(
-                            contentPadding:
-                            const EdgeInsets.only(left: 8.0),
-                            filled: true,
-                            fillColor:
-                            ColorResources.colorPrimaryLight,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(8.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: 'Select date',
-                            hintStyle: const TextStyle(
-                                fontSize:
-                                Dimensions.fontSizeDefault,
-                                fontWeight: FontWeight.w400,
-                                letterSpacing: 0.5,
-                                color: ColorResources.black1),
-                            enabled: false,
-                            prefixIcon: const Icon(
-                              CupertinoIcons.calendar,
-                              color:
-                              ColorResources.colorPrimaryDark,
-                              size: 20,
-                            ),
-                          ),
-                          onFieldSubmitted: (_) =>_femaleBirthTimeFocusNode.requestFocus(),
-                          focusNode: _femaleBirthdateFocusNode,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppStrings.formError.tr;
-                            }
-                            return null;
-                          },
-                        )
-
-
-
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppStrings.formError.tr;
+                        }
+                        return null;
+                      },
                     ),
                     const Gap(Dimensions.gapLarge),
                     CustomText(hintText: AppStrings.timeOfBirth.tr),
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
-                    GestureDetector(
+                    CustomFormTextField(
+                      controller: _femaleBirthTimeController,
+                      hintText: 'Select time',
+                      prefixIcon: CupertinoIcons.clock_fill,
+                      enabled: false,
+                      focusNode: _femaleBirthTimeFocusNode,
+                      onFieldSubmitted: (_) => _femaleBirthPlaceFocusNode.requestFocus(),
+                      contentPadding: const EdgeInsets.only(left: 8.0),
                       onTap: () async {
-                        CommonMethods().showTimerPickerDialog(context,_femaleBirthTimeController);
+                        CommonMethods().showTimerPickerDialog(context, _femaleBirthTimeController);
                       },
-                      child: TextFormField(
-                          controller: _femaleBirthTimeController,
-                          style: const TextStyle(
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeDefault),
-                          decoration: InputDecoration(
-                            contentPadding:
-                            const EdgeInsets.only(left: 8.0),
-                            filled: true,
-                            fillColor:
-                            ColorResources.colorPrimaryLight,
-                            border: OutlineInputBorder(
-                              borderRadius:
-                              BorderRadius.circular(8.0),
-                              borderSide: BorderSide.none,
-                            ),
-                            hintText: 'Select time',
-                            hintStyle: const TextStyle(
-                                fontSize:
-                                Dimensions.fontSizeDefault,
-                                fontWeight: FontWeight.w400,
-                                letterSpacing: 0.5,
-                                color: ColorResources.black1),
-                            enabled: false,
-                            prefixIcon: const Icon(
-                              CupertinoIcons.clock_fill,
-                              color:
-                              ColorResources.colorPrimaryDark,
-                              size: 20,
-                            ),
-                          ),
-                          onFieldSubmitted: (_) => _femaleBirthPlaceFocusNode.requestFocus(),
-                          focusNode: _femaleBirthTimeFocusNode,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppStrings.formError.tr;
-                            }
-                            return null;
-                          },
-
-                        )
-
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppStrings.formError.tr;
+                        }
+                        return null;
+                      },
                     ),
                     const Gap(Dimensions.gapLarge),
                     CustomText(hintText: AppStrings.placeOfBirth.tr),
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
-                    GestureDetector(
+                    CustomFormTextField(
+                      controller: _femaleBirthPlaceController,
+                      hintText: 'Select birth place',
+                      prefixIcon: CupertinoIcons.building_2_fill,
+                      enabled: false,
+                      focusNode: _femaleBirthPlaceFocusNode,
                       onTap: () async {
                         String? placeApiKey = await SharedPreferencesHelper.getData(AppConstants.placeApiKey);
                         var result = await Get.to(SearchPlaceScreen(placeApiKey.toString()));
@@ -464,40 +286,12 @@ class MatchingSubmitScreen extends StatelessWidget {
                           _femaleTimezone.text = result['offset'].toString();
                         }
                       },
-                      child: TextFormField(
-                          controller: _femaleBirthPlaceController,
-                          style: const TextStyle(
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeDefault),
-                          decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.all(0.0),
-                              filled: true,
-                              fillColor: ColorResources.colorPrimaryLight,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(8.0),
-                                borderSide: BorderSide.none,
-                              ),
-                              hintText: 'Select birth place',
-                              hintStyle: const TextStyle(
-                                  fontSize: Dimensions.fontSizeDefault,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 0.5,
-                                  color: ColorResources.black1),
-                              prefixIcon: const Icon(
-                                CupertinoIcons.building_2_fill,
-                                color: ColorResources.colorPrimaryDark,
-                                size: 20,
-                              ),
-                              enabled: false),
-                          focusNode: _femaleBirthPlaceFocusNode,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return AppStrings.formError.tr;
-                            }
-                            return null;
-                          },
-                        )
-
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return AppStrings.formError.tr;
+                        }
+                        return null;
+                      },
                     ),
                     const Gap(Dimensions.gapExtraLarge),
                   ],

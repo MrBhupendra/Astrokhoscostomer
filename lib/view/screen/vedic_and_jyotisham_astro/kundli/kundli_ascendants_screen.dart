@@ -65,103 +65,103 @@ class KundliAscendantsScreen extends StatelessWidget {
                           CustomTableTwoRowWidget(
                             title: AppStrings.ascendant.tr,
                             data: "${item.ascendant}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.ascendantLord.tr,
                             data: "${item.ascendantLord}",
-                            color: ColorResources.colorTableRow,
+                            color: ColorResources.colorTableRowOdd,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.ascendantLocation.tr,
                             data: "${item.ascendantLordLocation}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.ascendantHomeLocation.tr,
                             data: "${item.ascendantLordHouseLocation}",
-                            color: ColorResources.colorTableRow,
+                            color: ColorResources.colorTableRowOdd,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.generalPrediction.tr,
                             data: "${item.generalPrediction}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.personalisedPrediction.tr,
                             data: "${item.personalisedPrediction}",
-                            color: ColorResources.colorTableRow,
+                            color: ColorResources.colorTableRowOdd,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.verbalLocation.tr,
                             data: "${item.verbalLocation}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.ascendantStrength.tr,
                             data: "${item.ascendantLordStrength}",
-                            color: ColorResources.colorTableRow,
+                            color: ColorResources.colorTableRowOdd,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.symbol.tr,
                             data: "${item.symbol}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.zodiacCharacteristics.tr,
                             data: "${item.zodiacCharacteristics}",
-                            color: ColorResources.colorTableRow,
+                            color: ColorResources.colorTableRowOdd,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.luckyGem.tr,
                             data: "${item.luckyGem}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.badQualities.tr,
                             data: "${item.badQualities}",
-                            color: ColorResources.colorTableRow,
+                            color: ColorResources.colorTableRowOdd,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.dayForFasting.tr,
                             data: "${item.dayForFasting}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.gayatriMantra.tr,
                             data: "${item.gayatriMantra}",
-                            color: ColorResources.colorTableRow,
+                            color: ColorResources.colorTableRowOdd,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.flagshipQualities.tr,
                             data: "${item.flagshipQualities}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.spiritualityAdvice.tr,
                             data: "${item.spiritualityAdvice}",
-                            color: ColorResources.colorTableRow,
+                            color: ColorResources.colorTableRowOdd,
                           ),
                         for (KundliAscendantResponse item in controller.ascendantsModel.response!)
                           CustomTableTwoRowWidget(
                             title: AppStrings.goodQualities.tr,
                             data: "${item.goodQualities}",
-                            color: ColorResources.colorPrimaryLight,
+                            color: ColorResources.colorTableRowEven,
                           ),
                       ],
                     ),
