@@ -40,28 +40,40 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
   final _formKey = GlobalKey<FormState>();
   final _blockReasonController = TextEditingController();
 
-  final DashboardController dashboardController = Get.put(DashboardController());
+  final DashboardController dashboardController =
+      Get.put(DashboardController());
   final GiftController giftController = Get.put(GiftController());
   final ConfigController configController = Get.find();
 
   @override
   Widget build(BuildContext context) {
-    String chatRate = '**', callRate = '**', videoRate = '**', emergencyChatRate = '**', emergencyCallRate = '**',emergencyVideoRate = '**';
+    String chatRate = '**',
+        callRate = '**',
+        videoRate = '**',
+        emergencyChatRate = '**',
+        emergencyCallRate = '**',
+        emergencyVideoRate = '**';
     controller.astrologerData.value.prices?.forEach((priceItem) {
       String type = priceItem.type.toString();
       switch (type) {
         case AppConstants.chat:
-          chatRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+          chatRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty
+              ? "FREE"
+              : priceItem.price.toString();
           controller.nextChatController.value = controller
               .formatDateTimeOutput(priceItem.nextOnlineTime.toString());
           break;
         case AppConstants.call:
-          callRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+          callRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty
+              ? "FREE"
+              : priceItem.price.toString();
           controller.nextCallController.value = controller
               .formatDateTimeOutput(priceItem.nextOnlineTime.toString());
           break;
         case AppConstants.video:
-          videoRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+          videoRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty
+              ? "FREE"
+              : priceItem.price.toString();
           controller.nextVideoController.value = controller
               .formatDateTimeOutput(priceItem.nextOnlineTime.toString());
           break;
@@ -216,14 +228,15 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                             CustomOkdialogWidget(
                                               imagePath: Images.successCheck,
                                               title: AppStrings.success.tr,
-                                              imageColor: ColorResources.colorPrimary,
+                                              imageColor:
+                                                  ColorResources.colorPrimary,
                                               onPressed: () {
                                                 Get.back();
                                               },
-                                              description: AppStrings.successBlockMsg.tr,
+                                              description:
+                                                  AppStrings.successBlockMsg.tr,
                                             ),
-                                            barrierDismissible: false
-                                        );
+                                            barrierDismissible: false);
                                         // CustomDefaultDialog.showOkDialog(
                                         //     AppStrings.success.tr,
                                         //     AppStrings.successBlockMsg.tr, () {
@@ -274,9 +287,10 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
         ),
         body: RefreshIndicator(
             onRefresh: () async {
-              controller.getAstrologerDetail(controller.astrologerData.value.astrologerUniId.toString());
+              controller.getAstrologerDetail(
+                  controller.astrologerData.value.astrologerUniId.toString());
               bool isLogin = await SharedPreferencesHelper.getIsLogin();
-              if(isLogin){
+              if (isLogin) {
                 dashboardController.getWalletBalance();
               }
             },
@@ -294,297 +308,529 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                           children: [
                             Container(
                               decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(
+                                    Dimensions.borderRadiusDefault),
                                 boxShadow: [
                                   BoxShadow(
                                     color: ColorResources.colorPrimaryVariant
-                                        .withOpacity(0.3),
-                                    spreadRadius: 2,
-                                    blurRadius: 20,
-                                    offset: const Offset(0, 3),
+                                        .withOpacity(0.1),
+                                    spreadRadius: 1,
+                                    blurRadius: 10,
+                                    offset: const Offset(0, 2),
                                   ),
                                 ],
                               ),
-                              child: Column(
-                                children: [
-                                  const Gap(Dimensions.gapDefault),
-                                  Row(
-                                    children: [
-                                      Stack(
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                    Dimensions.paddingSizeDefault),
+                                child: Column(
+                                  children: [
+                                    // Online Status Badge (Top Left)
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          padding: const EdgeInsets.symmetric(
+                                            horizontal: 8,
+                                            vertical: 4,
+                                          ),
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade200,
+                                            borderRadius:
+                                                BorderRadius.circular(20),
+                                          ),
+                                          child: Row(
+                                            mainAxisSize: MainAxisSize.min,
+                                            children: [
+                                              Container(
+                                                width: 8,
+                                                height: 8,
+                                                decoration: BoxDecoration(
+                                                  color: controller
+                                                                  .astrologerData
+                                                                  .value
+                                                                  .onlineStatus ==
+                                                              1 &&
+                                                          controller
+                                                                  .astrologerData
+                                                                  .value
+                                                                  .busyStatus ==
+                                                              1
+                                                      ? Colors.orange
+                                                      : controller
+                                                                      .astrologerData
+                                                                      .value
+                                                                      .chatStatus ==
+                                                                  1 ||
+                                                              controller
+                                                                      .astrologerData
+                                                                      .value
+                                                                      .callStatus ==
+                                                                  1 ||
+                                                              controller
+                                                                      .astrologerData
+                                                                      .value
+                                                                      .videoStatus ==
+                                                                  1
+                                                          ? Colors.green
+                                                          : Colors.red,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                              ),
+                                              const Gap(6),
+                                              CustomTextRegular(
+                                                controller.astrologerData.value
+                                                                .onlineStatus ==
+                                                            1 &&
+                                                        controller.astrologerData.value
+                                                                .busyStatus ==
+                                                            1
+                                                    ? "BUSY"
+                                                    : controller
+                                                                    .astrologerData
+                                                                    .value
+                                                                    .chatStatus ==
+                                                                1 ||
+                                                            controller
+                                                                    .astrologerData
+                                                                    .value
+                                                                    .callStatus ==
+                                                                1 ||
+                                                            controller
+                                                                    .astrologerData
+                                                                    .value
+                                                                    .videoStatus ==
+                                                                1
+                                                        ? "ONLINE"
+                                                        : "OFFLINE",
+                                                fontSize: Dimensions
+                                                    .fontSizeExtraSmall,
+                                                color: controller
+                                                                .astrologerData
+                                                                .value
+                                                                .onlineStatus ==
+                                                            1 &&
+                                                        controller
+                                                                .astrologerData
+                                                                .value
+                                                                .busyStatus ==
+                                                            1
+                                                    ? Colors.orange.shade700
+                                                    : controller.astrologerData
+                                                                    .value.chatStatus ==
+                                                                1 ||
+                                                            controller
+                                                                    .astrologerData
+                                                                    .value
+                                                                    .callStatus ==
+                                                                1 ||
+                                                            controller
+                                                                    .astrologerData
+                                                                    .value
+                                                                    .videoStatus ==
+                                                                1
+                                                        ? Colors.green.shade700
+                                                        : Colors.red.shade700,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    const Gap(Dimensions.gapExtraExtraSmall),
+
+                                    // Profile Picture (Centered)
+                                    Center(
+                                      child: Stack(
                                         clipBehavior: Clip.none,
                                         children: [
                                           GestureDetector(
-                                            onTap: (){
+                                            onTap: () {
                                               Get.dialog(
                                                 Dialog(
-                                                  backgroundColor: Colors.transparent,
+                                                  backgroundColor:
+                                                      Colors.transparent,
                                                   child: ClipRRect(
-                                                    borderRadius: BorderRadius.circular(10.0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            10.0),
                                                     child: Container(
                                                       color: Colors.transparent,
                                                       width: Get.width * 0.8,
                                                       height: Get.height * 0.5,
-                                                      child: CustomNetworkImage(imageUrl: controller.astrologerData.value.astroImg.toString(), height: Get.height * 0.5,fit: BoxFit.cover),
+                                                      child: CustomNetworkImage(
+                                                          imageUrl: controller
+                                                              .astrologerData
+                                                              .value
+                                                              .astroImg
+                                                              .toString(),
+                                                          height:
+                                                              Get.height * 0.5,
+                                                          fit: BoxFit.cover),
                                                     ),
                                                   ),
                                                 ),
                                               );
                                             },
-                                            child: CustomRoundNetworkImage(
-                                                imageUrl: controller.astrologerData.value.astroImg.toString(),
-                                                height: Dimensions.profileImageHeight,
-                                                width: Dimensions.profileImageHeight),
-                                          ),
-                                          Positioned(
-                                            right: 0,
-                                            bottom: 0,
                                             child: Container(
-                                              padding: const EdgeInsets.all(4),
+                                              padding: const EdgeInsets.all(3),
                                               decoration: BoxDecoration(
-                                                color: controller.astrologerData.value.onlineStatus == 1 &&
-                                                        controller.astrologerData.value.busyStatus == 1
-                                                    ? Colors.orange
-                                                    : controller.astrologerData.value.chatStatus == 1 ||
-                                                    controller.astrologerData.value.callStatus == 1 ||
-                                                    controller.astrologerData.value.videoStatus == 1
-                                                        ? Colors.green
-                                                        : Colors.red,
                                                 shape: BoxShape.circle,
                                                 border: Border.all(
-                                                  color: Colors.white,
+                                                  color: controller
+                                                                  .astrologerData
+                                                                  .value
+                                                                  .onlineStatus ==
+                                                              1 &&
+                                                          controller
+                                                                  .astrologerData
+                                                                  .value
+                                                                  .busyStatus ==
+                                                              1
+                                                      ? Colors.orange
+                                                      : controller
+                                                                      .astrologerData
+                                                                      .value
+                                                                      .chatStatus ==
+                                                                  1 ||
+                                                              controller
+                                                                      .astrologerData
+                                                                      .value
+                                                                      .callStatus ==
+                                                                  1 ||
+                                                              controller
+                                                                      .astrologerData
+                                                                      .value
+                                                                      .videoStatus ==
+                                                                  1
+                                                          ? Colors.green
+                                                          : Colors.red,
                                                   width: 2,
                                                 ),
                                               ),
-                                              child: const Text(
-                                                ' ',
-                                                style: TextStyle(
-                                                    fontSize: 10,
-                                                    color: ColorResources.red),
+                                              child: CustomRoundNetworkImage(
+                                                imageUrl: controller
+                                                    .astrologerData
+                                                    .value
+                                                    .astroImg
+                                                    .toString(),
+                                                height: 100,
+                                                width: 100,
                                               ),
                                             ),
                                           ),
+                                          // Verified Badge
+                                          if (controller.astrologerData.value
+                                                  .isVerified ==
+                                              0)
+                                            Positioned(
+                                              right: 3,
+                                              bottom: 3,
+                                              child: Container(
+                                                padding:
+                                                    const EdgeInsets.all(3),
+                                                decoration: BoxDecoration(
+                                                    color: Colors.white,
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        color: ColorResources
+                                                            .black7,
+                                                        width: 0.5)),
+                                                child: Image.asset(
+                                                  Images.verifiedProfile,
+                                                  height: 20,
+                                                ),
+                                              ),
+                                            ),
                                         ],
                                       ),
-                                      const Gap(Dimensions.gapExtraLarge),
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Flexible(
-                                                  child: CustomTextMedium(
-                                                    controller.astrologerData.value.displayName.toString(),
-                                                    maxLines: 1,
-                                                    fontSize: Dimensions.fontSizeLarge,
-                                                  ),
-                                                ),
-                                                const Gap(Dimensions.gapSmall),
-                                                if (controller.astrologerData.value.isVerified == 1)
-                                                  Image.asset(
-                                                    Images.verifiedProfile,
-                                                    height: 18,
-                                                  ),
-                                              ],
-                                            ),
+                                    ),
+                                    const Gap(Dimensions.gapDefault),
 
-                                            CustomTextRegular(
-                                              controller.astrologerData.value
-                                                  .categoryNames
-                                                  .toString(),
-                                              maxLines: 3,
-                                              fontSize:
-                                                  Dimensions.fontSizeSmall,
-                                              color: ColorResources.black1,
-                                            ),
-                                            CustomTextRegular(
-                                              controller.astrologerData.value
-                                                  .languageName
-                                                  .toString(),
-                                              maxLines: 2,
-                                              fontSize:
-                                                  Dimensions.fontSizeSmall,
-                                              color: ColorResources.black1,
-                                            ),
-                                            CustomTextRegular(
-                                              controller.astrologerData.value.onlineStatus ==
-                                                          1 &&
-                                                      controller.astrologerData.value.busyStatus ==
-                                                          1
-                                                  ? "Busy"
-                                                  : controller.astrologerData.value.chatStatus == 1 ||
-                                                  controller.astrologerData.value.callStatus == 1 ||
-                                                  controller.astrologerData.value.videoStatus == 1
-                                                      ? "Online"
-                                                      : "Offline",
-                                              // fontSize: Dimensions.fontSizeSmall,
-                                              color: controller
-                                                              .astrologerData
-                                                              .value
-                                                              .onlineStatus ==
-                                                          1 &&
+                                    // Name
+                                    CustomTextMedium(
+                                      controller
+                                          .astrologerData.value.displayName
+                                          .toString(),
+                                      maxLines: 1,
+                                      fontSize: Dimensions.fontSizeExtraLarge,
+                                      color: ColorResources.black2,
+                                    ),
+                                    const Gap(Dimensions.gapSmall),
+
+                                    // Rating and Orders
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.star,
+                                          color: ColorResources.colorRatingIcon,
+                                          size: Dimensions.iconSizeOverSmall,
+                                        ),
+                                        const Gap(4),
+                                        CustomTextRegular(
+                                          controller.astrologerData.value.user!
+                                              .avgRating
+                                              .toString(),
+                                          fontSize: Dimensions.fontSizeDefault,
+                                          color: ColorResources.black2,
+                                        ),
+                                        const Gap(6),
+                                        Container(
+                                          width: 4,
+                                          height: 4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade400,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        const Gap(6),
+                                        CustomTextRegular(
+                                          "${controller.astrologerData.value.totalOrderCount ?? 0} orders",
+                                          fontSize: Dimensions.fontSizeSmall,
+                                          color: Colors.grey.shade600,
+                                        ),
+                                      ],
+                                    ),
+                                    const Gap(Dimensions.gapDefault),
+
+                                    // Skills Tags
+                                    if (controller.astrologerData.value
+                                                .categoryNames !=
+                                            null &&
+                                        controller.astrologerData.value
+                                            .categoryNames!.isNotEmpty)
+                                      Wrap(
+                                        alignment: WrapAlignment.center,
+                                        spacing: 8,
+                                        runSpacing: 8,
+                                        children: controller
+                                            .astrologerData.value.categoryNames!
+                                            .split(',')
+                                            .take(3)
+                                            .map((skill) => Container(
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal: 12,
+                                                    vertical: 6,
+                                                  ),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.grey.shade100,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20),
+                                                  ),
+                                                  child: CustomTextRegular(
+                                                    skill.trim(),
+                                                    fontSize: Dimensions
+                                                        .fontSizeSmall,
+                                                    color:
+                                                        ColorResources.black2,
+                                                  ),
+                                                ))
+                                            .toList(),
+                                      ),
+                                    const Gap(Dimensions.gapDefault),
+
+                                    // Dashed Separator
+                                    CustomPaint(
+                                      painter: DashedLinePainter(),
+                                      child: const SizedBox(
+                                        width: double.infinity,
+                                        height: 1,
+                                      ),
+                                    ),
+                                    const Gap(Dimensions.gapDefault),
+
+                                    // Experience and Languages Row
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        // Experience Section
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  Icons.school,
+                                                  color:
+                                                      const Color(0xFF4DD0E1),
+                                                  size: Dimensions
+                                                      .iconSizeOverSmall,
+                                                ),
+                                              ),
+                                              const Gap(8),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  CustomTextRegular(
+                                                    "EXP",
+                                                    fontSize: Dimensions
+                                                        .fontSizeExtraSmall,
+                                                    color: Colors.grey.shade600,
+                                                  ),
+                                                  CustomTextMedium(
+                                                    "${controller.astrologerData.value.experience ?? 0}+ Years",
+                                                    fontSize: Dimensions
+                                                        .fontSizeDefault,
+                                                    color:
+                                                        ColorResources.black2,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        // Languages Section
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                padding:
+                                                    const EdgeInsets.all(8),
+                                                decoration: BoxDecoration(
+                                                  color: Colors.grey.shade100,
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: Icon(
+                                                  Icons.language,
+                                                  color:
+                                                      const Color(0xFF4DD0E1),
+                                                  size: Dimensions
+                                                      .iconSizeOverSmall,
+                                                ),
+                                              ),
+                                              const Gap(8),
+                                              Expanded(
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.start,
+                                                  children: [
+                                                    CustomTextRegular(
+                                                      "LANG",
+                                                      fontSize: Dimensions
+                                                          .fontSizeExtraSmall,
+                                                      color:
+                                                          Colors.grey.shade600,
+                                                    ),
+                                                    CustomTextMedium(
                                                       controller
                                                               .astrologerData
                                                               .value
-                                                              .busyStatus ==
-                                                          1
-                                                  ? Colors.orange
-                                                  : controller.astrologerData.value.chatStatus == 1 ||
-                                                  controller.astrologerData.value.callStatus == 1 ||
-                                                  controller.astrologerData.value.videoStatus == 1
-                                                      ? Colors.green
-                                                      : Colors.red,
-                                            ),
-                                          ],
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        vertical: 6.0, horizontal: 6),
-                                    child: Row(
-                                      children: [
-                                        // const Gap(2),
-                                        Obx(() => GestureDetector(
-                                              onTap: () {
-                                                if (controller.isFollow.isTrue) {
-                                                  showUnfollowDialog();
-                                                } else {
-                                                  controller.astrologerFollow("1", controller.astrologerData.value.astrologerUniId.toString());
-                                                  CustomSnackBar.showTop(AppStrings.astroFollowMsg);
-                                                }
-                                              },
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        vertical: 4.0,
-                                                        horizontal: 10.0),
-                                                decoration: BoxDecoration(
-                                                  color: controller
-                                                          .isFollow.isFalse
-                                                      ? ColorResources
-                                                          .colorPrimary
-                                                      : ColorResources.white,
-                                                  borderRadius: BorderRadius
-                                                      .circular(Dimensions
-                                                          .borderRadiusDefault),
-                                                ),
-                                                child: CustomTextRegular(
-                                                  controller.isFollow.isFalse
-                                                      ? "Follow"
-                                                      : "Following",
-                                                  color: controller
-                                                          .isFollow.isFalse
-                                                      ? ColorResources
-                                                          .toolbarText
-                                                      : ColorResources.black,
-                                                  fontSize:
-                                                      Dimensions.fontSizeSmall,
+                                                              .languageName
+                                                              ?.toString() ??
+                                                          "N/A",
+                                                      maxLines: 1,
+                                                      fontSize: Dimensions
+                                                          .fontSizeDefault,
+                                                      color:
+                                                          ColorResources.black2,
+                                                    ),
+                                                  ],
                                                 ),
                                               ),
-                                            )),
-                                        const Gap(Dimensions.gapLarge),
-                                        Image.asset(
-                                          Images.astroChat,
-                                          height:
-                                              Dimensions.iconImageHeightOver,
-                                          color: ColorResources.black1,
+                                            ],
+                                          ),
                                         ),
-                                        const Gap(Dimensions.gapDefault),
-                                        Text(
-                                            "${controller.astrologerData.value.totalChatDuration} mins",
-                                            style: const TextStyle(
-                                                color: ColorResources.black1,
-                                                fontSize:
-                                                    Dimensions.fontSizeSmall)),
-                                        const Gap(Dimensions.gapDefault),
-                                        Container(
-                                          height: 25,
-                                          width: 1,
-                                          color: ColorResources.black1,
-                                        ),
-                                        const Gap(Dimensions.gapDefault),
-                                        Image.asset(
-                                          Images.astroCall,
-                                          height:
-                                              Dimensions.iconImageHeightOver,
-                                          color: ColorResources.black1,
-                                        ),
-                                        const Gap(Dimensions.gapDefault),
-                                        Text(
-                                            "${controller.astrologerData.value.totalCallDuration} mins",
-                                            style: const TextStyle(
-                                                color: ColorResources.black1,
-                                                fontSize:
-                                                    Dimensions.fontSizeSmall)),
                                       ],
                                     ),
-                                  ),
-                                  const Gap(Dimensions.gapDefault),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(
-                                    Dimensions.borderRadiusDefault),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: ColorResources.white,
-                                  ),
-                                ],
-                                border: Border.all(
-                                  color: ColorResources.colorPrimaryMedium,
-                                  width: 1.5,
-                                ),
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal:
-                                        Dimensions.paddingSizeExtraSmall,
-                                    vertical: Dimensions.paddingSizeExtraSmall),
-                                child: Row(
-                                  children: [
-                                    Expanded(
-                                        child: CustomTextRegular(
-                                      "Followers: ${controller.astrologerData.value.followerCount}",
-                                      maxLines: 1,
-                                      fontSize: Dimensions.fontSizeSmall,
-                                    )),
-                                    // const Gap(10),
+                                    const Gap(Dimensions.gapDefault),
+
+                                    // Divider
                                     Container(
-                                      height: 20,
-                                      width: 1,
-                                      color: ColorResources.black1,
-                                    ),
-                                    const Gap(5),
-                                    CustomRatingIcons(
-                                      rating: double.parse(controller
-                                          .astrologerData.value.user!.avgRating
-                                          .toString()),
-                                      iconSize: Dimensions.iconSizeOverSmall,
-                                    ),
-                                    CustomTextRegular(
-                                      controller
-                                          .astrologerData.value.user!.avgRating
-                                          .toString(),
-                                      maxLines: 1,
-                                      fontSize: Dimensions.fontSizeSmall,
+                                      height: 1,
+                                      color: Colors.grey.shade300,
                                     ),
                                     const Gap(Dimensions.gapDefault),
-                                    Container(
-                                      height: 20,
-                                      width: 1.0,
-                                      color: ColorResources.black1,
-                                    ),
-                                    const Gap(Dimensions.gapDefault),
-                                    Expanded(
-                                      child: CustomTextRegular(
-                                        "Exp: ${controller.astrologerData.value.experience} Years",
-                                        maxLines: 1,
-                                        fontSize: Dimensions.fontSizeSmall,
-                                      ),
+
+                                    // Chat Time and Call Time Row
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        // Chat Time Section
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                Images.astroChat,
+                                                height: Dimensions
+                                                    .iconImageHeightOver,
+                                                color: ColorResources.black1,
+                                              ),
+                                              const Gap(8),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  CustomTextRegular(
+                                                    "${controller.astrologerData.value.totalChatDuration ?? 0} mins",
+                                                    fontSize: Dimensions
+                                                        .fontSizeDefault,
+                                                    color:
+                                                        ColorResources.black2,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+
+                                        // Vertical Divider
+                                        Container(
+                                          height: 20,
+                                          width: 1,
+                                          color: Colors.grey.shade400,
+                                        ),
+
+                                        // Call Time Section
+                                        Expanded(
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Image.asset(
+                                                Images.astroCall,
+                                                height: Dimensions
+                                                    .iconImageHeightOver,
+                                                color: ColorResources.black1,
+                                              ),
+                                              const Gap(8),
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  CustomTextRegular(
+                                                    "${controller.astrologerData.value.totalCallDuration ?? 0} mins",
+                                                    fontSize: Dimensions
+                                                        .fontSizeDefault,
+                                                    color:
+                                                        ColorResources.black2,
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
                                     ),
                                   ],
                                 ),
@@ -592,82 +838,127 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                             ),
 
                             // Emergency Chat/Call
-                            if(AppFeatures.emergencyChat || AppFeatures.emergencyCall)
-                            Obx(() {
-                              if (controller.astrologerData.value.onlineStatus == 0) {
-                                return Column(
-                                  children: [
-                                    const Gap(Dimensions.gapDefault),
-                                    Container(
-                                      decoration: BoxDecoration(
-                                        color: Colors.white,
-                                        borderRadius: BorderRadius.circular(
-                                            Dimensions.borderRadiusDefault),
-                                        boxShadow: const [
-                                          BoxShadow(
-                                            color: ColorResources.colorPrimaryLight,
-                                            spreadRadius: 1,
-                                            blurRadius: 1,
-                                            offset: Offset(0, 0),
-                                          ),
-                                        ],
-                                      ),
-                                      child: GestureDetector(
-                                        onTap: ()  async {
-                                          if(controller.astrologerData.value.emergencyChatStatus == 1 || controller.astrologerData.value.emergencyCallStatus == 1){
-                                            Get.dialog(
-                                              CustomAstrologerEmergencyWidget(controller,emergencyCallRate,emergencyChatRate,emergencyVideoRate),
-                                            );
-                                          }else{
-                                            CustomSnackBar.showBottom("${controller.astrologerData.value.displayName} is offline for emergency.Try after sometime.");
-                                          }
-                                        },
-                                        child: Padding(
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: Dimensions.paddingSizeSmall,
-                                              vertical: Dimensions.paddingSizeSmall),
-                                          child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                children: [
-                                                  Image.asset(Images.emergency,
-                                                      height: 22,
-                                                      color: ColorResources.black2),
-                                                  const Gap(8),
-                                                  Expanded(
-                                                    child: CustomTextRegular(
-                                                        AppStrings.needEmergencyAssistance.tr),
-                                                  ),
-                                                ],
-                                              ),
-                                              const Gap(5),
-                                              CustomTextRegular("${controller.astrologerData.value.displayName} considers you a VIP customer. You may connect with them, even when they are offline @ ${configController.currencySymbol} $emergencyCallRate",color: ColorResources.black2,fontSize: Dimensions.fontSizeSmall,),
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                children: [
-                                                  Container(
-                                                    padding: const EdgeInsets.only(left: 7,right: 7,top: 3,bottom: 3),
-                                                    decoration: BoxDecoration(
-                                                      borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                                      border: Border.all(width: 1,color: controller.astrologerData.value.emergencyChatStatus == 1 || controller.astrologerData.value.emergencyCallStatus == 1 ? ColorResources.orange : ColorResources.black4)
+                            if (AppFeatures.emergencyChat ||
+                                AppFeatures.emergencyCall)
+                              Obx(() {
+                                if (controller
+                                        .astrologerData.value.onlineStatus ==
+                                    0) {
+                                  return Column(
+                                    children: [
+                                      const Gap(Dimensions.gapDefault),
+                                      Container(
+                                        decoration: BoxDecoration(
+                                          color: Colors.white,
+                                          borderRadius: BorderRadius.circular(
+                                              Dimensions.borderRadiusDefault),
+                                          boxShadow: const [
+                                            BoxShadow(
+                                              color: ColorResources
+                                                  .colorPrimaryLight,
+                                              spreadRadius: 1,
+                                              blurRadius: 1,
+                                              offset: Offset(0, 0),
+                                            ),
+                                          ],
+                                        ),
+                                        child: GestureDetector(
+                                          onTap: () async {
+                                            if (controller.astrologerData.value
+                                                        .emergencyChatStatus ==
+                                                    1 ||
+                                                controller.astrologerData.value
+                                                        .emergencyCallStatus ==
+                                                    1) {
+                                              Get.dialog(
+                                                CustomAstrologerEmergencyWidget(
+                                                    controller,
+                                                    emergencyCallRate,
+                                                    emergencyChatRate,
+                                                    emergencyVideoRate),
+                                              );
+                                            } else {
+                                              CustomSnackBar.showBottom(
+                                                  "${controller.astrologerData.value.displayName} is offline for emergency.Try after sometime.");
+                                            }
+                                          },
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal:
+                                                    Dimensions.paddingSizeSmall,
+                                                vertical: Dimensions
+                                                    .paddingSizeSmall),
+                                            child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.center,
+                                                  children: [
+                                                    Image.asset(
+                                                        Images.emergency,
+                                                        height: 22,
+                                                        color: ColorResources
+                                                            .black2),
+                                                    const Gap(8),
+                                                    Expanded(
+                                                      child: CustomTextRegular(
+                                                          AppStrings
+                                                              .needEmergencyAssistance
+                                                              .tr),
                                                     ),
-                                                    child: CustomTextMedium(AppStrings.connect.tr, color:controller.astrologerData.value.emergencyChatStatus == 1 || controller.astrologerData.value.emergencyCallStatus == 1 ? ColorResources.orange : ColorResources.black4)
-                                                  ),
-                                                ],
-                                              )
-                                            ],
+                                                  ],
+                                                ),
+                                                const Gap(5),
+                                                CustomTextRegular(
+                                                  "${controller.astrologerData.value.displayName} considers you a VIP customer. You may connect with them, even when they are offline @ ${configController.currencySymbol} $emergencyCallRate",
+                                                  color: ColorResources.black2,
+                                                  fontSize:
+                                                      Dimensions.fontSizeSmall,
+                                                ),
+                                                Row(
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment.end,
+                                                  children: [
+                                                    Container(
+                                                        padding:
+                                                            const EdgeInsets.only(
+                                                                left: 7,
+                                                                right: 7,
+                                                                top: 3,
+                                                                bottom: 3),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                const BorderRadius.all(
+                                                                    Radius.circular(
+                                                                        10)),
+                                                            border: Border.all(
+                                                                width: 1,
+                                                                color: controller.astrologerData.value.emergencyChatStatus == 1 || controller.astrologerData.value.emergencyCallStatus == 1
+                                                                    ? ColorResources
+                                                                        .orange
+                                                                    : ColorResources
+                                                                        .black4)),
+                                                        child: CustomTextMedium(AppStrings.connect.tr,
+                                                            color: controller.astrologerData.value.emergencyChatStatus ==
+                                                                        1 ||
+                                                                    controller.astrologerData.value.emergencyCallStatus == 1
+                                                                ? ColorResources.orange
+                                                                : ColorResources.black4)),
+                                                  ],
+                                                )
+                                              ],
+                                            ),
                                           ),
                                         ),
                                       ),
-                                    ),
-                                  ],
-                                );
-                              } else {
-                                return const SizedBox.shrink();
-                              }
-                            }),
+                                    ],
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              }),
 
                             // Gallery images
                             Obx(() {
@@ -723,10 +1014,11 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                             const Gap(Dimensions.gapLarge),
 
                             Obx(() {
-                              if (controller.astrologerData.value.onlineStatus == 0 ) {
+                              if (controller
+                                      .astrologerData.value.onlineStatus ==
+                                  0) {
                                 return Column(
-                                  crossAxisAlignment:
-                                      CrossAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     CustomTextMedium("Next Online",
                                         fontSize: Dimensions.fontSizeLarge),
@@ -738,14 +1030,14 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                           if (controller.nextChatController
                                               .value.isNotEmpty)
                                             Container(
-                                              padding:
-                                              const EdgeInsets.all(5),
-                                              margin: const EdgeInsets.only(left: 5,right: 5),
+                                              padding: const EdgeInsets.all(5),
+                                              margin: const EdgeInsets.only(
+                                                  left: 5, right: 5),
                                               decoration: BoxDecoration(
                                                 color: ColorResources
                                                     .colorPrimaryLight,
                                                 borderRadius:
-                                                BorderRadius.circular(8),
+                                                    BorderRadius.circular(8),
                                               ),
                                               child: Row(
                                                 children: [
@@ -758,14 +1050,14 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                                     color: ColorResources
                                                         .colorPrimaryMedium,
                                                   ),
-                                                  const Gap(Dimensions
-                                                      .gapExtraSmall),
+                                                  const Gap(
+                                                      Dimensions.gapExtraSmall),
                                                   CustomTextRegular(
                                                     controller
                                                         .nextChatController
                                                         .value,
                                                     color:
-                                                    ColorResources.black1,
+                                                        ColorResources.black1,
                                                   ),
                                                 ],
                                               ),
@@ -774,7 +1066,8 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                               .value.isNotEmpty)
                                             Container(
                                               padding: const EdgeInsets.all(5),
-                                              margin: const EdgeInsets.only(left: 5,right: 5),
+                                              margin: const EdgeInsets.only(
+                                                  left: 5, right: 5),
                                               decoration: BoxDecoration(
                                                 color: ColorResources
                                                     .colorPrimaryLight,
@@ -792,8 +1085,8 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                                     color: ColorResources
                                                         .colorPrimaryMedium,
                                                   ),
-                                                  const Gap(Dimensions
-                                                      .gapExtraSmall),
+                                                  const Gap(
+                                                      Dimensions.gapExtraSmall),
                                                   CustomTextRegular(
                                                     controller
                                                         .nextCallController
@@ -808,7 +1101,8 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                               .value.isNotEmpty)
                                             Container(
                                               padding: const EdgeInsets.all(5),
-                                              margin: const EdgeInsets.only(left: 5,right: 5),
+                                              margin: const EdgeInsets.only(
+                                                  left: 5, right: 5),
                                               decoration: BoxDecoration(
                                                 color: ColorResources
                                                     .colorPrimaryLight,
@@ -826,8 +1120,8 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                                     color: ColorResources
                                                         .colorPrimaryMedium,
                                                   ),
-                                                  const Gap(Dimensions
-                                                      .gapExtraSmall),
+                                                  const Gap(
+                                                      Dimensions.gapExtraSmall),
                                                   CustomTextRegular(
                                                     controller
                                                         .nextVideoController
@@ -843,8 +1137,7 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                     ),
                                     const Gap(Dimensions.gapSmall),
                                     const Divider(
-                                      color:
-                                          ColorResources.colorPrimaryVariant,
+                                      color: ColorResources.colorPrimaryVariant,
                                     ),
                                     const Gap(Dimensions.gapSmall),
                                   ],
@@ -854,22 +1147,34 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                               }
                             }),
 
-                            CustomTextMedium("Specialization", fontSize: Dimensions.fontSizeLarge),
+                            CustomTextMedium("Specialization",
+                                fontSize: Dimensions.fontSizeLarge),
                             const Gap(Dimensions.gapExtraSmall),
-                            CustomTextRegular(controller.astrologerData.value.skillNames.toString(), color: ColorResources.black1,),
+                            CustomTextRegular(
+                              controller.astrologerData.value.skillNames
+                                  .toString(),
+                              color: ColorResources.black1,
+                            ),
                             const Gap(Dimensions.gapSmall),
-                            const Divider(color: ColorResources.colorPrimaryVariant),
+                            const Divider(
+                                color: ColorResources.colorPrimaryVariant),
                             const Gap(Dimensions.gapSmall),
 
-                            CustomTextMedium("Languages", fontSize: Dimensions.fontSizeLarge),
+                            CustomTextMedium("Languages",
+                                fontSize: Dimensions.fontSizeLarge),
                             const Gap(Dimensions.gapExtraSmall),
-                            CustomTextRegular(controller.astrologerData.value.languageName.toString(), color: ColorResources.black1,),
+                            CustomTextRegular(
+                              controller.astrologerData.value.languageName
+                                  .toString(),
+                              color: ColorResources.black1,
+                            ),
                             const Gap(Dimensions.gapSmall),
-                            const Divider(color: ColorResources.colorPrimaryVariant),
+                            const Divider(
+                                color: ColorResources.colorPrimaryVariant),
                             const Gap(Dimensions.gapSmall),
 
-
-                            CustomTextMedium("Profile Summary", fontSize: Dimensions.fontSizeLarge),
+                            CustomTextMedium("Profile Summary",
+                                fontSize: Dimensions.fontSizeLarge),
                             CustomHtmlTextExpanded(
                                 fullText: controller
                                     .astrologerData.value.longBiography
@@ -878,9 +1183,9 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                 textColor: ColorResources.colorText,
                                 iconColor: ColorResources.colorText),
                             const Gap(Dimensions.gapSmall),
-                            const Divider(color: ColorResources.colorPrimaryVariant),
+                            const Divider(
+                                color: ColorResources.colorPrimaryVariant),
                             const Gap(Dimensions.gapSmall),
-
 
                             Row(
                               children: [
@@ -920,145 +1225,29 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                   color: ColorResources.white,
                                   borderRadius: BorderRadius.circular(
                                       Dimensions.borderRadiusDefault),
-                                  border: Border.all(color: ColorResources.black6)),
+                                  border:
+                                      Border.all(color: ColorResources.black6)),
                               child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      vertical: 5.0, horizontal: 8.0),
-                                  child: ListView.builder(
-                                    shrinkWrap: true,
-                                    physics: const NeverScrollableScrollPhysics(),
-                                    itemCount: controller.astrologerData.value.reviews?.length,
-                                    itemBuilder: (context, index) {
-                                      return CustomReviewWidget(controller.astrologerData.value.reviews![index]);
-                                    },
-                                  ),),
+                                padding: const EdgeInsets.symmetric(
+                                    vertical: 5.0, horizontal: 8.0),
+                                child: ListView.builder(
+                                  shrinkWrap: true,
+                                  physics: const NeverScrollableScrollPhysics(),
+                                  itemCount: controller
+                                      .astrologerData.value.reviews?.length,
+                                  itemBuilder: (context, index) {
+                                    return CustomReviewWidget(controller
+                                        .astrologerData.value.reviews![index]);
+                                  },
+                                ),
+                              ),
                             ),
 
                             // Ask a question
-                            if(AppFeatures.askAstroQuestion && controller.astrologerData.value.isVirtualAstrologer == 0)
-                            Column(
-                              children: [
-                                const Gap(Dimensions.gapSmall),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.white,
-                                    borderRadius: BorderRadius.circular(
-                                        Dimensions.borderRadiusDefault),
-                                    boxShadow: const [
-                                      BoxShadow(
-                                        color: ColorResources.colorPrimaryLight,
-                                        spreadRadius: 1,
-                                        blurRadius: 1,
-                                        offset: Offset(0, 0),
-                                      ),
-                                    ],
-                                  ),
-                                  child: GestureDetector(
-                                    onTap: ()  async {
-                                      final AskAstrologerQuestionController askAstrologerQuestionController = Get.put(AskAstrologerQuestionController());
-                                      askAstrologerQuestionController.messageController.text = "";
-                                        showModalBottomSheet(
-                                          context: context,
-                                          isScrollControlled: true,
-                                          // shape: const RoundedRectangleBorder(
-                                          //   borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                                          // ),
-                                          builder: (BuildContext context) {
-                                            return Container(
-                                              decoration: const BoxDecoration(
-                                                color: ColorResources.white,
-                                                borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
-                                              ),
-                                              child: Padding(
-                                                padding: EdgeInsets.only(
-                                                  bottom: MediaQuery.of(context).viewInsets.bottom, // Handle keyboard height
-                                                  top: 10,
-                                                  left: 14,
-                                                  right: 6,
-                                                ),
-                                                child: Column(
-                                                  mainAxisSize: MainAxisSize.min,
-                                                  children: [
-                                                    Row(
-                                                      children: [
-                                                        const SizedBox(width: 12),
-                                                        Flexible(
-                                                          child: TextField(
-                                                            controller: askAstrologerQuestionController.messageController,
-                                                            autofocus: true,
-                                                            style: const TextStyle(
-                                                              fontSize: 16,
-                                                              color: Colors.black,
-                                                            ),
-                                                            maxLines: 4,
-                                                            minLines: 1,
-                                                            decoration: const InputDecoration(
-                                                              border: InputBorder.none,
-                                                              hintText: 'Enter your question...',
-                                                            ),
-                                                          ),
-                                                        ),
-                                                        ElevatedButton(
-                                                          onPressed: () {
-                                                            if (askAstrologerQuestionController.messageController.text.isNotEmpty) {
-                                                              if (FocusManager.instance.primaryFocus != null) {
-                                                                FocusManager.instance.primaryFocus!.unfocus();
-                                                              }
-                                                              askAstrologerQuestionController.getCalculation(
-                                                                  askAstrologerQuestionController.messageController.text.toString(),
-                                                                  controller.astrologerData.value.astrologerUniId.toString(),
-                                                                  1,
-                                                                  "Open"
-                                                              );
-                                                              Get.back(); // Close the bottom sheet
-                                                            }
-                                                          },
-                                                          style: ElevatedButton.styleFrom(
-                                                            shape: const CircleBorder(),
-                                                            backgroundColor: ColorResources.colorPrimary, // Replace with ColorResources.colorPrimary
-                                                          ),
-                                                          child: const Icon(
-                                                            Icons.send,
-                                                            color: ColorResources.toolbarText, // Replace with ColorResources.white
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                        );
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: Dimensions.paddingSizeSmall,
-                                          vertical: Dimensions.paddingSizeSmall),
-                                      child: Row(
-                                        children: [
-                                          Image.asset(Images.askQuestion,
-                                              height: 24,
-                                              color: ColorResources.black2),
-                                          const Gap(10),
-                                          Expanded(
-                                            child: CustomTextRegular(
-                                                AppStrings.askQuestion.tr),
-                                          ),
-                                          const Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            color: ColorResources.black2,
-                                            size: 20,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            if(AppFeatures.slotBooking && controller.astrologerData.value.isVirtualAstrologer == 0)
+                            if (AppFeatures.askAstroQuestion &&
+                                controller.astrologerData.value
+                                        .isVirtualAstrologer ==
+                                    0)
                               Column(
                                 children: [
                                   const Gap(Dimensions.gapSmall),
@@ -1069,7 +1258,8 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                           Dimensions.borderRadiusDefault),
                                       boxShadow: const [
                                         BoxShadow(
-                                          color: ColorResources.colorPrimaryLight,
+                                          color:
+                                              ColorResources.colorPrimaryLight,
                                           spreadRadius: 1,
                                           blurRadius: 1,
                                           offset: Offset(0, 0),
@@ -1078,31 +1268,136 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                     ),
                                     child: GestureDetector(
                                       onTap: () async {
-                                        bool isLogin = await SharedPreferencesHelper.getIsLogin();
-                                        if(isLogin){
-                                          ChatIntakeFormController chatIntakeFormController = Get.put(ChatIntakeFormController());
-                                          chatIntakeFormController.setAstrologerData(controller.astrologerData.value.displayName.toString(), controller.astrologerData.value.astroImg.toString(), controller.astrologerData.value.astrologerUniId.toString(),AppConstants.slot,controller.astrologerData.value.isVirtualAstrologer ?? 0);
-                                          Get.toNamed("/slotAvailabilityScreen",arguments: {
-                                            'astrologerId':  controller.astrologerData.value.astrologerUniId.toString()
-                                          });
-                                        }else{
-                                          Get.toNamed('/login');
-                                        }
-
+                                        final AskAstrologerQuestionController
+                                            askAstrologerQuestionController =
+                                            Get.put(
+                                                AskAstrologerQuestionController());
+                                        askAstrologerQuestionController
+                                            .messageController.text = "";
+                                        showModalBottomSheet(
+                                          context: context,
+                                          isScrollControlled: true,
+                                          // shape: const RoundedRectangleBorder(
+                                          //   borderRadius: BorderRadius.vertical(top: Radius.circular(15)),
+                                          // ),
+                                          builder: (BuildContext context) {
+                                            return Container(
+                                              decoration: const BoxDecoration(
+                                                color: ColorResources.white,
+                                                borderRadius:
+                                                    BorderRadius.vertical(
+                                                        top: Radius.circular(
+                                                            15)),
+                                              ),
+                                              child: Padding(
+                                                padding: EdgeInsets.only(
+                                                  bottom: MediaQuery.of(context)
+                                                      .viewInsets
+                                                      .bottom, // Handle keyboard height
+                                                  top: 10,
+                                                  left: 14,
+                                                  right: 6,
+                                                ),
+                                                child: Column(
+                                                  mainAxisSize:
+                                                      MainAxisSize.min,
+                                                  children: [
+                                                    Row(
+                                                      children: [
+                                                        const SizedBox(
+                                                            width: 12),
+                                                        Flexible(
+                                                          child: TextField(
+                                                            controller:
+                                                                askAstrologerQuestionController
+                                                                    .messageController,
+                                                            autofocus: true,
+                                                            style:
+                                                                const TextStyle(
+                                                              fontSize: 16,
+                                                              color:
+                                                                  Colors.black,
+                                                            ),
+                                                            maxLines: 4,
+                                                            minLines: 1,
+                                                            decoration:
+                                                                const InputDecoration(
+                                                              border:
+                                                                  InputBorder
+                                                                      .none,
+                                                              hintText:
+                                                                  'Enter your question...',
+                                                            ),
+                                                          ),
+                                                        ),
+                                                        ElevatedButton(
+                                                          onPressed: () {
+                                                            if (askAstrologerQuestionController
+                                                                .messageController
+                                                                .text
+                                                                .isNotEmpty) {
+                                                              if (FocusManager
+                                                                      .instance
+                                                                      .primaryFocus !=
+                                                                  null) {
+                                                                FocusManager
+                                                                    .instance
+                                                                    .primaryFocus!
+                                                                    .unfocus();
+                                                              }
+                                                              askAstrologerQuestionController.getCalculation(
+                                                                  askAstrologerQuestionController
+                                                                      .messageController
+                                                                      .text
+                                                                      .toString(),
+                                                                  controller
+                                                                      .astrologerData
+                                                                      .value
+                                                                      .astrologerUniId
+                                                                      .toString(),
+                                                                  1,
+                                                                  "Open");
+                                                              Get.back(); // Close the bottom sheet
+                                                            }
+                                                          },
+                                                          style: ElevatedButton
+                                                              .styleFrom(
+                                                            shape:
+                                                                const CircleBorder(),
+                                                            backgroundColor:
+                                                                ColorResources
+                                                                    .colorPrimary, // Replace with ColorResources.colorPrimary
+                                                          ),
+                                                          child: const Icon(
+                                                            Icons.send,
+                                                            color: ColorResources
+                                                                .toolbarText, // Replace with ColorResources.white
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                        );
                                       },
                                       child: Padding(
                                         padding: const EdgeInsets.symmetric(
-                                            horizontal: Dimensions.paddingSizeSmall,
-                                            vertical: Dimensions.paddingSizeSmall),
+                                            horizontal:
+                                                Dimensions.paddingSizeSmall,
+                                            vertical:
+                                                Dimensions.paddingSizeSmall),
                                         child: Row(
                                           children: [
-                                            Image.asset(Images.chatAssistant,
+                                            Image.asset(Images.askQuestion,
                                                 height: 24,
                                                 color: ColorResources.black2),
                                             const Gap(10),
                                             Expanded(
                                               child: CustomTextRegular(
-                                                  AppStrings.checkSlotAvailability.tr),
+                                                  AppStrings.askQuestion.tr),
                                             ),
                                             const Icon(
                                               Icons.arrow_forward_ios_rounded,
@@ -1117,59 +1412,173 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                 ],
                               ),
 
-
-                            const Gap(Dimensions.gapSmall),
-                            if(controller.astrologerData.value.isVirtualAstrologer == 0)
-                            Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(
-                                    Dimensions.borderRadiusDefault),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: ColorResources.colorPrimaryLight,
-                                    spreadRadius: 1,
-                                    blurRadius: 1,
-                                    offset: Offset(0, 0),
+                            if (AppFeatures.slotBooking &&
+                                controller.astrologerData.value
+                                        .isVirtualAstrologer ==
+                                    0)
+                              Column(
+                                children: [
+                                  const Gap(Dimensions.gapSmall),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      borderRadius: BorderRadius.circular(
+                                          Dimensions.borderRadiusDefault),
+                                      boxShadow: const [
+                                        BoxShadow(
+                                          color:
+                                              ColorResources.colorPrimaryLight,
+                                          spreadRadius: 1,
+                                          blurRadius: 1,
+                                          offset: Offset(0, 0),
+                                        ),
+                                      ],
+                                    ),
+                                    child: GestureDetector(
+                                      onTap: () async {
+                                        bool isLogin =
+                                            await SharedPreferencesHelper
+                                                .getIsLogin();
+                                        if (isLogin) {
+                                          ChatIntakeFormController
+                                              chatIntakeFormController =
+                                              Get.put(
+                                                  ChatIntakeFormController());
+                                          chatIntakeFormController
+                                              .setAstrologerData(
+                                                  controller.astrologerData
+                                                      .value.displayName
+                                                      .toString(),
+                                                  controller.astrologerData
+                                                      .value.astroImg
+                                                      .toString(),
+                                                  controller.astrologerData
+                                                      .value.astrologerUniId
+                                                      .toString(),
+                                                  AppConstants.slot,
+                                                  controller
+                                                          .astrologerData
+                                                          .value
+                                                          .isVirtualAstrologer ??
+                                                      0);
+                                          Get.toNamed("/slotAvailabilityScreen",
+                                              arguments: {
+                                                'astrologerId': controller
+                                                    .astrologerData
+                                                    .value
+                                                    .astrologerUniId
+                                                    .toString()
+                                              });
+                                        } else {
+                                          Get.toNamed('/login');
+                                        }
+                                      },
+                                      child: Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal:
+                                                Dimensions.paddingSizeSmall,
+                                            vertical:
+                                                Dimensions.paddingSizeSmall),
+                                        child: Row(
+                                          children: [
+                                            Image.asset(Images.chatAssistant,
+                                                height: 24,
+                                                color: ColorResources.black2),
+                                            const Gap(10),
+                                            Expanded(
+                                              child: CustomTextRegular(
+                                                  AppStrings
+                                                      .checkSlotAvailability
+                                                      .tr),
+                                            ),
+                                            const Icon(
+                                              Icons.arrow_forward_ios_rounded,
+                                              color: ColorResources.black2,
+                                              size: 20,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
                                   ),
                                 ],
                               ),
-                              child: GestureDetector(
-                                onTap: () async {
-                                  bool isLogin = await SharedPreferencesHelper.getIsLogin();
-                                  if(isLogin){
-                                    ChatIntakeFormController chatIntakeFormController = Get.put(ChatIntakeFormController());
-                                    chatIntakeFormController.setAstrologerData(controller.astrologerData.value.displayName.toString(), controller.astrologerData.value.astroImg.toString(), controller.astrologerData.value.astrologerUniId.toString(),AppConstants.chat,controller.astrologerData.value.isVirtualAstrologer ?? 0);
-                                    chatIntakeFormController.startAssistantChat(controller.astrologerData.value.astrologerUniId.toString());
-                                  }else{
-                                    Get.toNamed('/login');
-                                  }
 
-                                },
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: Dimensions.paddingSizeSmall,
-                                      vertical: Dimensions.paddingSizeSmall),
-                                  child: Row(
-                                    children: [
-                                      Image.asset(Images.chatAssistant,
-                                          height: 24,
-                                          color: ColorResources.black2),
-                                      const Gap(10),
-                                      Expanded(
-                                        child: CustomTextRegular(
-                                            AppStrings.chatWithAss.tr),
-                                      ),
-                                      const Icon(
-                                        Icons.arrow_forward_ios_rounded,
-                                        color: ColorResources.black2,
-                                        size: 20,
-                                      ),
-                                    ],
+                            const Gap(Dimensions.gapSmall),
+                            if (controller
+                                    .astrologerData.value.isVirtualAstrologer ==
+                                0)
+                              Container(
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(
+                                      Dimensions.borderRadiusDefault),
+                                  boxShadow: const [
+                                    BoxShadow(
+                                      color: ColorResources.colorPrimaryLight,
+                                      spreadRadius: 1,
+                                      blurRadius: 1,
+                                      offset: Offset(0, 0),
+                                    ),
+                                  ],
+                                ),
+                                child: GestureDetector(
+                                  onTap: () async {
+                                    bool isLogin = await SharedPreferencesHelper
+                                        .getIsLogin();
+                                    if (isLogin) {
+                                      ChatIntakeFormController
+                                          chatIntakeFormController =
+                                          Get.put(ChatIntakeFormController());
+                                      chatIntakeFormController
+                                          .setAstrologerData(
+                                              controller.astrologerData.value
+                                                  .displayName
+                                                  .toString(),
+                                              controller
+                                                  .astrologerData.value.astroImg
+                                                  .toString(),
+                                              controller.astrologerData.value
+                                                  .astrologerUniId
+                                                  .toString(),
+                                              AppConstants.chat,
+                                              controller.astrologerData.value
+                                                      .isVirtualAstrologer ??
+                                                  0);
+                                      chatIntakeFormController
+                                          .startAssistantChat(controller
+                                              .astrologerData
+                                              .value
+                                              .astrologerUniId
+                                              .toString());
+                                    } else {
+                                      Get.toNamed('/login');
+                                    }
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: Dimensions.paddingSizeSmall,
+                                        vertical: Dimensions.paddingSizeSmall),
+                                    child: Row(
+                                      children: [
+                                        Image.asset(Images.chatAssistant,
+                                            height: 24,
+                                            color: ColorResources.black2),
+                                        const Gap(10),
+                                        Expanded(
+                                          child: CustomTextRegular(
+                                              AppStrings.chatWithAss.tr),
+                                        ),
+                                        const Icon(
+                                          Icons.arrow_forward_ios_rounded,
+                                          color: ColorResources.black2,
+                                          size: 20,
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
 
                             const Gap(Dimensions.gapSmall),
                             // Gifts
@@ -1201,25 +1610,34 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                               child: CustomTextMedium(
                                                 "Send a Gift",
                                                 fontSize:
-                                                Dimensions.fontSizeLarge,
+                                                    Dimensions.fontSizeLarge,
                                               ),
                                             ),
                                             Obx(() {
-                                              if (dashboardController.isBalanceLoading.value) {
+                                              if (dashboardController
+                                                  .isBalanceLoading.value) {
                                                 return const SizedBox(
-                                                    width: 20.0, // Set your desired width
+                                                    width:
+                                                        20.0, // Set your desired width
                                                     height: 20.0,
-                                                    child: CircularProgressIndicator(
-                                                      color: ColorResources.colorSecondary,
+                                                    child:
+                                                        CircularProgressIndicator(
+                                                      color: ColorResources
+                                                          .colorSecondary,
                                                       strokeWidth: 1.0,
                                                     ));
-                                              } else if (dashboardController.isBalanceSuccess.value) {
+                                              } else if (dashboardController
+                                                  .isBalanceSuccess.value) {
                                                 return CustomTextMedium(
                                                     '${configController.currencySymbol}${dashboardController.walletBalanceModel.data.toString()}',
-                                                    color: ColorResources.black);
+                                                    color:
+                                                        ColorResources.black);
                                               } else {
                                                 return const Text('***',
-                                                    style: TextStyle(fontSize: 14,color: ColorResources.toolbarText));
+                                                    style: TextStyle(
+                                                        fontSize: 14,
+                                                        color: ColorResources
+                                                            .toolbarText));
                                               }
                                             }),
                                           ],
@@ -1227,54 +1645,81 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                       ),
                                       const Gap(Dimensions.gapDefault),
                                       Obx(() {
-                                        if (giftController.isGiftSuccess.isTrue) {
+                                        if (giftController
+                                            .isGiftSuccess.isTrue) {
                                           return GridView.builder(
-                                            itemCount: giftController.liveGiftListModel.data?.length,
+                                            itemCount: giftController
+                                                .liveGiftListModel.data?.length,
                                             shrinkWrap: true,
-                                            physics: const NeverScrollableScrollPhysics(),
-                                            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                              crossAxisCount: 4,
-                                              mainAxisSpacing: 2.0,
-                                              crossAxisSpacing: 2.0,
-                                              childAspectRatio: 0.90
-                                            ),
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                                    crossAxisCount: 4,
+                                                    mainAxisSpacing: 2.0,
+                                                    crossAxisSpacing: 2.0,
+                                                    childAspectRatio: 0.90),
                                             itemBuilder: (context, index) {
                                               return GestureDetector(
                                                 onTap: () {
                                                   // controller.selectedGiftIndex.value = index;
-                                                  if (giftController.selectedGiftIndex.value == index) {
+                                                  if (giftController
+                                                          .selectedGiftIndex
+                                                          .value ==
+                                                      index) {
                                                     // If the selected gift is clicked again, unselect it
-                                                    giftController.selectedGiftIndex.value = -1;
+                                                    giftController
+                                                        .selectedGiftIndex
+                                                        .value = -1;
                                                   } else {
                                                     // Otherwise, select the clicked gift
-                                                    giftController.selectedGiftIndex.value = index;
+                                                    giftController
+                                                        .selectedGiftIndex
+                                                        .value = index;
                                                   }
                                                 },
                                                 child: Obx(
-                                                      () => Container(
+                                                  () => Container(
                                                     decoration: BoxDecoration(
-                                                      color: giftController.selectedGiftIndex.value == index
+                                                      color: giftController
+                                                                  .selectedGiftIndex
+                                                                  .value ==
+                                                              index
                                                           ? Colors.grey[300]
                                                           : null,
-                                                      borderRadius: BorderRadius.circular(10),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              10),
                                                     ),
                                                     child: Column(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
                                                       children: [
                                                         CustomNetworkImage(
-                                                          imageUrl: giftController.liveGiftListModel.data![index].giftImage.toString(),
+                                                          imageUrl: giftController
+                                                              .liveGiftListModel
+                                                              .data![index]
+                                                              .giftImage
+                                                              .toString(),
                                                           height: 40,
                                                           width: 40,
                                                         ),
                                                         // const Gap(Dimensions.gapExtraExtraSmall),
                                                         CustomTextRegular(
-                                                          giftController.liveGiftListModel.data![index].giftName.toString(),
-                                                          fontSize: Dimensions.fontSizeSmall,
+                                                          giftController
+                                                              .liveGiftListModel
+                                                              .data![index]
+                                                              .giftName
+                                                              .toString(),
+                                                          fontSize: Dimensions
+                                                              .fontSizeSmall,
                                                           maxLines: 1,
                                                         ),
                                                         CustomTextMedium(
                                                           "${configController.currencySymbol} ${giftController.liveGiftListModel.data![index].giftPrice.toString()}",
-                                                          fontSize: Dimensions.fontSizeExtraSmall,
+                                                          fontSize: Dimensions
+                                                              .fontSizeExtraSmall,
                                                         ),
                                                       ],
                                                     ),
@@ -1283,34 +1728,51 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                               );
                                             },
                                           );
-                                        } else if (giftController.isGiftLoading.isTrue) {
+                                        } else if (giftController
+                                            .isGiftLoading.isTrue) {
                                           return const CircularProgressIndicator();
                                         } else {
                                           return const EmptyScreen();
                                         }
                                       }),
                                       Padding(
-                                        padding: const EdgeInsets.only(top: 4.0, left: 8, right: 8, bottom: 10),
+                                        padding: const EdgeInsets.only(
+                                            top: 4.0,
+                                            left: 8,
+                                            right: 8,
+                                            bottom: 10),
                                         child: Row(
                                           children: [
                                             Obx(() {
-                                              if (giftController.selectedGiftIndex.value != -1) {
+                                              if (giftController
+                                                      .selectedGiftIndex
+                                                      .value !=
+                                                  -1) {
                                                 return Expanded(
                                                   child: GestureDetector(
                                                     onTap: () {
                                                       Get.toNamed("/wallet");
                                                     },
                                                     child: Container(
-                                                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 10,
+                                                          horizontal: 15),
                                                       decoration: BoxDecoration(
-                                                        color: ColorResources.colorPrimaryLight,
-                                                        borderRadius: BorderRadius.circular(20),
+                                                        color: ColorResources
+                                                            .colorPrimaryLight,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
                                                       ),
                                                       child: CustomTextMedium(
                                                         "Recharge",
-                                                        color: ColorResources.black,
-                                                        fontSize: Dimensions.fontSizeSmall,
-                                                        textAlign: TextAlign.center,
+                                                        color: ColorResources
+                                                            .black,
+                                                        fontSize: Dimensions
+                                                            .fontSizeSmall,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                     ),
                                                   ),
@@ -1321,31 +1783,59 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                             }),
                                             const Gap(Dimensions.gapExtraSmall),
                                             Obx(() {
-                                              if (giftController.selectedGiftIndex.value != -1) {
+                                              if (giftController
+                                                      .selectedGiftIndex
+                                                      .value !=
+                                                  -1) {
                                                 return Expanded(
                                                   child: GestureDetector(
                                                     onTap: () {
-                                                      if (giftController.selectedGiftIndex.value != -1) {
-                                                        giftController.sendGiftApi(
+                                                      if (giftController
+                                                              .selectedGiftIndex
+                                                              .value !=
+                                                          -1) {
+                                                        giftController
+                                                            .sendGiftApi(
                                                           "0",
-                                                          giftController.astrologerData.value.astrologerUniId.toString(),
-                                                          giftController.liveGiftListModel.data![giftController.selectedGiftIndex.value.toInt()].id.toString(),
+                                                          giftController
+                                                              .astrologerData
+                                                              .value
+                                                              .astrologerUniId
+                                                              .toString(),
+                                                          giftController
+                                                              .liveGiftListModel
+                                                              .data![giftController
+                                                                  .selectedGiftIndex
+                                                                  .value
+                                                                  .toInt()]
+                                                              .id
+                                                              .toString(),
                                                         );
                                                       } else {
-                                                        CustomSnackBar.showTop("Please select a gift.");
+                                                        CustomSnackBar.showTop(
+                                                            "Please select a gift.");
                                                       }
                                                     },
                                                     child: Container(
-                                                      padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          vertical: 10,
+                                                          horizontal: 15),
                                                       decoration: BoxDecoration(
-                                                        color: ColorResources.colorPrimaryMedium,
-                                                        borderRadius: BorderRadius.circular(20),
+                                                        color: ColorResources
+                                                            .colorPrimaryMedium,
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(20),
                                                       ),
                                                       child: CustomTextMedium(
                                                         "Send",
-                                                        color: ColorResources.toolbarText,
-                                                        fontSize: Dimensions.fontSizeSmall,
-                                                        textAlign: TextAlign.center,
+                                                        color: ColorResources
+                                                            .toolbarText,
+                                                        fontSize: Dimensions
+                                                            .fontSizeSmall,
+                                                        textAlign:
+                                                            TextAlign.center,
                                                       ),
                                                     ),
                                                   ),
@@ -1374,39 +1864,71 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                       ],
                     ),
                   ),
-                  if (controller.astrologerData.value.emergencyChatStatus != 1 ||  controller.astrologerData.value.emergencyCallStatus != 1 ||  controller.astrologerData.value.emergencyVideoStatus != 1)
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      color: ColorResources.white,
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMediumSmall,vertical: Dimensions.paddingSizeOverSmall),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            // if (controller.astrologerData.value.callStatus == 1)
+                  if (controller.astrologerData.value.emergencyChatStatus != 1 ||
+                      controller.astrologerData.value.emergencyCallStatus !=
+                          1 ||
+                      controller.astrologerData.value.emergencyVideoStatus != 1)
+                    Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        color: ColorResources.white,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: Dimensions.paddingSizeMediumSmall,
+                              vertical: Dimensions.paddingSizeOverSmall),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              // if (controller.astrologerData.value.callStatus == 1)
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 4.0),
                                   child: CustomServiceButton(
                                     onTap: () async {
-                                      bool isLogin = await SharedPreferencesHelper.getIsLogin();
-                                      num? isCallRequestToOfflineAstro  = configController.config.data?.isCallRequestToOfflineAstro;
-                                      if (isLogin && controller.astrologerData.value.callStatus == 1) {
-
-                                        if(AppFeatures.minimumBalanceRequired){
-                                          controller.astrologerData.value.prices?.forEach((priceItem) {
-                                            String type = priceItem.type.toString();
+                                      bool isLogin =
+                                          await SharedPreferencesHelper
+                                              .getIsLogin();
+                                      num? isCallRequestToOfflineAstro =
+                                          configController.config.data
+                                              ?.isCallRequestToOfflineAstro;
+                                      if (isLogin &&
+                                          controller.astrologerData.value
+                                                  .callStatus ==
+                                              1) {
+                                        if (AppFeatures
+                                            .minimumBalanceRequired) {
+                                          controller.astrologerData.value.prices
+                                              ?.forEach((priceItem) {
+                                            String type =
+                                                priceItem.type.toString();
                                             switch (type) {
                                               case AppConstants.chat:
-                                                chatRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+                                                chatRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
                                                 break;
                                               case AppConstants.call:
-                                                callRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+                                                callRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
                                                 break;
                                               case AppConstants.video:
-                                                videoRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+                                                videoRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
                                                 break;
                                             }
                                           });
@@ -1415,61 +1937,98 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                           if (chatRate == "FREE") {
                                             controller.checkCallDetail(
                                                 AppConstants.call,
-                                                controller.astrologerData.value.astrologerUniId.toString(),
                                                 controller.astrologerData.value
-                                            );
+                                                    .astrologerUniId
+                                                    .toString(),
+                                                controller
+                                                    .astrologerData.value);
                                           } else {
                                             // Convert chatRate from String to double
-                                            double callRateValue = double.tryParse(callRate) ?? 0.0;
-                                            double minimumBalance = callRateValue * 5;
+                                            double callRateValue =
+                                                double.tryParse(callRate) ??
+                                                    0.0;
+                                            double minimumBalance =
+                                                callRateValue * 5;
 
                                             // Convert wallet balance to double
-                                            double walletBalance = double.tryParse(dashboardController.walletBalanceModel.data.toString()) ?? 0.0;
+                                            double walletBalance =
+                                                double.tryParse(
+                                                        dashboardController
+                                                            .walletBalanceModel
+                                                            .data
+                                                            .toString()) ??
+                                                    0.0;
 
-                                            if (walletBalance >= minimumBalance) {
+                                            if (walletBalance >=
+                                                minimumBalance) {
                                               controller.checkCallDetail(
                                                   AppConstants.call,
-                                                  controller.astrologerData.value.astrologerUniId.toString(),
-                                                  controller.astrologerData.value
-                                              );
+                                                  controller.astrologerData
+                                                      .value.astrologerUniId
+                                                      .toString(),
+                                                  controller
+                                                      .astrologerData.value);
                                             } else {
-                                              CommonMethods().showInsufficientBalanceBottomSheet(AppConstants.call,controller.astrologerData.value.displayName.toString(),minimumBalance.toString());
+                                              CommonMethods()
+                                                  .showInsufficientBalanceBottomSheet(
+                                                      AppConstants.call,
+                                                      controller.astrologerData
+                                                          .value.displayName
+                                                          .toString(),
+                                                      minimumBalance
+                                                          .toString());
                                               // CustomSnackBar.showBottom("Minimum balance of 5 minutes is required to start chat");
                                             }
                                           }
-                                        }else{
+                                        } else {
                                           controller.checkCallDetail(
                                               AppConstants.call,
-                                              controller.astrologerData.value.astrologerUniId.toString(),
                                               controller.astrologerData.value
-                                          );
+                                                  .astrologerUniId
+                                                  .toString(),
+                                              controller.astrologerData.value);
                                         }
-                                      }
-                                      else if (!isLogin) {
+                                      } else if (!isLogin) {
                                         Get.toNamed('/login');
-                                      } else if (controller.astrologerData.value.callStatus == 0 && isCallRequestToOfflineAstro == 1){
+                                      } else if (controller.astrologerData.value
+                                                  .callStatus ==
+                                              0 &&
+                                          isCallRequestToOfflineAstro == 1) {
                                         showWaitListDialog(AppConstants.call);
-                                      }else if (controller.astrologerData.value.callStatus == 0 && isCallRequestToOfflineAstro == 0){
-                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                            content: Text("Astrologer currently unavailable for call"))
-                                        );
+                                      } else if (controller.astrologerData.value
+                                                  .callStatus ==
+                                              0 &&
+                                          isCallRequestToOfflineAstro == 0) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    "Astrologer currently unavailable for call")));
                                       }
                                     },
                                     service: "Call Now",
                                     servicePrice: callRate,
-                                    backgroundColor: controller.astrologerData.value.callStatus == 1
-                                      ? Colors.green
-                                      : ColorResources.black7,
-                                    textColor: controller.astrologerData.value.callStatus == 1 && controller.astrologerData.value.busyStatus == 1
-                                      ? Colors.red
-                                      : controller.astrologerData.value.callStatus == 1
-                                      ? ColorResources.white
-                                      : ColorResources.colorText,
+                                    backgroundColor: controller.astrologerData
+                                                .value.callStatus ==
+                                            1
+                                        ? Colors.green
+                                        : ColorResources.black7,
+                                    textColor: controller.astrologerData.value
+                                                    .callStatus ==
+                                                1 &&
+                                            controller.astrologerData.value
+                                                    .busyStatus ==
+                                                1
+                                        ? Colors.red
+                                        : controller.astrologerData.value
+                                                    .callStatus ==
+                                                1
+                                            ? ColorResources.white
+                                            : ColorResources.colorText,
                                   ),
                                 ),
                               ),
-                            // const Gap(Dimensions.gapDefault),
-                            // if (controller.astrologerData.value.chatStatus == 1)
+                              // const Gap(Dimensions.gapDefault),
+                              // if (controller.astrologerData.value.chatStatus == 1)
                               Expanded(
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
@@ -1491,21 +2050,49 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                     //   }
                                     // },
                                     onTap: () async {
-                                      bool isLogin = await SharedPreferencesHelper.getIsLogin();
-                                      num? isCallRequestToOfflineAstro  = configController.config.data?.isCallRequestToOfflineAstro;
-                                      if (isLogin && controller.astrologerData.value.chatStatus == 1) {
-                                        if(AppFeatures.minimumBalanceRequired){
-                                          controller.astrologerData.value.prices?.forEach((priceItem) {
-                                            String type = priceItem.type.toString();
+                                      bool isLogin =
+                                          await SharedPreferencesHelper
+                                              .getIsLogin();
+                                      num? isCallRequestToOfflineAstro =
+                                          configController.config.data
+                                              ?.isCallRequestToOfflineAstro;
+                                      if (isLogin &&
+                                          controller.astrologerData.value
+                                                  .chatStatus ==
+                                              1) {
+                                        if (AppFeatures
+                                            .minimumBalanceRequired) {
+                                          controller.astrologerData.value.prices
+                                              ?.forEach((priceItem) {
+                                            String type =
+                                                priceItem.type.toString();
                                             switch (type) {
                                               case AppConstants.chat:
-                                                chatRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+                                                chatRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
                                                 break;
                                               case AppConstants.call:
-                                                callRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+                                                callRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
                                                 break;
                                               case AppConstants.video:
-                                                videoRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
+                                                videoRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
                                                 break;
                                             }
                                           });
@@ -1514,188 +2101,313 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                           if (chatRate == "FREE") {
                                             controller.checkCallDetail(
                                                 AppConstants.chat,
-                                                controller.astrologerData.value.astrologerUniId.toString(),
                                                 controller.astrologerData.value
-                                            );
+                                                    .astrologerUniId
+                                                    .toString(),
+                                                controller
+                                                    .astrologerData.value);
                                           } else {
                                             // Convert chatRate from String to double
-                                            double chatRateValue = double.tryParse(chatRate) ?? 0.0;
-                                            double minimumBalance = chatRateValue * 5;
+                                            double chatRateValue =
+                                                double.tryParse(chatRate) ??
+                                                    0.0;
+                                            double minimumBalance =
+                                                chatRateValue * 5;
 
                                             // Convert wallet balance to double
-                                            double walletBalance = double.tryParse(dashboardController.walletBalanceModel.data.toString()) ?? 0.0;
+                                            double walletBalance =
+                                                double.tryParse(
+                                                        dashboardController
+                                                            .walletBalanceModel
+                                                            .data
+                                                            .toString()) ??
+                                                    0.0;
 
-                                            if (walletBalance >= minimumBalance) {
+                                            if (walletBalance >=
+                                                minimumBalance) {
                                               controller.checkCallDetail(
                                                   AppConstants.chat,
-                                                  controller.astrologerData.value.astrologerUniId.toString(),
-                                                  controller.astrologerData.value
-                                              );
+                                                  controller.astrologerData
+                                                      .value.astrologerUniId
+                                                      .toString(),
+                                                  controller
+                                                      .astrologerData.value);
                                             } else {
-                                              CommonMethods().showInsufficientBalanceBottomSheet(AppConstants.chat,controller.astrologerData.value.displayName.toString(),minimumBalance.toString());
+                                              CommonMethods()
+                                                  .showInsufficientBalanceBottomSheet(
+                                                      AppConstants.chat,
+                                                      controller.astrologerData
+                                                          .value.displayName
+                                                          .toString(),
+                                                      minimumBalance
+                                                          .toString());
                                               // CustomSnackBar.showBottom("Minimum balance of 5 minutes is required to start chat");
                                             }
                                           }
-                                        }else{
+                                        } else {
                                           controller.checkCallDetail(
                                               AppConstants.chat,
-                                              controller.astrologerData.value.astrologerUniId.toString(),
                                               controller.astrologerData.value
-                                          );
+                                                  .astrologerUniId
+                                                  .toString(),
+                                              controller.astrologerData.value);
                                         }
-                                      }
-                                      else if (!isLogin) {
+                                      } else if (!isLogin) {
                                         Get.toNamed('/login');
-                                      }  else if (controller.astrologerData.value.chatStatus == 0 && isCallRequestToOfflineAstro == 1){
+                                      } else if (controller.astrologerData.value
+                                                  .chatStatus ==
+                                              0 &&
+                                          isCallRequestToOfflineAstro == 1) {
                                         showWaitListDialog(AppConstants.chat);
-                                      }else if (controller.astrologerData.value.chatStatus == 0 && isCallRequestToOfflineAstro == 0){
-                                        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                            content: Text("Astrologer currently unavailable for chat"))
-                                        );
+                                      } else if (controller.astrologerData.value
+                                                  .chatStatus ==
+                                              0 &&
+                                          isCallRequestToOfflineAstro == 0) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    "Astrologer currently unavailable for chat")));
                                       }
-                                      },
+                                    },
                                     service: "Chat Now",
                                     servicePrice: chatRate,
-                                    backgroundColor: controller.astrologerData.value.chatStatus == 1
+                                    backgroundColor: controller.astrologerData
+                                                .value.chatStatus ==
+                                            1
                                         ? Colors.green
                                         : ColorResources.black7,
-                                    textColor: controller.astrologerData.value.chatStatus == 1 && controller.astrologerData.value.busyStatus == 1
+                                    textColor: controller.astrologerData.value
+                                                    .chatStatus ==
+                                                1 &&
+                                            controller.astrologerData.value
+                                                    .busyStatus ==
+                                                1
                                         ? Colors.red
-                                        : controller.astrologerData.value.chatStatus == 1
-                                        ? ColorResources.white
-                                        : ColorResources.colorText,
+                                        : controller.astrologerData.value
+                                                    .chatStatus ==
+                                                1
+                                            ? ColorResources.white
+                                            : ColorResources.colorText,
                                   ),
                                 ),
                               ),
-                            // const Gap(Dimensions.gapDefault),
-                            // if (controller.astrologerData.value.videoStatus == 1)
+                              // const Gap(Dimensions.gapDefault),
+                              // if (controller.astrologerData.value.videoStatus == 1)
                               Expanded(
-                              child: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 4.0),
-                                child: CustomServiceButton(
-                                  onTap: () async {
-                                    bool isLogin = await SharedPreferencesHelper.getIsLogin();
-                                    num? isCallRequestToOfflineAstro  = configController.config.data?.isCallRequestToOfflineAstro;
-                                    if (isLogin && controller.astrologerData.value.videoStatus == 1) {
-                                      if(AppFeatures.minimumBalanceRequired){
-                                        controller.astrologerData.value.prices?.forEach((priceItem) {
-                                          String type = priceItem.type.toString();
-                                          switch (type) {
-                                            case AppConstants.chat:
-                                              chatRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
-                                              break;
-                                            case AppConstants.call:
-                                              callRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
-                                              break;
-                                            case AppConstants.video:
-                                              videoRate = priceItem.firstCallFreeMinutes.toString().isNotEmpty ? "FREE" : priceItem.price.toString();
-                                              break;
-                                          }
-                                        });
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 4.0),
+                                  child: CustomServiceButton(
+                                    onTap: () async {
+                                      bool isLogin =
+                                          await SharedPreferencesHelper
+                                              .getIsLogin();
+                                      num? isCallRequestToOfflineAstro =
+                                          configController.config.data
+                                              ?.isCallRequestToOfflineAstro;
+                                      if (isLogin &&
+                                          controller.astrologerData.value
+                                                  .videoStatus ==
+                                              1) {
+                                        if (AppFeatures
+                                            .minimumBalanceRequired) {
+                                          controller.astrologerData.value.prices
+                                              ?.forEach((priceItem) {
+                                            String type =
+                                                priceItem.type.toString();
+                                            switch (type) {
+                                              case AppConstants.chat:
+                                                chatRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
+                                                break;
+                                              case AppConstants.call:
+                                                callRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
+                                                break;
+                                              case AppConstants.video:
+                                                videoRate = priceItem
+                                                        .firstCallFreeMinutes
+                                                        .toString()
+                                                        .isNotEmpty
+                                                    ? "FREE"
+                                                    : priceItem.price
+                                                        .toString();
+                                                break;
+                                            }
+                                          });
 
-                                        // Now handle the chatRate logic
-                                        if (chatRate == "FREE") {
-                                          controller.checkCallDetail(
-                                              AppConstants.video,
-                                              controller.astrologerData.value.astrologerUniId.toString(),
-                                              controller.astrologerData.value
-                                          );
-                                        } else {
-                                          // Convert chatRate from String to double
-                                          double videoRateValue = double.tryParse(videoRate) ?? 0.0;
-                                          double minimumBalance = videoRateValue * 5;
-
-                                          // Convert wallet balance to double
-                                          double walletBalance = double.tryParse(dashboardController.walletBalanceModel.data.toString()) ?? 0.0;
-
-                                          if (walletBalance >= minimumBalance) {
+                                          // Now handle the chatRate logic
+                                          if (chatRate == "FREE") {
                                             controller.checkCallDetail(
                                                 AppConstants.video,
-                                                controller.astrologerData.value.astrologerUniId.toString(),
                                                 controller.astrologerData.value
-                                            );
+                                                    .astrologerUniId
+                                                    .toString(),
+                                                controller
+                                                    .astrologerData.value);
                                           } else {
-                                            CommonMethods().showInsufficientBalanceBottomSheet(AppConstants.video,controller.astrologerData.value.displayName.toString(),minimumBalance.toString());
-                                            // CustomSnackBar.showBottom("Minimum balance of 5 minutes is required to start chat");
-                                          }
-                                        }
-                                      }else{
-                                        controller.checkCallDetail(
-                                            AppConstants.video,
-                                            controller.astrologerData.value.astrologerUniId.toString(),
-                                            controller.astrologerData.value
-                                        );
-                                      }
-                                    }
-                                    else if (!isLogin) {
-                                      Get.toNamed('/login');
-                                    } else if (controller.astrologerData.value.videoStatus == 0 && isCallRequestToOfflineAstro == 1){
-                                      showWaitListDialog(AppConstants.video);
-                                    }else if (controller.astrologerData.value.videoStatus == 0 && isCallRequestToOfflineAstro == 0){
-                                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                                          content: Text("Astrologer currently unavailable for video call"))
-                                      );
-                                    }
+                                            // Convert chatRate from String to double
+                                            double videoRateValue =
+                                                double.tryParse(videoRate) ??
+                                                    0.0;
+                                            double minimumBalance =
+                                                videoRateValue * 5;
 
-                                  },
-                                  service: "Video Call",
-                                  servicePrice: videoRate,
-                                  backgroundColor: controller.astrologerData.value.videoStatus == 1
-                                      ? Colors.green
-                                      : ColorResources.black7,
-                                  textColor: controller.astrologerData.value.videoStatus == 1 && controller.astrologerData.value.busyStatus == 1
-                                      ? Colors.red
-                                      : controller.astrologerData.value.videoStatus == 1
-                                      ? ColorResources.white
-                                      : ColorResources.colorText,
+                                            // Convert wallet balance to double
+                                            double walletBalance =
+                                                double.tryParse(
+                                                        dashboardController
+                                                            .walletBalanceModel
+                                                            .data
+                                                            .toString()) ??
+                                                    0.0;
+
+                                            if (walletBalance >=
+                                                minimumBalance) {
+                                              controller.checkCallDetail(
+                                                  AppConstants.video,
+                                                  controller.astrologerData
+                                                      .value.astrologerUniId
+                                                      .toString(),
+                                                  controller
+                                                      .astrologerData.value);
+                                            } else {
+                                              CommonMethods()
+                                                  .showInsufficientBalanceBottomSheet(
+                                                      AppConstants.video,
+                                                      controller.astrologerData
+                                                          .value.displayName
+                                                          .toString(),
+                                                      minimumBalance
+                                                          .toString());
+                                              // CustomSnackBar.showBottom("Minimum balance of 5 minutes is required to start chat");
+                                            }
+                                          }
+                                        } else {
+                                          controller.checkCallDetail(
+                                              AppConstants.video,
+                                              controller.astrologerData.value
+                                                  .astrologerUniId
+                                                  .toString(),
+                                              controller.astrologerData.value);
+                                        }
+                                      } else if (!isLogin) {
+                                        Get.toNamed('/login');
+                                      } else if (controller.astrologerData.value
+                                                  .videoStatus ==
+                                              0 &&
+                                          isCallRequestToOfflineAstro == 1) {
+                                        showWaitListDialog(AppConstants.video);
+                                      } else if (controller.astrologerData.value
+                                                  .videoStatus ==
+                                              0 &&
+                                          isCallRequestToOfflineAstro == 0) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    "Astrologer currently unavailable for video call")));
+                                      }
+                                    },
+                                    service: "Video Call",
+                                    servicePrice: videoRate,
+                                    backgroundColor: controller.astrologerData
+                                                .value.videoStatus ==
+                                            1
+                                        ? Colors.green
+                                        : ColorResources.black7,
+                                    textColor: controller.astrologerData.value
+                                                    .videoStatus ==
+                                                1 &&
+                                            controller.astrologerData.value
+                                                    .busyStatus ==
+                                                1
+                                        ? Colors.red
+                                        : controller.astrologerData.value
+                                                    .videoStatus ==
+                                                1
+                                            ? ColorResources.white
+                                            : ColorResources.colorText,
+                                  ),
                                 ),
                               ),
-                            ),
-                            // if (controller.astrologerData.value.callStatus == 0 &&
-                            //     controller.astrologerData.value.chatStatus ==
-                            //         0 &&
-                            //     controller.astrologerData.value.videoStatus ==
-                            //         0)
-                            //   CustomTextRegular(
-                            //     "Offline (Available Soon)",
-                            //     fontSize: Dimensions.fontSizeLarge,
-                            //     color: ColorResources.black1,
-                            //   ),
-                          ],
+                              // if (controller.astrologerData.value.callStatus == 0 &&
+                              //     controller.astrologerData.value.chatStatus ==
+                              //         0 &&
+                              //     controller.astrologerData.value.videoStatus ==
+                              //         0)
+                              //   CustomTextRegular(
+                              //     "Offline (Available Soon)",
+                              //     fontSize: Dimensions.fontSizeLarge,
+                              //     color: ColorResources.black1,
+                              //   ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  if(AppFeatures.emergencyChat || AppFeatures.emergencyCall || AppFeatures.emergencyVideoCall)
+                  if (AppFeatures.emergencyChat ||
+                      AppFeatures.emergencyCall ||
+                      AppFeatures.emergencyVideoCall)
                     Obx(() {
-                      if (controller.astrologerData.value.onlineStatus == 0 && controller.astrologerData.value.emergencyChatStatus == 1 ||  controller.astrologerData.value.emergencyCallStatus == 1 ||  controller.astrologerData.value.emergencyVideoStatus == 1) {
+                      if (controller.astrologerData.value.onlineStatus == 0 &&
+                              controller.astrologerData.value
+                                      .emergencyChatStatus ==
+                                  1 ||
+                          controller.astrologerData.value.emergencyCallStatus ==
+                              1 ||
+                          controller
+                                  .astrologerData.value.emergencyVideoStatus ==
+                              1) {
                         return Align(
                           alignment: Alignment.bottomCenter,
                           child: Container(
                             color: ColorResources.white,
                             child: Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeMediumSmall,vertical: Dimensions.paddingSizeOverSmall),
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: Dimensions.paddingSizeMediumSmall,
+                                  vertical: Dimensions.paddingSizeOverSmall),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: (){
-                                        if(controller.astrologerData.value.emergencyChatStatus == 1 || controller.astrologerData.value.emergencyCallStatus == 1 || controller.astrologerData.value.emergencyVideoStatus == 1){
+                                      onTap: () {
+                                        if (controller.astrologerData.value.emergencyChatStatus == 1 ||
+                                            controller.astrologerData.value
+                                                    .emergencyCallStatus ==
+                                                1 ||
+                                            controller.astrologerData.value
+                                                    .emergencyVideoStatus ==
+                                                1) {
                                           Get.dialog(
-                                            CustomAstrologerEmergencyWidget(controller,emergencyCallRate,emergencyChatRate,emergencyVideoRate),
+                                            CustomAstrologerEmergencyWidget(
+                                                controller,
+                                                emergencyCallRate,
+                                                emergencyChatRate,
+                                                emergencyVideoRate),
                                           );
-                                        }else{
-                                          CustomSnackBar.showBottom("${controller.astrologerData.value.displayName} is offline for emergency.Try after sometime.");
+                                        } else {
+                                          CustomSnackBar.showBottom(
+                                              "${controller.astrologerData.value.displayName} is offline for emergency.Try after sometime.");
                                         }
                                       },
                                       child: Container(
                                         padding: const EdgeInsets.all(12),
                                         decoration: BoxDecoration(
-                                            borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
-                                            color: ColorResources.orange
-                                        ),
+                                            borderRadius: BorderRadius.circular(
+                                                Dimensions.borderRadiusDefault),
+                                            color: ColorResources.orange),
                                         child: CustomTextRegular(
                                           "Try Emergency Session @ ${configController.currencySymbol} $emergencyCallRate/min",
                                           textAlign: TextAlign.center,
@@ -1745,8 +2457,10 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
             scrollController.addListener(() {
               if (scrollController.position.pixels ==
                   scrollController.position.maxScrollExtent) {
-                if (controller.isReviewLoading.isFalse && !controller.isNoMoreData) {
-                  controller.getAllReviews(controller.offsetCount, astrologerUniId);
+                if (controller.isReviewLoading.isFalse &&
+                    !controller.isNoMoreData) {
+                  controller.getAllReviews(
+                      controller.offsetCount, astrologerUniId);
                 }
               }
             });
@@ -1757,7 +2471,8 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: const EdgeInsets.only(top: 0.0, bottom: 8.0, right: 8.0),
+                    padding: const EdgeInsets.only(
+                        top: 0.0, bottom: 8.0, right: 8.0),
                     child: Row(
                       children: [
                         GestureDetector(
@@ -1794,7 +2509,8 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                 itemBuilder: (context, index) {
                                   // return CustomReviewWidget(
                                   //     controller.reviewsListData[index]);
-                                  var review = controller.reviewsListData[index];
+                                  var review =
+                                      controller.reviewsListData[index];
                                   if (review.status == 1) {
                                     return CustomReviewWidget(review);
                                   } else {
@@ -1804,9 +2520,9 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                               ),
                             ),
                             Obx(() => Visibility(
-                              visible: controller.isReviewLoading.isTrue,
-                              child: const Text('Loading..'),
-                            )),
+                                  visible: controller.isReviewLoading.isTrue,
+                                  child: const Text('Loading..'),
+                                )),
                           ],
                         );
                       } else if (controller.isReviewLoading.isTrue) {
@@ -1824,7 +2540,6 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
       },
     );
   }
-
 
   // void _showReviewBottomSheet(BuildContext context, String astrologerUniId) {
   //   controller.offsetCount = 0;
@@ -2007,7 +2722,6 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
     ));
   }
 
-
   void showWaitListDialog(String type) async {
     Get.dialog(AlertDialog(
       contentPadding: EdgeInsets.zero,
@@ -2051,7 +2765,8 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
+              padding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 8.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -2059,7 +2774,7 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                     child: GestureDetector(
                       onTap: () {
                         Get.back();
-                        },
+                      },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
                         alignment: Alignment.center,
@@ -2084,9 +2799,9 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                       onTap: () {
                         controller.checkCallDetail(
                             type,
-                            controller.astrologerData.value.astrologerUniId.toString(),
-                            controller.astrologerData.value
-                        );
+                            controller.astrologerData.value.astrologerUniId
+                                .toString(),
+                            controller.astrologerData.value);
                       },
                       child: Container(
                         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -2114,7 +2829,6 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
       ),
     ));
   }
-
 
 // void showInsufficientBalanceBottomSheet(String type, String astrologerName, String minimumAmount) {
   //   final WalletController walletController = Get.put(WalletController());
@@ -2250,4 +2964,29 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
       ],
     );
   }
+}
+
+class DashedLinePainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final Paint paint = Paint()
+      ..color = Colors.grey.withOpacity(0.5)
+      ..strokeWidth = 1;
+
+    const double dashWidth = 5;
+    const double dashSpace = 3;
+    double startX = 0;
+
+    while (startX < size.width) {
+      canvas.drawLine(
+        Offset(startX, size.height / 2),
+        Offset(startX + dashWidth, size.height / 2),
+        paint,
+      );
+      startX += dashWidth + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
