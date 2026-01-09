@@ -12,10 +12,12 @@ class FreeServiceWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        Expanded(
+        Flexible(
           flex: 3,
+          fit: FlexFit.loose,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.asset(
@@ -24,8 +26,9 @@ class FreeServiceWidget extends StatelessWidget {
             ),
           ),
         ),
-        Expanded(
+        Flexible(
           flex: 2,
+          fit: FlexFit.loose,
           child: Padding(
             padding: const EdgeInsets.only(left: 6.0, right: 6.0, top: 5),
             child: CustomTextMedium(

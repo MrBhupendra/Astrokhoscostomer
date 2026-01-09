@@ -39,7 +39,6 @@ class KundliChartScreen extends StatelessWidget {
         data,
         chartChannelList[0].name,
       );
-
     }
 
     return Container(
@@ -57,17 +56,21 @@ class KundliChartScreen extends StatelessWidget {
                   onTap: () {
                     controller.chartSelectedIndex.value = index;
 
-                    if(chartTypesList[index].title == AppStrings.transit.tr) {
+                    if (chartTypesList[index].title == AppStrings.transit.tr) {
                       controller.getTransitChart(
                         chartTypesList[index].name,
                         data,
-                        chartChannelList[controller.chartChannelSelectedIndex.value].name,
+                        chartChannelList[
+                                controller.chartChannelSelectedIndex.value]
+                            .name,
                       );
-                    }else{
+                    } else {
                       controller.getCharts(
                         chartTypesList[index].name,
                         data,
-                        chartChannelList[controller.chartChannelSelectedIndex.value].name,
+                        chartChannelList[
+                                controller.chartChannelSelectedIndex.value]
+                            .name,
                       );
                     }
 
@@ -78,40 +81,46 @@ class KundliChartScreen extends StatelessWidget {
                     // );
                   },
                   child: Obx(() => Container(
-                    margin: const EdgeInsets.all(Dimensions.marginSizeSmall),
-                    decoration: BoxDecoration(
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.2),
-                          spreadRadius: 1,
-                          blurRadius: 1,
-                          offset: const Offset(0, 1),
-                        )
-                      ],
-                      color: controller.chartSelectedIndex.value == index
-                          ? ColorResources.colorPrimary
-                          : ColorResources.white,
-                      borderRadius: BorderRadius.circular(Dimensions.borderRadiusSmall),
-                      border: Border.all(
-                        width: 1,
-                        color: controller.chartSelectedIndex.value == index
-                            ? ColorResources.colorPrimary
-                            : Colors.grey, // Use a different color when not selected
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                      child: Text(
-                        chartTypesList[index].title,
-                        style: TextStyle(
+                        margin:
+                            const EdgeInsets.all(Dimensions.marginSizeSmall),
+                        decoration: BoxDecoration(
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.grey.withOpacity(0.2),
+                              spreadRadius: 1,
+                              blurRadius: 1,
+                              offset: const Offset(0, 1),
+                            )
+                          ],
                           color: controller.chartSelectedIndex.value == index
-                              ? ColorResources.toolbarText // Set text color to white when selected
-                              : ColorResources.black,
-                          fontSize: 13,
+                              ? ColorResources.colorPrimary
+                              : ColorResources.white,
+                          borderRadius: BorderRadius.circular(
+                              Dimensions.borderRadiusSmall),
+                          border: Border.all(
+                            width: 1,
+                            color: controller.chartSelectedIndex.value == index
+                                ? ColorResources.colorPrimary
+                                : Colors
+                                    .grey, // Use a different color when not selected
+                          ),
                         ),
-                      ),
-                    ),
-                  )),
+                        child: Padding(
+                          padding: const EdgeInsets.all(
+                              Dimensions.paddingSizeExtraSmall),
+                          child: Text(
+                            chartTypesList[index].title,
+                            style: TextStyle(
+                              color: controller.chartSelectedIndex.value ==
+                                      index
+                                  ? ColorResources
+                                      .toolbarText // Set text color to white when selected
+                                  : ColorResources.black,
+                              fontSize: 13,
+                            ),
+                          ),
+                        ),
+                      )),
                 );
               },
             ),
@@ -119,7 +128,6 @@ class KundliChartScreen extends StatelessWidget {
 
           // Chart channel ListView
           SizedBox(
-
             width: 215,
             child: Container(
               height: 55,
@@ -130,36 +138,56 @@ class KundliChartScreen extends StatelessWidget {
                   return GestureDetector(
                     onTap: () {
                       controller.chartChannelSelectedIndex.value = index;
-                      if(chartTypesList[controller.chartSelectedIndex.value].title == AppStrings.transit.tr) {
-                        controller.getTransitChart(chartTypesList[controller.chartSelectedIndex.value].name, data, chartChannelList[index].name);
-                      }else{
-                        controller.getCharts(chartTypesList[controller.chartSelectedIndex.value].name, data, chartChannelList[index].name);
+                      if (chartTypesList[controller.chartSelectedIndex.value]
+                              .title ==
+                          AppStrings.transit.tr) {
+                        controller.getTransitChart(
+                            chartTypesList[controller.chartSelectedIndex.value]
+                                .name,
+                            data,
+                            chartChannelList[index].name);
+                      } else {
+                        controller.getCharts(
+                            chartTypesList[controller.chartSelectedIndex.value]
+                                .name,
+                            data,
+                            chartChannelList[index].name);
                       }
 
                       // controller.getCharts(chartTypesList[controller.chartSelectedIndex.value].name, data, chartChannelList[index].name);
                     },
                     child: Obx(() => Container(
-                      margin: const EdgeInsets.all(Dimensions.marginSizeSmall),
-                      decoration: BoxDecoration(
-                          color: controller.chartChannelSelectedIndex.value == index
-                              ? ColorResources.colorPrimary
-                              : ColorResources.white,
-                          borderRadius: BorderRadius.circular(Dimensions.borderRadiusSmall),
-                          border: Border.all(width: 1, color: ColorResources.colorPrimary)),
-                      child: Padding(
-                        padding: const EdgeInsets.all(Dimensions.paddingSizeExtraSmall),
-                        child: Text(
-                          chartChannelList[index].title,
-                          style: TextStyle(
-                            color: controller.chartChannelSelectedIndex.value == index
-                                ? ColorResources.toolbarText // Set text color to white when selected
-                                : ColorResources.black,
-                            // Set text color to black when not selected
-                            fontSize: 13,
+                          margin:
+                              const EdgeInsets.all(Dimensions.marginSizeSmall),
+                          decoration: BoxDecoration(
+                              color:
+                                  controller.chartChannelSelectedIndex.value ==
+                                          index
+                                      ? ColorResources.colorPrimary
+                                      : ColorResources.white,
+                              borderRadius: BorderRadius.circular(
+                                  Dimensions.borderRadiusSmall),
+                              border: Border.all(
+                                  width: 1,
+                                  color: ColorResources.colorPrimary)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(
+                                Dimensions.paddingSizeExtraSmall),
+                            child: Text(
+                              chartChannelList[index].title,
+                              style: TextStyle(
+                                color: controller
+                                            .chartChannelSelectedIndex.value ==
+                                        index
+                                    ? ColorResources
+                                        .toolbarText // Set text color to white when selected
+                                    : ColorResources.black,
+                                // Set text color to black when not selected
+                                fontSize: 13,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                    )),
+                        )),
                   );
                 },
               ),
@@ -170,30 +198,34 @@ class KundliChartScreen extends StatelessWidget {
           Expanded(
             child: Obx(() {
               if (controller.isChartSuccess.isTrue) {
-                return Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    // Display SVG chart
-                    Container(
-                      decoration:  BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 1,
-                              blurRadius: 2,
-                              offset: const Offset(0, 2),
-                            )
-                          ],
-                          color: ColorResources.colorChart
+                return Center(
+                  child: InteractiveViewer(
+                    minScale: 0.5,
+                    maxScale: 5.0,
+                    panEnabled: true,
+                    child: Container(
+                      width: MediaQuery.of(context).size.width * 1.2,
+                      height: MediaQuery.of(context).size.height * 0.8,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.5),
+                            spreadRadius: 1,
+                            blurRadius: 2,
+                            offset: const Offset(0, 2),
+                          )
+                        ],
+                        color: ColorResources.colorChart,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.all(6.0),
+                        padding: const EdgeInsets.all(8.0),
                         child: SvgPicture.string(
-                          controller.chartSvg.value, // Assuming chartSvg is a valid SVG string
+                          controller.chartSvg.value,
+                          fit: BoxFit.contain,
                         ),
                       ),
                     ),
-                  ],
+                  ),
                 );
               } else if (controller.isChartLoading.isTrue) {
                 return ListView.builder(
@@ -214,68 +246,115 @@ class KundliChartScreen extends StatelessWidget {
     );
   }
 
+  void getChartTypes() {
+    chartTypesList.clear();
 
-
-
-    void getChartTypes() {
-
-      chartTypesList.clear();
-
-      String? activeKundliApi = configController.config.data?.activeKundliApi.toString();
-      if(activeKundliApi == AppConstants.jyotisham) {
-        chartTypesList.add(ChartMenuModel(AppStrings.lagna.tr, "D1"));
-        chartTypesList.add(ChartMenuModel(AppStrings.navamsa.tr, "D9"));
-        chartTypesList.add(ChartMenuModel(AppStrings.dasamsa.tr, "D10"));
-        chartTypesList.add(ChartMenuModel(AppStrings.saptamsa.tr, "D7"));
-        chartTypesList.add(ChartMenuModel(AppStrings.khaVedamsa.tr, "D40"));
-        chartTypesList.add(ChartMenuModel(AppStrings.moon.tr, "moon"));
-        chartTypesList.add(ChartMenuModel(AppStrings.drekkana.tr, "D3"));
-        chartTypesList.add(ChartMenuModel(AppStrings.chaturthamsa.tr, "D4"));
-        chartTypesList.add(ChartMenuModel(AppStrings.shastiamsha.tr, "D6"));
-        chartTypesList.add(ChartMenuModel(AppStrings.ashtamsa.tr, "D8"));
-        chartTypesList.add(ChartMenuModel(AppStrings.dwadasamsa.tr, "D12"));
-        chartTypesList.add(ChartMenuModel(AppStrings.shodasamsa.tr, "D16"));
-        chartTypesList.add(ChartMenuModel(AppStrings.vimshama.tr, "D20"));
-        chartTypesList.add(ChartMenuModel(AppStrings.chaturVimshamsa.tr, "D24"));
-        chartTypesList.add(ChartMenuModel(AppStrings.nakshatramsa.tr, "D27"));
-        chartTypesList.add(ChartMenuModel(AppStrings.trimshamsha.tr, "D30"));
-        chartTypesList.add(ChartMenuModel(AppStrings.akshaKhaVedamsa.tr, "D45"));
-        chartTypesList.add(ChartMenuModel(AppStrings.shastiamsha.tr, "D60"));
-        chartTypesList.add(ChartMenuModel(AppStrings.transit.tr, "transit_chart"));
-        chartTypesList.add(ChartMenuModel(AppStrings.bhavChalit.tr, "bhav_chalit_chart"));
-      } else if(activeKundliApi == AppConstants.vedicastro) {
-        chartTypesList.add(ChartMenuModel(AppStrings.lagna.tr, "D1"));
-        chartTypesList.add(ChartMenuModel(AppStrings.dreshkana.tr, "D3"));
-        chartTypesList.add(ChartMenuModel(AppStrings.somanatha.tr, "D3-s"));
-        chartTypesList.add(ChartMenuModel(AppStrings.saptamsa.tr, "D7"));
-        chartTypesList.add(ChartMenuModel(AppStrings.navamsa.tr, "D9"));
-        chartTypesList.add(ChartMenuModel(AppStrings.dasamsa.tr, "D10"));
-        chartTypesList.add(ChartMenuModel(AppStrings.dasamsaEvenReverse.tr, "D10-R"));
-        chartTypesList.add(ChartMenuModel(AppStrings.dwadasamsa.tr, "D12"));
-        chartTypesList.add(ChartMenuModel(AppStrings.shodashamsa.tr, "D16"));
-        chartTypesList.add(ChartMenuModel(AppStrings.vimshama.tr, "D20"));
-        chartTypesList.add(ChartMenuModel(AppStrings.chaturVimshamsa.tr, "D24"));
-        chartTypesList.add(ChartMenuModel(AppStrings.d24R.tr, "D24-R"));
-        chartTypesList.add(ChartMenuModel(AppStrings.trimshamsha.tr, "D30"));
-        chartTypesList.add(ChartMenuModel(AppStrings.khaVedamsa.tr, "D40"));
-        chartTypesList.add(ChartMenuModel(AppStrings.akshaKhaVedamsa.tr, "D45"));
-        chartTypesList.add(ChartMenuModel(AppStrings.shastiamsha.tr, "D60"));
-        chartTypesList.add(ChartMenuModel(AppStrings.bhavChalit.tr, "chalit"));
-        chartTypesList.add(ChartMenuModel(AppStrings.moonchart.tr, "moon"));
-        chartTypesList.add(ChartMenuModel(AppStrings.sun.tr, "sun"));
-      }
+    String? activeKundliApi =
+        configController.config.data?.activeKundliApi.toString();
+    if (activeKundliApi == AppConstants.jyotisham) {
+      chartTypesList.add(ChartMenuModel(AppStrings.lagna.tr, "D1"));
+      chartTypesList.add(ChartMenuModel(AppStrings.navamsa.tr, "D9"));
+      chartTypesList.add(ChartMenuModel(AppStrings.dasamsa.tr, "D10"));
+      chartTypesList.add(ChartMenuModel(AppStrings.saptamsa.tr, "D7"));
+      chartTypesList.add(ChartMenuModel(AppStrings.khaVedamsa.tr, "D40"));
+      chartTypesList.add(ChartMenuModel(AppStrings.moon.tr, "moon"));
+      chartTypesList.add(ChartMenuModel(AppStrings.drekkana.tr, "D3"));
+      chartTypesList.add(ChartMenuModel(AppStrings.chaturthamsa.tr, "D4"));
+      chartTypesList.add(ChartMenuModel(AppStrings.shastiamsha.tr, "D6"));
+      chartTypesList.add(ChartMenuModel(AppStrings.ashtamsa.tr, "D8"));
+      chartTypesList.add(ChartMenuModel(AppStrings.dwadasamsa.tr, "D12"));
+      chartTypesList.add(ChartMenuModel(AppStrings.shodasamsa.tr, "D16"));
+      chartTypesList.add(ChartMenuModel(AppStrings.vimshama.tr, "D20"));
+      chartTypesList.add(ChartMenuModel(AppStrings.chaturVimshamsa.tr, "D24"));
+      chartTypesList.add(ChartMenuModel(AppStrings.nakshatramsa.tr, "D27"));
+      chartTypesList.add(ChartMenuModel(AppStrings.trimshamsha.tr, "D30"));
+      chartTypesList.add(ChartMenuModel(AppStrings.akshaKhaVedamsa.tr, "D45"));
+      chartTypesList.add(ChartMenuModel(AppStrings.shastiamsha.tr, "D60"));
+      chartTypesList
+          .add(ChartMenuModel(AppStrings.transit.tr, "transit_chart"));
+      chartTypesList
+          .add(ChartMenuModel(AppStrings.bhavChalit.tr, "bhav_chalit_chart"));
+    } else if (activeKundliApi == AppConstants.vedicastro) {
+      chartTypesList.add(ChartMenuModel(AppStrings.lagna.tr, "D1"));
+      chartTypesList.add(ChartMenuModel(AppStrings.dreshkana.tr, "D3"));
+      chartTypesList.add(ChartMenuModel(AppStrings.somanatha.tr, "D3-s"));
+      chartTypesList.add(ChartMenuModel(AppStrings.saptamsa.tr, "D7"));
+      chartTypesList.add(ChartMenuModel(AppStrings.navamsa.tr, "D9"));
+      chartTypesList.add(ChartMenuModel(AppStrings.dasamsa.tr, "D10"));
+      chartTypesList
+          .add(ChartMenuModel(AppStrings.dasamsaEvenReverse.tr, "D10-R"));
+      chartTypesList.add(ChartMenuModel(AppStrings.dwadasamsa.tr, "D12"));
+      chartTypesList.add(ChartMenuModel(AppStrings.shodashamsa.tr, "D16"));
+      chartTypesList.add(ChartMenuModel(AppStrings.vimshama.tr, "D20"));
+      chartTypesList.add(ChartMenuModel(AppStrings.chaturVimshamsa.tr, "D24"));
+      chartTypesList.add(ChartMenuModel(AppStrings.d24R.tr, "D24-R"));
+      chartTypesList.add(ChartMenuModel(AppStrings.trimshamsha.tr, "D30"));
+      chartTypesList.add(ChartMenuModel(AppStrings.khaVedamsa.tr, "D40"));
+      chartTypesList.add(ChartMenuModel(AppStrings.akshaKhaVedamsa.tr, "D45"));
+      chartTypesList.add(ChartMenuModel(AppStrings.shastiamsha.tr, "D60"));
+      chartTypesList.add(ChartMenuModel(AppStrings.bhavChalit.tr, "chalit"));
+      chartTypesList.add(ChartMenuModel(AppStrings.moonchart.tr, "moon"));
+      chartTypesList.add(ChartMenuModel(AppStrings.sun.tr, "sun"));
+    }
   }
 
   void getChartChannel() {
     chartChannelList.clear();
-    String? activeKundliApi = configController.config.data?.activeKundliApi.toString();
+    String? activeKundliApi =
+        configController.config.data?.activeKundliApi.toString();
 
     chartChannelList.add(ChartMenuModel(AppStrings.north.tr, "north"));
     chartChannelList.add(ChartMenuModel(AppStrings.south.tr, "south"));
-    if (activeKundliApi == AppConstants.jyotisham){
+    if (activeKundliApi == AppConstants.jyotisham) {
       chartChannelList.add(ChartMenuModel(AppStrings.east.tr, "east"));
     }
   }
-
 }
 
+// // Chart display area
+// Expanded(
+//   child: Obx(() {
+//     if (controller.isChartSuccess.isTrue) {
+//       return Center(
+//         child: SingleChildScrollView(
+//           scrollDirection: Axis.horizontal,
+//           child: SingleChildScrollView(
+//             child: Container(
+//               width: MediaQuery.of(context).size.width * 1.2,
+//               height: MediaQuery.of(context).size.height * 0.8,
+//               decoration: BoxDecoration(
+//                 boxShadow: [
+//                   BoxShadow(
+//                     color: Colors.grey.withOpacity(0.5),
+//                     spreadRadius: 1,
+//                     blurRadius: 2,
+//                     offset: const Offset(0, 2),
+//                   )
+//                 ],
+//                 color: ColorResources.colorChart,
+//               ),
+//               child: Padding(
+//                 padding: const EdgeInsets.all(8.0),
+//                 child: SvgPicture.string(
+//                   controller.chartSvg.value,
+//                   fit: BoxFit.contain,
+//                 ),
+//               ),
+//             ),
+//           ),
+//         ),
+//       );
+//     } else if (controller.isChartLoading.isTrue) {
+//       return ListView.builder(
+//         itemCount: 5,
+//         shrinkWrap: true,
+//         physics: const NeverScrollableScrollPhysics(),
+//         itemBuilder: (context, index) {
+//           return const SimmerListView();
+//         },
+//       );
+//     } else {
+//       return const EmptyScreen();
+//     }
+//   }),
+// ),

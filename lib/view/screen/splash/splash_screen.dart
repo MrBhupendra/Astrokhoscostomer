@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import '../../../controller/connectivity_service.dart';
 import '../../../utill/app_constants.dart';
+import '../../../utill/color_resources.dart';
 import '../../../utill/dimensions.dart';
 import '../../../utill/images.dart';
 import '../../widget/custom_default_indicator.dart';
@@ -40,12 +41,12 @@ class SplashScreen extends GetView<SplashController> {
 
             /// ⭐ Logo Center
             Positioned(
-              top: (screenHeight - screenWidth * 1.1) / 2,
-              left: (screenWidth - screenWidth * 1.1) / 2,
+              top: (screenHeight - screenWidth * 0.7) / 2,
+              left: (screenWidth - screenWidth * 0.7) / 2,
               child: Image.asset(
                 Images.logo,
-                width: screenWidth * 1.1,
-                height: screenWidth * 1.1,
+                width: screenWidth * 0.7,
+                height: screenWidth * 0.7,
                 fit: BoxFit.scaleDown,
               ),
             ),
@@ -59,7 +60,11 @@ class SplashScreen extends GetView<SplashController> {
                 children: [
                   Visibility(
                     visible: controller.isLoading.isTrue,
-                    child: const CustomDefaultProgressIndicator(),
+                    child: const Center(
+                      child: CircularProgressIndicator(
+                        color: ColorResources.black6,
+                      ),
+                    ),
                   ),
                   const Gap(Dimensions.gapDefault),
                   CustomTextMedium(

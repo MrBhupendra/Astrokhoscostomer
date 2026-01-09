@@ -60,8 +60,10 @@ class HomeScreen extends StatelessWidget {
     getFreeServices();
     getPaidServices();
     HomeController controller = Get.put<HomeController>(HomeController());
-    AllAstrologerController astrologerController = Get.put<AllAstrologerController>(AllAstrologerController());
-    DashboardController dashboardController = Get.put<DashboardController>(DashboardController());
+    AllAstrologerController astrologerController =
+        Get.put<AllAstrologerController>(AllAstrologerController());
+    DashboardController dashboardController =
+        Get.put<DashboardController>(DashboardController());
 
     controller.getDashboard(false);
     controller.getAllAstrologer();
@@ -72,7 +74,7 @@ class HomeScreen extends StatelessWidget {
         controller.getAllAstrologer();
         controller.getAllAIAstrologer();
         bool isLogin = await SharedPreferencesHelper.getIsLogin();
-        if(isLogin){
+        if (isLogin) {
           dashboardController.getWalletBalance();
         }
       },
@@ -95,71 +97,87 @@ class HomeScreen extends StatelessWidget {
                   Padding(
                     padding: const EdgeInsets.symmetric(
                         horizontal: 8.0, vertical: 10),
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        crossAxisSpacing: 8.0,
-                        mainAxisSpacing: 8.0,
-                        childAspectRatio: 0.85,
+                    child: SizedBox(
+                      height: 100,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        shrinkWrap: true,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: freeServicesList.length,
+                        itemBuilder: (context, index) {
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 8.0),
+                            child: SizedBox(
+                              width: 80,
+                              child: GestureDetector(
+                                  onTap: () async {
+                                    bool isLogin = await SharedPreferencesHelper
+                                        .getIsLogin();
+                                    if (isLogin) {
+                                      if (freeServicesList[index].title ==
+                                          AppStrings.dashHomeVastu.tr) {
+                                        Get.toNamed('/vastu_zones');
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashDailyQuote.tr) {
+                                        Get.toNamed("/daily_quote");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashMatchMatching.tr) {
+                                        Get.toNamed(
+                                            "/saveMatchingKundliScreen");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashKundali.tr) {
+                                        Get.toNamed("/savedKundliScreen");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashHoroscope.tr) {
+                                        Get.toNamed('/horoscopeTabScreen');
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashNumerology.tr) {
+                                        Get.toNamed('/numerology_submit');
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashPanchang.tr) {
+                                        Get.toNamed("/panchang_detail");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashShubhMuhrat.tr) {
+                                        Get.toNamed("/shubhmuhrat_details");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashZonalChart.tr) {
+                                        Get.toNamed("/zonal_chart");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashMobileNumerology.tr) {
+                                        Get.toNamed("/mobile_numerology");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashOfficeVastu.tr) {
+                                        Get.toNamed("/office_vastu");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashLoveCompatibility.tr) {
+                                        Get.toNamed(
+                                            "/love_compatibility_submit_screen");
+                                      } else if (freeServicesList[index]
+                                              .title ==
+                                          AppStrings.dashTarot.tr) {
+                                        Get.toNamed("/dailyTarotReading");
+                                      }
+                                    } else {
+                                      Get.toNamed('/login');
+                                    }
+                                  },
+                                  child: FreeServiceWidget(
+                                      item: freeServicesList[index])),
+                            ),
+                          );
+                        },
                       ),
-                      itemCount: freeServicesList.length,
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                            onTap: () async {
-                              bool isLogin =
-                              await SharedPreferencesHelper.getIsLogin();
-                              if (isLogin) {
-                                if (freeServicesList[index].title ==
-                                    AppStrings.dashHomeVastu.tr) {
-                                  Get.toNamed('/vastu_zones');
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashDailyQuote.tr) {
-                                  Get.toNamed("/daily_quote");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashMatchMatching.tr) {
-                                  Get.toNamed("/saveMatchingKundliScreen");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashKundali.tr) {
-                                  Get.toNamed("/savedKundliScreen");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashHoroscope.tr) {
-                                  Get.toNamed('/horoscopeTabScreen');
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashNumerology.tr) {
-                                  Get.toNamed('/numerology_submit');
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashPanchang.tr) {
-                                  Get.toNamed("/panchang_detail");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashShubhMuhrat.tr) {
-                                  Get.toNamed("/shubhmuhrat_details");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashZonalChart.tr) {
-                                  Get.toNamed("/zonal_chart");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashMobileNumerology.tr) {
-                                  Get.toNamed("/mobile_numerology");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashOfficeVastu.tr) {
-                                  Get.toNamed("/office_vastu");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashLoveCompatibility.tr) {
-                                  Get.toNamed(
-                                      "/love_compatibility_submit_screen");
-                                } else if (freeServicesList[index].title ==
-                                    AppStrings.dashTarot.tr) {
-                                  Get.toNamed("/dailyTarotReading");
-                                }
-                              } else {
-                                Get.toNamed('/login');
-                              }
-                            },
-                            child: FreeServiceWidget(
-                                item: freeServicesList[index]));
-                      },
                     ),
                   ),
 
@@ -181,10 +199,10 @@ class HomeScreen extends StatelessWidget {
                               children: List.generate(
                                 controller.bannerList!.length,
                                 (index) => GestureDetector(
-                                  onTap: (){
-                                    if(controller
-                                        .bannerList![index].url
-                                        .toString() != ""){
+                                  onTap: () {
+                                    if (controller.bannerList![index].url
+                                            .toString() !=
+                                        "") {
                                       launchUrlString(controller
                                           .bannerList![index].url
                                           .toString());
@@ -221,11 +239,13 @@ class HomeScreen extends StatelessWidget {
                     if (controller.isDashboardSuccess.isTrue) {
                       if (controller.liveAstrologerListData.isNotEmpty) {
                         return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 0),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 12.0, vertical: 0),
                           child: Column(
                             children: [
                               Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Expanded(
                                     child: CustomTextMedium(
@@ -237,7 +257,8 @@ class HomeScreen extends StatelessWidget {
                                   CustomButton(
                                     AppStrings.viewAll.tr,
                                     onPressed: () {
-                                      dashboardController.selectedIndex.value = 2;
+                                      dashboardController.selectedIndex.value =
+                                          2;
                                     },
                                     color: ColorResources.toolbarText,
                                     fontSize: Dimensions.fontSizeExtraSmall,
@@ -249,50 +270,109 @@ class HomeScreen extends StatelessWidget {
                                 height: 135,
                                 child: ListView.builder(
                                   scrollDirection: Axis.horizontal,
-                                  itemCount: controller.liveAstrologerListData.length,
+                                  itemCount:
+                                      controller.liveAstrologerListData.length,
                                   itemBuilder: (context, index) {
                                     return DashLiveAstrologerWidget(
                                       controller.liveAstrologerListData[index],
                                       onActionPressed: () async {
-                                        bool isLogin = await SharedPreferencesHelper.getIsLogin();
+                                        bool isLogin =
+                                            await SharedPreferencesHelper
+                                                .getIsLogin();
                                         if (isLogin) {
-                                          String callRate = '**', callDuration = '**', videoRate = '**', videoDuration = '**',privateCallRate = '**', privateCallDuration = '**', privateVideoRate = '**', privateVideoDuration = '**';
-                                          controller.liveAstrologerListData[index].prices?.forEach((priceItem) {
-                                            String type = priceItem.type.toString();
+                                          String callRate = '**',
+                                              callDuration = '**',
+                                              videoRate = '**',
+                                              videoDuration = '**',
+                                              privateCallRate = '**',
+                                              privateCallDuration = '**',
+                                              privateVideoRate = '**',
+                                              privateVideoDuration = '**';
+                                          controller
+                                              .liveAstrologerListData[index]
+                                              .prices
+                                              ?.forEach((priceItem) {
+                                            String type =
+                                                priceItem.type.toString();
                                             switch (type) {
                                               case AppConstants.liveAudioCall:
-                                                callRate = priceItem.price.toString();
-                                                callDuration = priceItem.timeInMinutes.toString();
+                                                callRate =
+                                                    priceItem.price.toString();
+                                                callDuration = priceItem
+                                                    .timeInMinutes
+                                                    .toString();
                                                 break;
                                               case AppConstants.liveVideoCall:
-                                                videoRate = priceItem.price.toString();
-                                                videoDuration = priceItem.timeInMinutes.toString();
+                                                videoRate =
+                                                    priceItem.price.toString();
+                                                videoDuration = priceItem
+                                                    .timeInMinutes
+                                                    .toString();
                                                 break;
-                                              case AppConstants.privateLiveAudioCall:
-                                                privateCallRate = priceItem.price.toString();
-                                                privateCallDuration = priceItem.timeInMinutes.toString();
+                                              case AppConstants
+                                                    .privateLiveAudioCall:
+                                                privateCallRate =
+                                                    priceItem.price.toString();
+                                                privateCallDuration = priceItem
+                                                    .timeInMinutes
+                                                    .toString();
                                                 break;
-                                              case AppConstants.privateLiveVideoCall:
-                                                privateVideoRate = priceItem.price.toString();
-                                                privateVideoDuration = priceItem.timeInMinutes.toString();
+                                              case AppConstants
+                                                    .privateLiveVideoCall:
+                                                privateVideoRate =
+                                                    priceItem.price.toString();
+                                                privateVideoDuration = priceItem
+                                                    .timeInMinutes
+                                                    .toString();
                                                 break;
                                             }
                                           });
 
-                                          final LiveStreamInitController liveController = Get.put(LiveStreamInitController());
-                                          String astrologerName = controller.liveAstrologerListData[index].displayName.toString();
-                                          String astrologerImage = controller.liveAstrologerListData[index].astroImg.toString();
-                                          liveController.setAstrologerData(astrologerName, astrologerImage, callRate, videoRate, callDuration, videoDuration,privateCallRate, privateVideoRate, privateCallDuration, privateVideoDuration,AppConstants.live);
+                                          final LiveStreamInitController
+                                              liveController = Get.put(
+                                                  LiveStreamInitController());
+                                          String astrologerName = controller
+                                              .liveAstrologerListData[index]
+                                              .displayName
+                                              .toString();
+                                          String astrologerImage = controller
+                                              .liveAstrologerListData[index]
+                                              .astroImg
+                                              .toString();
+                                          liveController.setAstrologerData(
+                                              astrologerName,
+                                              astrologerImage,
+                                              callRate,
+                                              videoRate,
+                                              callDuration,
+                                              videoDuration,
+                                              privateCallRate,
+                                              privateVideoRate,
+                                              privateCallDuration,
+                                              privateVideoDuration,
+                                              AppConstants.live);
 
                                           // Join Live
-                                          int astrologerUID = controller.liveAstrologerListData[index].user!.id!.toInt();
-                                          String uniqueId = controller.liveAstrologerListData[index].liveChannel.toString();
-                                          String astrologerUniId = controller.liveAstrologerListData[index].astrologerUniId.toString();
-                                          controller.joinLiveStream(astrologerUID, uniqueId, astrologerUniId);
-                                        }else{
+                                          int astrologerUID = controller
+                                              .liveAstrologerListData[index]
+                                              .user!
+                                              .id!
+                                              .toInt();
+                                          String uniqueId = controller
+                                              .liveAstrologerListData[index]
+                                              .liveChannel
+                                              .toString();
+                                          String astrologerUniId = controller
+                                              .liveAstrologerListData[index]
+                                              .astrologerUniId
+                                              .toString();
+                                          controller.joinLiveStream(
+                                              astrologerUID,
+                                              uniqueId,
+                                              astrologerUniId);
+                                        } else {
                                           Get.toNamed('/login');
                                         }
-
                                       },
                                     );
                                   },
@@ -308,7 +388,6 @@ class HomeScreen extends StatelessWidget {
                       return const SizedBox.shrink();
                     }
                   }),
-
 
                   //Astrologers
                   Padding(
@@ -359,7 +438,9 @@ class HomeScreen extends StatelessWidget {
                                 return AstrologerProfileCard(
                                   controller.astrologerListData[index],
                                   onActionPressed: () {
-                                    astrologerController.selectedAstrologerData.value = controller.astrologerListData[index];
+                                    astrologerController
+                                            .selectedAstrologerData.value =
+                                        controller.astrologerListData[index];
                                     Get.toNamed("/astroProfile");
                                   },
                                 );
@@ -388,95 +469,102 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   //AI Astrologers
-                  if(AppFeatures.aiAstrologer)
-                  Column(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 14.0, vertical: 0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Expanded(
-                              child: CustomTextMedium(
-                                AppStrings.aiAstrologers.tr,
-                                maxLines: 1,
-                                fontSize: Dimensions.fontSizeLarge,
-                              ),
-                            ),
-                            CustomButton(
-                              AppStrings.viewAll.tr,
-                              onPressed: () {
-                                Get.toNamed("/search",arguments: {
-                                  'isVirtualAstrologer' : '1'
-                                });
-                              },
-                              color: ColorResources.toolbarText,
-                              fontSize: Dimensions.fontSizeExtraSmall,
-                              minimumSize: const Size(35, 25),
-                            ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(
-                        height: 225,
-                        child: Padding(
+                  if (AppFeatures.aiAstrologer)
+                    Column(
+                      children: [
+                        Padding(
                           padding: const EdgeInsets.symmetric(
-                              vertical: Dimensions.paddingSizeExtraOverSmall,
-                              horizontal: Dimensions.paddingSizeOverSmall),
-                          child: Obx(
-                                () {
-                              if (controller.isAIAstrologerSuccess.isTrue) {
-                                return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: controller.aiAstrologerListData.length,
-                                  itemBuilder: (context, index) {
-                                    return DashAstrologerWidget1(
-                                      controller.aiAstrologerListData[index],
-                                      onActionPressed: () {
-                                        astrologerController.selectedAstrologerData.value = controller.aiAstrologerListData[index];
-                                        Get.toNamed("/astroProfile");
-                                      },
-                                    );
-                                  },
-                                );
-                              } else if (controller.isAIAstrologerLoading.isTrue) {
-                                return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 5,
-                                  itemBuilder: (context, index) {
-                                    return const SimmerDashAstrologer();
-                                  },
-                                );
-                              } else {
-                                return ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: 5,
-                                  itemBuilder: (context, index) {
-                                    return const SimmerDashAstrologer();
-                                  },
-                                );
-                              }
-                            },
+                              horizontal: 14.0, vertical: 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: CustomTextMedium(
+                                  AppStrings.aiAstrologers.tr,
+                                  maxLines: 1,
+                                  fontSize: Dimensions.fontSizeLarge,
+                                ),
+                              ),
+                              CustomButton(
+                                AppStrings.viewAll.tr,
+                                onPressed: () {
+                                  Get.toNamed("/search",
+                                      arguments: {'isVirtualAstrologer': '1'});
+                                },
+                                color: ColorResources.toolbarText,
+                                fontSize: Dimensions.fontSizeExtraSmall,
+                                minimumSize: const Size(35, 25),
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-
+                        SizedBox(
+                          height: 225,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: Dimensions.paddingSizeExtraOverSmall,
+                                horizontal: Dimensions.paddingSizeOverSmall),
+                            child: Obx(
+                              () {
+                                if (controller.isAIAstrologerSuccess.isTrue) {
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount:
+                                        controller.aiAstrologerListData.length,
+                                    itemBuilder: (context, index) {
+                                      return DashAstrologerWidget1(
+                                        controller.aiAstrologerListData[index],
+                                        onActionPressed: () {
+                                          astrologerController
+                                                  .selectedAstrologerData
+                                                  .value =
+                                              controller
+                                                  .aiAstrologerListData[index];
+                                          Get.toNamed("/astroProfile");
+                                        },
+                                      );
+                                    },
+                                  );
+                                } else if (controller
+                                    .isAIAstrologerLoading.isTrue) {
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) {
+                                      return const SimmerDashAstrologer();
+                                    },
+                                  );
+                                } else {
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) {
+                                      return const SimmerDashAstrologer();
+                                    },
+                                  );
+                                }
+                              },
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
 
                   // Orders
                   Obx(
-                        () {
+                    () {
                       if (kDebugMode) {
-                        print("SK->${controller.isLogin.isFalse} ${controller.chatChannels?.length}");
+                        print(
+                            "SK->${controller.isLogin.isFalse} ${controller.chatChannels?.length}");
                       }
                       if (controller.isDashboardSuccess.isTrue) {
-                        if (controller.isLogin.isFalse || controller.chatChannels!.isEmpty) {
+                        if (controller.isLogin.isFalse ||
+                            controller.chatChannels!.isEmpty) {
                           return Container();
                         } else {
                           return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 14.0, vertical: 0),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 14.0, vertical: 0),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -490,7 +578,8 @@ class HomeScreen extends StatelessWidget {
                                 CustomButton(
                                   AppStrings.viewAll.tr,
                                   onPressed: () async {
-                                    bool isLogin = await SharedPreferencesHelper.getIsLogin();
+                                    bool isLogin = await SharedPreferencesHelper
+                                        .getIsLogin();
                                     if (isLogin) {
                                       Get.toNamed("/chatChannels");
                                     } else {
@@ -511,9 +600,10 @@ class HomeScreen extends StatelessWidget {
                     },
                   ),
                   Obx(
-                        () {
+                    () {
                       if (controller.isDashboardSuccess.isTrue) {
-                        if (controller.isLogin.isFalse || controller.chatChannels!.isEmpty) {
+                        if (controller.isLogin.isFalse ||
+                            controller.chatChannels!.isEmpty) {
                           return Container();
                         } else {
                           return SizedBox(
@@ -523,28 +613,43 @@ class HomeScreen extends StatelessWidget {
                                   vertical: 0,
                                   horizontal: Dimensions.paddingSizeExtraSmall),
                               child: Obx(
-                                    () {
+                                () {
                                   if (controller.isDashboardSuccess.isTrue) {
-
                                     return ListView.builder(
                                       scrollDirection: Axis.horizontal,
-                                      itemCount: controller.chatChannels?.length,
+                                      itemCount:
+                                          controller.chatChannels?.length,
                                       itemBuilder: (context, index) {
                                         return DashOrdersWidget(
                                           controller.chatChannels![index],
                                           onPressed: () {
-                                            ChatHistoryController chatHistoryController = Get.put<ChatHistoryController>(ChatHistoryController());
+                                            ChatHistoryController
+                                                chatHistoryController =
+                                                Get.put<ChatHistoryController>(
+                                                    ChatHistoryController());
 
-                                            chatHistoryController.astrologerName = controller.chatChannels![index].displayName.toString();
-                                            chatHistoryController.astrologerImage = controller.chatChannels![index].astroImg.toString();
-                                            chatHistoryController.channelName = controller.chatChannels![index].channelName.toString();
+                                            chatHistoryController
+                                                    .astrologerName =
+                                                controller.chatChannels![index]
+                                                    .displayName
+                                                    .toString();
+                                            chatHistoryController
+                                                    .astrologerImage =
+                                                controller.chatChannels![index]
+                                                    .astroImg
+                                                    .toString();
+                                            chatHistoryController.channelName =
+                                                controller.chatChannels![index]
+                                                    .channelName
+                                                    .toString();
 
                                             Get.toNamed('/chatHistory');
                                           },
                                         );
                                       },
                                     );
-                                  } else if (controller.isDashboardLoading.isTrue) {
+                                  } else if (controller
+                                      .isDashboardLoading.isTrue) {
                                     return ListView.builder(
                                       scrollDirection: Axis.horizontal,
                                       itemCount: 5,
@@ -731,15 +836,14 @@ class HomeScreen extends StatelessWidget {
 
                   // Blog Section
                   Obx(
-                        () {
+                    () {
                       if (controller.isDashboardSuccess.isTrue) {
                         if (controller.blogList!.isNotEmpty) {
                           return HomeHeaderWidget(
                               title: AppStrings.blog.tr,
                               onPressed: () {
                                 Get.toNamed("/blog");
-                              }
-                          );
+                              });
                         } else {
                           return const SizedBox.shrink();
                         }
@@ -748,15 +852,13 @@ class HomeScreen extends StatelessWidget {
                             title: AppStrings.blog.tr,
                             onPressed: () {
                               Get.toNamed("/blog");
-                            }
-                        );
+                            });
                       } else {
                         return HomeHeaderWidget(
                             title: AppStrings.blog.tr,
                             onPressed: () {
                               Get.toNamed("/blog");
-                            }
-                        );
+                            });
                       }
                     },
                   ),
@@ -765,7 +867,8 @@ class HomeScreen extends StatelessWidget {
                       if (controller.isDashboardSuccess.isTrue) {
                         if (controller.blogList!.isNotEmpty) {
                           return Padding(
-                            padding: const EdgeInsets.only(left: 10, bottom: 20),
+                            padding:
+                                const EdgeInsets.only(left: 10, bottom: 20),
                             child: SizedBox(
                               height: 185,
                               child: Padding(
@@ -778,9 +881,9 @@ class HomeScreen extends StatelessWidget {
                                       controller.blogList![index],
                                       onPressed: () {
                                         BlogController blogController =
-                                        Get.put(BlogController());
+                                            Get.put(BlogController());
                                         blogController.blogsData =
-                                        controller.blogList![index];
+                                            controller.blogList![index];
                                         Get.toNamed("/blog_detail");
                                       },
                                     );
@@ -820,15 +923,14 @@ class HomeScreen extends StatelessWidget {
 
                   // Video Section
                   Obx(
-                        () {
+                    () {
                       if (controller.isDashboardSuccess.isTrue) {
                         if (controller.videoList!.isNotEmpty) {
                           return HomeHeaderWidget(
                               title: AppStrings.videos.tr,
                               onPressed: () {
                                 Get.toNamed("/video_list");
-                              }
-                          );
+                              });
                         } else {
                           return const SizedBox.shrink();
                         }
@@ -837,24 +939,23 @@ class HomeScreen extends StatelessWidget {
                             title: AppStrings.videos.tr,
                             onPressed: () {
                               Get.toNamed("/video_list");
-                            }
-                        );
+                            });
                       } else {
                         return HomeHeaderWidget(
                             title: AppStrings.videos.tr,
                             onPressed: () {
                               Get.toNamed("/video_list");
-                            }
-                        );
+                            });
                       }
                     },
                   ),
                   Obx(
-                        () {
+                    () {
                       if (controller.isDashboardSuccess.isTrue) {
                         if (controller.videoList!.isNotEmpty) {
                           return Padding(
-                            padding: const EdgeInsets.only(left: 10, bottom: 10),
+                            padding:
+                                const EdgeInsets.only(left: 10, bottom: 10),
                             child: SizedBox(
                               height: 160,
                               child: Padding(
@@ -867,9 +968,10 @@ class HomeScreen extends StatelessWidget {
                                       controller.videoList![index],
                                       onPressed: () {
                                         Get.to(VideoPlayScreen(
-                                            controller.videoList![index].url.toString(),
-                                            controller.videoList![index].title.toString())
-                                        );
+                                            controller.videoList![index].url
+                                                .toString(),
+                                            controller.videoList![index].title
+                                                .toString()));
                                       },
                                     );
                                   },
@@ -912,10 +1014,13 @@ class HomeScreen extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.grey.shade200,
-                        borderRadius: BorderRadius.circular(Dimensions.borderRadiusMedium),
+                        borderRadius: BorderRadius.circular(
+                            Dimensions.borderRadiusMedium),
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall, horizontal: Dimensions.paddingSizeMediumSmall),
+                        padding: const EdgeInsets.symmetric(
+                            vertical: Dimensions.paddingSizeSmall,
+                            horizontal: Dimensions.paddingSizeMediumSmall),
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -943,7 +1048,8 @@ class HomeScreen extends StatelessWidget {
                                     fontSize: Dimensions.fontSizeDefault,
                                   ),
                                   border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                                    borderRadius: BorderRadius.circular(
+                                        Dimensions.borderRadiusDefault),
                                     borderSide: BorderSide.none,
                                   ),
                                   filled: true,
@@ -961,11 +1067,15 @@ class HomeScreen extends StatelessWidget {
                             Center(
                               child: GestureDetector(
                                 onTap: () async {
-                                  bool isLogin = await SharedPreferencesHelper.getIsLogin();
+                                  bool isLogin = await SharedPreferencesHelper
+                                      .getIsLogin();
                                   if (isLogin) {
                                     if (_formKey.currentState!.validate()) {
-                                      FocusManager.instance.primaryFocus?.unfocus();
-                                      controller.sendSuggestions(_feedbackTextController.text.toString());
+                                      FocusManager.instance.primaryFocus
+                                          ?.unfocus();
+                                      controller.sendSuggestions(
+                                          _feedbackTextController.text
+                                              .toString());
                                       _feedbackTextController.clear();
                                     }
                                   } else {
@@ -975,10 +1085,11 @@ class HomeScreen extends StatelessWidget {
                                 child: Container(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: Dimensions.paddingSizeSmall,
-                                      vertical: Dimensions.paddingSizeExtraSmall
-                                  ),
+                                      vertical:
+                                          Dimensions.paddingSizeExtraSmall),
                                   decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(Dimensions.borderRadiusMedium),
+                                    borderRadius: BorderRadius.circular(
+                                        Dimensions.borderRadiusMedium),
                                     color: ColorResources.colorPrimary,
                                   ),
                                   child: CustomTextRegular(
@@ -1096,9 +1207,9 @@ class HomeScreen extends StatelessWidget {
             () {
               if (controller.isDashboardSuccess.isTrue) {
                 return Visibility(
-                  visible:
-                  controller.inProgressStatus.value == 1 &&
-                      controller.callType.value == AppConstants.chat || controller.callType.value == AppConstants.emergencyChat,
+                  visible: controller.inProgressStatus.value == 1 &&
+                          controller.callType.value == AppConstants.chat ||
+                      controller.callType.value == AppConstants.emergencyChat,
                   child: Container(
                     color: ColorResources.colorPrimaryLight,
                     child: Padding(
@@ -1153,12 +1264,20 @@ class HomeScreen extends StatelessWidget {
                                   chatIntakeFormController =
                                   Get.put(ChatIntakeFormController());
                               chatIntakeFormController.setAstrologerData(
-                                  controller.dashboardModel.data!.inProgressOrder!.astroName.toString(),
-                                  controller.dashboardModel.data!.inProgressOrder!.astroImage.toString(),
+                                  controller.dashboardModel.data!
+                                      .inProgressOrder!.astroName
+                                      .toString(),
+                                  controller.dashboardModel.data!
+                                      .inProgressOrder!.astroImage
+                                      .toString(),
                                   astrologerUniId.toString(),
                                   AppConstants.chat,
-                                  controller.dashboardModel.data!.inProgressOrder!.isVirtualAstrologer ?? 0
-                              );
+                                  controller
+                                          .dashboardModel
+                                          .data!
+                                          .inProgressOrder!
+                                          .isVirtualAstrologer ??
+                                      0);
 
                               String? customerUniUd =
                                   await SharedPreferencesHelper.getData(
@@ -1192,7 +1311,9 @@ class HomeScreen extends StatelessWidget {
               if (controller.isDashboardSuccess.isTrue) {
                 return Visibility(
                   visible: controller.inProgressStatus.value == 1 &&
-                      controller.callType.value == AppConstants.video || controller.callType.value == AppConstants.emergencyVideoCall,
+                          controller.callType.value == AppConstants.video ||
+                      controller.callType.value ==
+                          AppConstants.emergencyVideoCall,
                   child: Container(
                     color: ColorResources.colorPrimaryLight,
                     child: Padding(
@@ -1258,7 +1379,7 @@ class HomeScreen extends StatelessWidget {
                                       .toString(),
                                   astrologerUniId.toString(),
                                   AppConstants.video,
-                              0);
+                                  0);
 
                               String? customerUniUd =
                                   await SharedPreferencesHelper.getData(
@@ -1293,12 +1414,12 @@ class HomeScreen extends StatelessWidget {
           ),
           //ResumeInAppCall
           Obx(
-                () {
+            () {
               if (controller.isDashboardSuccess.isTrue) {
                 return Visibility(
-                  visible:
-                  controller.inProgressStatus.value == 1 &&
-                      controller.callType.value == AppConstants.call || controller.callType.value == AppConstants.emergencyCall,
+                  visible: controller.inProgressStatus.value == 1 &&
+                          controller.callType.value == AppConstants.call ||
+                      controller.callType.value == AppConstants.emergencyCall,
                   child: Container(
                     color: ColorResources.colorPrimaryLight,
                     child: Padding(
@@ -1349,10 +1470,12 @@ class HomeScreen extends StatelessWidget {
                                   .dashboardModel.data?.inProgressOrder?.uniqeid
                                   .toString();
                               String? agoraAppId =
-                              await SharedPreferencesHelper.getData(
-                                  AppConstants.agoraAppId);
+                                  await SharedPreferencesHelper.getData(
+                                      AppConstants.agoraAppId);
 
-                              final ChatIntakeFormController chatIntakeFormController = Get.put(ChatIntakeFormController());
+                              final ChatIntakeFormController
+                                  chatIntakeFormController =
+                                  Get.put(ChatIntakeFormController());
                               chatIntakeFormController.setAstrologerData(
                                   controller.dashboardModel.data!
                                       .inProgressOrder!.astroName
@@ -1362,11 +1485,11 @@ class HomeScreen extends StatelessWidget {
                                       .toString(),
                                   astrologerUniId.toString(),
                                   AppConstants.call,
-                              0);
+                                  0);
 
                               String? customerUniUd =
-                              await SharedPreferencesHelper.getData(
-                                  AppConstants.userUniId);
+                                  await SharedPreferencesHelper.getData(
+                                      AppConstants.userUniId);
                               String channelName =
                                   '$customerUniUd-$astrologerUniId-Call';
 
@@ -1378,7 +1501,6 @@ class HomeScreen extends StatelessWidget {
                                     .dashboardModel.data!.inProgressOrder!.token
                                     .toString(),
                               });
-
                             },
                             color: ColorResources.toolbarText,
                             fontSize: Dimensions.fontSizeSmall,
@@ -1455,21 +1577,28 @@ class HomeScreen extends StatelessWidget {
   }
 
   void getFreeServices() {
-    String? activeKundliApi = configController.config.data?.activeKundliApi.toString();
+    String? activeKundliApi =
+        configController.config.data?.activeKundliApi.toString();
     freeServicesList.clear();
-    freeServicesList.add(HomeMenuModel(AppStrings.dashHoroscope.tr, Images.dashHoroscope));
-    freeServicesList.add(HomeMenuModel(AppStrings.dashKundali.tr, Images.dashKundali));
-    freeServicesList.add(HomeMenuModel(AppStrings.dashMatchMatching.tr, Images.dashMatchMaking));
+    freeServicesList
+        .add(HomeMenuModel(AppStrings.dashHoroscope.tr, Images.dashHoroscope));
+    freeServicesList
+        .add(HomeMenuModel(AppStrings.dashKundali.tr, Images.dashKundali));
+    freeServicesList.add(
+        HomeMenuModel(AppStrings.dashMatchMatching.tr, Images.dashMatchMaking));
     // freeServicesList.add(HomeMenuModel(AppStrings.dashHomeVastu.tr, Images.dashVastu));
     // freeServicesList.add(HomeMenuModel(AppStrings.dashOfficeVastu.tr, Images.officeVastu));
     // freeServicesList.add(HomeMenuModel(AppStrings.dashZonalChart.tr, Images.dashZonalChart));
-    // if(activeKundliApi == AppConstants.jyotisham){
-    //   freeServicesList.add(HomeMenuModel(AppStrings.dashTarot.tr, Images.dashTarot));
-    // }
+
     // freeServicesList.add(HomeMenuModel(AppStrings.dashMobileNumerology.tr, Images.dashMobileNumerology));
 
     // freeServicesList.add(HomeMenuModel(AppStrings.dashLoveCompatibility.tr, Images.dashLoveCompatibility));
-    freeServicesList.add(HomeMenuModel(AppStrings.dashPanchang.tr, Images.dashPanchang));
+    freeServicesList
+        .add(HomeMenuModel(AppStrings.dashPanchang.tr, Images.dashPanchang));
+    if (activeKundliApi == AppConstants.jyotisham) {
+      freeServicesList
+          .add(HomeMenuModel(AppStrings.dashTarot.tr, Images.dashTarot));
+    }
     // freeServicesList.add(HomeMenuModel(AppStrings.dashNumerology.tr, Images.dashNumerology));
     // freeServicesList.add(HomeMenuModel(AppStrings.dashShubhMuhrat.tr, Images.dashShubhMuhrat));
     // freeServicesList.add(HomeMenuModel(AppStrings.dashDailyQuote.tr, Images.dashDailyQuote));
@@ -1477,13 +1606,20 @@ class HomeScreen extends StatelessWidget {
 
   void getPaidServices() {
     paidServicesList.clear();
-    paidServicesList.add(HomeMenuModel(AppStrings.jeevini.tr, Images.dashJeevini));
-    paidServicesList.add(HomeMenuModel(AppStrings.divineCode.tr, Images.dashDivineCode));
+    paidServicesList
+        .add(HomeMenuModel(AppStrings.jeevini.tr, Images.dashJeevini));
+    paidServicesList
+        .add(HomeMenuModel(AppStrings.divineCode.tr, Images.dashDivineCode));
     paidServicesList.add(HomeMenuModel(AppStrings.ebook.tr, Images.dashEBook));
-    paidServicesList.add(HomeMenuModel(AppStrings.report.tr, Images.dashReport));
-    paidServicesList.add(HomeMenuModel(AppStrings.electroHomeopathy.tr, Images.dashElectroHomeopathy));
-    paidServicesList.add(HomeMenuModel(AppStrings.vastuArchitect.tr, Images.dashVastuArchitect));
-    paidServicesList.add(HomeMenuModel(AppStrings.astroShop.tr, Images.dashAstroShop));
-    paidServicesList.add(HomeMenuModel(AppStrings.askAQuestion.tr, Images.askAQuestion));
+    paidServicesList
+        .add(HomeMenuModel(AppStrings.report.tr, Images.dashReport));
+    paidServicesList.add(HomeMenuModel(
+        AppStrings.electroHomeopathy.tr, Images.dashElectroHomeopathy));
+    paidServicesList.add(
+        HomeMenuModel(AppStrings.vastuArchitect.tr, Images.dashVastuArchitect));
+    paidServicesList
+        .add(HomeMenuModel(AppStrings.astroShop.tr, Images.dashAstroShop));
+    paidServicesList
+        .add(HomeMenuModel(AppStrings.askAQuestion.tr, Images.askAQuestion));
   }
 }

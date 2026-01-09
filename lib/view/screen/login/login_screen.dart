@@ -320,8 +320,8 @@ class LoginScreen extends GetView<LoginController> {
                           Center(
                             child: Image.asset(
                               Images.logo,
-                              width: 300,
-                              height: 250,
+                              width: 200,
+                              height: 180,
                             ),
                           ),
                         ],

@@ -306,6 +306,7 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
+                            Gap(10),
                             Container(
                               decoration: BoxDecoration(
                                 color: Colors.white,
@@ -666,7 +667,7 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                                 child: Icon(
                                                   Icons.school,
                                                   color:
-                                                      const Color(0xFF4DD0E1),
+                                                      ColorResources.colorPrimary,
                                                   size: Dimensions
                                                       .iconSizeOverSmall,
                                                 ),
@@ -711,7 +712,7 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                                 child: Icon(
                                                   Icons.language,
                                                   color:
-                                                      const Color(0xFF4DD0E1),
+                                                  ColorResources.colorPrimary,
                                                   size: Dimensions
                                                       .iconSizeOverSmall,
                                                 ),
