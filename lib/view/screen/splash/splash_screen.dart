@@ -20,39 +20,57 @@ class SplashScreen extends GetView<SplashController> {
 
     return SafeArea(
       child: Scaffold(
-        body: Padding(
-          padding: const EdgeInsets.only(bottom: 0.0),
-          child: Stack(
-            children: [
-              // Logo centered vertically and horizontally
-              Positioned(
-                top: (screenHeight - screenWidth * 0.7) / 2, // Center vertically
-                left: (screenWidth - screenWidth * 0.7) / 2, // Center horizontally
-                child: Image.asset(
-                  Images.logo,
-                  width: screenWidth * 0.7,
-                  height: screenWidth * 0.7,
-                  fit: BoxFit.scaleDown,
-                ),
+        body: Stack(
+          children: [
+            /// 🌌 Background Image
+            Positioned.fill(
+              child: Image.asset(
+                Images.splachbackground,
+                fit: BoxFit.cover,
               ),
-              // Progress indicator at the bottom center
-              Positioned(
-                bottom: 2,
-                left: 0,
-                right: 0,
-                child: Column(
-                  children: [
-                    Visibility(
-                      visible: controller.isLoading.isTrue,
-                      child: const CustomDefaultProgressIndicator(),
-                    ),
-                    const Gap(Dimensions.gapDefault),
-                    CustomTextMedium("Version: ${AppConstants.appVersion}",fontSize: Dimensions.fontSizeSmall)
-                  ],
-                ),
+            ),
+
+
+            /// 🌑 Optional dark overlay (text/logo clear dikhne ke liye)
+            Positioned.fill(
+              child: Container(
+                color: Colors.black.withOpacity(0.3),
               ),
-            ],
-          ),
+            ),
+
+            /// ⭐ Logo Center
+            Positioned(
+              top: (screenHeight - screenWidth * 1.1) / 2,
+              left: (screenWidth - screenWidth * 1.1) / 2,
+              child: Image.asset(
+                Images.logo,
+                width: screenWidth * 1.1,
+                height: screenWidth * 1.1,
+                fit: BoxFit.scaleDown,
+              ),
+            ),
+
+            /// ⏳ Loader + Version (Bottom)
+            Positioned(
+              bottom: 12,
+              left: 0,
+              right: 0,
+              child: Column(
+                children: [
+                  Visibility(
+                    visible: controller.isLoading.isTrue,
+                    child: const CustomDefaultProgressIndicator(),
+                  ),
+                  const Gap(Dimensions.gapDefault),
+                  CustomTextMedium(
+                    "Version: ${AppConstants.appVersion}",
+                    fontSize: Dimensions.fontSizeSmall,
+                    color: Colors.white,
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
       ),
     );

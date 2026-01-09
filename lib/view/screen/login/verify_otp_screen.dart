@@ -41,8 +41,8 @@ class VerifyOtpScreen extends GetView<LoginController> {
                           Center(
                             child: Image.asset(
                               Images.logo,
-                              width: 150,
-                              height: 150,
+                              width: 300,
+                              height: 250,
                             ),
                           ),
                         ],

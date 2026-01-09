@@ -160,7 +160,7 @@ class Images {
   static const String linkedin = "assets/images/linkedin.png";
   static const String shareChat = "assets/images/sharechat.png";
   static const String playStore = "assets/images/playstore.png";
-
+  static const String splachbackground = "assets/images/SplashBackground.png";
 
   //Vastu Images
   // static const String vastuCompass = 'assets/images/vastu_compass_six.png'; //delete

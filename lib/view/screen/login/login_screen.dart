@@ -277,7 +277,7 @@ class LoginScreen extends GetView<LoginController> {
     //       },
     //     ),
     //   ),
-    // );
+    // );-
 
     return SafeArea(
       child: Scaffold(
@@ -320,8 +320,8 @@ class LoginScreen extends GetView<LoginController> {
                           Center(
                             child: Image.asset(
                               Images.logo,
-                              width: 150,
-                              height: 155,
+                              width: 300,
+                              height: 250,
                             ),
                           ),
                         ],
