@@ -51,17 +51,19 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions android = FirebaseOptions(
     apiKey: 'AIzaSyBQ9R4pPxIw7W0NztwIoX7iqiFGZD4pOGg',
-    appId: '1:464748727346:android:32cf59ffff785378bf802b',
+    appId: '1:464748727346:android:3ba7711d97cca7c8bf802b',
     messagingSenderId: '464748727346',
     projectId: 'astrobrahmand-760c9',
+    databaseURL: 'https://astrobrahmand-760c9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'astrobrahmand-760c9.firebasestorage.app',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDlJ8hyV1MU791Zjkph-p0_KlAOpIaVA2w',
-    appId: '1:464748727346:ios:caad0547658d7924bf802b',
+    appId: '1:464748727346:ios:316b0be66b057df3bf802b',
     messagingSenderId: '464748727346',
     projectId: 'astrobrahmand-760c9',
+    databaseURL: 'https://astrobrahmand-760c9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'astrobrahmand-760c9.firebasestorage.app',
     iosBundleId: 'com.astrobrahmand.customer',
   );

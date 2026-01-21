@@ -1,13 +1,14 @@
 {
   "project_info": {
     "project_number": "464748727346",
+    "firebase_url": "https://astrobrahmand-760c9-default-rtdb.asia-southeast1.firebasedatabase.app",
     "project_id": "astrobrahmand-760c9",
     "storage_bucket": "astrobrahmand-760c9.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:464748727346:android:32cf59ffff785378bf802b",
+        "mobilesdk_app_id": "1:464748727346:android:3ba7711d97cca7c8bf802b",
         "android_client_info": {
           "package_name": "com.astrobrahmand.customer"
         }
