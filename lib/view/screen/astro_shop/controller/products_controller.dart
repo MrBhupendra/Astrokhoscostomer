@@ -139,18 +139,25 @@ class ProductsController extends GetxController {
     }
   }
 
+
   void increment(String productId, String vendorUniId) {
-    if (qtyCounter.value >= 0) {
-      qtyCounter.value = productQty.value + 1;
-      getProductCalculation(productId, 0, qtyCounter.value, "", vendorUniId,"");
+    // Check if product is in stock and quantity is available
+    if (productData.quantity != null && productQty.value < productData.quantity!.toInt()) {
+      productQty.value = productQty.value + 1;
+      qtyCounter.value = productQty.value;
+    } else if (productData.quantity == null || productData.quantity!.toInt() == 0) {
+      // Product is out of stock
+      CustomSnackBar.showBottom("Product is out of stock");
+    } else {
+      // Maximum quantity reached
+      CustomSnackBar.showBottom("Maximum quantity available: ${productData.quantity}");
     }
   }
 
   void decrement(String productId, String vendorUniId) {
-    if (qtyCounter.value == 0) {
-    } else {
-      qtyCounter.value = productQty.value - 1;
-      getProductCalculation(productId, 0, qtyCounter.value, "", vendorUniId,"");
+    if (productQty.value > 1) {
+      productQty.value = productQty.value - 1;
+      qtyCounter.value = productQty.value;
     }
   }
 
@@ -379,6 +386,18 @@ class ProductsController extends GetxController {
         "payment_method": payMethod,
         "offer_code": offerCode
       });
+
+      print("apiKey => $apiKey");
+      print("uniId => $uniId");
+      print("productId => $productId");
+      print("qty => $qty");
+      print("vendorUniId => $vendorUniId");
+      print("astroRefID => $astroRefID");
+      print("walletCheck => $walletCheck");
+      print("payMethod => $payMethod");
+      print("offerCode => $offerCode");
+      print("response2 => $response");
+
       if (response.statusCode == 200) {
         productCalculationModel = ProductCalculationModel.fromJson(response.data);
         if (productCalculationModel.status == AppConstants.success) {
@@ -401,7 +420,14 @@ class ProductsController extends GetxController {
 
           subscriptionDiscountPercent.value = productCalculationModel.data!.subscriptionDiscountPercent.toString();
 
-          isSubscription.value = productCalculationModel.data!.isSubscription!.toInt();
+          // isSubscription.value = productCalculationModel.data!.isSubscription!.toInt();
+          if (productCalculationModel.data != null &&
+              productCalculationModel.data!.isSubscription != null) {
+            isSubscription.value =
+                productCalculationModel.data!.isSubscription!.toInt();
+          } else {
+            isSubscription.value = 0;
+          }
 
           subTotalAmount.value = productCalculationModel.data!.subtotal.toString();
 
@@ -424,10 +450,11 @@ class ProductsController extends GetxController {
           print('OnApiError');
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       isCalculationSuccess(false);
       if (kDebugMode) {
         print('OnException==> ${e.toString()}');
+        print('OnException==> ${stackTrace.toString()}');
       }
     } finally {
       isCalculationLoading(false);

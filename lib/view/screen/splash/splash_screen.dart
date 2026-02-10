@@ -26,7 +26,7 @@ class SplashScreen extends GetView<SplashController> {
             /// 🌌 Background Image
             Positioned.fill(
               child: Image.asset(
-                Images.splachbackground,
+                Images.splashBackGround,
                 fit: BoxFit.cover,
               ),
             ),
