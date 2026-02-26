@@ -73,6 +73,7 @@ class Data {
     this.activeOffer,
     this.activeKundliApi,
     this.isCallRequestToOfflineAstro,
+    this.gmailClientId,
   });
 
   Data.fromJson(dynamic json) {
@@ -125,6 +126,7 @@ class Data {
     activeOffer = json['active_offer'];
     activeKundliApi = json['active_kundli_api'];
     isCallRequestToOfflineAstro = json['is_call_request_to_offline_astro'];
+    gmailClientId = json['gmail_client_id'];
   }
 
   String? companyName;
@@ -176,6 +178,7 @@ class Data {
   String? activeOffer;
   String? activeKundliApi;
   num? isCallRequestToOfflineAstro;
+  String? gmailClientId;
 
 
   Map<String, dynamic> toJson() {
@@ -233,6 +236,7 @@ class Data {
     map['active_offer'] = activeOffer;
     map['active_kundli_api'] = activeKundliApi;
     map['is_call_request_to_offline_astro'] = isCallRequestToOfflineAstro;
+    map['gmail_client_id'] = gmailClientId;
     return map;
   }
 }

@@ -65,6 +65,8 @@ class DefaultFirebaseOptions {
     projectId: 'astrobrahmand-760c9',
     databaseURL: 'https://astrobrahmand-760c9-default-rtdb.asia-southeast1.firebasedatabase.app',
     storageBucket: 'astrobrahmand-760c9.firebasestorage.app',
+    androidClientId: '464748727346-qlk4k02qu38cn4p50vjrrb1d1u3foops.apps.googleusercontent.com',
+    iosClientId: '464748727346-dmgbe00pd33rb2om8tncjpfj13mv7sqh.apps.googleusercontent.com',
     iosBundleId: 'com.astrobrahmand.customer',
   );
 }

@@ -8,12 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:464748727346:android:3ba7711d97cca7c8bf802b",
+        "mobilesdk_app_id": "1:464748727346:android:b7db208c7e3ed7b9bf802b",
         "android_client_info": {
-          "package_name": "com.astrobrahmand.customer"
+          "package_name": "com.astrobrahmand.astrologer"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBQ9R4pPxIw7W0NztwIoX7iqiFGZD4pOGg"
@@ -21,7 +26,63 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "464748727346-dmgbe00pd33rb2om8tncjpfj13mv7sqh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.astrobrahmand.customer"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:464748727346:android:3ba7711d97cca7c8bf802b",
+        "android_client_info": {
+          "package_name": "com.astrobrahmand.customer"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "464748727346-qlk4k02qu38cn4p50vjrrb1d1u3foops.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.astrobrahmand.customer",
+            "certificate_hash": "9452cf1f2acb50fe94c435342ca528f5eafbd816"
+          }
+        },
+        {
+          "client_id": "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBQ9R4pPxIw7W0NztwIoX7iqiFGZD4pOGg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "464748727346-dmgbe00pd33rb2om8tncjpfj13mv7sqh.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.astrobrahmand.customer"
+              }
+            }
+          ]
         }
       }
     }

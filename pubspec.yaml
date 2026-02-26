@@ -145,6 +145,8 @@ dependencies:
   chewie: ^1.8.5
   otp_autofill: ^4.1.0
   pretty_dio_logger: ^1.4.0
+  google_sign_in: ^6.2.1
+  phonecodes: ^0.0.4
 
 
 

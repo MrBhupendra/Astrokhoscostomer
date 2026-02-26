@@ -461,4 +461,6 @@ class Images {
   static const String subscription = 'assets/images/subscription.png';
   static const String icCoin = 'assets/images/ic_coin.png';
 
+  static String google = 'assets/images/google.png';
+
 }

@@ -523,4 +523,9 @@ class AppConstants {
 
   static const String horoscopePrice = 'horoscopePrice';
   static const String kundliMatchingPrice = 'kundliMatchingPrice';
+
+  // Gmail login
+  static const String defaultWebClientId = "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com";
+  static const String gmailLoginUri = '$baseUrl/api/customerLoginWithGmail';
+  static const String isGoogleLogin = 'isGoogleLogin';
 }

@@ -7,22 +7,39 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:astro_brahmand/model/success_model.dart';
 import 'package:astro_brahmand/model/verify_customer_model.dart';
 import 'package:astro_brahmand/utill/common_methods.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:otp_autofill/otp_autofill.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:phonecodes/phonecodes.dart';
 
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/app_events.dart';
 import '../../../../utill/app_features.dart';
 import '../../../../utill/app_strings.dart';
 import '../../../../utill/shared_preference.dart';
+import '../../../widget/custom_default_dialog.dart';
 import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
 import '../../splash/controller/config_controller.dart';
 
 class LoginController extends GetxController {
+  /// Google Login
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    serverClientId: AppConstants.defaultWebClientId,
+    scopes: [
+      'email',
+      'profile',
+    ],
+  );
+  /// Google end
+
+
   final Dio _dio = Dio();
   final TextEditingController mobileController = TextEditingController();
   String mobileNumber = "";
@@ -43,7 +60,7 @@ class LoginController extends GetxController {
   late OTPInteractor _otpInteractor;
 
   // resend otp time
-  late Timer _timer;
+  late Timer _timer = Timer(Duration.zero, () {});
   RxInt remainingTime = 0.obs;
   RxBool canResendOtp = true.obs;
 
@@ -52,6 +69,8 @@ class LoginController extends GetxController {
 
   ConfigController configController = Get.find();
   DeepLinkController deepLinkController = Get.find();
+
+  String regionCode = "IN";
 
   @override
   void onInit() {
@@ -294,6 +313,7 @@ class LoginController extends GetxController {
     debugPrint('App signature: $appSignature');
   }
 
+
   @override
   void dispose() {
     otpTextEditController.stopListen();
@@ -302,4 +322,156 @@ class LoginController extends GetxController {
 
     super.dispose();
   }
+
+
+  ///Google Login
+  Future<void> checkLocationPermission() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+
+    if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
+      debugPrint("[Login] requestLocationPermissions granted");
+      signInWithGoogle();
+    } else if (permission == LocationPermission.deniedForever) {
+      debugPrint("[Login] requestLocationPermissions deniedForever");
+      await openAppSettings();
+    } else {
+      debugPrint("[Login] requestLocationPermissions denied");
+
+      // Show dialog to inform the user
+      CustomDefaultDialog.showOkDialog(
+        "Permission Required",
+        "Location permission required for Google Authentication",
+            () {
+          Get.back();
+          // Optionally retry permission request after dialog is dismissed
+          checkLocationPermission(); // Retry only once per user action
+        },
+      );
+    }
+  }
+
+
+  Future<dynamic> signInWithGoogle() async {
+    try {
+      // Google Login
+      final GoogleSignIn googleSignIn = GoogleSignIn(
+        serverClientId: configController.config.data?.gmailClientId.toString(),//AppConstants.defaultWebClientId,
+        scopes: [
+          'email',
+          'profile',
+        ],
+      );
+      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
+      if (googleUser == null) return; //User cancelled the sign-in
+      regionCode = await getCountryCode();
+      Country country = Countries.findByCode(regionCode); //Ex:India,USA
+      countryCode.value = country.dialCode; //Ex: +91, +1
+
+      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+      final credential = GoogleAuthProvider.credential(
+        accessToken: googleAuth.accessToken,
+        idToken: googleAuth.idToken,
+      );
+
+      // Fetch user information
+      String? customerName = googleUser.displayName;
+      loginWithGmail(googleAuth.idToken.toString(),countryCode.value.toString(),regionCode.toString(),customerName.toString());
+    } on Exception catch (e) {
+      debugPrint('[LOGIN] exception->$e');
+    }
+  }
+
+  Future<String> getCountryCode() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium,);
+      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude,);
+
+      if (placemarks.isNotEmpty) {
+        return placemarks.first.isoCountryCode ?? 'IN';
+      } else {
+        debugPrint('Country not found');
+        return 'IN';
+      }
+    } catch (e) {
+      debugPrint('Error getting location: $e');
+      return 'IN';
+    }
+  }
+
+  Future<void> loginWithGmail(String idToken, String countryCode, String countryName,String customerName) async {
+    debugPrint("DebugPrint:$idToken");
+    CustomProgressDialog.showDialog();
+    try {
+      String? fcmToken = await SharedPreferencesHelper.getData(AppConstants.fcmToken);
+      final response = await _dio.post(AppConstants.gmailLoginUri, data: {
+        'id_token': idToken,
+        'user_fcm_token': fcmToken,
+        'is_updated': 1,
+        'country_code': countryCode,
+        'country_name': countryName,
+        'referral_code': '',
+      });
+      if (response.statusCode == 200) {
+        CustomProgressDialog.dismissDialog();
+        verifyCustomerModel = VerifyCustomerModel.fromJson(response.data);
+        if (verifyCustomerModel.status == AppConstants.success) {
+          try {
+            final userCredential = await FirebaseAuth.instance.signInWithCustomToken(verifyCustomerModel.data!.firebaseAuthToken.toString());
+            debugPrint("Sign-in successful.");
+            await AppEvents().sendSignInEvent("gmail",verifyCustomerModel.data!.customerUniId.toString(), "");
+            configController.setCurrency(
+                currencySymbol: verifyCustomerModel.data!.currencySymbol  ?? AppConstants.defaultCurrencySymbol,
+                currencyCode: verifyCustomerModel.data!.currencyCode  ?? AppConstants.defaultCurrencyCode,
+                phoneCode: countryCode.toString()
+            );
+            if (verifyCustomerModel.data?.processStatus == AppConstants.success) {
+              await CommonMethods().saveLoginSharedPrefData(verifyCustomerModel,countryCode, true);
+              await SharedPreferencesHelper.saveBoolData(AppConstants.isGoogleLogin, true);
+              Get.offAllNamed('/dashboard');
+            } else {
+              await CommonMethods().saveLoginSharedPrefData(verifyCustomerModel,countryCode, false);
+              await SharedPreferencesHelper.saveBoolData(AppConstants.isGoogleLogin, true);
+              Get.offAllNamed('/updateProfile', arguments: {
+                'type': "Register",
+                'email': verifyCustomerModel.data!.email.toString(),
+                'mobile': "",
+                'name': customerName,
+                'regionCode': countryCode
+              });
+            }
+          } on FirebaseAuthException catch (e) {
+            switch (e.code) {
+              case "invalid-custom-token":
+                CustomSnackBar.showBottom("Invalid token.Contact Support Team.");
+                debugPrint("[AUTH0] The supplied token is not a Firebase custom auth token.");
+                break;
+              case "custom-token-mismatch":
+                CustomSnackBar.showBottom("Token Mismatch.Contact Support Team.");
+                debugPrint("[AUTH0] The supplied token is for a different Firebase project.");
+                break;
+              default:
+                CustomSnackBar.showBottom("Something went wrong.Contact Support Team.");
+                debugPrint("[AUTH0] Unknown error.");
+            }
+          }
+        } else {
+          CustomSnackBar.showBottom(verifyCustomerModel.msg.toString());
+        }
+      } else {
+        CustomProgressDialog.dismissDialog();
+        if (kDebugMode) {
+          print('OnApiError');
+        }
+      }
+    } catch (e) {
+      CustomProgressDialog.dismissDialog();
+      if (kDebugMode) {
+        print('OnException==> $e');
+      }
+    }
+  }
+
+  Future<void> handleSignOut() => _googleSignIn.disconnect();
+
+/// Google end
 }

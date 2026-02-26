@@ -5,6 +5,7 @@ import 'package:get/get.dart' show BoolExtension, Get, GetNavigation, GetxContro
 import 'package:dio/dio.dart' show Dio, FormData, MultipartFile;
 import 'package:flutter/foundation.dart';
 import 'package:astro_brahmand/model/verify_customer_model.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/common_methods.dart';
@@ -30,6 +31,8 @@ class UpdateProfileController extends GetxController {
   final TextEditingController timezone = TextEditingController();
   String genderValue = "";
   String profileImage = "";
+
+  final RxString countryCode = '+91'.obs;
 
   Future<void> initData() async {
 
@@ -128,6 +131,10 @@ class UpdateProfileController extends GetxController {
     } finally {
       isLoading(false);
     }
+  }
+
+  Future<void> updateCountryCode(CountryCode code) async {
+    countryCode.value = code.dialCode!;
   }
 
 }

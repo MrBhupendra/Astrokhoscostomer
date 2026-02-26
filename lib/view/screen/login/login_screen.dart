@@ -469,6 +469,14 @@ class LoginScreen extends GetView<LoginController> {
                         ),
                       );
                     }),
+
+                    const Gap(Dimensions.gapLarge),
+                    _buildDividerWithOr(),
+                    const Gap(Dimensions.gapLarge),
+                    _buildGoogleLoginButton(),
+                    const Gap(Dimensions.gapLarge),
+
+
                     Gap(200),
                     Center(
                       child: Padding(
@@ -521,6 +529,65 @@ class LoginScreen extends GetView<LoginController> {
 
 
 
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildDividerWithOr() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeThirtyFive),
+      child: Row(
+        children: [
+          const Flexible(
+            child: Divider(
+              color: ColorResources.black6,
+            ),
+          ),
+          const SizedBox(width: Dimensions.sizedBoxSmall),
+          Text(AppStrings.or.tr,style: const TextStyle(
+              color: ColorResources.black4
+          ),),
+          const SizedBox(width: Dimensions.sizedBoxSmall),
+          const Flexible(
+            child: Divider(
+              color: ColorResources.black6,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildGoogleLoginButton() {
+    return Center(
+      child: SizedBox(
+        width: Get.width * 0.8,
+        child: ElevatedButton(
+          onPressed: () async {
+            if (FocusManager.instance.primaryFocus != null) {
+              FocusManager.instance.primaryFocus!.unfocus();
+            }
+            controller.checkLocationPermission();
+          },
+          style: ElevatedButton.styleFrom(
+            backgroundColor: ColorResources.black7,// controller.showMobileLogin.value ? ColorResources.colorPrimaryVariant : ColorResources.black8,
+            padding: const EdgeInsets.only(top: 12, bottom: 12),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(Images.google,height: 20,width: 20),
+              const Gap(10),
+              CustomTextRegular(
+                "Sign In With Google",
+                color: ColorResources.black,// controller.showMobileLogin.value ? ColorResources.black8 : ColorResources.black
+              ),
             ],
           ),
         ),

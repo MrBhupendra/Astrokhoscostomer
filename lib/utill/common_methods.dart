@@ -170,6 +170,7 @@ class CommonMethods {
         AppConstants.name, verifyCustomerModel.data!.name.toString());
     await SharedPreferencesHelper.saveData(
         AppConstants.email, verifyCustomerModel.data!.email.toString());
+    await SharedPreferencesHelper.saveData(AppConstants.phoneNumber, verifyCustomerModel.data!.phone.toString());
     await SharedPreferencesHelper.saveData(
         AppConstants.gender, verifyCustomerModel.data!.gender.toString());
     await SharedPreferencesHelper.saveData(

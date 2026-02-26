@@ -3,6 +3,7 @@ import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:astro_brahmand/utill/app_constants.dart';
 
@@ -85,6 +86,7 @@ class SharedPreferencesHelper {
 
     //Save config data
     CommonMethods().logoutUser(isInAppCall,paymentGateway, appLanguage,vedicApiKey,jyotishamApiKey,agoraAppId,placeApiKey,architectCategoryId,homeopathyCategoryId,aiPredictionPrice,askQuestionPrice,coMobile,coEmail,coWhatsapp,coAddress,fb,instagram,youtube,twitter,shareChat,linkedin);
+    GoogleSignIn().disconnect();
     try{
       User? user = FirebaseAuth.instance.currentUser;
       if(user != null){
