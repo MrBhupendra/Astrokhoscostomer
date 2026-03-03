@@ -23,6 +23,8 @@ import '../../../dashboard/controller/dashboard_controller.dart';
 import '../../../feedback/feedback_screen.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import '../../../wallet/controller/wallet_controller.dart';
+
 class VideoCallController extends FullLifeCycleController with FullLifeCycleMixin {
  final ChatIntakeFormController chatIntakeFormController = Get.find();
 
@@ -44,8 +46,9 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
   //Listeners
   var chatAcceptedListener;
   var chatEndListener;
+ var durationListener;
 
-  //Agora
+ //Agora
   late String agoraAppId;
   late String agoraToken;
   late String uniqueId;
@@ -63,10 +66,11 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
   final isGetTimeSuccess = false.obs;
   ChatRemainingTimeModel chatRemainingTimeModel = ChatRemainingTimeModel();
 
-  //Timer
-  RxInt seconds = 60.obs;
-  RxBool isTimerRunning = false.obs;
-  Timer? _timer;
+ //Timer
+ RxInt seconds = 60.obs;
+ RxInt popupAfterDuration = 60.obs;
+ RxBool isTimerRunning = false.obs;
+ Timer? _timer;
 
  // Remaining offer time
  RxInt offerSeconds = 0.obs;
@@ -254,6 +258,22 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
         print('[ChatTab] ChatEnd:onCancelled $error');
       }
     });
+
+    durationListener = dbReference.child('duration').onValue.listen((event) {
+      if (event.snapshot.exists && event.snapshot.value != null) {
+        int newDuration = int.tryParse(event.snapshot.value.toString()) ?? seconds.value;
+        if (newDuration != seconds.value) {
+          seconds.value = newDuration; // UI auto update
+          if (kDebugMode) {
+            print('[VideoCall] Duration updated from Firebase: $newDuration');
+          }
+        }
+      }
+    }, onError: (error) {
+      if (kDebugMode) {
+        print('[VideoCall] Duration listener error: $error');
+      }
+    });
   }
 
   Future<void> endCall() async {
@@ -296,6 +316,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
         if (chatRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
+          popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
           if(AppFeatures.freeChatOfferDialog) {
             offerSeconds.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
           }
@@ -319,54 +340,60 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     }
   }
 
-  void startTimer() {
-    if (!isTimerRunning.value) {
-      isTimerRunning.toggle();
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-        if (seconds.value > 0) {
-          seconds--;
-          if(seconds.value == 30){
-            Get.dialog(
-              CustomDialogWidget(
-                imagePath: Images.icCoin,
-                title: AppStrings.lowBalance.tr,
-                description: AppStrings.lowBalancePopup.tr,
-                yesText: AppStrings.rechargeNow.tr,
-                onYesPressed: () async {
-                  Get.back();
-                  Get.toNamed('/wallet');
-                },
-                noText: AppStrings.cancel.tr,
-              ),
-            );
-          }
+ void startTimer() {
+   if (!isTimerRunning.value) {
+     isTimerRunning.toggle();
+     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+       if (seconds.value > 0) {
+         seconds--;
+       } else {
+         endCall();
+       }
+       if (popupAfterDuration.value > 0) {
+         popupAfterDuration--;
+         if(popupAfterDuration.value == 0){
+           Get.dialog(
+             CustomDialogWidget(
+               imagePath: Images.icCoin,
+               title: AppStrings.lowBalance.tr,
+               description: AppStrings.lowBalancePopup.tr,
+               onYesPressed: () async {
+                 Get.back();
 
-          if (offerSeconds.value > 0) {
-            offerSeconds--;
-            if (offerSeconds.value == 0) {
-              CustomDefaultDialog.showOkDialog(
-                AppStrings.alert.tr,
-                "Your free chat time is about to end. The call will now continue at the standard chat rate.",
-                    () {
-                  Get.back();
-                },
-              );
-            }
-          }
+                 if (!Get.isRegistered<WalletController>()) {
+                   Get.put(WalletController());
+                 }
+                 if (uniqueId.isNotEmpty) {
+                   Get.find<WalletController>().setPaymentData(
+                     uniqueId: uniqueId,
+                     channelName: channelName,
+                     astroImage: chatIntakeFormController.astrologerImage,
+                     astroName: chatIntakeFormController.astrologerName,
+                     astroUniId: chatIntakeFormController.astrologerUniId,
+                   );
+                 } else {
+                   print("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                 }
 
-        } else {
-          endCall();
-        }
-      });
-    }
-  }
+                 Get.toNamed('/wallet');
+               },
+             ),
+           );
+         }
+       } else {
+         return;
+         // endChat();
+       }
+     });
+   }
+ }
 
-  void stopTimer() {
-    if (_timer != null && _timer!.isActive) {
-      _timer!.cancel();
-      isTimerRunning.toggle();
-    }
-  }
+ void stopTimer() {
+   if (_timer != null && _timer!.isActive) {
+     _timer!.cancel();
+     isTimerRunning.toggle();
+   }
+ }
 
   String getFormattedTime() {
     int hours = seconds ~/ 3600;

@@ -1,5 +1,7 @@
 import 'package:get/get.dart';
 
+import '../view/screen/chat/controller/chat_intake_form_controller.dart';
+import '../view/screen/wallet/controller/wallet_controller.dart';
 import '../view/widget/custom_call_connect_widget.dart';
 import '../view/widget/custom_okdialog_widget.dart';
 import '../view/widget/custom_payment_status_dialog.dart';
@@ -7,90 +9,257 @@ import 'app_constants.dart';
 import 'app_strings.dart';
 import 'color_resources.dart';
 import 'images.dart';
+import 'package:flutter/cupertino.dart';
+
 
 class AppDialog {
   void showPaymentFailedDialog() {
+
+    final walletController = Get.find<WalletController>();
+    final uniqueId = walletController.getUniqueIdSafe();
+    final channelName = walletController.getChannelNameSafe();
+    final AgoraTokenSafe = walletController.getAgoraTokenSafe();
+    final AgoraAppIdSafe = walletController.getAgoraAppIdSafe();
+    final astroName = walletController.getAstroNameSafe();
+    final astroImage = walletController.getAstroImageSafe();
+    final astroUniId = walletController.getAstroUniIdSafe();
+    final isVirtual = walletController.getIsVirtualSafe();
+    print("callDuration===>5");
+    print(uniqueId);
+    print(channelName);
+    print(AgoraTokenSafe);
+    print(AgoraAppIdSafe);
+    print(astroName);
+    print(astroImage);
+    print(astroUniId);
+    print(isVirtual);
     Get.dialog(
-        CustomPaymentDialogWidget(
-          imagePath: Images.paymentFailed,
-          onPressed: () {
-            Get.back(); //CLose Dialog
-          },
-          title: AppStrings.paymentFailed,
-          description: AppStrings.paymentFailedDesc,
-          btnText: AppStrings.tryAgain,
-          borderColor: ColorResources.lightRed,
-          textColor: ColorResources.lightRed,
+        PopScope(
+          canPop: false,
+          child: CustomPaymentDialogWidget(
+            imagePath: Images.paymentFailed,
+            onPressed: () {
+              if (uniqueId.isNotEmpty) {
+                if (uniqueId.startsWith("CHAT")) {
+                  final ChatIntakeFormController
+                  chatIntakeFormController =
+                  Get.put(ChatIntakeFormController());
+                  chatIntakeFormController.setAstrologerData(
+                      astroName
+                          .toString(),
+                      astroImage
+                          .toString(),
+                      astroUniId.toString(),
+                      AppConstants.chat,
+                      isVirtual);
+                  Get.offAllNamed(
+                    '/chat_screen',
+                    arguments: {"channelName": channelName, "uniqueId": uniqueId},
+                  );
+                } else if (uniqueId.startsWith("CALL")) {
+                  print("callDuration===>6");
+                  print(uniqueId);
+                  print(channelName);
+                  print(AgoraTokenSafe);
+                  print(AgoraAppIdSafe);
+                  final ChatIntakeFormController
+                  chatIntakeFormController =
+                  Get.put(ChatIntakeFormController());
+                  chatIntakeFormController.setAstrologerData(
+                      astroName
+                          .toString(),
+                      astroImage
+                          .toString(),
+                      astroUniId.toString(),
+                      AppConstants.call,
+                      0);
+                  Get.offAllNamed(
+                    '/voiceCallScreen',
+                    arguments: {"channelName": channelName, "uniqueId": uniqueId, "token": AgoraTokenSafe, "agoraAppId": AgoraAppIdSafe},
+                  );
+                } else if (uniqueId.startsWith("VIDEO")) {
+                  final ChatIntakeFormController
+                  chatIntakeFormController =
+                  Get.put(ChatIntakeFormController());
+                  chatIntakeFormController.setAstrologerData(
+                      astroName
+                          .toString(),
+                      astroImage
+                          .toString(),
+                      astroUniId.toString(),
+                      AppConstants.video,
+                      0);
+                  Get.offAllNamed(
+                    '/videoCallScreen',
+                    arguments: {"channelName": channelName, "uniqueId": uniqueId},
+                  );
+                } else {
+                  // Fallback if uniqueId doesn’t match any known type
+                  Get.back();
+                }
+                return;
+              }
+              Get.back(); // Close Dialog if uniqueId is empty
+            },
+            title: AppStrings.paymentFailed,
+            description: AppStrings.paymentFailedDesc,
+            btnText: AppStrings.tryAgain,
+            borderColor: ColorResources.lightRed,
+            textColor: ColorResources.lightRed,
+          ),
         ),
         barrierDismissible: false);
   }
 
   void showPaymentSuccessDialog(String type) {
+    final walletController = Get.find<WalletController>();
+    final uniqueId = walletController.getUniqueIdSafe();
+    final channelName = walletController.getChannelNameSafe();
+    final AgoraTokenSafe = walletController.getAgoraTokenSafe();
+    final AgoraAppIdSafe = walletController.getAgoraAppIdSafe();
+    final astroName = walletController.getAstroNameSafe();
+    final astroImage = walletController.getAstroImageSafe();
+    final astroUniId = walletController.getAstroUniIdSafe();
+    final isVirtual = walletController.getIsVirtualSafe();
+    print("callDuration===>5");
+    print(uniqueId);
+    print(channelName);
+    print(AgoraTokenSafe);
+    print(AgoraAppIdSafe);
+    print(astroName);
+    print(astroImage);
+    print(astroUniId);
+    print(isVirtual);
     Get.dialog(
-        CustomPaymentDialogWidget(
-            imagePath: Images.paymentSuccess,
-            onPressed: () {
-              Get.back(); //Close Dialog
-              if (type.isNotEmpty) {
-                if (type == AppConstants.subscriptionOrder) {
-                  //REPORT
-                  Get.offAllNamed('/subscription_purchase_list');
-                } else if (type == AppConstants.report) {
-                  //REPORT
-                  Get.offAllNamed('/report_order_list_vedic');
-                } else if (type == AppConstants.jeevini) {
-                  //JEEVINI
-                  Get.offAllNamed('/paid_orders_tab_screen',
-                      arguments: {'index': 0});
-                } else if (type == AppConstants.divineCode) {
-                  //DIVINE
-                  Get.offAllNamed('/paid_orders_tab_screen',
-                      arguments: {'index': 1});
-                } else if (type == AppConstants.pdfBook) {
-                  //BOOKS
-                  Get.offAllNamed('/paid_orders_tab_screen',
-                      arguments: {'index': 2});
-                } else if (type == AppConstants.report) {
-                  //REPORT
-                  Get.offAllNamed('/paid_orders_tab_screen',
-                      arguments: {'index': 3});
-                } else if (type == AppConstants.shop) {
-                  //SHOP
-                  Get.offAllNamed('/orders_tab_screen',
-                      arguments: {'index': 1});
-                } else if (type == AppConstants.serviceOrder) {
-                  //Service
-                  Get.offAllNamed('/orders_tab_screen',
-                      arguments: {'index': 2});
-                } else if (type == AppConstants.groupPoojaOrder) {
-                  //GroupPooja
-                  Get.offAllNamed('/orders_tab_screen',
-                      arguments: {'index': 3});
-                } else if (type == AppConstants.architect) {
-                  //Architect
-                  Get.offAllNamed('/architect_orders_tab_screen');
-                } else if (type == AppConstants.slotBooking) {
-                  //SlotBooking
-                  Get.offAllNamed('/orders_tab_screen',
-                      arguments: {'index': 4});
-                } else if (type == AppConstants.askQuestion) {
-                  //askQuestion
-                  Get.offNamed('/ask_question_order_screen');
+        PopScope(
+          canPop: false,
+          child: CustomPaymentDialogWidget(
+              imagePath: Images.paymentSuccess,
+              onPressed: () {
+                Get.back(); //Close Dialog
+
+                if (uniqueId.isNotEmpty) {
+                  if (uniqueId.startsWith("CHAT")) {
+                    final ChatIntakeFormController
+                    chatIntakeFormController =
+                    Get.put(ChatIntakeFormController());
+                    chatIntakeFormController.setAstrologerData(
+                        astroName
+                            .toString(),
+                        astroImage
+                            .toString(),
+                        astroUniId.toString(),
+                        AppConstants.chat,
+                        isVirtual);
+                    Get.offAllNamed(
+                      '/chat_screen',
+                      arguments: {"channelName": channelName, "uniqueId": uniqueId},
+                    );
+                  } else if (uniqueId.startsWith("CALL")) {
+                    print("callDuration===>6");
+                    print(uniqueId);
+                    print(channelName);
+                    print(AgoraTokenSafe);
+                    print(AgoraAppIdSafe);
+                    final ChatIntakeFormController
+                    chatIntakeFormController =
+                    Get.put(ChatIntakeFormController());
+                    chatIntakeFormController.setAstrologerData(
+                        astroName
+                            .toString(),
+                        astroImage
+                            .toString(),
+                        astroUniId.toString(),
+                        AppConstants.call,
+                        0);
+                    Get.offAllNamed(
+                      '/voiceCallScreen',
+                      arguments: {"channelName": channelName, "uniqueId": uniqueId, "token": AgoraTokenSafe, "agoraAppId": AgoraAppIdSafe},
+                    );
+                  } else if (uniqueId.startsWith("VIDEO")) {
+                    final ChatIntakeFormController
+                    chatIntakeFormController =
+                    Get.put(ChatIntakeFormController());
+                    chatIntakeFormController.setAstrologerData(
+                        astroName
+                            .toString(),
+                        astroImage
+                            .toString(),
+                        astroUniId.toString(),
+                        AppConstants.video,
+                        0);
+                    Get.offAllNamed(
+                      '/videoCallScreen',
+                      arguments: {"channelName": channelName, "uniqueId": uniqueId},
+                    );
+                  } else {
+                    // Fallback if uniqueId doesn’t match any known type
+                    Get.back();
+                  }
+                  return;
                 }
-                else if (type == AppConstants.orderMandirDarshan) {
-                  //GroupPooja
-                  Get.offAllNamed('/orders_tab_screen',
-                      arguments: {'index': 6});
+
+                if (type.isNotEmpty) {
+                  if (type == AppConstants.subscriptionOrder) {
+                    //REPORT
+                    Get.offAllNamed('/subscription_purchase_list');
+                  } else if (type == AppConstants.report) {
+                    //REPORT
+                    Get.offAllNamed('/report_order_list_vedic');
+                  } else if (type == AppConstants.jeevini) {
+                    //JEEVINI
+                    Get.offAllNamed('/paid_orders_tab_screen',
+                        arguments: {'index': 0});
+                  } else if (type == AppConstants.divineCode) {
+                    //DIVINE
+                    Get.offAllNamed('/paid_orders_tab_screen',
+                        arguments: {'index': 1});
+                  } else if (type == AppConstants.pdfBook) {
+                    //BOOKS
+                    Get.offAllNamed('/paid_orders_tab_screen',
+                        arguments: {'index': 2});
+                  } else if (type == AppConstants.report) {
+                    //REPORT
+                    Get.offAllNamed('/paid_orders_tab_screen',
+                        arguments: {'index': 3});
+                  } else if (type == AppConstants.shop) {
+                    //SHOP
+                    Get.offAllNamed('/orders_tab_screen',
+                        arguments: {'index': 1});
+                  } else if (type == AppConstants.serviceOrder) {
+                    //Service
+                    Get.offAllNamed('/orders_tab_screen',
+                        arguments: {'index': 2});
+                  } else if (type == AppConstants.groupPoojaOrder) {
+                    //GroupPooja
+                    Get.offAllNamed('/orders_tab_screen',
+                        arguments: {'index': 3});
+                  } else if (type == AppConstants.architect) {
+                    //Architect
+                    Get.offAllNamed('/architect_orders_tab_screen');
+                  } else if (type == AppConstants.slotBooking) {
+                    //SlotBooking
+                    Get.offAllNamed('/orders_tab_screen',
+                        arguments: {'index': 4});
+                  } else if (type == AppConstants.askQuestion) {
+                    //askQuestion
+                    Get.offNamed('/ask_question_order_screen');
+                  }
+                  else if (type == AppConstants.orderMandirDarshan) {
+                    //GroupPooja
+                    Get.offAllNamed('/orders_tab_screen',
+                        arguments: {'index': 6});
+                  } else {
+                    Get.offAllNamed('/dashboard');
+                  }
                 } else {
                   Get.offAllNamed('/dashboard');
                 }
-              } else {
-                Get.offAllNamed('/dashboard');
-              }
-            },
-            title: AppStrings.paymentSuccess.tr,
-            description: AppStrings.paymentSuccessDesc.tr,
-            btnText: AppStrings.continueBtn),
+              },
+              title: AppStrings.paymentSuccess.tr,
+              description: AppStrings.paymentSuccessDesc.tr,
+              btnText: AppStrings.continueBtn),
+        ),
         barrierDismissible: false);
   }
 

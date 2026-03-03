@@ -506,199 +506,201 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
     liveAstrologerController.getAllAstrologer("live");
     Get.bottomSheet(
       enableDrag: true,
-      Container(
-        height: Get.height * 0.5,
-        decoration: const BoxDecoration(
-          color: ColorResources.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.borderRadiusMedium)),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
-              child: Container(
-                width: 40,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade400,
-                  borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+      SafeArea(
+        child: Container(
+          height: Get.height * 0.5,
+          decoration: const BoxDecoration(
+            color: ColorResources.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.borderRadiusMedium)),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
+                child: Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeOverSmall),
-              child: CustomTextMedium(
-                "Check other live sessions",
-                fontSize: Dimensions.fontSizeLarge,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeOverSmall),
+                child: CustomTextMedium(
+                  "Check other live sessions",
+                  fontSize: Dimensions.fontSizeLarge,
+                ),
               ),
-            ),
-            const Divider(thickness: 1.2),
-            Expanded(
-              child: Obx(
-                    () {
-                  if (liveAstrologerController.isAstrologerSuccess.isTrue) {
-                    return GridView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 4,
-                        mainAxisSpacing: 4,
-                        crossAxisSpacing: 4,
-                        childAspectRatio: 0.8,
-                      ),
-                      itemCount: liveAstrologerController.astrologerModel.data?.length, // Adjust this count based on your data
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () async {
-                            Get.delete<LiveStreamController>();
-                            bool isLogin = await SharedPreferencesHelper.getIsLogin();
-                            if (isLogin) {
-                              String callRate = '**', callDuration = '**', videoRate = '**', videoDuration = '**',privateCallRate = '**', privateCallDuration = '**', privateVideoRate = '**', privateVideoDuration = '**';
-                              liveAstrologerController.astrologerModel.data?[index].prices?.forEach((priceItem) {
-                                String type = priceItem.type.toString();
-                                switch (type) {
-                                  case AppConstants.liveAudioCall:
-                                    callRate = priceItem.price.toString();
-                                    callDuration = priceItem.timeInMinutes.toString();
-                                    break;
-                                  case AppConstants.liveVideoCall:
-                                    videoRate = priceItem.price.toString();
-                                    videoDuration = priceItem.timeInMinutes.toString();
-                                    break;
-                                  case AppConstants.privateLiveAudioCall:
-                                    privateCallRate = priceItem.price.toString();
-                                    privateCallDuration = priceItem.timeInMinutes.toString();
-                                    break;
-                                  case AppConstants.privateLiveVideoCall:
-                                    privateVideoRate = priceItem.price.toString();
-                                    privateVideoDuration = priceItem.timeInMinutes.toString();
-                                    break;
-                                }
-                              });
-                              final LiveStreamInitController liveController = Get.put(LiveStreamInitController());
-                              String astrologerName = liveAstrologerController.astrologerModel.data![index].displayName.toString();
-                              String astrologerImage = liveAstrologerController.astrologerModel.data![index].astroImg.toString();
-                              liveController.setAstrologerData(astrologerName, astrologerImage, callRate, videoRate, callDuration, videoDuration,privateCallRate, privateVideoRate, privateCallDuration, privateVideoDuration,AppConstants.live);
-                              // Join Live
-                              int astrologerUID = liveAstrologerController.astrologerModel.data![index].user!.id!.toInt();
-                              String uniqueId = liveAstrologerController.astrologerModel.data![index].liveChannel.toString();
-                              String astrologerUniId = liveAstrologerController.astrologerModel.data![index].astrologerUniId.toString();
-                              liveAstrologerController.joinLiveStream(astrologerUID, uniqueId, astrologerUniId);
-                              print("astrologerUID->$astrologerUID uniqueId->$uniqueId astrologerUniId->$astrologerUniId");
-                            }else{
-                              Get.toNamed('/login');
-                            }
+              const Divider(thickness: 1.2),
+              Expanded(
+                child: Obx(
+                      () {
+                    if (liveAstrologerController.isAstrologerSuccess.isTrue) {
+                      return GridView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeExtraSmall),
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 4,
+                          mainAxisSpacing: 4,
+                          crossAxisSpacing: 4,
+                          childAspectRatio: 0.8,
+                        ),
+                        itemCount: liveAstrologerController.astrologerModel.data?.length, // Adjust this count based on your data
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () async {
+                              Get.delete<LiveStreamController>();
+                              bool isLogin = await SharedPreferencesHelper.getIsLogin();
+                              if (isLogin) {
+                                String callRate = '**', callDuration = '**', videoRate = '**', videoDuration = '**',privateCallRate = '**', privateCallDuration = '**', privateVideoRate = '**', privateVideoDuration = '**';
+                                liveAstrologerController.astrologerModel.data?[index].prices?.forEach((priceItem) {
+                                  String type = priceItem.type.toString();
+                                  switch (type) {
+                                    case AppConstants.liveAudioCall:
+                                      callRate = priceItem.price.toString();
+                                      callDuration = priceItem.timeInMinutes.toString();
+                                      break;
+                                    case AppConstants.liveVideoCall:
+                                      videoRate = priceItem.price.toString();
+                                      videoDuration = priceItem.timeInMinutes.toString();
+                                      break;
+                                    case AppConstants.privateLiveAudioCall:
+                                      privateCallRate = priceItem.price.toString();
+                                      privateCallDuration = priceItem.timeInMinutes.toString();
+                                      break;
+                                    case AppConstants.privateLiveVideoCall:
+                                      privateVideoRate = priceItem.price.toString();
+                                      privateVideoDuration = priceItem.timeInMinutes.toString();
+                                      break;
+                                  }
+                                });
+                                final LiveStreamInitController liveController = Get.put(LiveStreamInitController());
+                                String astrologerName = liveAstrologerController.astrologerModel.data![index].displayName.toString();
+                                String astrologerImage = liveAstrologerController.astrologerModel.data![index].astroImg.toString();
+                                liveController.setAstrologerData(astrologerName, astrologerImage, callRate, videoRate, callDuration, videoDuration,privateCallRate, privateVideoRate, privateCallDuration, privateVideoDuration,AppConstants.live);
+                                // Join Live
+                                int astrologerUID = liveAstrologerController.astrologerModel.data![index].user!.id!.toInt();
+                                String uniqueId = liveAstrologerController.astrologerModel.data![index].liveChannel.toString();
+                                String astrologerUniId = liveAstrologerController.astrologerModel.data![index].astrologerUniId.toString();
+                                liveAstrologerController.joinLiveStream(astrologerUID, uniqueId, astrologerUniId);
+                                print("astrologerUID->$astrologerUID uniqueId->$uniqueId astrologerUniId->$astrologerUniId");
+                              }else{
+                                Get.toNamed('/login');
+                              }
+                            },
+                            child: Column(
+                              children: [
+                                Stack(
+                                  children: [
+                                    Container(
+                                      padding: const EdgeInsets.all(2),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(50),
+                                          border: Border.all(color: ColorResources.colorPrimary)
+                                      ),
+                                      child: CustomRoundNetworkImage(
+                                          imageUrl: liveAstrologerController.astrologerModel.data![index].astroImg.toString(),
+                                          height: 55,
+                                          width: 55
+                                      ),
+                                    ),
+                                    // const CircleAvatar(
+                                    //   radius: 30,
+                                    //   backgroundImage: NetworkImage(
+                                    //     'https://astro.synilogictech.com/uploads/astrologer/1722519399-astro_img.png', // Replace with actual image URLs
+                                    //   ),
+                                    // ),
+                                    // Positioned(
+                                    //   bottom: 0,
+                                    //   left: 10,
+                                    //   right: 10,
+                                    //   child: Container(
+                                    //     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
+                                    //     decoration: BoxDecoration(
+                                    //       color: ColorResources.colorPrimary,
+                                    //       borderRadius: BorderRadius.circular(Dimensions.borderRadiusSmall),
+                                    //     ),
+                                    //     child: CustomTextRegular(
+                                    //       "LIVE",
+                                    //       fontSize: Dimensions.fontSizeExtraSmall,
+                                    //       color: ColorResources.toolbarText,
+                                    //       textAlign: TextAlign.center,
+                                    //     ),
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                                const Gap(4),
+                                CustomTextRegular(
+                                  liveAstrologerController.astrologerModel.data![index].displayName.toString(),
+                                  fontSize: Dimensions.fontSizeSmall,
+                                  textAlign: TextAlign.center,
+                                  maxLines: 2,
+                                ),
+                              ],
+                            ),
+                          );
+                        },
+                      );
+                    }
+                    else if (liveAstrologerController.isAstrologerLoading.isTrue) {
+                      return ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) {
+                          return const SimmerListView();
+                        },
+                      );
+                    } else {
+                      return const EmptyScreen();
+                    }
+                  },
+                ),
+              ),
+              SafeArea(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Action for "Leave" button
+                            Get.offAllNamed('/dashboard');
                           },
-                          child: Column(
-                            children: [
-                              Stack(
-                                children: [
-                                  Container(
-                                    padding: const EdgeInsets.all(2),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(50),
-                                        border: Border.all(color: ColorResources.colorPrimary)
-                                    ),
-                                    child: CustomRoundNetworkImage(
-                                        imageUrl: liveAstrologerController.astrologerModel.data![index].astroImg.toString(),
-                                        height: 55,
-                                        width: 55
-                                    ),
-                                  ),
-                                  // const CircleAvatar(
-                                  //   radius: 30,
-                                  //   backgroundImage: NetworkImage(
-                                  //     'https://astro.synilogictech.com/uploads/astrologer/1722519399-astro_img.png', // Replace with actual image URLs
-                                  //   ),
-                                  // ),
-                                  // Positioned(
-                                  //   bottom: 0,
-                                  //   left: 10,
-                                  //   right: 10,
-                                  //   child: Container(
-                                  //     padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 1),
-                                  //     decoration: BoxDecoration(
-                                  //       color: ColorResources.colorPrimary,
-                                  //       borderRadius: BorderRadius.circular(Dimensions.borderRadiusSmall),
-                                  //     ),
-                                  //     child: CustomTextRegular(
-                                  //       "LIVE",
-                                  //       fontSize: Dimensions.fontSizeExtraSmall,
-                                  //       color: ColorResources.toolbarText,
-                                  //       textAlign: TextAlign.center,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
-                              ),
-                              const Gap(4),
-                              CustomTextRegular(
-                                liveAstrologerController.astrologerModel.data![index].displayName.toString(),
-                                fontSize: Dimensions.fontSizeSmall,
-                                textAlign: TextAlign.center,
-                                maxLines: 2,
-                              ),
-                            ],
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade300,
+                            foregroundColor: Colors.black,
                           ),
-                        );
-                      },
-                    );
-                  }
-                  else if (liveAstrologerController.isAstrologerLoading.isTrue) {
-                    return ListView.builder(
-                      itemCount: 5,
-                      itemBuilder: (context, index) {
-                        return const SimmerListView();
-                      },
-                    );
-                  } else {
-                    return const EmptyScreen();
-                  }
-                },
-              ),
-            ),
-            SafeArea(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Action for "Leave" button
-                          Get.offAllNamed('/dashboard');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey.shade300,
-                          foregroundColor: Colors.black,
+                          child: const Text("Leave"),
                         ),
-                        child: const Text("Leave"),
                       ),
                     ),
-                  ),
-                  // if(liveAstrologerController.astrologerFollowModel.status == 0)
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          print("astrologerUniId->$astrologerUniId");
-                          // Action for "Follow & Leave" button
-                          liveAstrologerController.astrologerFollow("1", astrologerUniId.toString());
-                          CustomSnackBar.showTop(AppStrings.astroFollowMsg);
-                          Get.offAllNamed('/dashboard');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorResources.colorPrimary,
-                          foregroundColor: ColorResources.toolbarText,
+                    // if(liveAstrologerController.astrologerFollowModel.status == 0)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            print("astrologerUniId->$astrologerUniId");
+                            // Action for "Follow & Leave" button
+                            liveAstrologerController.astrologerFollow("1", astrologerUniId.toString());
+                            CustomSnackBar.showTop(AppStrings.astroFollowMsg);
+                            Get.offAllNamed('/dashboard');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorResources.colorPrimary,
+                            foregroundColor: ColorResources.toolbarText,
+                          ),
+                          child: const Text("Follow & Leave"),
                         ),
-                        child: const Text("Follow & Leave"),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       isScrollControlled: true,
@@ -1161,55 +1163,57 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
 
   void showTypingBottomSheet() {
     Get.bottomSheet(
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  autofocus: true,
-                  controller: messageController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      borderSide: BorderSide.none, // Removes the border line
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    autofocus: true,
+                    controller: messageController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none, // Removes the border line
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Type something...',
                     ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Type something...',
                   ),
                 ),
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    if (messageController.text.isNotEmpty) {
-                      String? uniId = await SharedPreferencesHelper.getData(
-                          AppConstants.userUniId);
-                      ChatMessageModel chatMessage = ChatMessageModel(
-                        senderUniId: uniId,
-                        date: getCurrentDateTime(),
-                        fileUrl: "",
-                        messageType: AppConstants.text,
-                        name: customerName,
-                        profileImageUrl: customerImage,
-                        selectedText: "",
-                        selectedType: "",
-                        text: messageController.text.toString(),
-                      );
-                      sendMessage(chatMessage);
-                      messageController.clear();
-                      Get.back();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      backgroundColor: ColorResources.colorPrimary),
-                  child: const Icon(
-                    Icons.send,
-                    color: ColorResources.black,
-                  ))
-            ],
+                ElevatedButton(
+                    onPressed: () async {
+                      if (messageController.text.isNotEmpty) {
+                        String? uniId = await SharedPreferencesHelper.getData(
+                            AppConstants.userUniId);
+                        ChatMessageModel chatMessage = ChatMessageModel(
+                          senderUniId: uniId,
+                          date: getCurrentDateTime(),
+                          fileUrl: "",
+                          messageType: AppConstants.text,
+                          name: customerName,
+                          profileImageUrl: customerImage,
+                          selectedText: "",
+                          selectedType: "",
+                          text: messageController.text.toString(),
+                        );
+                        sendMessage(chatMessage);
+                        messageController.clear();
+                        Get.back();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        backgroundColor: ColorResources.colorPrimary),
+                    child: const Icon(
+                      Icons.send,
+                      color: ColorResources.black,
+                    ))
+              ],
+            ),
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -1218,327 +1222,329 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
 
   void showCallBottomSheet() {
     Get.bottomSheet(
-      Container(
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+      SafeArea(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
+            ),
           ),
-        ),
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-            child: Column(
-              children: [
-                CustomRoundNetworkImage(
-                    imageUrl: liveDataController.astrologerImage.toString(),
-                    height: Dimensions.liveImageProfileSize,
-                    width: Dimensions.liveImageProfileSize),
-                const Gap(Dimensions.gapDefault),
-                CustomTextMedium(
-                  liveDataController.astrologerName.toString(),
-                  fontSize: Dimensions.fontSizeLarge,
-                ),
-                const Gap(Dimensions.gapOverLarge),
-                //Public Voice Call
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(4.0),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ColorResources.colorPrimary,
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.call,
-                          size: 24,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    const Gap(6),
-                    Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextMedium(
-                              "Audio Call",
-                              fontSize: Dimensions.fontSizeFifteen,
-                              color: ColorResources.black,
-                            ),
-                            CustomTextMedium(
-                              "${configController.currencySymbol} ${liveDataController.callPrice.toString()} For ${liveDataController.callDuration.toString()} min",
-                              fontSize: Dimensions.fontSizeDefault,
-                              color: ColorResources.black,
-                            ),
-                            CustomTextRegular(
-                              "Astrologer on video, you on audio.",
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: ColorResources.black5,
-                            ),
-                          ],
-                        )),
-                    Obx(() {
-                      return GestureDetector(
-                        onTap: () {
-                          if (callStatus.isTrue) {
-                            Get.back();
-                            sendRequestApi(uniqueId, astrologerUniId.toString(), AppConstants.liveAudioCall, false);
-                          } else {
-                            CustomSnackBar.showTop("Astrologer is not available for Voice Call.");
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 15),
-                          decoration: BoxDecoration(
-                              color: callStatus.value
-                                  ? ColorResources.colorPrimaryMedium
-                                  : ColorResources.grey,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: CustomTextMedium(
-                            callStatus.value ? "Join" : "Offline",
-                            color: callStatus.value
-                                ? ColorResources.white
-                                : ColorResources.red,
-                            fontSize: Dimensions.fontSizeSmall,
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-                const Gap(Dimensions.gapExtraSmall),
-
-                //Public Video Call
-                const Divider(),
-                const Gap(Dimensions.gapExtraSmall),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Container(
-                      padding: const EdgeInsets.all(4.0),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: ColorResources.colorPrimary,
-                      ),
-                      child: const Center(
-                        child: Icon(
-                          Icons.videocam_sharp,
-                          size: 24,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                    const Gap(6),
-                    Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextMedium(
-                              "Video Call",
-                              fontSize: Dimensions.fontSizeFifteen,
-                              color: ColorResources.black,
-                            ),
-                            CustomTextMedium(
-                              "${configController.currencySymbol} ${liveDataController.videoCallPrice.toString()} For ${liveDataController.videoCallDuration.toString()} min",
-                              fontSize: Dimensions.fontSizeDefault,
-                              color: ColorResources.black,
-                            ),
-                            CustomTextRegular(
-                              "Astrologer on video, you on video.",
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: ColorResources.black5,
-                            ),
-                          ],
-                        )),
-                    Obx(() {
-                      return GestureDetector(
-                        onTap: () {
-                          if (videoCallStatus.isTrue) {
-                            Get.back();
-                            sendRequestApi(uniqueId, astrologerUniId.toString(), AppConstants.liveVideoCall, true);
-                          } else {
-                            CustomSnackBar.showTop("Astrologer is not available for Video Call.");
-                          }
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 6, horizontal: 15),
-                          decoration: BoxDecoration(
-                              color: videoCallStatus.value
-                                  ? ColorResources.colorPrimaryMedium
-                                  : ColorResources.grey,
-                              borderRadius: BorderRadius.circular(8)),
-                          child: CustomTextMedium(
-                            videoCallStatus.value ? "Join" : "Offline",
-                            color: videoCallStatus.value
-                                ? ColorResources.white
-                                : ColorResources.red,
-                            fontSize: Dimensions.fontSizeSmall,
-                          ),
-                        ),
-                      );
-                    }),
-                  ],
-                ),
-
-                if(AppFeatures.privateCall)
-                  Column(
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+              child: Column(
+                children: [
+                  CustomRoundNetworkImage(
+                      imageUrl: liveDataController.astrologerImage.toString(),
+                      height: Dimensions.liveImageProfileSize,
+                      width: Dimensions.liveImageProfileSize),
+                  const Gap(Dimensions.gapDefault),
+                  CustomTextMedium(
+                    liveDataController.astrologerName.toString(),
+                    fontSize: Dimensions.fontSizeLarge,
+                  ),
+                  const Gap(Dimensions.gapOverLarge),
+                  //Public Voice Call
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      //Private Voice Call
-                      const Divider(),
-                      const Gap(Dimensions.gapExtraSmall),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(4.0),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: ColorResources.colorPrimary,
-                            ),
-                            child: Center(
-                              child: Image.asset(Images.privateCall,
-                                height: 24,
-                                width: 24,
-                                color:Colors.black,),
+                      Container(
+                        padding: const EdgeInsets.all(4.0),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: ColorResources.colorPrimary,
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.call,
+                            size: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Gap(6),
+                      Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextMedium(
+                                "Audio Call",
+                                fontSize: Dimensions.fontSizeFifteen,
+                                color: ColorResources.black,
+                              ),
+                              CustomTextMedium(
+                                "${configController.currencySymbol} ${liveDataController.callPrice.toString()} For ${liveDataController.callDuration.toString()} min",
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black,
+                              ),
+                              CustomTextRegular(
+                                "Astrologer on video, you on audio.",
+                                fontSize: Dimensions.fontSizeSmall,
+                                color: ColorResources.black5,
+                              ),
+                            ],
+                          )),
+                      Obx(() {
+                        return GestureDetector(
+                          onTap: () {
+                            if (callStatus.isTrue) {
+                              Get.back();
+                              sendRequestApi(uniqueId, astrologerUniId.toString(), AppConstants.liveAudioCall, false);
+                            } else {
+                              CustomSnackBar.showTop("Astrologer is not available for Voice Call.");
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 15),
+                            decoration: BoxDecoration(
+                                color: callStatus.value
+                                    ? ColorResources.colorPrimaryMedium
+                                    : ColorResources.grey,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: CustomTextMedium(
+                              callStatus.value ? "Join" : "Offline",
+                              color: callStatus.value
+                                  ? ColorResources.white
+                                  : ColorResources.red,
+                              fontSize: Dimensions.fontSizeSmall,
                             ),
                           ),
-                          const Gap(6),
-                          Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CustomTextMedium(
-                                    "Private Audio Call",
-                                    fontSize: Dimensions.fontSizeFifteen,
-                                    color: ColorResources.black,
-                                  ),
-                                  CustomTextMedium(
-                                    "${configController.currencySymbol} ${liveDataController.privateCallPrice.toString()} For ${liveDataController.privateCallDuration.toString()} min",
-                                    fontSize: Dimensions.fontSizeDefault,
-                                    color: ColorResources.black,
-                                  ),
-                                  CustomTextRegular(
-                                    "Astrologer on video, you on audio.\nNo one can hear your conversation.",
-                                    fontSize: Dimensions.fontSizeSmall,
-                                    color: ColorResources.black5,
-                                  ),
-                                ],
-                              )),
-                          Obx(() {
-                            return GestureDetector(
-                              onTap: () {
-                                if (privateCallStatus.isTrue) {
-                                  Get.back();
-                                  sendRequestApi(uniqueId, astrologerUniId.toString(), AppConstants.privateLiveAudioCall, false);
-                                } else {
-                                  CustomSnackBar.showTop("Astrologer is not available for Private Audio Call.");
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 6, horizontal: 15),
-                                decoration: BoxDecoration(
-                                    color: privateCallStatus.value
-                                        ? ColorResources.colorPrimaryMedium
-                                        : ColorResources.grey,
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: CustomTextMedium(
-                                  privateCallStatus.value ? "Join" : "Offline",
-                                  color: privateCallStatus.value
-                                      ? ColorResources.white
-                                      : ColorResources.red,
-                                  fontSize: Dimensions.fontSizeSmall,
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
-
-                      //Private Video Call
-                      const Divider(),
-                      const Gap(Dimensions.gapExtraSmall),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.all(4.0),
-                            decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: ColorResources.colorPrimary,
-                            ),
-                            child: Center(
-                              child: Image.asset(Images.privateVideoCall,
-                                height: 24,
-                                width: 24,
-                                color:Colors.black,),
-                            ),
-                          ),
-                          const Gap(6),
-                          Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  CustomTextMedium(
-                                    "Private Video Call",
-                                    fontSize: Dimensions.fontSizeFifteen,
-                                    color: ColorResources.black,
-                                  ),
-                                  CustomTextMedium(
-                                    "${configController.currencySymbol} ${liveDataController.privateVideoCallPrice.toString()} For ${liveDataController.privateVideoCallDuration.toString()} min",
-                                    fontSize: Dimensions.fontSizeDefault,
-                                    color: ColorResources.black,
-                                  ),
-                                  CustomTextRegular(
-                                    "Astrologer on video, you on video.\nNo one can hear your conversation.\nNo one can see your video.",
-                                    fontSize: Dimensions.fontSizeSmall,
-                                    color: ColorResources.black5,
-                                  ),
-                                ],
-                              )),
-                          Obx(() {
-                            return GestureDetector(
-                              onTap: () {
-                                if (privateVideoCallStatus.isTrue) {
-                                  Get.back();
-                                  sendRequestApi(uniqueId, astrologerUniId.toString(), AppConstants.privateLiveVideoCall, true);
-                                } else {
-                                  CustomSnackBar.showTop("Astrologer is not available for Private Video Call.");
-                                }
-                              },
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                    vertical: 6, horizontal: 15),
-                                decoration: BoxDecoration(
-                                    color: privateVideoCallStatus.value
-                                        ? ColorResources.colorPrimaryMedium
-                                        : ColorResources.grey,
-                                    borderRadius: BorderRadius.circular(8)),
-                                child: CustomTextMedium(
-                                  privateVideoCallStatus.value ? "Join" : "Offline",
-                                  color: privateVideoCallStatus.value
-                                      ? ColorResources.white
-                                      : ColorResources.red,
-                                  fontSize: Dimensions.fontSizeSmall,
-                                ),
-                              ),
-                            );
-                          }),
-                        ],
-                      ),
+                        );
+                      }),
                     ],
-                  )
-              ],
+                  ),
+                  const Gap(Dimensions.gapExtraSmall),
+        
+                  //Public Video Call
+                  const Divider(),
+                  const Gap(Dimensions.gapExtraSmall),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(4.0),
+                        decoration: const BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: ColorResources.colorPrimary,
+                        ),
+                        child: const Center(
+                          child: Icon(
+                            Icons.videocam_sharp,
+                            size: 24,
+                            color: Colors.black,
+                          ),
+                        ),
+                      ),
+                      const Gap(6),
+                      Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextMedium(
+                                "Video Call",
+                                fontSize: Dimensions.fontSizeFifteen,
+                                color: ColorResources.black,
+                              ),
+                              CustomTextMedium(
+                                "${configController.currencySymbol} ${liveDataController.videoCallPrice.toString()} For ${liveDataController.videoCallDuration.toString()} min",
+                                fontSize: Dimensions.fontSizeDefault,
+                                color: ColorResources.black,
+                              ),
+                              CustomTextRegular(
+                                "Astrologer on video, you on video.",
+                                fontSize: Dimensions.fontSizeSmall,
+                                color: ColorResources.black5,
+                              ),
+                            ],
+                          )),
+                      Obx(() {
+                        return GestureDetector(
+                          onTap: () {
+                            if (videoCallStatus.isTrue) {
+                              Get.back();
+                              sendRequestApi(uniqueId, astrologerUniId.toString(), AppConstants.liveVideoCall, true);
+                            } else {
+                              CustomSnackBar.showTop("Astrologer is not available for Video Call.");
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 6, horizontal: 15),
+                            decoration: BoxDecoration(
+                                color: videoCallStatus.value
+                                    ? ColorResources.colorPrimaryMedium
+                                    : ColorResources.grey,
+                                borderRadius: BorderRadius.circular(8)),
+                            child: CustomTextMedium(
+                              videoCallStatus.value ? "Join" : "Offline",
+                              color: videoCallStatus.value
+                                  ? ColorResources.white
+                                  : ColorResources.red,
+                              fontSize: Dimensions.fontSizeSmall,
+                            ),
+                          ),
+                        );
+                      }),
+                    ],
+                  ),
+        
+                  if(AppFeatures.privateCall)
+                    Column(
+                      children: [
+                        //Private Voice Call
+                        const Divider(),
+                        const Gap(Dimensions.gapExtraSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(4.0),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: ColorResources.colorPrimary,
+                              ),
+                              child: Center(
+                                child: Image.asset(Images.privateCall,
+                                  height: 24,
+                                  width: 24,
+                                  color:Colors.black,),
+                              ),
+                            ),
+                            const Gap(6),
+                            Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomTextMedium(
+                                      "Private Audio Call",
+                                      fontSize: Dimensions.fontSizeFifteen,
+                                      color: ColorResources.black,
+                                    ),
+                                    CustomTextMedium(
+                                      "${configController.currencySymbol} ${liveDataController.privateCallPrice.toString()} For ${liveDataController.privateCallDuration.toString()} min",
+                                      fontSize: Dimensions.fontSizeDefault,
+                                      color: ColorResources.black,
+                                    ),
+                                    CustomTextRegular(
+                                      "Astrologer on video, you on audio.\nNo one can hear your conversation.",
+                                      fontSize: Dimensions.fontSizeSmall,
+                                      color: ColorResources.black5,
+                                    ),
+                                  ],
+                                )),
+                            Obx(() {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (privateCallStatus.isTrue) {
+                                    Get.back();
+                                    sendRequestApi(uniqueId, astrologerUniId.toString(), AppConstants.privateLiveAudioCall, false);
+                                  } else {
+                                    CustomSnackBar.showTop("Astrologer is not available for Private Audio Call.");
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 6, horizontal: 15),
+                                  decoration: BoxDecoration(
+                                      color: privateCallStatus.value
+                                          ? ColorResources.colorPrimaryMedium
+                                          : ColorResources.grey,
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: CustomTextMedium(
+                                    privateCallStatus.value ? "Join" : "Offline",
+                                    color: privateCallStatus.value
+                                        ? ColorResources.white
+                                        : ColorResources.red,
+                                    fontSize: Dimensions.fontSizeSmall,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+        
+                        //Private Video Call
+                        const Divider(),
+                        const Gap(Dimensions.gapExtraSmall),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(4.0),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: ColorResources.colorPrimary,
+                              ),
+                              child: Center(
+                                child: Image.asset(Images.privateVideoCall,
+                                  height: 24,
+                                  width: 24,
+                                  color:Colors.black,),
+                              ),
+                            ),
+                            const Gap(6),
+                            Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    CustomTextMedium(
+                                      "Private Video Call",
+                                      fontSize: Dimensions.fontSizeFifteen,
+                                      color: ColorResources.black,
+                                    ),
+                                    CustomTextMedium(
+                                      "${configController.currencySymbol} ${liveDataController.privateVideoCallPrice.toString()} For ${liveDataController.privateVideoCallDuration.toString()} min",
+                                      fontSize: Dimensions.fontSizeDefault,
+                                      color: ColorResources.black,
+                                    ),
+                                    CustomTextRegular(
+                                      "Astrologer on video, you on video.\nNo one can hear your conversation.\nNo one can see your video.",
+                                      fontSize: Dimensions.fontSizeSmall,
+                                      color: ColorResources.black5,
+                                    ),
+                                  ],
+                                )),
+                            Obx(() {
+                              return GestureDetector(
+                                onTap: () {
+                                  if (privateVideoCallStatus.isTrue) {
+                                    Get.back();
+                                    sendRequestApi(uniqueId, astrologerUniId.toString(), AppConstants.privateLiveVideoCall, true);
+                                  } else {
+                                    CustomSnackBar.showTop("Astrologer is not available for Private Video Call.");
+                                  }
+                                },
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      vertical: 6, horizontal: 15),
+                                  decoration: BoxDecoration(
+                                      color: privateVideoCallStatus.value
+                                          ? ColorResources.colorPrimaryMedium
+                                          : ColorResources.grey,
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: CustomTextMedium(
+                                    privateVideoCallStatus.value ? "Join" : "Offline",
+                                    color: privateVideoCallStatus.value
+                                        ? ColorResources.white
+                                        : ColorResources.red,
+                                    fontSize: Dimensions.fontSizeSmall,
+                                  ),
+                                ),
+                              );
+                            }),
+                          ],
+                        ),
+                      ],
+                    )
+                ],
+              ),
             ),
           ),
         ),
@@ -1551,156 +1557,158 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
     selectedGiftIndex.value = -1;
     getGifts();
     Get.bottomSheet(
-      Container(
-        width: Get.width,
-        constraints: const BoxConstraints(maxHeight: 400),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+      SafeArea(
+        child: Container(
+          width: Get.width,
+          constraints: const BoxConstraints(maxHeight: 400),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextMedium(
-                      "Send a gift",
-                      fontSize: Dimensions.fontSizeLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Obx(
-                        () => CustomTextMedium(
-                      "${configController.currencySymbol} ${walletBalance.value.toString()}",
-                      fontSize: Dimensions.fontSizeExtraLarge,
-                    ),
-                  ),
-                ],
-              ),
-              const Gap(Dimensions.gapDefault),
-              Obx(
-                    () {
-                  if (isGiftSuccess.isTrue) {
-                    return GridView.builder(
-                      itemCount: liveGiftListModel.data?.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 4,
-                          mainAxisSpacing: 4.0,
-                          crossAxisSpacing: 2.0),
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            selectedGiftIndex.value = index;
-                          },
-                          child: Obx(
-                                () => Container(
-                              decoration: BoxDecoration(
-                                color: selectedGiftIndex.value == index
-                                    ? Colors.grey[300]
-                                    : null,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomNetworkImage(
-                                    imageUrl: liveGiftListModel
-                                        .data![index].giftImage
-                                        .toString(),
-                                    height: 25,
-                                    width: 25,
-                                  ),
-                                  const Gap(Dimensions.gapExtraSmall),
-                                  CustomTextRegular(
-                                      liveGiftListModel.data![index].giftName
-                                          .toString(),
-                                      fontSize: Dimensions.fontSizeSmall),
-                                  CustomTextMedium(
-                                      "${configController.currencySymbol} ${liveGiftListModel.data![index].giftPrice.toString()}",
-                                      fontSize: Dimensions.fontSizeSmall),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  } else if (isGiftLoading.isTrue) {
-                    return const CircularProgressIndicator();
-                  } else {
-                    return const EmptyScreen();
-                  }
-                },
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.toNamed("/wallet");
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 15),
-                        decoration: BoxDecoration(
-                            color: ColorResources.colorPrimaryLight,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: CustomTextMedium(
-                          "Recharge",
-                          color: ColorResources.black,
-                          fontSize: Dimensions.fontSizeSmall,
-                          textAlign: TextAlign.center,
-                        ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextMedium(
+                        "Send a gift",
+                        fontSize: Dimensions.fontSizeLarge,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
-                  const Gap(Dimensions.gapExtraSmall),
-                  Obx(() {
-                    return Expanded(
+                    Obx(
+                          () => CustomTextMedium(
+                        "${configController.currencySymbol} ${walletBalance.value.toString()}",
+                        fontSize: Dimensions.fontSizeExtraLarge,
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(Dimensions.gapDefault),
+                Obx(
+                      () {
+                    if (isGiftSuccess.isTrue) {
+                      return GridView.builder(
+                        itemCount: liveGiftListModel.data?.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 4,
+                            mainAxisSpacing: 4.0,
+                            crossAxisSpacing: 2.0),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              selectedGiftIndex.value = index;
+                            },
+                            child: Obx(
+                                  () => Container(
+                                decoration: BoxDecoration(
+                                  color: selectedGiftIndex.value == index
+                                      ? Colors.grey[300]
+                                      : null,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CustomNetworkImage(
+                                      imageUrl: liveGiftListModel
+                                          .data![index].giftImage
+                                          .toString(),
+                                      height: 25,
+                                      width: 25,
+                                    ),
+                                    const Gap(Dimensions.gapExtraSmall),
+                                    CustomTextRegular(
+                                        liveGiftListModel.data![index].giftName
+                                            .toString(),
+                                        fontSize: Dimensions.fontSizeSmall),
+                                    CustomTextMedium(
+                                        "${configController.currencySymbol} ${liveGiftListModel.data![index].giftPrice.toString()}",
+                                        fontSize: Dimensions.fontSizeSmall),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else if (isGiftLoading.isTrue) {
+                      return const CircularProgressIndicator();
+                    } else {
+                      return const EmptyScreen();
+                    }
+                  },
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          if (selectedGiftIndex.value != -1) {
-                            Get.back();
-                            sendGiftApi(
-                                astrologerUniId.toString(),
-                                liveGiftListModel
-                                    .data![selectedGiftIndex.value]);
-                          } else {
-                            CustomSnackBar.showTop("Please select a gift.");
-                          }
+                          Get.toNamed("/wallet");
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 15),
                           decoration: BoxDecoration(
-                              color: selectedGiftIndex.value != -1
-                                  ? ColorResources.colorPrimaryMedium
-                                  : ColorResources.black6,
+                              color: ColorResources.colorPrimaryLight,
                               borderRadius: BorderRadius.circular(20)),
                           child: CustomTextMedium(
-                            "Send",
-                            color: selectedGiftIndex.value != -1
-                                ? ColorResources.toolbarText
-                                : ColorResources.black5,
+                            "Recharge",
+                            color: ColorResources.black,
                             fontSize: Dimensions.fontSizeSmall,
                             textAlign: TextAlign.center,
                           ),
                         ),
                       ),
-                    );
-                  }),
-                ],
-              )
-            ],
+                    ),
+                    const Gap(Dimensions.gapExtraSmall),
+                    Obx(() {
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            if (selectedGiftIndex.value != -1) {
+                              Get.back();
+                              sendGiftApi(
+                                  astrologerUniId.toString(),
+                                  liveGiftListModel
+                                      .data![selectedGiftIndex.value]);
+                            } else {
+                              CustomSnackBar.showTop("Please select a gift.");
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 15),
+                            decoration: BoxDecoration(
+                                color: selectedGiftIndex.value != -1
+                                    ? ColorResources.colorPrimaryMedium
+                                    : ColorResources.black6,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: CustomTextMedium(
+                              "Send",
+                              color: selectedGiftIndex.value != -1
+                                  ? ColorResources.toolbarText
+                                  : ColorResources.black5,
+                              fontSize: Dimensions.fontSizeSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -1710,45 +1718,47 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
 
   void showRequestBottomSheet() {
     Get.bottomSheet(
-      Container(
-        constraints: BoxConstraints(maxHeight: Get.height*0.45),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+      SafeArea(
+        child: Container(
+          constraints: BoxConstraints(maxHeight: Get.height*0.45),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: Column(
-            children: [
-              CustomTextMedium(
-                "WaitList",
-                fontSize: Dimensions.fontSizeLarge,
-              ),
-              const Gap(Dimensions.gapExtraExtraSmall),
-              Obx(
-                    () => CustomTextMedium(
-                  "Total: ${requestList.length.toString()}",
-                  fontSize: Dimensions.fontSizeDefault,
-                  color: ColorResources.colorPrimaryMedium,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: Column(
+              children: [
+                CustomTextMedium(
+                  "WaitList",
+                  fontSize: Dimensions.fontSizeLarge,
                 ),
-              ),
-              const Gap(Dimensions.gapDefault),
-              Expanded(
-                child: Obx(
-                      () => ListView.builder(
-                    itemCount: requestList.length,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      LiveRequestModel request = requestList[index];
-                      return LiveRequestWidget(request);
-                    },
+                const Gap(Dimensions.gapExtraExtraSmall),
+                Obx(
+                      () => CustomTextMedium(
+                    "Total: ${requestList.length.toString()}",
+                    fontSize: Dimensions.fontSizeDefault,
+                    color: ColorResources.colorPrimaryMedium,
                   ),
                 ),
-              ),
-            ],
+                const Gap(Dimensions.gapDefault),
+                Expanded(
+                  child: Obx(
+                        () => ListView.builder(
+                      itemCount: requestList.length,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        LiveRequestModel request = requestList[index];
+                        return LiveRequestWidget(request);
+                      },
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -166,275 +166,277 @@ class SubscriptionController extends GetxController{
       SubscriptionData? subscriptionData,
       ) {
     Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Row(
-                    children: [
-                      // const Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2),
-                          child: Image.asset(
-                            Images.back,
-                            height: 24,
-                            color: ColorResources.black,
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                          child: CustomTextMedium(AppStrings.paymentInformation.tr,
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeLarge)),
-
-                      // const Gap(10),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: ColorResources.white,
-                      borderRadius:
-                      BorderRadius.circular(Dimensions.borderRadiusDefault),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        )
-                      ]),
-                  child: Padding(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    child: Row(
                       children: [
-                        // Padding(
-                        //   padding: const EdgeInsets.symmetric(vertical: 6),
-                        //   child: CustomTextMedium(
-                        //     AppStrings.importantNotice,
-                        //     color: ColorResources.colorPrimary,
-                        //     fontSize: Dimensions.fontSizeOverSmall,
-                        //   ),
-                        // ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: CustomTextMedium(
-                            AppStrings.subscriptionDetail,
-                            color: ColorResources.colorPrimary,
-                            fontSize: Dimensions.fontSizeLarge,
+                        // const Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2),
+                            child: Image.asset(
+                              Images.back,
+                              height: 24,
+                              color: ColorResources.black,
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: CustomTextRegular(
-                                  "Name",
-                                  color: ColorResources.black1,
-                                ),
-                              ),
-                              Expanded(
-                                child: CustomTextRegular(subscriptionData!.subscriptionDetail!.title.toString(),
-                                  color: ColorResources.black1,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Price",
+                        const Gap(10),
+                        Expanded(
+                            child: CustomTextMedium(AppStrings.paymentInformation.tr,
                                 color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${AppConstants.defaultCurrencySymbol}${subscriptionData.subscriptionDetail!.price}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        // Obx(() => Visibility(
-                        //   visible: isWalletSelected.value == 1,
-                        //   child: Padding(
-                        //     padding:
-                        //     const EdgeInsets.symmetric(vertical: 4),
-                        //     child: Row(
-                        //       mainAxisAlignment:
-                        //       MainAxisAlignment.spaceBetween,
-                        //       children: [
-                        //         CustomTextRegular(
-                        //           "Wallet",
-                        //           color: ColorResources.black1,
-                        //         ),
-                        //         Obx(() => CustomTextRegular(
-                        //           "${configController.currencySymbol} ${walletPayableAmount.value}",
-                        //           color: ColorResources.black1,
-                        //         )),
-                        //       ],
-                        //     ),
-                        //   ),
-                        // )),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "GST ${subscriptionData.rechargeGstPercent}%",
-                                color: ColorResources.black1,
-                              ),
-                              Obx(() => CustomTextRegular(
-                                "${AppConstants.defaultCurrencySymbol}${gstAmount.value}",
-                                color: ColorResources.black1,
-                              )),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextMedium("Total Payable",
-                                  color: ColorResources.black),
-                              Obx(() => CustomTextMedium(
-                                  "${AppConstants.defaultCurrencySymbol}${totalPayableAmount.value}",
-                                  color: ColorResources.colorPrimary)),
-                            ],
-                          ),
-                        ),
+                                fontSize: Dimensions.fontSizeLarge)),
+        
+                        // const Gap(10),
                       ],
                     ),
                   ),
-                ),
-
-
-                const Gap(10),
-
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraOverSmall),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
-                              onItemSelected: (int index){
-                                if(configController.phoneCode == AppConstants.defaultPhoneCode){
-                                  subscriptionPurchase(
-                                      subscriptionId,
-                                       configController.paymentGatewayList[index].payMethod.toString()
-                                  );
-                                }else{
-                                  subscriptionPurchase(
-                                      subscriptionId,
-                                      configController.internationalPaymentGatewayList[index].payMethod.toString()
-                                  );
-                                }
-                              }
-                          );
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular(
-                              "Pay Using",
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: ColorResources.black2,
+                  const Divider(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ColorResources.white,
+                        borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          )
+                        ]),
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          // Padding(
+                          //   padding: const EdgeInsets.symmetric(vertical: 6),
+                          //   child: CustomTextMedium(
+                          //     AppStrings.importantNotice,
+                          //     color: ColorResources.colorPrimary,
+                          //     fontSize: Dimensions.fontSizeOverSmall,
+                          //   ),
+                          // ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: CustomTextMedium(
+                              AppStrings.subscriptionDetail,
+                              color: ColorResources.colorPrimary,
+                              fontSize: Dimensions.fontSizeLarge,
                             ),
-                            Row(
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomTextMedium(
-                                    configController.phoneCode == AppConstants.defaultPhoneCode
-                                        ? configController.config.data!.payment!.defaultPaymentGateway.toString()
-                                        : configController.config.data!.paymentForOtherCountry!.defaultPaymentGateway.toString(),
-                                    fontSize: Dimensions.fontSizeSmall
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    "Name",
+                                    color: ColorResources.black1,
+                                  ),
                                 ),
-                                const Icon(Icons.arrow_drop_up)
+                                Expanded(
+                                  child: CustomTextRegular(subscriptionData!.subscriptionDetail!.title.toString(),
+                                    color: ColorResources.black1,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
-                            String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
-                            if(configController.phoneCode == AppConstants.defaultPhoneCode){
-                              subscriptionPurchase(
-                                  subscriptionId,
-                                  defaultPayMethod.toString()
-                              );
-                            }else {
-                              subscriptionPurchase(
-                                  subscriptionId,
-                                  defaultPayMethodInternational.toString()
-                              );
-                            }
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorResources.colorPrimary,
-                            padding: const EdgeInsets.only(
-                                top: 10, bottom: 10, left: 14, right: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                          ),
+        
+        
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "Price",
+                                  color: ColorResources.black1,
+                                ),
+                                CustomTextRegular(
+                                  "${AppConstants.defaultCurrencySymbol}${subscriptionData.subscriptionDetail!.price}",
+                                  color: ColorResources.black1,
+                                ),
+                              ],
                             ),
                           ),
-                          child: CustomTextMedium(
-                            AppStrings.proceedToPay,
-                            color: ColorResources.toolbarText,
-                            textAlign: TextAlign.center,
+        
+                          // Obx(() => Visibility(
+                          //   visible: isWalletSelected.value == 1,
+                          //   child: Padding(
+                          //     padding:
+                          //     const EdgeInsets.symmetric(vertical: 4),
+                          //     child: Row(
+                          //       mainAxisAlignment:
+                          //       MainAxisAlignment.spaceBetween,
+                          //       children: [
+                          //         CustomTextRegular(
+                          //           "Wallet",
+                          //           color: ColorResources.black1,
+                          //         ),
+                          //         Obx(() => CustomTextRegular(
+                          //           "${configController.currencySymbol} ${walletPayableAmount.value}",
+                          //           color: ColorResources.black1,
+                          //         )),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "GST ${subscriptionData.rechargeGstPercent}%",
+                                  color: ColorResources.black1,
+                                ),
+                                Obx(() => CustomTextRegular(
+                                  "${AppConstants.defaultCurrencySymbol}${gstAmount.value}",
+                                  color: ColorResources.black1,
+                                )),
+                              ],
+                            ),
+                          ),
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextMedium("Total Payable",
+                                    color: ColorResources.black),
+                                Obx(() => CustomTextMedium(
+                                    "${AppConstants.defaultCurrencySymbol}${totalPayableAmount.value}",
+                                    color: ColorResources.colorPrimary)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+        
+        
+                  const Gap(10),
+        
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraOverSmall),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
+                                onItemSelected: (int index){
+                                  if(configController.phoneCode == AppConstants.defaultPhoneCode){
+                                    subscriptionPurchase(
+                                        subscriptionId,
+                                         configController.paymentGatewayList[index].payMethod.toString()
+                                    );
+                                  }else{
+                                    subscriptionPurchase(
+                                        subscriptionId,
+                                        configController.internationalPaymentGatewayList[index].payMethod.toString()
+                                    );
+                                  }
+                                }
+                            );
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular(
+                                "Pay Using",
+                                fontSize: Dimensions.fontSizeSmall,
+                                color: ColorResources.black2,
+                              ),
+                              Row(
+                                children: [
+                                  CustomTextMedium(
+                                      configController.phoneCode == AppConstants.defaultPhoneCode
+                                          ? configController.config.data!.payment!.defaultPaymentGateway.toString()
+                                          : configController.config.data!.paymentForOtherCountry!.defaultPaymentGateway.toString(),
+                                      fontSize: Dimensions.fontSizeSmall
+                                  ),
+                                  const Icon(Icons.arrow_drop_up)
+                                ],
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed("/wallet");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomTextMedium("Recharge",
-                            color: ColorResources.colorPrimary),
+                        const Gap(10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
+                              String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
+                              if(configController.phoneCode == AppConstants.defaultPhoneCode){
+                                subscriptionPurchase(
+                                    subscriptionId,
+                                    defaultPayMethod.toString()
+                                );
+                              }else {
+                                subscriptionPurchase(
+                                    subscriptionId,
+                                    defaultPayMethodInternational.toString()
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorResources.colorPrimary,
+                              padding: const EdgeInsets.only(
+                                  top: 10, bottom: 10, left: 14, right: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: CustomTextMedium(
+                              AppStrings.proceedToPay,
+                              color: ColorResources.toolbarText,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/wallet");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomTextMedium("Recharge",
+                              color: ColorResources.colorPrimary),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

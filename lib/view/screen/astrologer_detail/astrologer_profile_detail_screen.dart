@@ -330,7 +330,7 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                     // Online Status Badge (Top Left)
                                     Row(
                                       mainAxisAlignment:
-                                          MainAxisAlignment.start,
+                                          MainAxisAlignment.spaceBetween,
                                       children: [
                                         Container(
                                           padding: const EdgeInsets.symmetric(
@@ -438,6 +438,50 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                             ],
                                           ),
                                         ),
+                                        Obx(() => GestureDetector(
+                                          onTap: () {
+                                            if (controller.isFollow.isTrue) {
+                                              showUnfollowDialog();
+                                            } else {
+                                              controller.astrologerFollow("1", controller.astrologerData.value.astrologerUniId.toString());
+                                              CustomSnackBar.showTop(AppStrings.astroFollowMsg);
+                                            }
+                                          },
+                                          child: Container(
+                                            padding:
+                                            const EdgeInsets.symmetric(
+                                                vertical: 4.0,
+                                                horizontal: 10.0),
+                                            decoration: BoxDecoration(
+                                              color: controller
+                                                  .isFollow.isFalse
+                                                  ? ColorResources
+                                                  .colorPrimary
+                                                  : ColorResources.white,
+                                              border: controller.isFollow.isTrue
+                                                  ? Border.all(
+                                                color: ColorResources.colorPrimary,
+                                                width: 1.0,
+                                              )
+                                                  : null,
+                                              borderRadius: BorderRadius
+                                                  .circular(Dimensions
+                                                  .borderRadiusDefault),
+                                            ),
+                                            child: CustomTextRegular(
+                                              controller.isFollow.isFalse
+                                                  ? "Follow"
+                                                  : "Following",
+                                              color: controller
+                                                  .isFollow.isFalse
+                                                  ? ColorResources
+                                                  .toolbarText
+                                                  : ColorResources.colorPrimary,
+                                              fontSize:
+                                              Dimensions.fontSizeSmall,
+                                            ),
+                                          ),
+                                        )),
                                       ],
                                     ),
                                     const Gap(Dimensions.gapExtraExtraSmall),

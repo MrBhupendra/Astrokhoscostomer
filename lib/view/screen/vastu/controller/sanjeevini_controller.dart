@@ -247,324 +247,326 @@ class SanjeeviniController extends GetxController {
       SanjeeviniCalculationData? calculationData,
       SanjeeviniData sanjeeviniData) {
     Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Row(
-                    children: [
-                      // const Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2),
-                          child: Image.asset(
-                            Images.back,
-                            height: 24,
-                            color: ColorResources.black,
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                          child: CustomTextMedium(AppStrings.paymentInformation.tr,
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeLarge)),
-
-                      // const Gap(10),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: ColorResources.white,
-                      borderRadius:
-                          BorderRadius.circular(Dimensions.borderRadiusDefault),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        )
-                      ]),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: CustomTextMedium(
-                            "${AppStrings.jeevini} Detail",
-                            color: ColorResources.colorPrimary,
-                            fontSize: Dimensions.fontSizeLarge,
+                        // const Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2),
+                            child: Image.asset(
+                              Images.back,
+                              height: 24,
+                              color: ColorResources.black,
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: CustomTextRegular(
-                                  "Name",
-                                  color: ColorResources.black1,
-                                ),
-                              ),
-                              Expanded(
-                                child: CustomTextRegular(
-                                  sanjeeviniData.title.toString(),
-                                  color: ColorResources.black1,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Price",
+                        const Gap(10),
+                        Expanded(
+                            child: CustomTextMedium(AppStrings.paymentInformation.tr,
                                 color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${configController.currencySymbol} ${calculationData?.sanjeeviniAmount}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Obx(() => Visibility(
-                              visible: isWalletSelected.value == 1,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomTextRegular(
-                                      "Wallet",
-                                      color: ColorResources.black1,
-                                    ),
-                                    Obx(() => CustomTextRegular(
-                                          "${configController.currencySymbol} ${walletPayableAmount.value}",
-                                          color: ColorResources.black1,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "GST ${calculationData?.rechargeGstPercent}%",
-                                color: ColorResources.black1,
-                              ),
-                              Obx(() => CustomTextRegular(
-                                    "${configController.currencySymbol} ${gstAmount.value}",
-                                    color: ColorResources.black1,
-                                  )),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextMedium("Total Payable",
-                                  color: ColorResources.black),
-                              Obx(() => CustomTextMedium(
-                                  "${configController.currencySymbol} ${totalPayableAmount.value}",
-                                  color: ColorResources.colorPrimary)),
-                            ],
-                          ),
-                        ),
+                                fontSize: Dimensions.fontSizeLarge)),
+        
+                        // const Gap(10),
                       ],
                     ),
                   ),
-                ),
-                const Gap(10),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        Images.walletBalance,
-                        height: 26,
-                        color: ColorResources.colorPrimary,
-                      ),
-                      const Gap(15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular("Wallet"),
-                            CustomTextRegular(
-                              "Available for payment ${configController.currencySymbol} ${calculationData?.myWalletAmount}",
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeSmall,
+                  const Divider(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ColorResources.white,
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.borderRadiusDefault),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          )
+                        ]),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: CustomTextMedium(
+                              "${AppStrings.jeevini} Detail",
+                              color: ColorResources.colorPrimary,
+                              fontSize: Dimensions.fontSizeLarge,
                             ),
-                          ],
-                        ),
-                      ),
-                      CustomCheckbox(
-                        onChanged: (isChecked) {
-                          if (isChecked) {
-                            getSanjeeviniCalculation(
-                                sanjeeviniData.id.toString(),
-                                1,
-                                sanjeeviniData,
-                                "Wallet");
-                          } else {
-                            getSanjeeviniCalculation(
-                                sanjeeviniData.id.toString(),
-                                0,
-                                sanjeeviniData,
-                                "Wallet");
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                // const Gap(10),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(vertical: 4),
-                //   child: CustomElevatedButton(
-                //       text: AppStrings.proceedToPay.tr,
-                //       textColor: ColorResources.toolbarText,
-                //       backgroundColor: ColorResources.colorPrimary,
-                //       onPressed: () async {
-                //         String? payMethod =
-                //             await SharedPreferencesHelper.getData(
-                //                 AppConstants.paymentGateway);
-                //         if (payMethod == AppConstants.payRazorpay ||
-                //             payMethod == AppConstants.payCCAvenue) {
-                //           sanjeeviniPurchase(sanjeeviniId, isWalletSelected.value, payMethod!);
-                //         } else {
-                //           CustomSnackBar.showBottom('No Payment Gateway Found');
-                //         }
-                //       }),
-                // ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraOverSmall),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
-                              onItemSelected: (int index){
-                                if(configController.phoneCode == AppConstants.defaultPhoneCode){
-                                  sanjeeviniPurchase(sanjeeviniId, isWalletSelected.value, configController.paymentGatewayList[index].payMethod.toString());
-                                }else{
-                                  sanjeeviniPurchase(sanjeeviniId, isWalletSelected.value, configController.internationalPaymentGatewayList[index].payMethod.toString());
-                                }
-                              }
-                          );
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular(
-                              "Pay Using",
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: ColorResources.black2,
-                            ),
-                            Row(
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomTextMedium(
-                                    CommonMethods().toCapitalize(
-                                      configController.phoneCode == AppConstants.defaultPhoneCode
-                                          ? configController.config.data!.payment!.defaultPaymentGateway.toString()
-                                          : configController.config.data!.paymentForOtherCountry!.defaultPaymentGateway.toString(),
-                                    ),
-                                    fontSize: Dimensions.fontSizeSmall
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    "Name",
+                                    color: ColorResources.black1,
+                                  ),
                                 ),
-                                const Icon(Icons.arrow_drop_up)
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    sanjeeviniData.title.toString(),
+                                    color: ColorResources.black1,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ),
                               ],
                             ),
-                          ],
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                              String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
-                              String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
-                              if(configController.phoneCode == AppConstants.defaultPhoneCode){
-                                sanjeeviniPurchase(
-                                    sanjeeviniId,
-                                    isWalletSelected.value,
-                                    defaultPayMethod.toString()
-                                );
-                              }else {
-                                sanjeeviniPurchase(
-                                    sanjeeviniId,
-                                    isWalletSelected.value,
-                                    defaultPayMethodInternational.toString()
-                                );
-                              }
-
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorResources.colorPrimary,
-                            padding: const EdgeInsets.only(
-                                top: 10, bottom: 10, left: 14, right: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "Price",
+                                  color: ColorResources.black1,
+                                ),
+                                CustomTextRegular(
+                                  "${configController.currencySymbol} ${calculationData?.sanjeeviniAmount}",
+                                  color: ColorResources.black1,
+                                ),
+                              ],
                             ),
                           ),
-                          child: CustomTextMedium(
-                            AppStrings.proceedToPay,
-                            color: ColorResources.toolbarText,
-                            textAlign: TextAlign.center,
+                          Obx(() => Visibility(
+                                visible: isWalletSelected.value == 1,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CustomTextRegular(
+                                        "Wallet",
+                                        color: ColorResources.black1,
+                                      ),
+                                      Obx(() => CustomTextRegular(
+                                            "${configController.currencySymbol} ${walletPayableAmount.value}",
+                                            color: ColorResources.black1,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "GST ${calculationData?.rechargeGstPercent}%",
+                                  color: ColorResources.black1,
+                                ),
+                                Obx(() => CustomTextRegular(
+                                      "${configController.currencySymbol} ${gstAmount.value}",
+                                      color: ColorResources.black1,
+                                    )),
+                              ],
+                            ),
+                          ),
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextMedium("Total Payable",
+                                    color: ColorResources.black),
+                                Obx(() => CustomTextMedium(
+                                    "${configController.currencySymbol} ${totalPayableAmount.value}",
+                                    color: ColorResources.colorPrimary)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          Images.walletBalance,
+                          height: 26,
+                          color: ColorResources.colorPrimary,
+                        ),
+                        const Gap(15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular("Wallet"),
+                              CustomTextRegular(
+                                "Available for payment ${configController.currencySymbol} ${calculationData?.myWalletAmount}",
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeSmall,
+                              ),
+                            ],
                           ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed("/wallet");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomTextMedium("Recharge",
-                            color: ColorResources.colorPrimary),
+                        CustomCheckbox(
+                          onChanged: (isChecked) {
+                            if (isChecked) {
+                              getSanjeeviniCalculation(
+                                  sanjeeviniData.id.toString(),
+                                  1,
+                                  sanjeeviniData,
+                                  "Wallet");
+                            } else {
+                              getSanjeeviniCalculation(
+                                  sanjeeviniData.id.toString(),
+                                  0,
+                                  sanjeeviniData,
+                                  "Wallet");
+                            }
+                          },
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  // const Gap(10),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 4),
+                  //   child: CustomElevatedButton(
+                  //       text: AppStrings.proceedToPay.tr,
+                  //       textColor: ColorResources.toolbarText,
+                  //       backgroundColor: ColorResources.colorPrimary,
+                  //       onPressed: () async {
+                  //         String? payMethod =
+                  //             await SharedPreferencesHelper.getData(
+                  //                 AppConstants.paymentGateway);
+                  //         if (payMethod == AppConstants.payRazorpay ||
+                  //             payMethod == AppConstants.payCCAvenue) {
+                  //           sanjeeviniPurchase(sanjeeviniId, isWalletSelected.value, payMethod!);
+                  //         } else {
+                  //           CustomSnackBar.showBottom('No Payment Gateway Found');
+                  //         }
+                  //       }),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraOverSmall),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
+                                onItemSelected: (int index){
+                                  if(configController.phoneCode == AppConstants.defaultPhoneCode){
+                                    sanjeeviniPurchase(sanjeeviniId, isWalletSelected.value, configController.paymentGatewayList[index].payMethod.toString());
+                                  }else{
+                                    sanjeeviniPurchase(sanjeeviniId, isWalletSelected.value, configController.internationalPaymentGatewayList[index].payMethod.toString());
+                                  }
+                                }
+                            );
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular(
+                                "Pay Using",
+                                fontSize: Dimensions.fontSizeSmall,
+                                color: ColorResources.black2,
+                              ),
+                              Row(
+                                children: [
+                                  CustomTextMedium(
+                                      CommonMethods().toCapitalize(
+                                        configController.phoneCode == AppConstants.defaultPhoneCode
+                                            ? configController.config.data!.payment!.defaultPaymentGateway.toString()
+                                            : configController.config.data!.paymentForOtherCountry!.defaultPaymentGateway.toString(),
+                                      ),
+                                      fontSize: Dimensions.fontSizeSmall
+                                  ),
+                                  const Icon(Icons.arrow_drop_up)
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Gap(10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                                String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
+                                String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
+                                if(configController.phoneCode == AppConstants.defaultPhoneCode){
+                                  sanjeeviniPurchase(
+                                      sanjeeviniId,
+                                      isWalletSelected.value,
+                                      defaultPayMethod.toString()
+                                  );
+                                }else {
+                                  sanjeeviniPurchase(
+                                      sanjeeviniId,
+                                      isWalletSelected.value,
+                                      defaultPayMethodInternational.toString()
+                                  );
+                                }
+        
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorResources.colorPrimary,
+                              padding: const EdgeInsets.only(
+                                  top: 10, bottom: 10, left: 14, right: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: CustomTextMedium(
+                              AppStrings.proceedToPay,
+                              color: ColorResources.toolbarText,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/wallet");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomTextMedium("Recharge",
+                              color: ColorResources.colorPrimary),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

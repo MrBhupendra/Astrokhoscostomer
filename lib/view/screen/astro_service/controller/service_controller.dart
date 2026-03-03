@@ -336,627 +336,629 @@ class ServiceController extends GetxController {
       ServicesData serviceData) {
     final OfferCodeController offerCodeController = Get.put(OfferCodeController());
     Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Row(
-                    children: [
-                      // const Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2),
-                          child: Image.asset(
-                            Images.back,
-                            height: 24,
-                            color: ColorResources.black,
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                          child: CustomTextMedium(AppStrings.paymentInformation.tr,
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeLarge)),
-
-                      // const Gap(10),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: ColorResources.white,
-                      borderRadius:
-                      BorderRadius.circular(Dimensions.borderRadiusDefault),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        )
-                      ]),
-                  child: Padding(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: CustomTextMedium(
-                            AppStrings.serviceDetail,
-                            color: ColorResources.colorPrimary,
-                            fontSize: Dimensions.fontSizeLarge,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: CustomTextRegular(
-                                  "Name",
-                                  color: ColorResources.black1,
-                                ),
-                              ),
-                              Expanded(
-                                child: CustomTextRegular(
-                                  serviceData.serviceName.toString(),
-                                  color: ColorResources.black1,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: CustomTextRegular(
-                                  "Duration",
-                                  color: ColorResources.black1,
-                                ),
-                              ),
-                              Expanded(
-                                child:CustomTextRegular(
-                                  CommonMethods().getFormattedTimeFromMin(int.parse(duration)),
-                                  color: ColorResources.black1,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Price",
-                                color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${configController.currencySymbol} ${calculationData?.serviceAmount}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Obx(() => Visibility(
-                          visible: isWalletSelected.value == 1,
+                        // const Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
                           child: Padding(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2),
+                            child: Image.asset(
+                              Images.back,
+                              height: 24,
+                              color: ColorResources.black,
+                            ),
+                          ),
+                        ),
+                        const Gap(10),
+                        Expanded(
+                            child: CustomTextMedium(AppStrings.paymentInformation.tr,
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeLarge)),
+        
+                        // const Gap(10),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ColorResources.white,
+                        borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          )
+                        ]),
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: CustomTextMedium(
+                              AppStrings.serviceDetail,
+                              color: ColorResources.colorPrimary,
+                              fontSize: Dimensions.fontSizeLarge,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    "Name",
+                                    color: ColorResources.black1,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    serviceData.serviceName.toString(),
+                                    color: ColorResources.black1,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    "Duration",
+                                    color: ColorResources.black1,
+                                  ),
+                                ),
+                                Expanded(
+                                  child:CustomTextRegular(
+                                    CommonMethods().getFormattedTimeFromMin(int.parse(duration)),
+                                    color: ColorResources.black1,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+        
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomTextRegular(
-                                  "Wallet",
+                                  "Price",
+                                  color: ColorResources.black1,
+                                ),
+                                CustomTextRegular(
+                                  "${configController.currencySymbol} ${calculationData?.serviceAmount}",
+                                  color: ColorResources.black1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Obx(() => Visibility(
+                            visible: isWalletSelected.value == 1,
+                            child: Padding(
+                              padding:
+                              const EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomTextRegular(
+                                    "Wallet",
+                                    color: ColorResources.black1,
+                                  ),
+                                  Obx(() => CustomTextRegular(
+                                    "${configController.currencySymbol} ${walletPayableAmount.value}",
+                                    color: ColorResources.black1,
+                                  )),
+                                ],
+                              ),
+                            ),
+                          )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "GST ${calculationData?.rechargeGstPercent}%",
                                   color: ColorResources.black1,
                                 ),
                                 Obx(() => CustomTextRegular(
-                                  "${configController.currencySymbol} ${walletPayableAmount.value}",
+                                  "${configController.currencySymbol} ${gstAmount.value}",
                                   color: ColorResources.black1,
                                 )),
                               ],
                             ),
                           ),
-                        )),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "GST ${calculationData?.rechargeGstPercent}%",
-                                color: ColorResources.black1,
-                              ),
-                              Obx(() => CustomTextRegular(
-                                "${configController.currencySymbol} ${gstAmount.value}",
-                                color: ColorResources.black1,
-                              )),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Offer Discount",
-                                color: ColorResources.colorPrimaryDark,
-                              ),
-                              Obx(() => CustomTextRegular(
-                                "-${configController.currencySymbol} ${offerDiscount.value}",
-                                color: ColorResources.colorPrimaryDark,
-                              )),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextMedium("Total Payable",
-                                  color: ColorResources.black),
-                              Obx(() => CustomTextMedium(
-                                  "${configController.currencySymbol} ${totalPayableAmount.value}",
-                                  color: ColorResources.colorPrimary)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-
-                const Gap(Dimensions.gapDefault),
-                const CustomText(hintText: "Booking Date"),
-                const Gap(Dimensions.gapExtraSmall),
-                GestureDetector(
-                  onTap: () async {
-                    CommonMethods().showFutureDatePickerDialog(
-                        mContext!,
-                        birthDateController);
-                  },
-                  child: CustomTextField(
-                    controller: birthDateController,
-                    hintText: 'Select Date for service ',
-                    enabled: false,
-                  ),
-                ),
-
-                const Gap(Dimensions.gapDefault),
-                const CustomText(hintText: "Booking Time"),
-                const SizedBox(height: Dimensions.gapExtraSmall),
-                GestureDetector(
-                  onTap: () async {
-                    CommonMethods().showTimerPickerDialog(
-                        mContext!,
-                        birthTimeController);
-                  },
-                  child: CustomTextField(
-                    controller: birthTimeController,
-                    hintText: 'Select Time for service',
-                    enabled: false,
-                  ),
-                ),
-                const Gap(Dimensions.gapDefault),
-                // CustomTextRegular("Offer Code:"),
-                // const SizedBox(height: Dimensions.gapExtraSmall),
-                // Offer Code
-                Visibility(
-                  visible: AppFeatures.offerCode,
-                  child: Form(
-                    key: _formKey,
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8.0),
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.3),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: const Offset(0, 0),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "Offer Discount",
+                                  color: ColorResources.colorPrimaryDark,
                                 ),
+                                Obx(() => CustomTextRegular(
+                                  "-${configController.currencySymbol} ${offerDiscount.value}",
+                                  color: ColorResources.colorPrimaryDark,
+                                )),
                               ],
                             ),
-                            child: TextFormField(
-                              controller: _offerCodeController,
-                              style: const TextStyle(
-                                color: ColorResources.black,
-                                fontSize: Dimensions.fontSizeDefault,
-                              ),
-                              decoration: InputDecoration(
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(8.0),
-                                  borderSide: const BorderSide(
-                                    color: ColorResources.colorPrimary,
-                                  ),
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-                                isDense: true,
-                                hintText: AppStrings.enterCouponCode.tr,
-                                prefixIcon: const IconTheme(
-                                  data: IconThemeData(
-                                    color: ColorResources.colorPrimaryDark,
-                                    size: 18,
-                                  ),
-                                  child: Icon(Icons.discount_outlined),
-                                ),
-                                hintStyle: const TextStyle(
-                                  fontSize: Dimensions.fontSizeDefault,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: 0.5,
-                                  color: ColorResources.black4,
-                                ),
-                              ),
-                              textCapitalization: TextCapitalization.characters,
-                              // validator: (value) {
-                              //   if (value == null || value.isEmpty) {
-                              //     return AppStrings.codeError.tr;
-                              //   }
-                              //   return null;
-                              // },
+                          ),
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextMedium("Total Payable",
+                                    color: ColorResources.black),
+                                Obx(() => CustomTextMedium(
+                                    "${configController.currencySymbol} ${totalPayableAmount.value}",
+                                    color: ColorResources.colorPrimary)),
+                              ],
                             ),
                           ),
+                        ],
+                      ),
+                    ),
+                  ),
+        
+                  const Gap(Dimensions.gapDefault),
+                  const CustomText(hintText: "Booking Date"),
+                  const Gap(Dimensions.gapExtraSmall),
+                  GestureDetector(
+                    onTap: () async {
+                      CommonMethods().showFutureDatePickerDialog(
+                          mContext!,
+                          birthDateController);
+                    },
+                    child: CustomTextField(
+                      controller: birthDateController,
+                      hintText: 'Select Date for service ',
+                      enabled: false,
+                    ),
+                  ),
+        
+                  const Gap(Dimensions.gapDefault),
+                  const CustomText(hintText: "Booking Time"),
+                  const SizedBox(height: Dimensions.gapExtraSmall),
+                  GestureDetector(
+                    onTap: () async {
+                      CommonMethods().showTimerPickerDialog(
+                          mContext!,
+                          birthTimeController);
+                    },
+                    child: CustomTextField(
+                      controller: birthTimeController,
+                      hintText: 'Select Time for service',
+                      enabled: false,
+                    ),
+                  ),
+                  const Gap(Dimensions.gapDefault),
+                  // CustomTextRegular("Offer Code:"),
+                  // const SizedBox(height: Dimensions.gapExtraSmall),
+                  // Offer Code
+                  Visibility(
+                    visible: AppFeatures.offerCode,
+                    child: Form(
+                      key: _formKey,
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Expanded(
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(8.0),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: Colors.grey.withOpacity(0.3),
+                                    spreadRadius: 1,
+                                    blurRadius: 2,
+                                    offset: const Offset(0, 0),
+                                  ),
+                                ],
+                              ),
+                              child: TextFormField(
+                                controller: _offerCodeController,
+                                style: const TextStyle(
+                                  color: ColorResources.black,
+                                  fontSize: Dimensions.fontSizeDefault,
+                                ),
+                                decoration: InputDecoration(
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(8.0),
+                                    borderSide: const BorderSide(
+                                      color: ColorResources.colorPrimary,
+                                    ),
+                                  ),
+                                  contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
+                                  isDense: true,
+                                  hintText: AppStrings.enterCouponCode.tr,
+                                  prefixIcon: const IconTheme(
+                                    data: IconThemeData(
+                                      color: ColorResources.colorPrimaryDark,
+                                      size: 18,
+                                    ),
+                                    child: Icon(Icons.discount_outlined),
+                                  ),
+                                  hintStyle: const TextStyle(
+                                    fontSize: Dimensions.fontSizeDefault,
+                                    fontWeight: FontWeight.w400,
+                                    letterSpacing: 0.5,
+                                    color: ColorResources.black4,
+                                  ),
+                                ),
+                                textCapitalization: TextCapitalization.characters,
+                                // validator: (value) {
+                                //   if (value == null || value.isEmpty) {
+                                //     return AppStrings.codeError.tr;
+                                //   }
+                                //   return null;
+                                // },
+                              ),
+                            ),
+                          ),
+                          const Gap(8),
+                          CustomButton(
+                            AppStrings.apply.tr.toUpperCase(),
+                            color: ColorResources.toolbarText,
+                            onPressed: () {
+                              if (FocusManager.instance.primaryFocus != null) {
+                                FocusManager.instance.primaryFocus!.unfocus();
+                              }
+                              if(_offerCodeController.text.isNotEmpty){
+                                getServiceCalculation(
+                                    serviceAssignId,
+                                    astrologerId,
+                                    isWalletSelected.value,
+                                    serviceData,
+                                    "",
+                                    duration,
+                                    _offerCodeController.text.toString(),
+                                    mContext!
+                                );
+                              }else{
+                                CustomSnackBar.showBottom(AppStrings.codeError.tr);
+                              }
+                            },
+                            minimumSize: const Size(45, 36),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  // Check Coupon Status
+                  Obx((){
+                    if(offerStatus.value == "1"){
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 4.0,top: 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Image.asset(Images.couponCode,height: 16,width: 16,color: Colors.green),
+                            const Gap(6),
+                            CustomTextMedium(
+                              AppStrings.couponCodeApplied.tr,
+                              color: Colors.green,
+                              fontSize: Dimensions.fontSizeSmall,
+                            ),
+                            const Gap(2)
+                          ],
                         ),
-                        const Gap(8),
-                        CustomButton(
-                          AppStrings.apply.tr.toUpperCase(),
-                          color: ColorResources.toolbarText,
-                          onPressed: () {
-                            if (FocusManager.instance.primaryFocus != null) {
-                              FocusManager.instance.primaryFocus!.unfocus();
-                            }
-                            if(_offerCodeController.text.isNotEmpty){
+                      );
+                    }else if(offerStatus.value == "0"){
+                      return Padding(
+                        padding: const EdgeInsets.only(left: 4.0,top: 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.error_outline,color: Colors.red,size: 16),
+                            const Gap(6),
+                            CustomTextMedium(
+                              offerMsg.toString(),
+                              color: Colors.red,
+                              fontSize: Dimensions.fontSizeSmall,
+                            ),
+                            const Gap(2)
+                          ],
+                        ),
+                      );
+                    }else{
+                      return const SizedBox();
+                    }
+                  }),
+                  const Gap(10),
+                  Visibility(
+                    visible: AppFeatures.offerCode,
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 8),
+                      decoration: BoxDecoration(
+                        color: ColorResources.colorPrimaryLight,
+                        borderRadius: BorderRadius.circular(8.0),
+                        // border: Border.all(color: ColorResources.colorPrimary)
+                      ),
+                      child: Row(
+                        children: [
+                          Image.asset(Images.offerCode,height: 20,width: 20),
+                          const Gap(10),
+                          Expanded(
+                              child: CustomTextRegular(
+                                AppStrings.availableOffer.tr,
+                                color: ColorResources.black2,
+                                fontSize: Dimensions.fontSizeSmall,
+                              )
+                          ),
+                          InkWell(
+                              onTap: (){
+                                offerCodeController.offerCodeBottomSheet(mContext!,_offerCodeController,
+                                    applyOffer:  (){
+                                      getServiceCalculation(
+                                          serviceAssignId,
+                                          astrologerId,
+                                          isWalletSelected.value,
+                                          serviceData,
+                                          "",
+                                          duration,
+                                          _offerCodeController.text.toString(),
+                                          mContext!
+                                      );
+                                    });
+                              },
+                              child: Padding(
+                                padding: const EdgeInsets.all(10.0),
+                                child: CustomTextMedium(
+                                    AppStrings.viewAll.tr,
+                                    fontSize: Dimensions.fontSizeSmall,
+                                    color: ColorResources.colorPrimaryDark
+                                ),
+                              )
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          Images.walletBalance,
+                          height: 26,
+                          color: ColorResources.colorPrimary,
+                        ),
+                        const Gap(15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular("Wallet"),
+                              CustomTextRegular(
+                                "Available for payment ${configController.currencySymbol} ${calculationData?.myWalletAmount}",
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeSmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                        CustomCheckbox(
+                          onChanged: (isChecked) {
+                            if (isChecked) {
                               getServiceCalculation(
                                   serviceAssignId,
                                   astrologerId,
-                                  isWalletSelected.value,
+                                  1,
                                   serviceData,
-                                  "",
+                                  "Wallet",
                                   duration,
                                   _offerCodeController.text.toString(),
-                                  mContext!
-                              );
-                            }else{
-                              CustomSnackBar.showBottom(AppStrings.codeError.tr);
+                              mContext!);
+                            } else {
+                              getServiceCalculation(
+                                  serviceAssignId,
+                                  astrologerId,
+                                  0,
+                                  serviceData,
+                                  "Wallet",
+                                  duration,
+                                  _offerCodeController.text.toString(),
+                              mContext!);
                             }
                           },
-                          minimumSize: const Size(45, 36),
                         ),
                       ],
                     ),
                   ),
-                ),
-                // Check Coupon Status
-                Obx((){
-                  if(offerStatus.value == "1"){
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 4.0,top: 0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Image.asset(Images.couponCode,height: 16,width: 16,color: Colors.green),
-                          const Gap(6),
-                          CustomTextMedium(
-                            AppStrings.couponCodeApplied.tr,
-                            color: Colors.green,
-                            fontSize: Dimensions.fontSizeSmall,
-                          ),
-                          const Gap(2)
-                        ],
-                      ),
-                    );
-                  }else if(offerStatus.value == "0"){
-                    return Padding(
-                      padding: const EdgeInsets.only(left: 4.0,top: 0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Icon(Icons.error_outline,color: Colors.red,size: 16),
-                          const Gap(6),
-                          CustomTextMedium(
-                            offerMsg.toString(),
-                            color: Colors.red,
-                            fontSize: Dimensions.fontSizeSmall,
-                          ),
-                          const Gap(2)
-                        ],
-                      ),
-                    );
-                  }else{
-                    return const SizedBox();
-                  }
-                }),
-                const Gap(10),
-                Visibility(
-                  visible: AppFeatures.offerCode,
-                  child: Container(
-                    padding: const EdgeInsets.only(left: 8),
-                    decoration: BoxDecoration(
-                      color: ColorResources.colorPrimaryLight,
-                      borderRadius: BorderRadius.circular(8.0),
-                      // border: Border.all(color: ColorResources.colorPrimary)
-                    ),
+                  // const Gap(10),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 4),
+                  //   child: CustomElevatedButton(
+                  //       text: AppStrings.proceedToPay.tr,
+                  //       textColor: ColorResources.toolbarText,
+                  //       backgroundColor: ColorResources.colorPrimary,
+                  //       onPressed: () async {
+                  //         if(birthDateController.text.isNotEmpty && birthTimeController.text.isNotEmpty){
+                  //           String? payMethod = await SharedPreferencesHelper.getData(AppConstants.paymentGateway);
+                  //           if (payMethod == AppConstants.payRazorpay) {
+                  //             servicePurchaseRazorpay(serviceAssignId, astrologerId, CommonMethods().convertDateInput(birthDateController.text.toString()),CommonMethods().convertTimeInput(birthTimeController.text.toString()) ,isWalletSelected.value, payMethod.toString());
+                  //           }else if (payMethod == AppConstants.payCCAvenue) {
+                  //             servicePurchaseCCAvenue(serviceAssignId, astrologerId, CommonMethods().convertDateInput(birthDateController.text.toString()),CommonMethods().convertTimeInput(birthTimeController.text.toString()) ,isWalletSelected.value, payMethod.toString());
+                  //           } else {
+                  //             CustomSnackBar.showBottom('No Payment Gateway Found');
+                  //           }
+                  //         }else if(birthDateController.text.isEmpty){
+                  //           CustomSnackBar.showBottom("Please Select Date");
+                  //         }else if(birthTimeController.text.isEmpty){
+                  //           CustomSnackBar.showBottom("Please Select Time");
+                  //         }
+                  //       }
+                  //       ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraOverSmall),
                     child: Row(
                       children: [
-                        Image.asset(Images.offerCode,height: 20,width: 20),
+                        GestureDetector(
+                          onTap: (){
+                            CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
+                              onItemSelected: (int index){
+                              if(birthDateController.text.isNotEmpty && birthTimeController.text.isNotEmpty){
+                                if(configController.phoneCode == AppConstants.defaultPhoneCode){
+                                  servicePurchase(
+                                      serviceAssignId,
+                                      astrologerId,
+                                      CommonMethods().convertDateInput(birthDateController.text.toString()),
+                                      CommonMethods().convertTimeInput(birthTimeController.text.toString()),
+                                      isWalletSelected.value,
+                                      _offerCodeController.text.toString(),
+                                      configController.paymentGatewayList[index].payMethod.toString()
+                                  );
+                                }else{
+                                  servicePurchase(
+                                      serviceAssignId,
+                                      astrologerId,
+                                      CommonMethods().convertDateInput(birthDateController.text.toString()),
+                                      CommonMethods().convertTimeInput(birthTimeController.text.toString()),
+                                      isWalletSelected.value,
+                                      _offerCodeController.text.toString(),
+                                      configController.internationalPaymentGatewayList[index].payMethod.toString()
+                                  );
+                                }
+                              }else if(birthDateController.text.isEmpty){
+                                CustomSnackBar.showBottom("Please Select Date");
+                              }else if(birthTimeController.text.isEmpty){
+                                CustomSnackBar.showBottom("Please Select Time");
+                              }
+                              }
+                            );
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular(
+                                "Pay Using",
+                                fontSize: Dimensions.fontSizeSmall,
+                                color: ColorResources.black2,
+                              ),
+                              Row(
+                                children: [
+                                  CustomTextMedium(
+                                      configController.phoneCode == AppConstants.defaultPhoneCode
+                                          ? configController.config.data!.payment!.defaultPaymentGateway.toString()
+                                          : configController.config.data!.paymentForOtherCountry!.defaultPaymentGateway.toString(),
+                                      fontSize: Dimensions.fontSizeSmall
+                                  ),
+                                  const Icon(Icons.arrow_drop_up)
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
                         const Gap(10),
                         Expanded(
-                            child: CustomTextRegular(
-                              AppStrings.availableOffer.tr,
-                              color: ColorResources.black2,
-                              fontSize: Dimensions.fontSizeSmall,
-                            )
-                        ),
-                        InkWell(
-                            onTap: (){
-                              offerCodeController.offerCodeBottomSheet(mContext!,_offerCodeController,
-                                  applyOffer:  (){
-                                    getServiceCalculation(
-                                        serviceAssignId,
-                                        astrologerId,
-                                        isWalletSelected.value,
-                                        serviceData,
-                                        "",
-                                        duration,
-                                        _offerCodeController.text.toString(),
-                                        mContext!
-                                    );
-                                  });
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              if(birthDateController.text.isNotEmpty && birthTimeController.text.isNotEmpty){
+                                String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
+                                String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
+                                if(configController.phoneCode == AppConstants.defaultPhoneCode){
+                                  servicePurchase(
+                                      serviceAssignId,
+                                      astrologerId,
+                                      CommonMethods().convertDateInput(birthDateController.text.toString()),
+                                      CommonMethods().convertTimeInput(birthTimeController.text.toString()),
+                                      isWalletSelected.value,
+                                      _offerCodeController.text.toString(),
+                                      defaultPayMethod.toString()
+                                  );
+                                }else {
+                                  servicePurchase(
+                                      serviceAssignId,
+                                      astrologerId,
+                                      CommonMethods().convertDateInput(birthDateController.text.toString()),
+                                      CommonMethods().convertTimeInput(birthTimeController.text.toString()),
+                                      isWalletSelected.value,
+                                      _offerCodeController.text.toString(),
+                                      defaultPayMethodInternational.toString()
+                                  );
+                                }
+                              }else if(birthDateController.text.isEmpty){
+                                CustomSnackBar.showBottom("Please Select Date");
+                              }else if(birthTimeController.text.isEmpty){
+                                CustomSnackBar.showBottom("Please Select Time");
+                              }
+        
                             },
-                            child: Padding(
-                              padding: const EdgeInsets.all(10.0),
-                              child: CustomTextMedium(
-                                  AppStrings.viewAll.tr,
-                                  fontSize: Dimensions.fontSizeSmall,
-                                  color: ColorResources.colorPrimaryDark
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorResources.colorPrimary,
+                              padding: const EdgeInsets.only(
+                                  top: 10, bottom: 10, left: 14, right: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
                               ),
-                            )
+                            ),
+                            child: CustomTextMedium(
+                              AppStrings.proceedToPay,
+                              color: ColorResources.toolbarText,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                         ),
                       ],
                     ),
                   ),
-                ),
-                const Gap(10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        Images.walletBalance,
-                        height: 26,
-                        color: ColorResources.colorPrimary,
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/wallet");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomTextMedium("Recharge",
+                              color: ColorResources.colorPrimary),
+                        ],
                       ),
-                      const Gap(15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular("Wallet"),
-                            CustomTextRegular(
-                              "Available for payment ${configController.currencySymbol} ${calculationData?.myWalletAmount}",
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      CustomCheckbox(
-                        onChanged: (isChecked) {
-                          if (isChecked) {
-                            getServiceCalculation(
-                                serviceAssignId,
-                                astrologerId,
-                                1,
-                                serviceData,
-                                "Wallet",
-                                duration,
-                                _offerCodeController.text.toString(),
-                            mContext!);
-                          } else {
-                            getServiceCalculation(
-                                serviceAssignId,
-                                astrologerId,
-                                0,
-                                serviceData,
-                                "Wallet",
-                                duration,
-                                _offerCodeController.text.toString(),
-                            mContext!);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                // const Gap(10),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(vertical: 4),
-                //   child: CustomElevatedButton(
-                //       text: AppStrings.proceedToPay.tr,
-                //       textColor: ColorResources.toolbarText,
-                //       backgroundColor: ColorResources.colorPrimary,
-                //       onPressed: () async {
-                //         if(birthDateController.text.isNotEmpty && birthTimeController.text.isNotEmpty){
-                //           String? payMethod = await SharedPreferencesHelper.getData(AppConstants.paymentGateway);
-                //           if (payMethod == AppConstants.payRazorpay) {
-                //             servicePurchaseRazorpay(serviceAssignId, astrologerId, CommonMethods().convertDateInput(birthDateController.text.toString()),CommonMethods().convertTimeInput(birthTimeController.text.toString()) ,isWalletSelected.value, payMethod.toString());
-                //           }else if (payMethod == AppConstants.payCCAvenue) {
-                //             servicePurchaseCCAvenue(serviceAssignId, astrologerId, CommonMethods().convertDateInput(birthDateController.text.toString()),CommonMethods().convertTimeInput(birthTimeController.text.toString()) ,isWalletSelected.value, payMethod.toString());
-                //           } else {
-                //             CustomSnackBar.showBottom('No Payment Gateway Found');
-                //           }
-                //         }else if(birthDateController.text.isEmpty){
-                //           CustomSnackBar.showBottom("Please Select Date");
-                //         }else if(birthTimeController.text.isEmpty){
-                //           CustomSnackBar.showBottom("Please Select Time");
-                //         }
-                //       }
-                //       ),
-                // ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraOverSmall),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
-                            onItemSelected: (int index){
-                            if(birthDateController.text.isNotEmpty && birthTimeController.text.isNotEmpty){
-                              if(configController.phoneCode == AppConstants.defaultPhoneCode){
-                                servicePurchase(
-                                    serviceAssignId,
-                                    astrologerId,
-                                    CommonMethods().convertDateInput(birthDateController.text.toString()),
-                                    CommonMethods().convertTimeInput(birthTimeController.text.toString()),
-                                    isWalletSelected.value,
-                                    _offerCodeController.text.toString(),
-                                    configController.paymentGatewayList[index].payMethod.toString()
-                                );
-                              }else{
-                                servicePurchase(
-                                    serviceAssignId,
-                                    astrologerId,
-                                    CommonMethods().convertDateInput(birthDateController.text.toString()),
-                                    CommonMethods().convertTimeInput(birthTimeController.text.toString()),
-                                    isWalletSelected.value,
-                                    _offerCodeController.text.toString(),
-                                    configController.internationalPaymentGatewayList[index].payMethod.toString()
-                                );
-                              }
-                            }else if(birthDateController.text.isEmpty){
-                              CustomSnackBar.showBottom("Please Select Date");
-                            }else if(birthTimeController.text.isEmpty){
-                              CustomSnackBar.showBottom("Please Select Time");
-                            }
-                            }
-                          );
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular(
-                              "Pay Using",
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: ColorResources.black2,
-                            ),
-                            Row(
-                              children: [
-                                CustomTextMedium(
-                                    configController.phoneCode == AppConstants.defaultPhoneCode
-                                        ? configController.config.data!.payment!.defaultPaymentGateway.toString()
-                                        : configController.config.data!.paymentForOtherCountry!.defaultPaymentGateway.toString(),
-                                    fontSize: Dimensions.fontSizeSmall
-                                ),
-                                const Icon(Icons.arrow_drop_up)
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            if(birthDateController.text.isNotEmpty && birthTimeController.text.isNotEmpty){
-                              String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
-                              String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
-                              if(configController.phoneCode == AppConstants.defaultPhoneCode){
-                                servicePurchase(
-                                    serviceAssignId,
-                                    astrologerId,
-                                    CommonMethods().convertDateInput(birthDateController.text.toString()),
-                                    CommonMethods().convertTimeInput(birthTimeController.text.toString()),
-                                    isWalletSelected.value,
-                                    _offerCodeController.text.toString(),
-                                    defaultPayMethod.toString()
-                                );
-                              }else {
-                                servicePurchase(
-                                    serviceAssignId,
-                                    astrologerId,
-                                    CommonMethods().convertDateInput(birthDateController.text.toString()),
-                                    CommonMethods().convertTimeInput(birthTimeController.text.toString()),
-                                    isWalletSelected.value,
-                                    _offerCodeController.text.toString(),
-                                    defaultPayMethodInternational.toString()
-                                );
-                              }
-                            }else if(birthDateController.text.isEmpty){
-                              CustomSnackBar.showBottom("Please Select Date");
-                            }else if(birthTimeController.text.isEmpty){
-                              CustomSnackBar.showBottom("Please Select Time");
-                            }
-
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorResources.colorPrimary,
-                            padding: const EdgeInsets.only(
-                                top: 10, bottom: 10, left: 14, right: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: CustomTextMedium(
-                            AppStrings.proceedToPay,
-                            color: ColorResources.toolbarText,
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed("/wallet");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomTextMedium("Recharge",
-                            color: ColorResources.colorPrimary),
-                      ],
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

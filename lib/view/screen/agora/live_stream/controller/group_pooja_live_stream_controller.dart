@@ -414,78 +414,80 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
     liveAstrologerController.getAllAstrologer("live");
     Get.bottomSheet(
       enableDrag: true,
-      Container(
-        height: Get.height * 0.2,
-        decoration: const BoxDecoration(
-          color: ColorResources.white,
-          borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.borderRadiusMedium)),
-        ),
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
-              child: Container(
-                width: 40,
-                height: 5,
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade400,
-                  borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+      SafeArea(
+        child: Container(
+          height: Get.height * 0.2,
+          decoration: const BoxDecoration(
+            color: ColorResources.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(Dimensions.borderRadiusMedium)),
+          ),
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraSmall),
+                child: Container(
+                  width: 40,
+                  height: 5,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade400,
+                    borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeOverSmall),
-              child: CustomTextMedium(
-                "Do Follow our Astrologer before leaving!",
-                fontSize: Dimensions.fontSizeLarge,
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeOverSmall),
+                child: CustomTextMedium(
+                  "Do Follow our Astrologer before leaving!",
+                  fontSize: Dimensions.fontSizeLarge,
+                ),
               ),
-            ),
-            const Divider(thickness: 1.2),
-            SafeArea(
-              child: Row(
-                children: [
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // Action for "Leave" button
-                          Get.offAllNamed('/dashboard');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.grey.shade300,
-                          foregroundColor: Colors.black,
+              const Divider(thickness: 1.2),
+              SafeArea(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            // Action for "Leave" button
+                            Get.offAllNamed('/dashboard');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.grey.shade300,
+                            foregroundColor: Colors.black,
+                          ),
+                          child: const Text("Leave"),
                         ),
-                        child: const Text("Leave"),
                       ),
                     ),
-                  ),
-                  // if(liveAstrologerController.astrologerFollowModel.status == 0)
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          if (kDebugMode) {
-                            print("astrologerUniId->$astrologerUniId");
-                          }
-                          // Action for "Follow & Leave" button
-                          liveAstrologerController.astrologerFollow("1", astrologerUniId.toString());
-                          CustomSnackBar.showTop(AppStrings.astroFollowMsg);
-                          Get.offAllNamed('/dashboard');
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: ColorResources.colorPrimary,
-                          foregroundColor: ColorResources.toolbarText,
+                    // if(liveAstrologerController.astrologerFollowModel.status == 0)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
+                        child: ElevatedButton(
+                          onPressed: () {
+                            if (kDebugMode) {
+                              print("astrologerUniId->$astrologerUniId");
+                            }
+                            // Action for "Follow & Leave" button
+                            liveAstrologerController.astrologerFollow("1", astrologerUniId.toString());
+                            CustomSnackBar.showTop(AppStrings.astroFollowMsg);
+                            Get.offAllNamed('/dashboard');
+                          },
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: ColorResources.colorPrimary,
+                            foregroundColor: ColorResources.toolbarText,
+                          ),
+                          child: const Text("Follow & Leave"),
                         ),
-                        child: const Text("Follow & Leave"),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       isScrollControlled: true,
@@ -674,55 +676,57 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
 
   void showTypingBottomSheet() {
     Get.bottomSheet(
-        Padding(
-          padding: const EdgeInsets.all(8),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Expanded(
-                child: TextFormField(
-                  autofocus: true,
-                  controller: messageController,
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30.0),
-                      borderSide: BorderSide.none, // Removes the border line
+        SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.all(8),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Expanded(
+                  child: TextFormField(
+                    autofocus: true,
+                    controller: messageController,
+                    decoration: InputDecoration(
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide.none, // Removes the border line
+                      ),
+                      filled: true,
+                      fillColor: Colors.white,
+                      hintText: 'Type something...',
                     ),
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: 'Type something...',
                   ),
                 ),
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    if (messageController.text.isNotEmpty) {
-                      String? uniId = await SharedPreferencesHelper.getData(
-                          AppConstants.userUniId);
-                      ChatMessageModel chatMessage = ChatMessageModel(
-                        senderUniId: uniId,
-                        date: getCurrentDateTime(),
-                        fileUrl: "",
-                        messageType: AppConstants.text,
-                        name: customerName,
-                        profileImageUrl: customerImage,
-                        selectedText: "",
-                        selectedType: "",
-                        text: messageController.text.toString(),
-                      );
-                      sendMessage(chatMessage);
-                      messageController.clear();
-                      Get.back();
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                      shape: const CircleBorder(),
-                      backgroundColor: ColorResources.colorPrimary),
-                  child: const Icon(
-                    Icons.send,
-                    color: ColorResources.black,
-                  ))
-            ],
+                ElevatedButton(
+                    onPressed: () async {
+                      if (messageController.text.isNotEmpty) {
+                        String? uniId = await SharedPreferencesHelper.getData(
+                            AppConstants.userUniId);
+                        ChatMessageModel chatMessage = ChatMessageModel(
+                          senderUniId: uniId,
+                          date: getCurrentDateTime(),
+                          fileUrl: "",
+                          messageType: AppConstants.text,
+                          name: customerName,
+                          profileImageUrl: customerImage,
+                          selectedText: "",
+                          selectedType: "",
+                          text: messageController.text.toString(),
+                        );
+                        sendMessage(chatMessage);
+                        messageController.clear();
+                        Get.back();
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                        shape: const CircleBorder(),
+                        backgroundColor: ColorResources.colorPrimary),
+                    child: const Icon(
+                      Icons.send,
+                      color: ColorResources.black,
+                    ))
+              ],
+            ),
           ),
         ),
         backgroundColor: Colors.transparent,
@@ -733,156 +737,158 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
     selectedGiftIndex.value = -1;
     getGifts();
     Get.bottomSheet(
-      Container(
-        width: Get.width,
-        constraints: const BoxConstraints(maxHeight: 400),
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(16.0),
-            topRight: Radius.circular(16.0),
+      SafeArea(
+        child: Container(
+          width: Get.width,
+          constraints: const BoxConstraints(maxHeight: 400),
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(16.0),
+              topRight: Radius.circular(16.0),
+            ),
           ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: Column(
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: CustomTextMedium(
-                      "Send a gift",
-                      fontSize: Dimensions.fontSizeLarge,
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Obx(
-                    () => CustomTextMedium(
-                      "${configController.currencySymbol} ${walletBalance.value.toString()}",
-                      fontSize: Dimensions.fontSizeExtraLarge,
-                    ),
-                  ),
-                ],
-              ),
-              const Gap(Dimensions.gapDefault),
-              Obx(
-                () {
-                  if (isGiftSuccess.isTrue) {
-                    return GridView.builder(
-                      itemCount: liveGiftListModel.data?.length,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      gridDelegate:
-                          const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 4,
-                              mainAxisSpacing: 4.0,
-                              crossAxisSpacing: 2.0),
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            selectedGiftIndex.value = index;
-                          },
-                          child: Obx(
-                            () => Container(
-                              decoration: BoxDecoration(
-                                color: selectedGiftIndex.value == index
-                                    ? Colors.grey[300]
-                                    : null,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  CustomNetworkImage(
-                                    imageUrl: liveGiftListModel
-                                        .data![index].giftImage
-                                        .toString(),
-                                    height: 25,
-                                    width: 25,
-                                  ),
-                                  const Gap(Dimensions.gapExtraSmall),
-                                  CustomTextRegular(
-                                      liveGiftListModel.data![index].giftName
-                                          .toString(),
-                                      fontSize: Dimensions.fontSizeSmall),
-                                  CustomTextMedium(
-                                      "${configController.currencySymbol} ${liveGiftListModel.data![index].giftPrice.toString()}",
-                                      fontSize: Dimensions.fontSizeSmall),
-                                ],
-                              ),
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  } else if (isGiftLoading.isTrue) {
-                    return const CircularProgressIndicator();
-                  } else {
-                    return const EmptyScreen();
-                  }
-                },
-              ),
-              const Spacer(),
-              Row(
-                children: [
-                  Expanded(
-                    child: GestureDetector(
-                      onTap: () {
-                        Get.toNamed("/wallet");
-                      },
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 10, horizontal: 15),
-                        decoration: BoxDecoration(
-                            color: ColorResources.colorPrimaryLight,
-                            borderRadius: BorderRadius.circular(20)),
-                        child: CustomTextMedium(
-                          "Recharge",
-                          color: ColorResources.black,
-                          fontSize: Dimensions.fontSizeSmall,
-                          textAlign: TextAlign.center,
-                        ),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    Expanded(
+                      child: CustomTextMedium(
+                        "Send a gift",
+                        fontSize: Dimensions.fontSizeLarge,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                  ),
-                  const Gap(Dimensions.gapExtraSmall),
-                  Obx(() {
-                    return Expanded(
+                    Obx(
+                      () => CustomTextMedium(
+                        "${configController.currencySymbol} ${walletBalance.value.toString()}",
+                        fontSize: Dimensions.fontSizeExtraLarge,
+                      ),
+                    ),
+                  ],
+                ),
+                const Gap(Dimensions.gapDefault),
+                Obx(
+                  () {
+                    if (isGiftSuccess.isTrue) {
+                      return GridView.builder(
+                        itemCount: liveGiftListModel.data?.length,
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 4,
+                                mainAxisSpacing: 4.0,
+                                crossAxisSpacing: 2.0),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              selectedGiftIndex.value = index;
+                            },
+                            child: Obx(
+                              () => Container(
+                                decoration: BoxDecoration(
+                                  color: selectedGiftIndex.value == index
+                                      ? Colors.grey[300]
+                                      : null,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    CustomNetworkImage(
+                                      imageUrl: liveGiftListModel
+                                          .data![index].giftImage
+                                          .toString(),
+                                      height: 25,
+                                      width: 25,
+                                    ),
+                                    const Gap(Dimensions.gapExtraSmall),
+                                    CustomTextRegular(
+                                        liveGiftListModel.data![index].giftName
+                                            .toString(),
+                                        fontSize: Dimensions.fontSizeSmall),
+                                    CustomTextMedium(
+                                        "${configController.currencySymbol} ${liveGiftListModel.data![index].giftPrice.toString()}",
+                                        fontSize: Dimensions.fontSizeSmall),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else if (isGiftLoading.isTrue) {
+                      return const CircularProgressIndicator();
+                    } else {
+                      return const EmptyScreen();
+                    }
+                  },
+                ),
+                const Spacer(),
+                Row(
+                  children: [
+                    Expanded(
                       child: GestureDetector(
                         onTap: () {
-                          if (selectedGiftIndex.value != -1) {
-                            Get.back();
-                            sendGiftApi(
-                                astrologerUniId.toString(),
-                                liveGiftListModel
-                                    .data![selectedGiftIndex.value]);
-                          } else {
-                            CustomSnackBar.showTop("Please select a gift.");
-                          }
+                          Get.toNamed("/wallet");
                         },
                         child: Container(
                           padding: const EdgeInsets.symmetric(
                               vertical: 10, horizontal: 15),
                           decoration: BoxDecoration(
-                              color: selectedGiftIndex.value != -1
-                                  ? ColorResources.colorPrimaryMedium
-                                  : ColorResources.black6,
+                              color: ColorResources.colorPrimaryLight,
                               borderRadius: BorderRadius.circular(20)),
                           child: CustomTextMedium(
-                            "Send",
-                            color: selectedGiftIndex.value != -1
-                                ? ColorResources.toolbarText
-                                : ColorResources.black5,
+                            "Recharge",
+                            color: ColorResources.black,
                             fontSize: Dimensions.fontSizeSmall,
                             textAlign: TextAlign.center,
                           ),
                         ),
                       ),
-                    );
-                  }),
-                ],
-              )
-            ],
+                    ),
+                    const Gap(Dimensions.gapExtraSmall),
+                    Obx(() {
+                      return Expanded(
+                        child: GestureDetector(
+                          onTap: () {
+                            if (selectedGiftIndex.value != -1) {
+                              Get.back();
+                              sendGiftApi(
+                                  astrologerUniId.toString(),
+                                  liveGiftListModel
+                                      .data![selectedGiftIndex.value]);
+                            } else {
+                              CustomSnackBar.showTop("Please select a gift.");
+                            }
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10, horizontal: 15),
+                            decoration: BoxDecoration(
+                                color: selectedGiftIndex.value != -1
+                                    ? ColorResources.colorPrimaryMedium
+                                    : ColorResources.black6,
+                                borderRadius: BorderRadius.circular(20)),
+                            child: CustomTextMedium(
+                              "Send",
+                              color: selectedGiftIndex.value != -1
+                                  ? ColorResources.toolbarText
+                                  : ColorResources.black5,
+                              fontSize: Dimensions.fontSizeSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      );
+                    }),
+                  ],
+                )
+              ],
+            ),
           ),
         ),
       ),

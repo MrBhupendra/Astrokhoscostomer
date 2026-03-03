@@ -28,6 +28,7 @@ import '../../ask_question/controller/typing_controller.dart';
 import '../../dashboard/controller/dashboard_controller.dart';
 import '../../feedback/feedback_screen.dart';
 import '../../splash/controller/config_controller.dart';
+import '../../wallet/controller/wallet_controller.dart';
 import '../model/chat_history_model.dart';
 import '../model/chat_message_model.dart';
 import '../model/chat_remaining_time_model.dart';
@@ -90,6 +91,7 @@ class ChatScreenController extends FullLifeCycleController
 
   //Timer
   RxInt seconds = 60.obs;
+  RxInt popupAfterDuration = 60.obs;
   RxBool isTimerRunning = false.obs;
   Timer? _timer;
 
@@ -520,6 +522,7 @@ class ChatScreenController extends FullLifeCycleController
         if (chatRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
+          popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
           if(AppFeatures.freeChatOfferDialog) {
             offerSeconds.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
           }
@@ -788,77 +791,67 @@ class ChatScreenController extends FullLifeCycleController
     }
   }
 
-  //Chat Tab Controller
   void startTimer() {
-    print('Timer start');
     if (!isTimerRunning.value) {
       isTimerRunning.toggle();
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (seconds.value > 0) {
           seconds--;
-          if(seconds.value == 30){
+          // if(seconds.value == 30){
+          //   Get.dialog(
+          //     CustomDialogWidget(
+          //       imagePath: Images.icCoin,
+          //       title: AppStrings.lowBalance.tr,
+          //       description: AppStrings.lowBalancePopup.tr,
+          //       onYesPressed: () async {
+          //         Get.back();
+          //         Get.toNamed('/wallet');
+          //       },
+          //     ),
+          //   );
+          // }
+        } else {
+          return;
+        }
+        if (popupAfterDuration.value > 0) {
+          popupAfterDuration--;
+          if(popupAfterDuration.value == 0){
             Get.dialog(
               CustomDialogWidget(
                 imagePath: Images.icCoin,
                 title: AppStrings.lowBalance.tr,
                 description: AppStrings.lowBalancePopup.tr,
-                yesText: AppStrings.rechargeNow.tr,
                 onYesPressed: () async {
                   Get.back();
+
+                  if (!Get.isRegistered<WalletController>()) {
+                    Get.put(WalletController());
+                  }
+                  if (uniqueId.isNotEmpty) {
+                    Get.find<WalletController>().setPaymentData(
+                        uniqueId: uniqueId,
+                        channelName: channelName,
+                        astroImage: chatIntakeFormController.astrologerImage,
+                        astroName: chatIntakeFormController.astrologerName,
+                        astroUniId: chatIntakeFormController.astrologerUniId,
+                        isVirtual: chatIntakeFormController.isVirtualAstrologer
+                    );
+                  } else {
+                    print("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                  }
+
                   Get.toNamed('/wallet');
                 },
-                noText: AppStrings.cancel.tr,
               ),
             );
           }
-          if (offerSeconds.value > 0) {
-            offerSeconds--;
-            if (offerSeconds.value == 0) {
-              CustomDefaultDialog.showOkDialog(
-                AppStrings.alert.tr,
-                "Your free chat time is about to end. The call will now continue at the standard chat rate.",
-                    () {
-                  Get.back();
-                },
-              );
-            }
-          }
-
         } else {
-          endChat();
+          return;
+          // endChat();
         }
       });
     }
   }
-
-  // Remaining offer duration
-  // void startTimer() {
-  //   if (!isTimerRunning.value) {
-  //     isTimerRunning.toggle();
-  //     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
-  //       if (seconds.value > 0) {
-  //         seconds--;
-  //         if(seconds.value == 30){
-  //           Get.dialog(
-  //             CustomDialogWidget(
-  //               imagePath: Images.icCoin,
-  //               title: AppStrings.lowBalance.tr,
-  //               description: AppStrings.lowBalancePopup.tr,
-  //               yesText: AppStrings.rechargeNow.tr,
-  //               onYesPressed: () async {
-  //                 Get.back();
-  //                 Get.toNamed('/wallet');
-  //               },
-  //               noText: AppStrings.cancel.tr,
-  //             ),
-  //           );
-  //         }
-  //       } else {
-  //         endChat();
-  //       }
-  //     });
-  //   }
-  // }
 
   void stopTimer() {
     if (_timer != null && _timer!.isActive) {

@@ -352,175 +352,177 @@ class AstrologerProfileController extends FullLifeCycleController
 
   void _showCallBottomSheet(String astrologerUniId, String type, AstrologerData astrologer) {
     Get.bottomSheet(
-        Container(
-          color: ColorResources.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: Row(
-                      children: [
-                        CustomRoundNetworkImage(
-                            imageUrl: astrologer.astroImg.toString(),
-                            height: 40,
-                            width: 40
-                        ),
-                        Expanded(
-                          child: CustomTextMedium(
-                            astrologer.displayName.toString(),
-                            fontSize: Dimensions.fontSizeDefault,
-                            maxLines: 1,
-                            textAlign: TextAlign.center,
-                            color: ColorResources.black1,
+        SafeArea(
+          child: Container(
+            color: ColorResources.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Row(
+                        children: [
+                          CustomRoundNetworkImage(
+                              imageUrl: astrologer.astroImg.toString(),
+                              height: 40,
+                              width: 40
                           ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.close),
-                          onPressed: () {
-                            Get.back();
-                          },
-                        ),
-                      ],
+                          Expanded(
+                            child: CustomTextMedium(
+                              astrologer.displayName.toString(),
+                              fontSize: Dimensions.fontSizeDefault,
+                              maxLines: 1,
+                              textAlign: TextAlign.center,
+                              color: ColorResources.black1,
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.close),
+                            onPressed: () {
+                              Get.back();
+                            },
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                  const Divider(thickness: 1.5),
-                  Obx(
-                        () {
-                      if (isCallSuccess.isTrue) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 4.0, horizontal: 6),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 6.0),
-                                child: CustomTextMedium("ASTROLOGER DETAIL",
-                                    fontSize: Dimensions.fontSizeDefault),
-                              ),
-                              Row(
-                                children: [
-                                  Expanded(
+                    const Divider(thickness: 1.5),
+                    Obx(
+                          () {
+                        if (isCallSuccess.isTrue) {
+                          return Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 4.0, horizontal: 6),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 6.0),
+                                  child: CustomTextMedium("ASTROLOGER DETAIL",
+                                      fontSize: Dimensions.fontSizeDefault),
+                                ),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: CustomTextRegular(
+                                        "${type == AppConstants.call ? "Call" : type == AppConstants.chat ? "Chat" : type == AppConstants.video ? "Video" : type == AppConstants.emergencyCall ? "Emergency Call" : type == AppConstants.emergencyChat ? "Emergency Chat" : type == AppConstants.emergencyVideoCall ? "Emergency Video" : "Unknown"} rate: ${configController.currencySymbol}${checkCallDetailModel.data?.price} /min",
+                                        // "$type rate: ${configController.currencySymbol}${checkCallDetailModel.data?.price} /min",
+                                        color: ColorResources.black1,
+                                        fontSize: Dimensions.fontSizeSmall,
+                                      ),
+                                    ),
+                                    const Gap(Dimensions.gapExtraOverLarge),
+                                    if(checkCallDetailModel.data?.isSubscriptionApplied == 1)
+                                    Container(
+                                        decoration: BoxDecoration(
+                                          color: ColorResources.white,
+                                          borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.grey.withOpacity(0.3),
+                                                blurRadius: 3.0,
+                                                spreadRadius: 1,
+                                                offset: const Offset(0, 2),
+                                              ),
+                                            ]
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(5.0),
+                                          child: CustomTextMedium("Subscription Applied",color: ColorResources.colorPrimary,),
+                                        )
+                                    )
+                                  ],
+                                ),
+                                const Gap(Dimensions.gapExtraSmall),
+                                const Divider(),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 6.0),
+                                  child: CustomTextMedium("YOUR DETAIL",
+                                      fontSize: Dimensions.fontSizeDefault),
+                                ),
+                                CustomTextRegular(
+                                  "Balance: ${configController.currencySymbol} ${checkCallDetailModel.data?.userWalletAmt}",
+                                  color: ColorResources.black1,
+                                  fontSize: Dimensions.fontSizeSmall,
+                                ),
+                                const Gap(Dimensions.gapExtraSmall),
+                                CustomTextRegular(
+                                  "Max Duration: ${checkCallDetailModel.data?.minutes} Mins",
+                                  color: ColorResources.black1,
+                                  fontSize: Dimensions.fontSizeSmall,
+                                ),
+                                const Gap(Dimensions.gapExtraSmall),
+                                const Divider(),
+                                Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 6.0),
+                                  child: CustomTextMedium("HOW IT WORKS ?",
+                                      fontSize: Dimensions.fontSizeDefault),
+                                ),
+                                CustomTextRegular(
+                                  "Simply click 'Start' button to initiate session.",
+                                  color: ColorResources.black1,
+                                  fontSize: Dimensions.fontSizeSmall,
+                                ),
+                                const Gap(Dimensions.gapExtraSmall),
+                                const Divider(),
+                                CustomElevatedButton(
+                                  onPressed: () {
+                                    Get.back(); //Close dialog
+                                    ChatIntakeFormController chatIntakeFormController = Get.put(ChatIntakeFormController());
+                                    if (type == AppConstants.call) {
+                                      chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(), AppConstants.call,astrologer.isVirtualAstrologer ?? 0);
+                                      Get.toNamed("/chat_intake_form");
+                                    } else if (type == AppConstants.chat) {
+                                      chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(),AppConstants.chat,astrologer.isVirtualAstrologer ?? 0);
+                                      Get.toNamed("/chat_intake_form");
+                                    } else if (type == AppConstants.video) {
+                                      chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(),AppConstants.video,astrologer.isVirtualAstrologer ?? 0);
+                                      Get.toNamed("/chat_intake_form");
+                                    }else if (type == AppConstants.emergencyCall) {
+                                      chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(), AppConstants.emergencyCall,astrologer.isVirtualAstrologer ?? 0);
+                                      Get.toNamed("/chat_intake_form");
+                                    }else if (type == AppConstants.emergencyChat) {
+                                      chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(),AppConstants.emergencyChat,astrologer.isVirtualAstrologer ?? 0);
+                                      Get.toNamed("/chat_intake_form");
+                                    }else if (type == AppConstants.emergencyVideoCall) {
+                                      chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(),AppConstants.emergencyVideoCall,astrologer.isVirtualAstrologer ?? 0);
+                                      Get.toNamed("/chat_intake_form");
+                                    }
+                                  },
+                                  text: "START",
+                                  backgroundColor: ColorResources.colorPrimary,
+                                  textColor: ColorResources.toolbarText,
+                                ),
+                                const Gap(10),
+                                GestureDetector(
+                                  onTap: (){
+                                    Get.toNamed("/wallet");
+                                  },
+                                  child: Center(
                                     child: CustomTextRegular(
-                                      "${type == AppConstants.call ? "Call" : type == AppConstants.chat ? "Chat" : type == AppConstants.video ? "Video" : type == AppConstants.emergencyCall ? "Emergency Call" : type == AppConstants.emergencyChat ? "Emergency Chat" : type == AppConstants.emergencyVideoCall ? "Emergency Video" : "Unknown"} rate: ${configController.currencySymbol}${checkCallDetailModel.data?.price} /min",
-                                      // "$type rate: ${configController.currencySymbol}${checkCallDetailModel.data?.price} /min",
-                                      color: ColorResources.black1,
-                                      fontSize: Dimensions.fontSizeSmall,
+                                      "Recharge",
+                                      color: ColorResources.colorPrimaryDark,
+                                      textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  const Gap(Dimensions.gapExtraOverLarge),
-                                  if(checkCallDetailModel.data?.isSubscriptionApplied == 1)
-                                  Container(
-                                      decoration: BoxDecoration(
-                                        color: ColorResources.white,
-                                        borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault),
-                                          boxShadow: [
-                                            BoxShadow(
-                                              color: Colors.grey.withOpacity(0.3),
-                                              blurRadius: 3.0,
-                                              spreadRadius: 1,
-                                              offset: const Offset(0, 2),
-                                            ),
-                                          ]
-                                      ),
-                                      child: Padding(
-                                        padding: const EdgeInsets.all(5.0),
-                                        child: CustomTextMedium("Subscription Applied",color: ColorResources.colorPrimary,),
-                                      )
-                                  )
-                                ],
-                              ),
-                              const Gap(Dimensions.gapExtraSmall),
-                              const Divider(),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 6.0),
-                                child: CustomTextMedium("YOUR DETAIL",
-                                    fontSize: Dimensions.fontSizeDefault),
-                              ),
-                              CustomTextRegular(
-                                "Balance: ${configController.currencySymbol} ${checkCallDetailModel.data?.userWalletAmt}",
-                                color: ColorResources.black1,
-                                fontSize: Dimensions.fontSizeSmall,
-                              ),
-                              const Gap(Dimensions.gapExtraSmall),
-                              CustomTextRegular(
-                                "Max Duration: ${checkCallDetailModel.data?.minutes} Mins",
-                                color: ColorResources.black1,
-                                fontSize: Dimensions.fontSizeSmall,
-                              ),
-                              const Gap(Dimensions.gapExtraSmall),
-                              const Divider(),
-                              Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 6.0),
-                                child: CustomTextMedium("HOW IT WORKS ?",
-                                    fontSize: Dimensions.fontSizeDefault),
-                              ),
-                              CustomTextRegular(
-                                "Simply click 'Start' button to initiate session.",
-                                color: ColorResources.black1,
-                                fontSize: Dimensions.fontSizeSmall,
-                              ),
-                              const Gap(Dimensions.gapExtraSmall),
-                              const Divider(),
-                              CustomElevatedButton(
-                                onPressed: () {
-                                  Get.back(); //Close dialog
-                                  ChatIntakeFormController chatIntakeFormController = Get.put(ChatIntakeFormController());
-                                  if (type == AppConstants.call) {
-                                    chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(), AppConstants.call,astrologer.isVirtualAstrologer ?? 0);
-                                    Get.toNamed("/chat_intake_form");
-                                  } else if (type == AppConstants.chat) {
-                                    chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(),AppConstants.chat,astrologer.isVirtualAstrologer ?? 0);
-                                    Get.toNamed("/chat_intake_form");
-                                  } else if (type == AppConstants.video) {
-                                    chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(),AppConstants.video,astrologer.isVirtualAstrologer ?? 0);
-                                    Get.toNamed("/chat_intake_form");
-                                  }else if (type == AppConstants.emergencyCall) {
-                                    chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(), AppConstants.emergencyCall,astrologer.isVirtualAstrologer ?? 0);
-                                    Get.toNamed("/chat_intake_form");
-                                  }else if (type == AppConstants.emergencyChat) {
-                                    chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(),AppConstants.emergencyChat,astrologer.isVirtualAstrologer ?? 0);
-                                    Get.toNamed("/chat_intake_form");
-                                  }else if (type == AppConstants.emergencyVideoCall) {
-                                    chatIntakeFormController.setAstrologerData(astrologer.displayName.toString(), astrologer.astroImg.toString(), astrologer.astrologerUniId.toString(),AppConstants.emergencyVideoCall,astrologer.isVirtualAstrologer ?? 0);
-                                    Get.toNamed("/chat_intake_form");
-                                  }
-                                },
-                                text: "START",
-                                backgroundColor: ColorResources.colorPrimary,
-                                textColor: ColorResources.toolbarText,
-                              ),
-                              const Gap(10),
-                              GestureDetector(
-                                onTap: (){
-                                  Get.toNamed("/wallet");
-                                },
-                                child: Center(
-                                  child: CustomTextRegular(
-                                    "Recharge",
-                                    color: ColorResources.colorPrimaryDark,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      } else if (isCallLoading.isTrue) {
-                        return const CustomDefaultProgressIndicator();
-                      } else {
-                        return const EmptyScreen();
-                      }
-                    },
-                  ),
-                ],
+                                )
+                              ],
+                            ),
+                          );
+                        } else if (isCallLoading.isTrue) {
+                          return const CustomDefaultProgressIndicator();
+                        } else {
+                          return const EmptyScreen();
+                        }
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

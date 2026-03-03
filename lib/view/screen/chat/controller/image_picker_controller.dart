@@ -13,56 +13,58 @@ class ImagePickerController extends GetxController {
 
   void showSelectBottomSheet(){
     Get.bottomSheet(
-      SingleChildScrollView(
-        child: Container(
-          color: ColorResources.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(
-                horizontal: Dimensions.paddingSizeExtraSmall),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: Dimensions.paddingSizeMediumSmall,
-                      bottom: Dimensions.paddingSizeOverSmall),
-                  child: ListTile(
-                    leading: const Icon(Icons.photo_library,color: ColorResources.colorPrimary),
-                    title: const Text('Pick from Gallery'),
-                    onTap: () async {
-                      Get.back();
-                      await pickImage(ImageSource.gallery);
-                    },
+      SafeArea(
+        child: SingleChildScrollView(
+          child: Container(
+            color: ColorResources.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeExtraSmall),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: Dimensions.paddingSizeMediumSmall,
+                        bottom: Dimensions.paddingSizeOverSmall),
+                    child: ListTile(
+                      leading: const Icon(Icons.photo_library,color: ColorResources.colorPrimary),
+                      title: const Text('Pick from Gallery'),
+                      onTap: () async {
+                        Get.back();
+                        await pickImage(ImageSource.gallery);
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      bottom: Dimensions.paddingSizeOverSmall),
-                  child: ListTile(
-                    leading: const Icon(Icons.camera_alt,color: ColorResources.colorPrimary),
-                    title: const Text('Take Picture'),
-                    onTap: () async {
-                      Get.back();
-                      await pickImage(ImageSource.camera);
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        bottom: Dimensions.paddingSizeOverSmall),
+                    child: ListTile(
+                      leading: const Icon(Icons.camera_alt,color: ColorResources.colorPrimary),
+                      title: const Text('Take Picture'),
+                      onTap: () async {
+                        Get.back();
+                        await pickImage(ImageSource.camera);
+                      },
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(
-                      bottom:
-                      Dimensions.paddingSizeMediumSmall),
-                  child: ListTile(
-                    leading: const Icon(Icons.cancel,
-                        color: ColorResources.red),
-                    title: const Text('Cancel',
-                        style: TextStyle(
-                            color: ColorResources.red)),
-                    onTap: () {
-                      Get.back();
-                    },
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        bottom:
+                        Dimensions.paddingSizeMediumSmall),
+                    child: ListTile(
+                      leading: const Icon(Icons.cancel,
+                          color: ColorResources.red),
+                      title: const Text('Cancel',
+                          style: TextStyle(
+                              color: ColorResources.red)),
+                      onTap: () {
+                        Get.back();
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

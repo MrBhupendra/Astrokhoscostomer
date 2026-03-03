@@ -309,7 +309,7 @@ class WalletScreen extends StatelessWidget {
                                                       CustomTextRegular(
                                                         "${walletController.walletModel.data?[index].tag?.toUpperCase()}",
                                                         fontSize: Dimensions
-                                                            .fontSizeSmall,
+                                                            .fontSizeExtraSmall,
                                                         color: ColorResources
                                                             .white,
                                                         maxLines: 1,

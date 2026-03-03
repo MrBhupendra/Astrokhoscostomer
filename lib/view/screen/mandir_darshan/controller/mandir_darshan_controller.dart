@@ -341,409 +341,411 @@ class MandirDarshanController extends GetxController {
       LiveMandirDarshanCalculationData? calculationData,
       LiveTempleDarshan liveTempleDarshanData) {
     Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Row(
-                    children: [
-                      // const Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2),
-                          child: Image.asset(
-                            Images.back,
-                            height: 24,
-                            color: ColorResources.black,
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                          child: CustomTextMedium(AppStrings.paymentInformation.tr,
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeLarge)),
-
-                      // const Gap(10),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: ColorResources.white,
-                      borderRadius:
-                      BorderRadius.circular(Dimensions.borderRadiusDefault),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        )
-                      ]),
-                  child: Padding(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: CustomTextMedium(
-                            AppStrings.importantNoticeTempleDarshan,
-                            color: ColorResources.colorPrimary,
-                            fontSize: Dimensions.fontSizeOverSmall,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: CustomTextMedium(
-                            AppStrings.serviceDetail,
-                            color: ColorResources.colorPrimary,
-                            fontSize: Dimensions.fontSizeLarge,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: CustomTextRegular(
-                                  "Name",
-                                  color: ColorResources.black1,
-                                ),
-                              ),
-                              Expanded(
-                                child: CustomTextRegular(
-                                  liveTempleDarshanData.liveTempleDarshanName.toString(),
-                                  color: ColorResources.black1,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        int.tryParse(duration)! > 0 ? Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: CustomTextRegular(
-                                  "Duration",
-                                  color: ColorResources.black1,
-                                ),
-                              ),
-                              Expanded(
-                                child:CustomTextRegular(
-                                  CommonMethods().getFormattedTimeFromMin(int.parse(duration)),
-                                  color: ColorResources.black1,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ) : const SizedBox.shrink(),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Wallet main balance",
-                                color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${configController.currencySymbol} ${calculationData?.myWalletAmount}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Wallet gift balance",
-                                color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${configController.currencySymbol} ${calculationData?.walletGiftBalance}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Price",
-                                color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${configController.currencySymbol} ${calculationData?.liveTempleDarshanAmount}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Obx(() => Visibility(
-                          visible: isWalletSelected.value == 1,
+                        // const Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
                           child: Padding(
-                            padding:
-                            const EdgeInsets.symmetric(vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2),
+                            child: Image.asset(
+                              Images.back,
+                              height: 24,
+                              color: ColorResources.black,
+                            ),
+                          ),
+                        ),
+                        const Gap(10),
+                        Expanded(
+                            child: CustomTextMedium(AppStrings.paymentInformation.tr,
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeLarge)),
+
+                        // const Gap(10),
+                      ],
+                    ),
+                  ),
+                  const Divider(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ColorResources.white,
+                        borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          )
+                        ]),
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: CustomTextMedium(
+                              AppStrings.importantNoticeTempleDarshan,
+                              color: ColorResources.colorPrimary,
+                              fontSize: Dimensions.fontSizeOverSmall,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: CustomTextMedium(
+                              AppStrings.serviceDetail,
+                              color: ColorResources.colorPrimary,
+                              fontSize: Dimensions.fontSizeLarge,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
                             child: Row(
-                              mainAxisAlignment:
-                              MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    "Name",
+                                    color: ColorResources.black1,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    liveTempleDarshanData.liveTempleDarshanName.toString(),
+                                    color: ColorResources.black1,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          int.tryParse(duration)! > 0 ? Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    "Duration",
+                                    color: ColorResources.black1,
+                                  ),
+                                ),
+                                Expanded(
+                                  child:CustomTextRegular(
+                                    CommonMethods().getFormattedTimeFromMin(int.parse(duration)),
+                                    color: ColorResources.black1,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ) : const SizedBox.shrink(),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomTextRegular(
-                                  "Wallet",
+                                  "Wallet main balance",
+                                  color: ColorResources.black1,
+                                ),
+                                CustomTextRegular(
+                                  "${configController.currencySymbol} ${calculationData?.myWalletAmount}",
+                                  color: ColorResources.black1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "Wallet gift balance",
+                                  color: ColorResources.black1,
+                                ),
+                                CustomTextRegular(
+                                  "${configController.currencySymbol} ${calculationData?.walletGiftBalance}",
+                                  color: ColorResources.black1,
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "Price",
+                                  color: ColorResources.black1,
+                                ),
+                                CustomTextRegular(
+                                  "${configController.currencySymbol} ${calculationData?.liveTempleDarshanAmount}",
+                                  color: ColorResources.black1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Obx(() => Visibility(
+                            visible: isWalletSelected.value == 1,
+                            child: Padding(
+                              padding:
+                              const EdgeInsets.symmetric(vertical: 4),
+                              child: Row(
+                                mainAxisAlignment:
+                                MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CustomTextRegular(
+                                    "Wallet",
+                                    color: ColorResources.black1,
+                                  ),
+                                  Obx(() => CustomTextRegular(
+                                    "${configController.currencySymbol} ${walletPayableAmount.value}",
+                                    color: ColorResources.black1,
+                                  )),
+                                ],
+                              ),
+                            ),
+                          )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "GST ${calculationData?.rechargeGstPercent}%",
                                   color: ColorResources.black1,
                                 ),
                                 Obx(() => CustomTextRegular(
-                                  "${configController.currencySymbol} ${walletPayableAmount.value}",
+                                  "${configController.currencySymbol} ${gstAmount.value}",
                                   color: ColorResources.black1,
                                 )),
                               ],
                             ),
                           ),
-                        )),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "GST ${calculationData?.rechargeGstPercent}%",
-                                color: ColorResources.black1,
-                              ),
-                              Obx(() => CustomTextRegular(
-                                "${configController.currencySymbol} ${gstAmount.value}",
-                                color: ColorResources.black1,
-                              )),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextMedium("Total Payable",
-                                  color: ColorResources.black),
-                              Obx(() => CustomTextMedium(
-                                  "${configController.currencySymbol} ${totalPayableAmount.value}",
-                                  color: ColorResources.colorPrimary)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Gap(10),
-                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        Images.walletBalance,
-                        height: 26,
-                        color: ColorResources.colorPrimary,
-                      ),
-                      const Gap(15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular("Wallet"),
-                            CustomTextRegular(
-                              "Available for payment ${configController.currencySymbol} ${calculationData?.myWalletAmount}",
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      CustomCheckbox(
-                        onChanged: (isChecked) {
-                          if (isChecked) {
-                            getMandirDarshanCalculation(
-                                liveMandirDarshanAssignId,
-                                astrologerId,
-                                1,
-                                liveTempleDarshanData,
-                                duration,
-                                "Wallet",
-                                mContext!);
-                          } else {
-                            getMandirDarshanCalculation(
-                                liveMandirDarshanAssignId,
-                                astrologerId,
-                                0,
-                                liveTempleDarshanData,
-                                duration,
-                                "Wallet",
-                                mContext!);
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                // const Gap(10),
-                // Padding(
-                //   padding: const EdgeInsets.symmetric(vertical: 4),
-                //   child: CustomElevatedButton(
-                //       text: AppStrings.proceedToPay.tr,
-                //       textColor: ColorResources.toolbarText,
-                //       backgroundColor: ColorResources.colorPrimary,
-                //       onPressed: () async {
-                //         if(birthDateController.text.isNotEmpty && birthTimeController.text.isNotEmpty){
-                //           String? payMethod = await SharedPreferencesHelper.getData(AppConstants.paymentGateway);
-                //           if (payMethod == AppConstants.payRazorpay) {
-                //             servicePurchaseRazorpay(liveMandirDarshanAssignId, astrologerId, CommonMethods().convertDateInput(birthDateController.text.toString()),CommonMethods().convertTimeInput(birthTimeController.text.toString()) ,isWalletSelected.value, payMethod.toString());
-                //           }else if (payMethod == AppConstants.payCCAvenue) {
-                //             servicePurchaseCCAvenue(liveMandirDarshanAssignId, astrologerId, CommonMethods().convertDateInput(birthDateController.text.toString()),CommonMethods().convertTimeInput(birthTimeController.text.toString()) ,isWalletSelected.value, payMethod.toString());
-                //           } else {
-                //             CustomSnackBar.showBottom('No Payment Gateway Found');
-                //           }
-                //         }else if(birthDateController.text.isEmpty){
-                //           CustomSnackBar.showBottom("Please Select Date");
-                //         }else if(birthTimeController.text.isEmpty){
-                //           CustomSnackBar.showBottom("Please Select Time");
-                //         }
-                //       }
-                //       ),
-                // ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraOverSmall),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: (){
-                          CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
-                              onItemSelected: (int index){
-                                if(configController.phoneCode == AppConstants.defaultPhoneCode){
-                                  purchaseMandirDarshanPooja(
-                                      liveMandirDarshanAssignId,
-                                      astrologerId,
-                                      isWalletSelected.value,
-                                      configController.paymentGatewayList[index].payMethod.toString()
-                                  );
-                                }else{
-                                  purchaseMandirDarshanPooja(
-                                      liveMandirDarshanAssignId,
-                                      astrologerId,
-                                      isWalletSelected.value,
-                                      configController.internationalPaymentGatewayList[index].payMethod.toString()
-                                  );
-                                }
-                              }
-                          );
-                        },
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular(
-                              "Pay Using",
-                              fontSize: Dimensions.fontSizeSmall,
-                              color: ColorResources.black2,
-                            ),
-                            Row(
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomTextMedium(
-                                    configController.phoneCode == AppConstants.defaultPhoneCode
-                                        ? configController.config.data!.payment!.defaultPaymentGateway.toString()
-                                        : configController.config.data!.paymentForOtherCountry!.defaultPaymentGateway.toString(),
-                                    fontSize: Dimensions.fontSizeSmall
-                                ),
-                                const Icon(Icons.arrow_drop_up)
+                                CustomTextMedium("Total Payable",
+                                    color: ColorResources.black),
+                                Obx(() => CustomTextMedium(
+                                    "${configController.currencySymbol} ${totalPayableAmount.value}",
+                                    color: ColorResources.colorPrimary)),
                               ],
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      const Gap(10),
-                      Expanded(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            debugPrint("liveMandirDarshanAssignId$liveMandirDarshanAssignId");
-                            String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
-                            String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
-                            if(configController.phoneCode == AppConstants.defaultPhoneCode){
-                              purchaseMandirDarshanPooja(
+                    ),
+                  ),
+                  const Gap(10),
+                  Padding(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          Images.walletBalance,
+                          height: 26,
+                          color: ColorResources.colorPrimary,
+                        ),
+                        const Gap(15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular("Wallet"),
+                              CustomTextRegular(
+                                "Available for payment ${configController.currencySymbol} ${calculationData?.myWalletAmount}",
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeSmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                        CustomCheckbox(
+                          onChanged: (isChecked) {
+                            if (isChecked) {
+                              getMandirDarshanCalculation(
                                   liveMandirDarshanAssignId,
                                   astrologerId,
-                                  isWalletSelected.value,
-                                  defaultPayMethod.toString()
-                              );
-                            }else {
-                              purchaseMandirDarshanPooja(
+                                  1,
+                                  liveTempleDarshanData,
+                                  duration,
+                                  "Wallet",
+                                  mContext!);
+                            } else {
+                              getMandirDarshanCalculation(
                                   liveMandirDarshanAssignId,
                                   astrologerId,
-                                  isWalletSelected.value,
-                                  defaultPayMethodInternational.toString()
-                              );
+                                  0,
+                                  liveTempleDarshanData,
+                                  duration,
+                                  "Wallet",
+                                  mContext!);
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: ColorResources.colorPrimary,
-                            padding: const EdgeInsets.only(
-                                top: 10, bottom: 10, left: 14, right: 14),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                          ),
-                          child: CustomTextMedium(
-                            AppStrings.proceedToPay,
-                            color: ColorResources.toolbarText,
-                            textAlign: TextAlign.center,
-                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed("/wallet");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomTextMedium("Recharge",
-                            color: ColorResources.colorPrimary),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  // const Gap(10),
+                  // Padding(
+                  //   padding: const EdgeInsets.symmetric(vertical: 4),
+                  //   child: CustomElevatedButton(
+                  //       text: AppStrings.proceedToPay.tr,
+                  //       textColor: ColorResources.toolbarText,
+                  //       backgroundColor: ColorResources.colorPrimary,
+                  //       onPressed: () async {
+                  //         if(birthDateController.text.isNotEmpty && birthTimeController.text.isNotEmpty){
+                  //           String? payMethod = await SharedPreferencesHelper.getData(AppConstants.paymentGateway);
+                  //           if (payMethod == AppConstants.payRazorpay) {
+                  //             servicePurchaseRazorpay(liveMandirDarshanAssignId, astrologerId, CommonMethods().convertDateInput(birthDateController.text.toString()),CommonMethods().convertTimeInput(birthTimeController.text.toString()) ,isWalletSelected.value, payMethod.toString());
+                  //           }else if (payMethod == AppConstants.payCCAvenue) {
+                  //             servicePurchaseCCAvenue(liveMandirDarshanAssignId, astrologerId, CommonMethods().convertDateInput(birthDateController.text.toString()),CommonMethods().convertTimeInput(birthTimeController.text.toString()) ,isWalletSelected.value, payMethod.toString());
+                  //           } else {
+                  //             CustomSnackBar.showBottom('No Payment Gateway Found');
+                  //           }
+                  //         }else if(birthDateController.text.isEmpty){
+                  //           CustomSnackBar.showBottom("Please Select Date");
+                  //         }else if(birthTimeController.text.isEmpty){
+                  //           CustomSnackBar.showBottom("Please Select Time");
+                  //         }
+                  //       }
+                  //       ),
+                  // ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeExtraOverSmall),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: (){
+                            CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
+                                onItemSelected: (int index){
+                                  if(configController.phoneCode == AppConstants.defaultPhoneCode){
+                                    purchaseMandirDarshanPooja(
+                                        liveMandirDarshanAssignId,
+                                        astrologerId,
+                                        isWalletSelected.value,
+                                        configController.paymentGatewayList[index].payMethod.toString()
+                                    );
+                                  }else{
+                                    purchaseMandirDarshanPooja(
+                                        liveMandirDarshanAssignId,
+                                        astrologerId,
+                                        isWalletSelected.value,
+                                        configController.internationalPaymentGatewayList[index].payMethod.toString()
+                                    );
+                                  }
+                                }
+                            );
+                          },
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular(
+                                "Pay Using",
+                                fontSize: Dimensions.fontSizeSmall,
+                                color: ColorResources.black2,
+                              ),
+                              Row(
+                                children: [
+                                  CustomTextMedium(
+                                      configController.phoneCode == AppConstants.defaultPhoneCode
+                                          ? configController.config.data!.payment!.defaultPaymentGateway.toString()
+                                          : configController.config.data!.paymentForOtherCountry!.defaultPaymentGateway.toString(),
+                                      fontSize: Dimensions.fontSizeSmall
+                                  ),
+                                  const Icon(Icons.arrow_drop_up)
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        const Gap(10),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              debugPrint("liveMandirDarshanAssignId$liveMandirDarshanAssignId");
+                              String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
+                              String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
+                              if(configController.phoneCode == AppConstants.defaultPhoneCode){
+                                purchaseMandirDarshanPooja(
+                                    liveMandirDarshanAssignId,
+                                    astrologerId,
+                                    isWalletSelected.value,
+                                    defaultPayMethod.toString()
+                                );
+                              }else {
+                                purchaseMandirDarshanPooja(
+                                    liveMandirDarshanAssignId,
+                                    astrologerId,
+                                    isWalletSelected.value,
+                                    defaultPayMethodInternational.toString()
+                                );
+                              }
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: ColorResources.colorPrimary,
+                              padding: const EdgeInsets.only(
+                                  top: 10, bottom: 10, left: 14, right: 14),
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                            child: CustomTextMedium(
+                              AppStrings.proceedToPay,
+                              color: ColorResources.toolbarText,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/wallet");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomTextMedium("Recharge",
+                              color: ColorResources.colorPrimary),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

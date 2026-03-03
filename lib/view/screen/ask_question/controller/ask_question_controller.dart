@@ -341,192 +341,194 @@ class AskQuestionController extends FullLifeCycleController
 
   void _showCalculationBottomSheet(String question, QuestionCalculationData? calculationData) {
     Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Row(
-                    children: [
-                      // const Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2),
-                          child: Image.asset(
-                            Images.back,
-                            height: 24,
-                            color: ColorResources.black,
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                          child: CustomTextMedium(AppStrings.paymentInformation.tr,
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeLarge)),
-
-                      // const Gap(10),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: ColorResources.white,
-                      borderRadius:
-                      BorderRadius.circular(Dimensions.borderRadiusDefault),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        )
-                      ]),
-                  child: Padding(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: CustomTextMedium(
-                            "Payment Detail",
-                            color: ColorResources.colorPrimary,
-                            fontSize: Dimensions.fontSizeLarge,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Price",
-                                color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${configController.currencySymbol} ${calculationData
-                                    ?.openAiPredictionPrice}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Obx(() =>
-                            Visibility(
-                              visible: isWalletSelected.value == 1,
-                              child: Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 4),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomTextRegular(
-                                      "Wallet",
-                                      color: ColorResources.black1,
-                                    ),
-                                    Obx(() =>
-                                        CustomTextRegular(
-                                          "${AppStrings
-                                              .rupeeSign} ${walletPayableAmount
-                                              .value}",
-                                          color: ColorResources.black1,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            )),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextMedium("Total Payable",
-                                  color: ColorResources.black),
-                              Obx(() =>
-                                  CustomTextMedium(
-                                      "${AppStrings
-                                          .rupeeSign} ${totalPayableAmount
-                                          .value}",
-                                      color: ColorResources.colorPrimary)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Gap(10),
-                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        Images.walletBalance,
-                        height: 26,
-                        color: ColorResources.colorPrimary,
-                      ),
-                      const Gap(15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular("Wallet"),
-                            CustomTextRegular(
-                              "Available for payment ${AppStrings
-                                  .rupeeSign} ${calculationData
-                                  ?.myWalletAmount}",
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                // const Gap(10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: CustomElevatedButton(
-                      text: AppStrings.proceedToPay.tr,
-                      textColor: ColorResources.toolbarText,
-                      backgroundColor: ColorResources.colorPrimary,
-                      onPressed: () async {
-                        questionPurchase(question);
-                      }),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed("/wallet");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
+      SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CustomTextMedium("Recharge",
-                            color: ColorResources.colorPrimary),
+                        // const Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2),
+                            child: Image.asset(
+                              Images.back,
+                              height: 24,
+                              color: ColorResources.black,
+                            ),
+                          ),
+                        ),
+                        const Gap(10),
+                        Expanded(
+                            child: CustomTextMedium(AppStrings.paymentInformation.tr,
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeLarge)),
+        
+                        // const Gap(10),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  const Divider(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ColorResources.white,
+                        borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          )
+                        ]),
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: CustomTextMedium(
+                              "Payment Detail",
+                              color: ColorResources.colorPrimary,
+                              fontSize: Dimensions.fontSizeLarge,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "Price",
+                                  color: ColorResources.black1,
+                                ),
+                                CustomTextRegular(
+                                  "${configController.currencySymbol} ${calculationData
+                                      ?.openAiPredictionPrice}",
+                                  color: ColorResources.black1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Obx(() =>
+                              Visibility(
+                                visible: isWalletSelected.value == 1,
+                                child: Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 4),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CustomTextRegular(
+                                        "Wallet",
+                                        color: ColorResources.black1,
+                                      ),
+                                      Obx(() =>
+                                          CustomTextRegular(
+                                            "${AppStrings
+                                                .rupeeSign} ${walletPayableAmount
+                                                .value}",
+                                            color: ColorResources.black1,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextMedium("Total Payable",
+                                    color: ColorResources.black),
+                                Obx(() =>
+                                    CustomTextMedium(
+                                        "${AppStrings
+                                            .rupeeSign} ${totalPayableAmount
+                                            .value}",
+                                        color: ColorResources.colorPrimary)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  Padding(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          Images.walletBalance,
+                          height: 26,
+                          color: ColorResources.colorPrimary,
+                        ),
+                        const Gap(15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular("Wallet"),
+                              CustomTextRegular(
+                                "Available for payment ${AppStrings
+                                    .rupeeSign} ${calculationData
+                                    ?.myWalletAmount}",
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeSmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  // const Gap(10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: CustomElevatedButton(
+                        text: AppStrings.proceedToPay.tr,
+                        textColor: ColorResources.toolbarText,
+                        backgroundColor: ColorResources.colorPrimary,
+                        onPressed: () async {
+                          questionPurchase(question);
+                        }),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/wallet");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomTextMedium("Recharge",
+                              color: ColorResources.colorPrimary),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

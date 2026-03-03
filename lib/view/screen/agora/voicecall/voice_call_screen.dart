@@ -10,6 +10,7 @@ import '../../../widget/custom_round_network_image.dart';
 import '../../../widget/custom_text_medium.dart';
 import '../../../widget/custom_text_regular.dart';
 import '../../chat/controller/image_picker_controller.dart';
+import '../../wallet/controller/wallet_controller.dart';
 
 class VoiceCallScreen extends StatelessWidget {
   VoiceCallScreen({super.key});
@@ -56,9 +57,56 @@ class VoiceCallScreen extends StatelessWidget {
                               color: ColorResources.white,
                             ),
                             const Gap(2),
-                            Row(
+                            Column(
                               mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
+                                //QuickRecharge Button
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Obx(() => controller.isChatAccepted.isTrue
+                                      ? Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      GestureDetector(
+                                        onTap: () {
+                                          if (!Get.isRegistered<WalletController>()) {
+                                            Get.put(WalletController());
+                                          }
+                                          if (controller.uniqueId.isNotEmpty) {
+                                            Get.find<WalletController>().setPaymentData(
+                                              uniqueId: controller.uniqueId,
+                                              channelName: controller.channelName,
+                                              astroImage: controller.chatIntakeFormController.astrologerImage,
+                                              astroName: controller.chatIntakeFormController.astrologerName,
+                                              astroUniId: controller.chatIntakeFormController.astrologerUniId,
+                                            );
+                                          } else {
+                                            debugPrint("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                                          }
+                                          Get.toNamed('/wallet');
+                                        },
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: ColorResources.white.withOpacity(0.05),
+                                              border: Border.all(
+                                                  width: 1.0,
+                                                  color: ColorResources.white),
+                                              borderRadius: const BorderRadius.all(
+                                                  Radius.circular(8.0))),
+                                          padding: const EdgeInsets.symmetric(
+                                              vertical: 8.0, horizontal: 12.0),
+                                          child: CustomTextMedium(
+                                            "Quick Recharge Now",
+                                            fontSize: 10.0,
+                                            color: ColorResources.white,
+                                          ),
+                                        ),
+                                      )
+                                    ],
+                                  )
+                                      : const SizedBox.shrink()),
+                                ),
                                 Obx(() => controller.remoteUid.value != 0 && controller.isChatAccepted.isTrue
                                     ? Container(
                                   color: const Color.fromRGBO(

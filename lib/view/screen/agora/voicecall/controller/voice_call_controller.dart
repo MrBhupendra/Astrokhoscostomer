@@ -30,6 +30,7 @@ import '../../../chat/model/chat_session_model.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
 import '../../../dashboard/controller/dashboard_controller.dart';
+import '../../../wallet/controller/wallet_controller.dart';
 
 class VoiceCallController extends FullLifeCycleController
     with FullLifeCycleMixin {
@@ -81,6 +82,7 @@ class VoiceCallController extends FullLifeCycleController
 
   //Timer
   RxInt seconds = 60.obs;
+  RxInt popupAfterDuration = 60.obs;
   RxBool isTimerRunning = false.obs;
   Timer? _timer;
 
@@ -328,6 +330,7 @@ class VoiceCallController extends FullLifeCycleController
         if (chatRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
+          popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
           if(AppFeatures.freeChatOfferDialog) {
             offerSeconds.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
           }
@@ -357,36 +360,50 @@ class VoiceCallController extends FullLifeCycleController
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
         if (seconds.value > 0) {
           seconds--;
-          if(seconds.value == 30){
+        } else {
+          endCall();
+        }
+        if (popupAfterDuration.value > 0) {
+          popupAfterDuration--;
+          if(popupAfterDuration.value == 0){
             Get.dialog(
               CustomDialogWidget(
                 imagePath: Images.icCoin,
                 title: AppStrings.lowBalance.tr,
                 description: AppStrings.lowBalancePopup.tr,
-                yesText: AppStrings.rechargeNow.tr,
                 onYesPressed: () async {
                   Get.back();
+
+                  if (!Get.isRegistered<WalletController>()) {
+                    Get.put(WalletController());
+                  }
+                  if (uniqueId.isNotEmpty) {
+                    Get.find<WalletController>().setPaymentData(
+                      uniqueId: uniqueId,
+                      channelName: channelName,
+                      agoraAppId: agoraAppId,
+                      agoraToken: agoraToken,
+                      astroImage: chatIntakeFormController.astrologerImage,
+                      astroName: chatIntakeFormController.astrologerName,
+                      astroUniId: chatIntakeFormController.astrologerUniId,
+                    );
+                    print("callDuration===>2");
+                    print(uniqueId);
+                    print(channelName);
+                    print(agoraAppId);
+                    print(agoraToken);
+                  } else {
+                    print("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                  }
+
                   Get.toNamed('/wallet');
                 },
-                noText: AppStrings.cancel.tr,
               ),
             );
           }
-          if (offerSeconds.value > 0) {
-            offerSeconds--;
-            if (offerSeconds.value == 0) {
-              CustomDefaultDialog.showOkDialog(
-                AppStrings.alert.tr,
-                "Your free chat time is about to end. The call will now continue at the standard chat rate.",
-                    () {
-                  Get.back();
-                },
-              );
-            }
-          }
-
         } else {
-          endCall();
+          return;
+          // endChat();
         }
       });
     }

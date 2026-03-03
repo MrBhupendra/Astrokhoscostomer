@@ -54,6 +54,39 @@ class WalletController extends GetxController {
   //Multiple PG
   final ConfigController configController = Get.find();
 
+
+  String? _uniqueId;
+  String? _channelName;
+  String? _agoraAppId;
+  String? _agoraToken;
+  String? _astroName;
+  String? _astroImage;
+  String? _astroUniId;
+  int? _isVirtual;
+
+  void setPaymentData({String? uniqueId, String? channelName, String? agoraAppId, String? agoraToken, String? astroName,
+    String? astroImage,
+    String? astroUniId,
+    int? isVirtual,}) {
+    _uniqueId = uniqueId;
+    _channelName = channelName;
+    _agoraAppId = agoraAppId;
+    _agoraToken = agoraToken;
+    _astroName = astroName;
+    _astroImage = astroImage;
+    _astroUniId = astroUniId;
+    _isVirtual = isVirtual;
+    print("callDuration===>3");
+    print(uniqueId);
+    print(channelName);
+    print(agoraAppId);
+    print(agoraToken);
+    print(astroName);
+    print(astroImage);
+    print(astroUniId);
+    print(isVirtual);
+  }
+
   @override
   void onInit() {
     super.onInit();
@@ -235,4 +268,17 @@ class WalletController extends GetxController {
       }
     }
   }
+
+  String getUniqueIdSafe() => _uniqueId ?? "";
+  String getChannelNameSafe() => _channelName ?? "";
+  String getAgoraTokenSafe() => _agoraToken ?? "";
+  String getAgoraAppIdSafe() => _agoraAppId ?? "";
+
+  String getAstroNameSafe() => _astroName ?? "";
+
+  String getAstroImageSafe() => _astroImage ?? "";
+
+  String getAstroUniIdSafe() => _astroUniId ?? "";
+
+  int getIsVirtualSafe() => _isVirtual ?? 0;
 }

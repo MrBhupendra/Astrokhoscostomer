@@ -500,388 +500,390 @@ class ReportController extends GetxController {
   void _showHoroCalculationBottomSheet(ReportCalculationData? calculationData,
       String orderType, KundliMatchData data) {
     Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Row(
-                    children: [
-                      // const Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2),
-                          child: Image.asset(
-                            Images.back,
-                            height: 24,
-                            color: ColorResources.black,
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                          child: CustomTextMedium(
-                              AppStrings.paymentInformation.tr,
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeLarge)),
-
-                      // const Gap(10),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: ColorResources.white,
-                      borderRadius:
-                          BorderRadius.circular(Dimensions.borderRadiusDefault),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        )
-                      ]),
-                  child: Padding(
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+      SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
+                    child: Row(
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: CustomTextMedium(
-                            orderType == AppConstants.reportHoroscope
-                                ? "${AppStrings.kundliReport.tr} Detail"
-                                : "${AppStrings.matchingReport.tr} Detail",
-                            color: ColorResources.colorPrimary,
-                            fontSize: Dimensions.fontSizeLarge,
+                        // const Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2),
+                            child: Image.asset(
+                              Images.back,
+                              height: 24,
+                              color: ColorResources.black,
+                            ),
                           ),
                         ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: CustomTextRegular(
-                                  "Name",
-                                  color: ColorResources.black1,
-                                ),
-                              ),
-                              Expanded(
-                                child: CustomTextRegular(
-                                  orderType == AppConstants.reportHoroscope
-                                      ? AppStrings.kundliReport.tr
-                                      : AppStrings.matchingReport.tr,
-                                  color: ColorResources.black1,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Price",
+                        const Gap(10),
+                        Expanded(
+                            child: CustomTextMedium(
+                                AppStrings.paymentInformation.tr,
                                 color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${AppStrings.rupeeSign} ${calculationData?.orderAmount}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Obx(() => Visibility(
-                              visible: isWalletSelected.value == 1,
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(vertical: 4),
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomTextRegular(
-                                      "Wallet",
-                                      color: ColorResources.black1,
-                                    ),
-                                    Obx(() => CustomTextRegular(
-                                          "${AppStrings.rupeeSign} ${walletPayableAmount.value}",
-                                          color: ColorResources.black1,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "GST ${calculationData?.rechargeGstPercent}%",
-                                color: ColorResources.black1,
-                              ),
-                              Obx(() => CustomTextRegular(
-                                    "${AppStrings.rupeeSign} ${gstAmount.value}",
-                                    color: ColorResources.black1,
-                                  )),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextMedium("Total Payable",
-                                  color: ColorResources.black),
-                              Obx(() => CustomTextMedium(
-                                  "${AppStrings.rupeeSign} ${totalPayableAmount.value}",
-                                  color: ColorResources.colorPrimary)),
-                            ],
-                          ),
-                        ),
+                                fontSize: Dimensions.fontSizeLarge)),
+        
+                        // const Gap(10),
                       ],
                     ),
                   ),
-                ),
-                const Gap(10),
-                Visibility(
-                  visible: orderType == AppConstants.reportHoroscope,
-                  child: Column(
-                    children: [
-                      const Gap(10),
-                      Padding(
-                        padding:
-                        const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                        child: Column(
-                          children: [
-                            Row(
+                  const Divider(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ColorResources.white,
+                        borderRadius:
+                            BorderRadius.circular(Dimensions.borderRadiusDefault),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          )
+                        ]),
+                    child: Padding(
+                      padding:
+                          const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: CustomTextMedium(
+                              orderType == AppConstants.reportHoroscope
+                                  ? "${AppStrings.kundliReport.tr} Detail"
+                                  : "${AppStrings.matchingReport.tr} Detail",
+                              color: ColorResources.colorPrimary,
+                              fontSize: Dimensions.fontSizeLarge,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Icon(Icons.picture_as_pdf_outlined, size: 26,
-                                  color: ColorResources.colorPrimary,),
-                                const Gap(15),
                                 Expanded(
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      CustomTextRegular("PDF Size"),
-                                      CustomTextRegular(
-                                        "Please select below your preferred PDF size:",
-                                        color: ColorResources.black1,
-                                        fontSize: Dimensions.fontSizeSmall,
-                                      ),
-                                    ],
+                                  child: CustomTextRegular(
+                                    "Name",
+                                    color: ColorResources.black1,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    orderType == AppConstants.reportHoroscope
+                                        ? AppStrings.kundliReport.tr
+                                        : AppStrings.matchingReport.tr,
+                                    color: ColorResources.black1,
+                                    textAlign: TextAlign.end,
                                   ),
                                 ),
                               ],
                             ),
-                            Obx(() => Column(
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                Row(
-                                  children: [
-                                    const Gap(20),
-                                    const Icon(Icons.circle, size: 8, color: ColorResources.black),
-                                    const Gap(15),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          CustomTextRegular("Small"),
-                                          CustomTextRegular(
-                                            "Around 10 Pages",
-                                            color: ColorResources.black1,
-                                            fontSize: Dimensions.fontSizeSmall,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Radio<String>(
-                                      value: "small",
-                                      groupValue: pdfSize.value,
-                                      onChanged: (value) {
-                                        print("${pdfSize.value}");
-
-                                        if (value != null) {
-                                          pdfSize.value = value;
-                                          paidKundliCalculation(orderType, 0, "", data);
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                CustomTextRegular(
+                                  "Price",
+                                  color: ColorResources.black1,
                                 ),
-                                Row(
-                                  children: [
-                                    const Gap(20),
-                                    const Icon(Icons.circle, size: 8, color: ColorResources.black),
-                                    const Gap(15),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          CustomTextRegular("Medium"),
-                                          CustomTextRegular(
-                                            "Around 30 Pages",
-                                            color: ColorResources.black1,
-                                            fontSize: Dimensions.fontSizeSmall,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Radio<String>(
-                                      value: "medium",
-                                      groupValue: pdfSize.value,
-                                      onChanged: (value) {
-                                        print("${pdfSize.value}");
-                                        if (value != null) {
-                                          pdfSize.value = value;
-                                          paidKundliCalculation(orderType, 0, "", data);
-                                        }
-                                      },
-                                    ),
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    const Gap(20),
-                                    const Icon(Icons.circle, size: 8, color: ColorResources.black),
-                                    const Gap(15),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          CustomTextRegular("Large"),
-                                          CustomTextRegular(
-                                            "Around 60 Pages",
-                                            color: ColorResources.black1,
-                                            fontSize: Dimensions.fontSizeSmall,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                    Radio<String>(
-                                      value: "large",
-                                      groupValue: pdfSize.value,
-                                      onChanged: (value) {
-                                        print("${pdfSize.value}");
-
-                                        if (value != null) {
-                                          pdfSize.value = value;
-                                          paidKundliCalculation(orderType, 0, "", data);
-                                        }
-                                      },
-                                    ),
-                                  ],
+                                CustomTextRegular(
+                                  "${AppStrings.rupeeSign} ${calculationData?.orderAmount}",
+                                  color: ColorResources.black1,
                                 ),
                               ],
-                            )),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const Gap(10),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        Images.walletBalance,
-                        height: 26,
-                        color: ColorResources.colorPrimary,
-                      ),
-                      const Gap(15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular("Wallet"),
-                            CustomTextRegular(
-                              "Available for payment ${AppStrings.rupeeSign} ${calculationData?.myWalletAmount}",
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeSmall,
                             ),
-                          ],
-                        ),
+                          ),
+                          Obx(() => Visibility(
+                                visible: isWalletSelected.value == 1,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.symmetric(vertical: 4),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CustomTextRegular(
+                                        "Wallet",
+                                        color: ColorResources.black1,
+                                      ),
+                                      Obx(() => CustomTextRegular(
+                                            "${AppStrings.rupeeSign} ${walletPayableAmount.value}",
+                                            color: ColorResources.black1,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "GST ${calculationData?.rechargeGstPercent}%",
+                                  color: ColorResources.black1,
+                                ),
+                                Obx(() => CustomTextRegular(
+                                      "${AppStrings.rupeeSign} ${gstAmount.value}",
+                                      color: ColorResources.black1,
+                                    )),
+                              ],
+                            ),
+                          ),
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextMedium("Total Payable",
+                                    color: ColorResources.black),
+                                Obx(() => CustomTextMedium(
+                                    "${AppStrings.rupeeSign} ${totalPayableAmount.value}",
+                                    color: ColorResources.colorPrimary)),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
-                      CustomCheckbox(
-                        onChanged: (isChecked) {
-                          if (isChecked) {
-                            paidKundliCalculation(orderType, 1, "Wallet", data);
-                          } else {
-                            paidKundliCalculation(orderType, 0, "Wallet", data);
-                          }
-                        },
-                      ),
-                    ],
+                    ),
                   ),
-                ),
-                // const Gap(10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: CustomElevatedButton(
-                      text: AppStrings.proceedToPay.tr,
-                      textColor: ColorResources.toolbarText,
-                      backgroundColor: ColorResources.colorPrimaryVariant,
-                      onPressed: () async {
-                        String? payMethod =
-                            await SharedPreferencesHelper.getData(
-                                AppConstants.paymentGateway);
-                        print(payMethod);
-                        if (payMethod == AppConstants.payRazorpay ||
-                            payMethod == AppConstants.payCCAvenue) {
-                          paidKundliPurchase(orderType, isWalletSelected.value,
-                              payMethod!, data);
-                        } else if (payMethod == AppConstants.payCashfree) {
-                          paidCashfreeKundliPurchase(orderType,
-                              isWalletSelected.value, payMethod!, data);
-                        } else if (payMethod == AppConstants.payPhonePe) {
-                          paidPhonePeKundliPurchase(orderType,
-                              isWalletSelected.value, payMethod!, data);
-                        } else {
-                          CustomSnackBar.showBottom('No Payment Gateway Found');
-                        }
-                      }),
-                ),
-
-
-
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed("/wallet");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+                  const Gap(10),
+                  Visibility(
+                    visible: orderType == AppConstants.reportHoroscope,
+                    child: Column(
                       children: [
-                        CustomTextMedium("Recharge",
-                            color: ColorResources.colorPrimaryDark),
+                        const Gap(10),
+                        Padding(
+                          padding:
+                          const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Icon(Icons.picture_as_pdf_outlined, size: 26,
+                                    color: ColorResources.colorPrimary,),
+                                  const Gap(15),
+                                  Expanded(
+                                    child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        CustomTextRegular("PDF Size"),
+                                        CustomTextRegular(
+                                          "Please select below your preferred PDF size:",
+                                          color: ColorResources.black1,
+                                          fontSize: Dimensions.fontSizeSmall,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              Obx(() => Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Gap(20),
+                                      const Icon(Icons.circle, size: 8, color: ColorResources.black),
+                                      const Gap(15),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CustomTextRegular("Small"),
+                                            CustomTextRegular(
+                                              "Around 10 Pages",
+                                              color: ColorResources.black1,
+                                              fontSize: Dimensions.fontSizeSmall,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Radio<String>(
+                                        value: "small",
+                                        groupValue: pdfSize.value,
+                                        onChanged: (value) {
+                                          print("${pdfSize.value}");
+        
+                                          if (value != null) {
+                                            pdfSize.value = value;
+                                            paidKundliCalculation(orderType, 0, "", data);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Gap(20),
+                                      const Icon(Icons.circle, size: 8, color: ColorResources.black),
+                                      const Gap(15),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CustomTextRegular("Medium"),
+                                            CustomTextRegular(
+                                              "Around 30 Pages",
+                                              color: ColorResources.black1,
+                                              fontSize: Dimensions.fontSizeSmall,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Radio<String>(
+                                        value: "medium",
+                                        groupValue: pdfSize.value,
+                                        onChanged: (value) {
+                                          print("${pdfSize.value}");
+                                          if (value != null) {
+                                            pdfSize.value = value;
+                                            paidKundliCalculation(orderType, 0, "", data);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                  Row(
+                                    children: [
+                                      const Gap(20),
+                                      const Icon(Icons.circle, size: 8, color: ColorResources.black),
+                                      const Gap(15),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            CustomTextRegular("Large"),
+                                            CustomTextRegular(
+                                              "Around 60 Pages",
+                                              color: ColorResources.black1,
+                                              fontSize: Dimensions.fontSizeSmall,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                      Radio<String>(
+                                        value: "large",
+                                        groupValue: pdfSize.value,
+                                        onChanged: (value) {
+                                          print("${pdfSize.value}");
+        
+                                          if (value != null) {
+                                            pdfSize.value = value;
+                                            paidKundliCalculation(orderType, 0, "", data);
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              )),
+                            ],
+                          ),
+                        ),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  const Gap(10),
+                  Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          Images.walletBalance,
+                          height: 26,
+                          color: ColorResources.colorPrimary,
+                        ),
+                        const Gap(15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular("Wallet"),
+                              CustomTextRegular(
+                                "Available for payment ${AppStrings.rupeeSign} ${calculationData?.myWalletAmount}",
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeSmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                        CustomCheckbox(
+                          onChanged: (isChecked) {
+                            if (isChecked) {
+                              paidKundliCalculation(orderType, 1, "Wallet", data);
+                            } else {
+                              paidKundliCalculation(orderType, 0, "Wallet", data);
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  // const Gap(10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: CustomElevatedButton(
+                        text: AppStrings.proceedToPay.tr,
+                        textColor: ColorResources.toolbarText,
+                        backgroundColor: ColorResources.colorPrimaryVariant,
+                        onPressed: () async {
+                          String? payMethod =
+                              await SharedPreferencesHelper.getData(
+                                  AppConstants.paymentGateway);
+                          print(payMethod);
+                          if (payMethod == AppConstants.payRazorpay ||
+                              payMethod == AppConstants.payCCAvenue) {
+                            paidKundliPurchase(orderType, isWalletSelected.value,
+                                payMethod!, data);
+                          } else if (payMethod == AppConstants.payCashfree) {
+                            paidCashfreeKundliPurchase(orderType,
+                                isWalletSelected.value, payMethod!, data);
+                          } else if (payMethod == AppConstants.payPhonePe) {
+                            paidPhonePeKundliPurchase(orderType,
+                                isWalletSelected.value, payMethod!, data);
+                          } else {
+                            CustomSnackBar.showBottom('No Payment Gateway Found');
+                          }
+                        }),
+                  ),
+        
+        
+        
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed("/wallet");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomTextMedium("Recharge",
+                              color: ColorResources.colorPrimaryDark),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

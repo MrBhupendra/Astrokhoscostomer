@@ -120,86 +120,88 @@ class ArchitectNewOldScreen extends GetView<ArchitectController> {
   void showOldActionBottomSheet() {
     Get.bottomSheet(
       enableDrag: true,
-        Container(
-          color: ColorResources.white,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 5.0, horizontal: 4),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6.0),
-                          child: CustomTextRegular("Analyze is your house following Vastu principles?",
-                              fontSize: Dimensions.fontSizeLarge),
-                        ),
-                        const Gap(Dimensions.gapExtraSmall),
-                        GestureDetector(
-                          onTap: (){
-                            Get.back(); //Close dialog
-                            Get.toNamed("/zonal_chart");
-                          },
-                          child: Container(
-                            width: Get.width,
-                            padding: const EdgeInsets.only(top: 15, bottom: 15),
-                            decoration: BoxDecoration(
-                              color: ColorResources.colorPrimary, // Container color
-                              borderRadius: BorderRadius.circular(8.0), // Radius value
-                            ),
-                            child: Column(
-                              children: [
-                                CustomTextRegular(
-                                  "Check Vastu Report",
-                                  color: ColorResources.white,
-                                  fontSize: Dimensions.fontSizeDefault,
-                                ),
-                              ],
-                            ),),
-                        ),
-                        const Gap(Dimensions.gapExtraSmall),
-                        const Divider(thickness: 1),
-
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6.0),
-                          child: CustomTextRegular("Get expert architectural advice",
-                              fontSize: Dimensions.fontSizeLarge),
-                        ),
-                        const Gap(Dimensions.gapExtraSmall),
-                        GestureDetector(
-                          onTap: (){
-                            Get.back(); //Close dialog
-                            Get.toNamed('/architect_list_screen',arguments: {
-                              "type" : "old"
-                            });
-                          },
-                          child: Container(
-                            width: Get.width,
-                            padding: const EdgeInsets.only(top: 15, bottom: 15),
-                            decoration: BoxDecoration(
-                              color: ColorResources.colorPrimary, // Container color
-                              borderRadius: BorderRadius.circular(8.0), // Radius value
-                            ),
-                            child: Column(
-                              children: [
-                                CustomTextRegular(
-                                  "Proceed with Architect",
-                                  color: ColorResources.white,
-                                  fontSize: Dimensions.fontSizeDefault,
-                                ),
-                              ],
-                            ),),
-                        ),
-                        const Gap(Dimensions.gapLarge),
-                      ],
-                    ),
-                  )
-                ],
+        SafeArea(
+          child: Container(
+            color: ColorResources.white,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                      const EdgeInsets.symmetric(vertical: 5.0, horizontal: 4),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6.0),
+                            child: CustomTextRegular("Analyze is your house following Vastu principles?",
+                                fontSize: Dimensions.fontSizeLarge),
+                          ),
+                          const Gap(Dimensions.gapExtraSmall),
+                          GestureDetector(
+                            onTap: (){
+                              Get.back(); //Close dialog
+                              Get.toNamed("/zonal_chart");
+                            },
+                            child: Container(
+                              width: Get.width,
+                              padding: const EdgeInsets.only(top: 15, bottom: 15),
+                              decoration: BoxDecoration(
+                                color: ColorResources.colorPrimary, // Container color
+                                borderRadius: BorderRadius.circular(8.0), // Radius value
+                              ),
+                              child: Column(
+                                children: [
+                                  CustomTextRegular(
+                                    "Check Vastu Report",
+                                    color: ColorResources.white,
+                                    fontSize: Dimensions.fontSizeDefault,
+                                  ),
+                                ],
+                              ),),
+                          ),
+                          const Gap(Dimensions.gapExtraSmall),
+                          const Divider(thickness: 1),
+          
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6.0),
+                            child: CustomTextRegular("Get expert architectural advice",
+                                fontSize: Dimensions.fontSizeLarge),
+                          ),
+                          const Gap(Dimensions.gapExtraSmall),
+                          GestureDetector(
+                            onTap: (){
+                              Get.back(); //Close dialog
+                              Get.toNamed('/architect_list_screen',arguments: {
+                                "type" : "old"
+                              });
+                            },
+                            child: Container(
+                              width: Get.width,
+                              padding: const EdgeInsets.only(top: 15, bottom: 15),
+                              decoration: BoxDecoration(
+                                color: ColorResources.colorPrimary, // Container color
+                                borderRadius: BorderRadius.circular(8.0), // Radius value
+                              ),
+                              child: Column(
+                                children: [
+                                  CustomTextRegular(
+                                    "Proceed with Architect",
+                                    color: ColorResources.white,
+                                    fontSize: Dimensions.fontSizeDefault,
+                                  ),
+                                ],
+                              ),),
+                          ),
+                          const Gap(Dimensions.gapLarge),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           ),

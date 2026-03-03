@@ -714,123 +714,125 @@ class CommonMethods {
     final ConfigController configController = Get.find();
     final WalletController walletController = Get.put(WalletController());
     Get.bottomSheet(
-      Container(
-        height: Get.height * 0.4,
-        decoration: const BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
+      SafeArea(
+        child: Container(
+          height: Get.height * 0.4,
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CustomTextMedium(
-                      "Add money to Wallet",
-                      fontSize: 18
-                  ),
-                  InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: const Icon(
-                        Icons.cancel,
-                        color: ColorResources.black2,
-                      ))
-                ],
-              ),
-            ),
-            const Divider(
-              color: ColorResources.black6,
-              height: 1,
-            ),
-
-            const Gap(8),
-
-            // Subtitle
-            CustomTextRegular(
-              "Minimum balance of 5 minutes (${configController
-                  .currencySymbol}$minimumAmount) is required to start $type with $astrologerName",
-              color: Colors.red,
-              // fontSize: 15,
-            ),
-
-            const Gap(8),
-
-            CustomTextRegular(
-              "Tip: 90% Users recharge for 10 minutes or more",
-              color: ColorResources.black4,
-            ),
-
-            const Gap(10),
-            Obx(
-                  () {
-                if (walletController.isVoucherSuccess.isTrue) {
-                  // GridView for recharge options
-                  return Expanded(
-                    child: GridView.builder(
-                      shrinkWrap: true,
-                      itemCount: walletController.walletModel.data?.length,
-                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        crossAxisSpacing: 10,
-                        mainAxisSpacing: 10,
-                        childAspectRatio: 2,
-                      ),
-                      itemBuilder: (context, index) {
-                        return GestureDetector(
-                          onTap: () {
-                            walletController.selectVoucher(index);
-                            Get.to(() => const WalletScreen(), arguments: {
-                              'voucher': walletController.walletModel
-                                  .data?[index],
-                            });
-                          },
-                          child: Container(
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                  color: ColorResources.colorPrimary),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                CustomTextRegular(
-                                  "${configController
-                                      .currencySymbol}${walletController
-                                      .walletModel.data?[index].walletAmount}",
-                                  // fontSize: Dimensions.fontSizeLarge,
-                                ),
-                                CustomTextRegular(
-                                  "${AppStrings.extra.tr} ${configController
-                                      .currencySymbol}${walletController
-                                      .walletModel.data?[index].giftAmount}",
-                                  fontSize: Dimensions.fontSizeSmall,
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 16),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    CustomTextMedium(
+                        "Add money to Wallet",
+                        fontSize: 18
                     ),
-                  );
-                } else if (walletController.isVoucherLoading.isTrue) {
-                  return const CustomProgressIndicator();
-                } else {
-                  return const EmptyScreen();
-                }
-              },
-            )
-          ],
+                    InkWell(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: const Icon(
+                          Icons.cancel,
+                          color: ColorResources.black2,
+                        ))
+                  ],
+                ),
+              ),
+              const Divider(
+                color: ColorResources.black6,
+                height: 1,
+              ),
+        
+              const Gap(8),
+        
+              // Subtitle
+              CustomTextRegular(
+                "Minimum balance of 5 minutes (${configController
+                    .currencySymbol}$minimumAmount) is required to start $type with $astrologerName",
+                color: Colors.red,
+                // fontSize: 15,
+              ),
+        
+              const Gap(8),
+        
+              CustomTextRegular(
+                "Tip: 90% Users recharge for 10 minutes or more",
+                color: ColorResources.black4,
+              ),
+        
+              const Gap(10),
+              Obx(
+                    () {
+                  if (walletController.isVoucherSuccess.isTrue) {
+                    // GridView for recharge options
+                    return Expanded(
+                      child: GridView.builder(
+                        shrinkWrap: true,
+                        itemCount: walletController.walletModel.data?.length,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 3,
+                          crossAxisSpacing: 10,
+                          mainAxisSpacing: 10,
+                          childAspectRatio: 2,
+                        ),
+                        itemBuilder: (context, index) {
+                          return GestureDetector(
+                            onTap: () {
+                              walletController.selectVoucher(index);
+                              Get.to(() => const WalletScreen(), arguments: {
+                                'voucher': walletController.walletModel
+                                    .data?[index],
+                              });
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                    color: ColorResources.colorPrimary),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  CustomTextRegular(
+                                    "${configController
+                                        .currencySymbol}${walletController
+                                        .walletModel.data?[index].walletAmount}",
+                                    // fontSize: Dimensions.fontSizeLarge,
+                                  ),
+                                  CustomTextRegular(
+                                    "${AppStrings.extra.tr} ${configController
+                                        .currencySymbol}${walletController
+                                        .walletModel.data?[index].giftAmount}",
+                                    fontSize: Dimensions.fontSizeSmall,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    );
+                  } else if (walletController.isVoucherLoading.isTrue) {
+                    return const CustomProgressIndicator();
+                  } else {
+                    return const EmptyScreen();
+                  }
+                },
+              )
+            ],
+          ),
         ),
       ),
       isScrollControlled: true, // Ensures full-screen scrollable bottom sheet
@@ -892,103 +894,105 @@ class CommonMethods {
       {required Function(int index) onItemSelected}) {
     final ConfigController configController = Get.find();
     Get.bottomSheet(
-      Container(
-        height: Get.height * 0.22,
-        decoration: const BoxDecoration(
-          color: ColorResources.black8,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(10),
-            topRight: Radius.circular(10),
+      SafeArea(
+        child: Container(
+          height: Get.height * 0.22,
+          decoration: const BoxDecoration(
+            color: ColorResources.black8,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10),
+              topRight: Radius.circular(10),
+            ),
           ),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
-              child: Row(
-                children: [
-                  Expanded(child: CustomTextMedium("Select your payment method",
-                    fontSize: Dimensions.fontSizeLarge,)),
-                  InkWell(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: const Icon(
-                        Icons.cancel,
-                        color: ColorResources.black4,
-                      )
-                  )
-                ],
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 10),
+                child: Row(
+                  children: [
+                    Expanded(child: CustomTextMedium("Select your payment method",
+                      fontSize: Dimensions.fontSizeLarge,)),
+                    InkWell(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: const Icon(
+                          Icons.cancel,
+                          color: ColorResources.black4,
+                        )
+                    )
+                  ],
+                ),
               ),
-            ),
-            const Divider(
-              color: ColorResources.black6,
-              height: 1,
-            ),
-            const Gap(8),
-            Expanded(
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemCount: isInternational ? configController
-                    .internationalPaymentGatewayList.length : configController
-                    .paymentGatewayList.length,
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      onItemSelected.call(index);
-                    },
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.only(left: 4.0),
-                          child: Container(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10, horizontal: 20),
-                            margin: const EdgeInsets.only(right: 10),
-                            decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(10),
-                                boxShadow: [
-                                  BoxShadow(
-                                      color: Colors.grey.withOpacity(0.2),
-                                      spreadRadius: 1,
-                                      blurRadius: 2,
-                                      offset: const Offset(0, 2)
-                                  )
-                                ]
-                            ),
-                            child: Image.asset(
-                                isInternational ? configController
-                                    .internationalPaymentGatewayList[index]
-                                    .image.toString() : configController
-                                    .paymentGatewayList[index].image.toString(),
-                                height: 40,
-                                width: 40
+              const Divider(
+                color: ColorResources.black6,
+                height: 1,
+              ),
+              const Gap(8),
+              Expanded(
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  shrinkWrap: true,
+                  itemCount: isInternational ? configController
+                      .internationalPaymentGatewayList.length : configController
+                      .paymentGatewayList.length,
+                  itemBuilder: (context, index) {
+                    return GestureDetector(
+                      onTap: () {
+                        onItemSelected.call(index);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(left: 4.0),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 10, horizontal: 20),
+                              margin: const EdgeInsets.only(right: 10),
+                              decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                  boxShadow: [
+                                    BoxShadow(
+                                        color: Colors.grey.withOpacity(0.2),
+                                        spreadRadius: 1,
+                                        blurRadius: 2,
+                                        offset: const Offset(0, 2)
+                                    )
+                                  ]
+                              ),
+                              child: Image.asset(
+                                  isInternational ? configController
+                                      .internationalPaymentGatewayList[index]
+                                      .image.toString() : configController
+                                      .paymentGatewayList[index].image.toString(),
+                                  height: 40,
+                                  width: 40
+                              ),
                             ),
                           ),
-                        ),
-                        const Gap(2),
-                        CustomTextMedium(
-                          isInternational ? configController
-                              .internationalPaymentGatewayList[index].title
-                              .toString() : configController
-                              .paymentGatewayList[index].title.toString(),
-                          fontSize: Dimensions.fontSizeSmall,
-                        ),
-                      ],
-                    ),
-                  );
-                },
+                          const Gap(2),
+                          CustomTextMedium(
+                            isInternational ? configController
+                                .internationalPaymentGatewayList[index].title
+                                .toString() : configController
+                                .paymentGatewayList[index].title.toString(),
+                            fontSize: Dimensions.fontSizeSmall,
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
               ),
-            ),
-
-          ],
+        
+            ],
+          ),
         ),
       ),
       isScrollControlled: true, // Ensures full-screen scrollable bottom sheet

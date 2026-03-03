@@ -23,6 +23,7 @@ import '../../widget/custom_round_network_image.dart';
 import '../../widget/custom_text_medium.dart';
 import '../../widget/custom_text_regular.dart';
 import '../splash/controller/config_controller.dart';
+import '../wallet/controller/wallet_controller.dart';
 import 'controller/chat_intake_form_controller.dart';
 import 'controller/chat_screen_controller.dart';
 import 'model/chat_message_model.dart';
@@ -176,6 +177,53 @@ class ChatScreen extends StatelessWidget {
                 Obx(() => Visibility(
                     visible: controller.isChatHistoryLoading.isTrue,
                     child: const Text("Loading.."))),
+                //QuickRecharge Button
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Obx(() => controller.isChatAccepted.isTrue
+                      ? Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          if (!Get.isRegistered<WalletController>()) {
+                            Get.put(WalletController());
+                          }
+                          if (controller.uniqueId.isNotEmpty) {
+                            Get.find<WalletController>().setPaymentData(
+                                uniqueId: controller.uniqueId,
+                                channelName: controller.channelName,
+                                astroImage: chatIntakeFormController.astrologerImage,
+                                astroName: chatIntakeFormController.astrologerName,
+                                astroUniId: chatIntakeFormController.astrologerUniId,
+                                isVirtual: chatIntakeFormController.isVirtualAstrologer
+                            );
+                          } else {
+                            debugPrint("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                          }
+                          Get.toNamed('/wallet');
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: ColorResources.colorPrimaryLight.withOpacity(0.05),
+                              border: Border.all(
+                                  width: 1.0,
+                                  color: ColorResources.colorPrimary),
+                              borderRadius: const BorderRadius.all(
+                                  Radius.circular(8.0))),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 12.0),
+                          child: CustomTextMedium(
+                            "Quick Recharge Now",
+                            fontSize: 10.0,
+                            color: ColorResources.colorPrimary,
+                          ),
+                        ),
+                      )
+                    ],
+                  )
+                      : const SizedBox.shrink()),
+                ),
                 Expanded(
                   child: Obx(
                     () => ListView.builder(

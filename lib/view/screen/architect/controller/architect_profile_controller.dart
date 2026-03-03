@@ -185,185 +185,187 @@ class ArchitectProfileController extends FullLifeCycleController
       String layoutPrice, AstrologerData astrologer) {
     String selectedType = "";
     Get.bottomSheet(
-        Container(
-      color: ColorResources.white,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Row(
-                  children: [
-                    CustomRoundNetworkImage(
-                        imageUrl: astrologer.astroImg.toString(),
-                        height: 40,
-                        width: 40),
-                    Expanded(
-                      child: CustomTextMedium(
-                        astrologer.displayName.toString(),
-                        fontSize: Dimensions.fontSizeDefault,
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        color: ColorResources.black1,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.back();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.all(6.0),
-                        child: Image.asset(
-                          'assets/images/close.png',
-                          height: Dimensions.iconImageHeightOver,
-                          color: ColorResources.black,
+        SafeArea(
+          child: Container(
+                color: ColorResources.white,
+                child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 12),
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Row(
+                    children: [
+                      CustomRoundNetworkImage(
+                          imageUrl: astrologer.astroImg.toString(),
+                          height: 40,
+                          width: 40),
+                      Expanded(
+                        child: CustomTextMedium(
+                          astrologer.displayName.toString(),
+                          fontSize: Dimensions.fontSizeDefault,
+                          maxLines: 1,
+                          textAlign: TextAlign.center,
+                          color: ColorResources.black1,
                         ),
                       ),
-                    ),
-                  ],
+                      GestureDetector(
+                        onTap: () {
+                          Get.back();
+                        },
+                        child: Padding(
+                          padding: const EdgeInsets.all(6.0),
+                          child: Image.asset(
+                            'assets/images/close.png',
+                            height: Dimensions.iconImageHeightOver,
+                            color: ColorResources.black,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const Divider(thickness: 1.5),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: CustomTextMedium("$mainType Floor Plan",
+                            fontSize: Dimensions.fontSizeDefault),
+                      ),
+                      CustomTextRegular(
+                        "Price ${configController.currencySymbol} $layoutPrice/-",
+                        color: ColorResources.colorPrimaryDark,
+                        fontSize: Dimensions.fontSizeDefault,
+                      ),
+                      const Gap(Dimensions.gapExtraSmall),
+                      Visibility(
+                        visible: isOldNew == "new",
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Divider(),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(vertical: 6.0),
+                              child: CustomTextMedium("$mainType Layout With Complete Elevation",
+                                  fontSize: Dimensions.fontSizeDefault),
+                            ),
+                            CustomTextRegular(
+                              "Price ${configController.currencySymbol} $completePrice/-",
+                              color: ColorResources.colorPrimaryDark,
+                              fontSize: Dimensions.fontSizeDefault,
+                            ),
+                            const Gap(Dimensions.gapExtraSmall),
+                          ],
+                        ),
+                      ),
+                      const Divider(),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 6.0),
+                        child: CustomTextMedium("HOW IT WORKS ?",
+                            fontSize: Dimensions.fontSizeDefault),
+                      ),
+                      CustomTextRegular(
+                        "Simply click 'Start' button to initiate session.Your session will be active for the next 24 hours.",
+                        color: ColorResources.black1,
+                        fontSize: Dimensions.fontSizeSmall,
+                      ),
+                      const Gap(Dimensions.gapExtraSmall),
+                      const Divider(),
+                      GestureDetector(
+                        onTap: (){
+                          Get.back(); //Close dialog
+                          selectedType = subTypeLayout;
+                          getCalculation(selectedType, astrologer.astrologerUniId.toString(), 0, "Open");
+                        },
+                        child: Container(
+                          width: Get.width,
+                          padding: const EdgeInsets.only(top: 5, bottom: 5),
+                          decoration: BoxDecoration(
+                            color: ColorResources.colorPrimary, // Container color
+                            borderRadius: BorderRadius.circular(8.0), // Radius value
+                          ),
+                          child: Column(
+                          children: [
+                            CustomTextRegular(
+                              "$mainType Floor Plan",
+                              color: ColorResources.white,
+                              fontSize: Dimensions.fontSizeSmall,
+                            ),
+                            CustomTextRegular(
+                              "PAY ${configController.currencySymbol} $layoutPrice/-",
+                              color: ColorResources.white,
+                              fontSize: Dimensions.fontSizeDefault,
+                            ),
+                          ],
+                        ),),
+                      ),
+          
+                      Visibility(
+                        visible: isOldNew == "new",
+                        child: Column(
+                          children: [
+                            const Gap(Dimensions.gapExtraSmall),
+                            GestureDetector(
+                              onTap: (){
+                                Get.back(); //Close dialog
+                                selectedType = subTypeComplete;
+                                getCalculation(selectedType, astrologer.astrologerUniId.toString(), 0, "Open");
+                              },
+                              child: Container(
+                                width: Get.width,
+                                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                                decoration: BoxDecoration(
+                                  color: ColorResources.colorPrimary, // Container color
+                                  borderRadius: BorderRadius.circular(8.0), // Radius value
+                                ),
+                                child: Column(
+                                  children: [
+                                    CustomTextRegular(
+                                      "$mainType Layout With Complete Elevation",
+                                      color: ColorResources.white,
+                                      fontSize: Dimensions.fontSizeSmall,
+                                    ),
+                                    CustomTextRegular(
+                                      "PAY ${configController.currencySymbol} $completePrice/-",
+                                      color: ColorResources.white,
+                                      fontSize: Dimensions.fontSizeDefault,
+                                    ),
+                                  ],
+                                ),),
+                            ),
+                          ],
+                        ),
+                      ),
+          
+                      const Gap(10),
+                      GestureDetector(
+                        onTap: () {
+                          Get.toNamed("/wallet");
+                        },
+                        child: Center(
+                          child: CustomTextRegular(
+                            "Recharge",
+                            color: ColorResources.colorPrimary,
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
                 ),
               ),
-              const Divider(thickness: 1.5),
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 6),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: CustomTextMedium("$mainType Floor Plan",
-                          fontSize: Dimensions.fontSizeDefault),
-                    ),
-                    CustomTextRegular(
-                      "Price ${configController.currencySymbol} $layoutPrice/-",
-                      color: ColorResources.colorPrimaryDark,
-                      fontSize: Dimensions.fontSizeDefault,
-                    ),
-                    const Gap(Dimensions.gapExtraSmall),
-                    Visibility(
-                      visible: isOldNew == "new",
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Divider(),
-                          Padding(
-                            padding: const EdgeInsets.symmetric(vertical: 6.0),
-                            child: CustomTextMedium("$mainType Layout With Complete Elevation",
-                                fontSize: Dimensions.fontSizeDefault),
-                          ),
-                          CustomTextRegular(
-                            "Price ${configController.currencySymbol} $completePrice/-",
-                            color: ColorResources.colorPrimaryDark,
-                            fontSize: Dimensions.fontSizeDefault,
-                          ),
-                          const Gap(Dimensions.gapExtraSmall),
-                        ],
-                      ),
-                    ),
-                    const Divider(),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 6.0),
-                      child: CustomTextMedium("HOW IT WORKS ?",
-                          fontSize: Dimensions.fontSizeDefault),
-                    ),
-                    CustomTextRegular(
-                      "Simply click 'Start' button to initiate session.Your session will be active for the next 24 hours.",
-                      color: ColorResources.black1,
-                      fontSize: Dimensions.fontSizeSmall,
-                    ),
-                    const Gap(Dimensions.gapExtraSmall),
-                    const Divider(),
-                    GestureDetector(
-                      onTap: (){
-                        Get.back(); //Close dialog
-                        selectedType = subTypeLayout;
-                        getCalculation(selectedType, astrologer.astrologerUniId.toString(), 0, "Open");
-                      },
-                      child: Container(
-                        width: Get.width,
-                        padding: const EdgeInsets.only(top: 5, bottom: 5),
-                        decoration: BoxDecoration(
-                          color: ColorResources.colorPrimary, // Container color
-                          borderRadius: BorderRadius.circular(8.0), // Radius value
-                        ),
-                        child: Column(
-                        children: [
-                          CustomTextRegular(
-                            "$mainType Floor Plan",
-                            color: ColorResources.white,
-                            fontSize: Dimensions.fontSizeSmall,
-                          ),
-                          CustomTextRegular(
-                            "PAY ${configController.currencySymbol} $layoutPrice/-",
-                            color: ColorResources.white,
-                            fontSize: Dimensions.fontSizeDefault,
-                          ),
-                        ],
-                      ),),
-                    ),
-
-                    Visibility(
-                      visible: isOldNew == "new",
-                      child: Column(
-                        children: [
-                          const Gap(Dimensions.gapExtraSmall),
-                          GestureDetector(
-                            onTap: (){
-                              Get.back(); //Close dialog
-                              selectedType = subTypeComplete;
-                              getCalculation(selectedType, astrologer.astrologerUniId.toString(), 0, "Open");
-                            },
-                            child: Container(
-                              width: Get.width,
-                              padding: const EdgeInsets.only(top: 5, bottom: 5),
-                              decoration: BoxDecoration(
-                                color: ColorResources.colorPrimary, // Container color
-                                borderRadius: BorderRadius.circular(8.0), // Radius value
-                              ),
-                              child: Column(
-                                children: [
-                                  CustomTextRegular(
-                                    "$mainType Layout With Complete Elevation",
-                                    color: ColorResources.white,
-                                    fontSize: Dimensions.fontSizeSmall,
-                                  ),
-                                  CustomTextRegular(
-                                    "PAY ${configController.currencySymbol} $completePrice/-",
-                                    color: ColorResources.white,
-                                    fontSize: Dimensions.fontSizeDefault,
-                                  ),
-                                ],
-                              ),),
-                          ),
-                        ],
-                      ),
-                    ),
-
-                    const Gap(10),
-                    GestureDetector(
-                      onTap: () {
-                        Get.toNamed("/wallet");
-                      },
-                      child: Center(
-                        child: CustomTextRegular(
-                          "Recharge",
-                          color: ColorResources.colorPrimary,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
-    ));
+        ));
   }
 
   Future<void> getCalculation(String type,String astrologerId, int walletCheck, String action) async {
@@ -428,251 +430,253 @@ class ArchitectProfileController extends FullLifeCycleController
 
   void _showCalculationBottomSheet(String type,String astrologerId, ArchitectCalculationData? calculationData) {
     Get.bottomSheet(
-      Container(
-        color: Colors.white,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 0),
-                  child: Row(
-                    children: [
-                      // const Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          Get.back();
-                        },
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 2),
-                          child: Image.asset(
-                            Images.back,
-                            height: 24,
-                            color: ColorResources.black,
-                          ),
-                        ),
-                      ),
-                      const Gap(10),
-                      Expanded(
-                          child: CustomTextMedium(AppStrings.paymentInformation.tr,
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeLarge)),
-
-                      // const Gap(10),
-                    ],
-                  ),
-                ),
-                const Divider(),
-                Container(
-                  decoration: BoxDecoration(
-                      color: ColorResources.white,
-                      borderRadius:
-                      BorderRadius.circular(Dimensions.borderRadiusDefault),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.grey.withOpacity(0.3),
-                          spreadRadius: 1,
-                          blurRadius: 3,
-                          offset: const Offset(0, 1),
-                        )
-                      ]),
-                  child: Padding(
-                    padding:
-                    const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: CustomTextMedium(
-                            "${AppStrings.vastuArchitect.tr} Detail",
-                            color: ColorResources.colorPrimary,
-                            fontSize: Dimensions.fontSizeLarge,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Expanded(
-                                child: CustomTextRegular(
-                                  "Name",
-                                  color: ColorResources.black1,
-                                ),
-                              ),
-                              Expanded(
-                                child: CustomTextRegular(
-                                "Architect Consultant",
-                                  color: ColorResources.black1,
-                                  textAlign: TextAlign.end,
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "Price",
-                                color: ColorResources.black1,
-                              ),
-                              CustomTextRegular(
-                                "${configController.currencySymbol} ${calculationData
-                                    ?.architectServiceAmount}",
-                                color: ColorResources.black1,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Obx(() =>
-                            Visibility(
-                              visible: isWalletSelected.value == 1,
-                              child: Padding(
-                                padding:
-                                const EdgeInsets.symmetric(vertical: 4),
-                                child: Row(
-                                  mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    CustomTextRegular(
-                                      "Wallet",
-                                      color: ColorResources.black1,
-                                    ),
-                                    Obx(() =>
-                                        CustomTextRegular(
-                                          "${AppStrings
-                                              .rupeeSign} ${walletPayableAmount
-                                              .value}",
-                                          color: ColorResources.black1,
-                                        )),
-                                  ],
-                                ),
-                              ),
-                            )),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 4),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextRegular(
-                                "GST ${calculationData?.rechargeGstPercent}%",
-                                color: ColorResources.black1,
-                              ),
-                              Obx(() =>
-                                  CustomTextRegular(
-                                    "${configController.currencySymbol} ${gstAmount
-                                        .value}",
-                                    color: ColorResources.black1,
-                                  )),
-                            ],
-                          ),
-                        ),
-                        const Divider(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              CustomTextMedium("Total Payable",
-                                  color: ColorResources.black),
-                              Obx(() =>
-                                  CustomTextMedium(
-                                      "${AppStrings
-                                          .rupeeSign} ${totalPayableAmount
-                                          .value}",
-                                      color: ColorResources.colorPrimary)),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const Gap(10),
-                Padding(
-                  padding:
-                  const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
-                  child: Row(
-                    children: [
-                      Image.asset(
-                        Images.walletBalance,
-                        height: 26,
-                        color: ColorResources.colorPrimary,
-                      ),
-                      const Gap(15),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            CustomTextRegular("Wallet"),
-                            CustomTextRegular(
-                              "Available for payment ${AppStrings
-                                  .rupeeSign} ${calculationData
-                                  ?.myWalletAmount}",
-                              color: ColorResources.black1,
-                              fontSize: Dimensions.fontSizeSmall,
-                            ),
-                          ],
-                        ),
-                      ),
-                      CustomCheckbox(
-                        onChanged: (isChecked) {
-                          if (isChecked) {
-                            getCalculation(
-                                type, astrologerId, 1, "Wallet");
-                          } else {
-                            getCalculation(
-                                type, astrologerId, 0, "Wallet");
-                          }
-                        },
-                      ),
-                    ],
-                  ),
-                ),
-                // const Gap(10),
-                Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: CustomElevatedButton(
-                      text: AppStrings.proceedToPay.tr,
-                      textColor: ColorResources.toolbarText,
-                      backgroundColor: ColorResources.colorPrimary,
-                      onPressed: () async {
-                        print("AS1");
-                        String? payMethod =
-                        await SharedPreferencesHelper.getData(
-                            AppConstants.paymentGateway);
-                        if (payMethod == AppConstants.payRazorpay ||
-                            payMethod == AppConstants.payCCAvenue) {
-                          architectServicePurchase(astrologerId,type,isWalletSelected.value,payMethod.toString());
-                        } else {
-                          CustomSnackBar.showBottom('No Payment Gateway Found');
-                        }
-                      }),
-                ),
-                GestureDetector(
-                  onTap: (){
-                    Get.toNamed("/wallet");
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 6),
+      SafeArea(
+        child: Container(
+          color: Colors.white,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(vertical: 6.0, horizontal: 10),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 0),
                     child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        CustomTextMedium("Recharge",
-                            color: ColorResources.colorPrimary),
+                        // const Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            Get.back();
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                                vertical: 10.0, horizontal: 2),
+                            child: Image.asset(
+                              Images.back,
+                              height: 24,
+                              color: ColorResources.black,
+                            ),
+                          ),
+                        ),
+                        const Gap(10),
+                        Expanded(
+                            child: CustomTextMedium(AppStrings.paymentInformation.tr,
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeLarge)),
+        
+                        // const Gap(10),
                       ],
                     ),
                   ),
-                ),
-              ],
+                  const Divider(),
+                  Container(
+                    decoration: BoxDecoration(
+                        color: ColorResources.white,
+                        borderRadius:
+                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.3),
+                            spreadRadius: 1,
+                            blurRadius: 3,
+                            offset: const Offset(0, 1),
+                          )
+                        ]),
+                    child: Padding(
+                      padding:
+                      const EdgeInsets.symmetric(vertical: 6, horizontal: 8),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: CustomTextMedium(
+                              "${AppStrings.vastuArchitect.tr} Detail",
+                              color: ColorResources.colorPrimary,
+                              fontSize: Dimensions.fontSizeLarge,
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Expanded(
+                                  child: CustomTextRegular(
+                                    "Name",
+                                    color: ColorResources.black1,
+                                  ),
+                                ),
+                                Expanded(
+                                  child: CustomTextRegular(
+                                  "Architect Consultant",
+                                    color: ColorResources.black1,
+                                    textAlign: TextAlign.end,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "Price",
+                                  color: ColorResources.black1,
+                                ),
+                                CustomTextRegular(
+                                  "${configController.currencySymbol} ${calculationData
+                                      ?.architectServiceAmount}",
+                                  color: ColorResources.black1,
+                                ),
+                              ],
+                            ),
+                          ),
+                          Obx(() =>
+                              Visibility(
+                                visible: isWalletSelected.value == 1,
+                                child: Padding(
+                                  padding:
+                                  const EdgeInsets.symmetric(vertical: 4),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      CustomTextRegular(
+                                        "Wallet",
+                                        color: ColorResources.black1,
+                                      ),
+                                      Obx(() =>
+                                          CustomTextRegular(
+                                            "${AppStrings
+                                                .rupeeSign} ${walletPayableAmount
+                                                .value}",
+                                            color: ColorResources.black1,
+                                          )),
+                                    ],
+                                  ),
+                                ),
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 4),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextRegular(
+                                  "GST ${calculationData?.rechargeGstPercent}%",
+                                  color: ColorResources.black1,
+                                ),
+                                Obx(() =>
+                                    CustomTextRegular(
+                                      "${configController.currencySymbol} ${gstAmount
+                                          .value}",
+                                      color: ColorResources.black1,
+                                    )),
+                              ],
+                            ),
+                          ),
+                          const Divider(),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                CustomTextMedium("Total Payable",
+                                    color: ColorResources.black),
+                                Obx(() =>
+                                    CustomTextMedium(
+                                        "${AppStrings
+                                            .rupeeSign} ${totalPayableAmount
+                                            .value}",
+                                        color: ColorResources.colorPrimary)),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  const Gap(10),
+                  Padding(
+                    padding:
+                    const EdgeInsets.symmetric(vertical: 4.0, horizontal: 8),
+                    child: Row(
+                      children: [
+                        Image.asset(
+                          Images.walletBalance,
+                          height: 26,
+                          color: ColorResources.colorPrimary,
+                        ),
+                        const Gap(15),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              CustomTextRegular("Wallet"),
+                              CustomTextRegular(
+                                "Available for payment ${AppStrings
+                                    .rupeeSign} ${calculationData
+                                    ?.myWalletAmount}",
+                                color: ColorResources.black1,
+                                fontSize: Dimensions.fontSizeSmall,
+                              ),
+                            ],
+                          ),
+                        ),
+                        CustomCheckbox(
+                          onChanged: (isChecked) {
+                            if (isChecked) {
+                              getCalculation(
+                                  type, astrologerId, 1, "Wallet");
+                            } else {
+                              getCalculation(
+                                  type, astrologerId, 0, "Wallet");
+                            }
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  // const Gap(10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 4),
+                    child: CustomElevatedButton(
+                        text: AppStrings.proceedToPay.tr,
+                        textColor: ColorResources.toolbarText,
+                        backgroundColor: ColorResources.colorPrimary,
+                        onPressed: () async {
+                          print("AS1");
+                          String? payMethod =
+                          await SharedPreferencesHelper.getData(
+                              AppConstants.paymentGateway);
+                          if (payMethod == AppConstants.payRazorpay ||
+                              payMethod == AppConstants.payCCAvenue) {
+                            architectServicePurchase(astrologerId,type,isWalletSelected.value,payMethod.toString());
+                          } else {
+                            CustomSnackBar.showBottom('No Payment Gateway Found');
+                          }
+                        }),
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      Get.toNamed("/wallet");
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 6),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CustomTextMedium("Recharge",
+                              color: ColorResources.colorPrimary),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
