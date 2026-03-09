@@ -14,9 +14,11 @@ import 'package:get/get.dart';
 import '../../model/astrologer_model.dart';
 import '../../utill/app_constants.dart';
 import '../../utill/app_features.dart';
+import '../../utill/app_strings.dart';
 import '../../utill/dimensions.dart';
 import '../../utill/shared_preference.dart';
 import '../screen/splash/controller/config_controller.dart';
+import 'custom_snack_bar.dart';
 
 class CallChatAstrologerWidget extends StatelessWidget {
   final AstrologerData astrologer;
@@ -33,6 +35,7 @@ class CallChatAstrologerWidget extends StatelessWidget {
     // final DashboardController dashboardController = Get.put(DashboardController());
     AstrologerProfileController astrologerProfileController = AstrologerProfileController();
     DashboardController dashboardController = DashboardController();
+    RxBool isFollow = (astrologer.isFollow ?? false).obs;
     String chatRate = '**', callRate = '**', videoRate = '**';
     astrologer.prices?.forEach((priceItem) {
       String type = priceItem.type.toString();
@@ -162,9 +165,54 @@ class CallChatAstrologerWidget extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              CustomTextMedium(
-                                  capitalizeFirst(astrologer.displayName.toString()),
-                                  maxLines: 1, fontSize: Dimensions.fontSizeLarge),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: CustomTextMedium(
+                                      astrologer.displayName.toString(),
+                                      maxLines: 2,
+                                      fontSize: Dimensions.fontSizeLarge,
+                                    ),
+                                  ),
+
+                                  const Gap(6),
+
+                                  Obx(() => GestureDetector(
+                                    onTap: () {
+                                      if (isFollow.value) {
+                                        showUnfollowDialog(astrologerProfileController, astrologer, isFollow);
+                                      } else {
+                                        astrologerProfileController.astrologerFollow(
+                                            "1", astrologer.astrologerUniId.toString());
+
+                                        isFollow.value = true;
+
+                                        CustomSnackBar.showTop(AppStrings.astroFollowMsg);
+                                      }
+                                    },
+                                    child: Container(
+                                      padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                                      decoration: BoxDecoration(
+                                        color: isFollow.value
+                                            ? ColorResources.white
+                                            : ColorResources.colorPrimary,
+                                        border: isFollow.value
+                                            ? Border.all(color: ColorResources.colorPrimary)
+                                            : null,
+                                        borderRadius:
+                                        BorderRadius.circular(Dimensions.borderRadiusDefault),
+                                      ),
+                                      child: CustomTextRegular(
+                                        isFollow.value ? "Following" : "Follow",
+                                        fontSize: Dimensions.fontSizeSmall,
+                                        color: isFollow.value
+                                            ? ColorResources.colorPrimary
+                                            : ColorResources.toolbarText,
+                                      ),
+                                    ),
+                                  )),
+                                ],
+                              ),
                               const Gap(2),
                               CustomTextRegular(
                                 astrologer.categoryNames.toString(),
@@ -990,6 +1038,79 @@ class CallChatAstrologerWidget extends StatelessWidget {
   String capitalizeFirst(String value) {
     if (value.isEmpty) return value;
     return value[0].toUpperCase() + value.substring(1);
+  }
+
+  void showUnfollowDialog(
+      AstrologerProfileController controller,
+      AstrologerData astrologer,
+      RxBool isFollow,
+      ) {
+    Get.dialog(
+      AlertDialog(
+        contentPadding: EdgeInsets.zero,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        content: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 6),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+
+              CustomRoundNetworkImage(
+                imageUrl: astrologer.astroImg.toString(),
+                height: Dimensions.profileImageHeight,
+                width: Dimensions.profileImageHeight,
+              ),
+
+              const Gap(10),
+
+              CustomTextRegular(
+                astrologer.displayName.toString(),
+                fontSize: 14,
+              ),
+
+              const Padding(
+                padding: EdgeInsets.symmetric(vertical: 4, horizontal: 10),
+                child: Text(
+                  "Are you sure you want to unfollow?",
+                  style: TextStyle(fontSize: 12),
+                ),
+              ),
+
+              GestureDetector(
+                onTap: () async {
+                  await controller.astrologerFollow(
+                      "0", astrologer.astrologerUniId.toString());
+
+                  isFollow.value = false;
+
+                  Get.back();
+
+                  CustomSnackBar.showTop(AppStrings.astroUnfollowMsg);
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8, horizontal: 20),
+                  decoration: BoxDecoration(
+                    color: ColorResources.colorPrimary,
+                    borderRadius: BorderRadius.circular(
+                        Dimensions.borderRadiusDefault),
+                  ),
+                  child: const Text(
+                    "Unfollow",
+                    style: TextStyle(
+                      fontSize: Dimensions.fontSizeSmall,
+                      color: ColorResources.toolbarText,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
 

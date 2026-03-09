@@ -3,6 +3,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import '../../../utill/app_constants.dart';
 import '../../../utill/app_strings.dart';
 import '../../../utill/color_resources.dart';
 import '../../../utill/dimensions.dart';
@@ -115,20 +116,23 @@ class CheckoutScreen extends StatelessWidget {
                                             ],
                                           ),
                                         ),
-                                        Padding(
-                                          padding: const EdgeInsets.symmetric(vertical: 2),
-                                          child: Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              CustomTextRegular(
-                                                "GST 18%",
-                                                color: ColorResources.black1,
-                                              ),
-                                              CustomTextRegular(
-                                                "${configController.currencySymbol} 72.0",
-                                                color: ColorResources.black1,
-                                              ),
-                                            ],
+                                        Visibility(
+                                          visible: (configController.phoneCode == AppConstants.defaultPhoneCode) ? true : false,
+                                          child: Padding(
+                                            padding: const EdgeInsets.symmetric(vertical: 2),
+                                            child: Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                              children: [
+                                                CustomTextRegular(
+                                                  "GST 18%",
+                                                  color: ColorResources.black1,
+                                                ),
+                                                CustomTextRegular(
+                                                  "${configController.currencySymbol} 72.0",
+                                                  color: ColorResources.black1,
+                                                ),
+                                              ],
+                                            ),
                                           ),
                                         ),
                                         Padding(

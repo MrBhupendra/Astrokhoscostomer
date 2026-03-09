@@ -181,28 +181,31 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                               ),
                                             ),
                                           )),
-                                      Obx(() => Padding(
-                                            padding:
-                                                const EdgeInsets.symmetric(
-                                                    vertical: 2),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
-                                              children: [
-                                                CustomTextRegular(
-                                                  "GST ${controller.gstPercent.toString()}%",
-                                                  color:
-                                                      ColorResources.black1,
-                                                ),
-                                                CustomTextRegular(
-                                                  "${configController.currencySymbol} ${controller.gstAmount.toString()}",
-                                                  color:
-                                                      ColorResources.black1,
-                                                ),
-                                              ],
-                                            ),
-                                          )),
+                                      Visibility(
+                                        visible: (configController.phoneCode == AppConstants.defaultPhoneCode) ? true : false,
+                                        child: Obx(() => Padding(
+                                              padding:
+                                                  const EdgeInsets.symmetric(
+                                                      vertical: 2),
+                                              child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  CustomTextRegular(
+                                                    "GST ${controller.gstPercent.toString()}%",
+                                                    color:
+                                                        ColorResources.black1,
+                                                  ),
+                                                  CustomTextRegular(
+                                                    "${configController.currencySymbol} ${controller.gstAmount.toString()}",
+                                                    color:
+                                                        ColorResources.black1,
+                                                  ),
+                                                ],
+                                              ),
+                                            )),
+                                      ),
                                       Obx(() => Padding(
                                             padding:
                                                 const EdgeInsets.symmetric(

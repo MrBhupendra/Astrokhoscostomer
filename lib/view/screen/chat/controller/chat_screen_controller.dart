@@ -162,12 +162,14 @@ class ChatScreenController extends FullLifeCycleController
     } else {
       isChatAccepted.value = false;
     }
-
+    Future.delayed(const Duration(seconds: 1), () async {
+      getChatDuration(uniqueId);
+    });
     DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
     bool chatEnd;
     if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
       chatEnd = false;
-      getChatDuration(uniqueId);
+      // getChatDuration(uniqueId);
     } else {
       print('No data available or new session.');
       chatEnd = true;

@@ -52,6 +52,7 @@ class VoiceCallController extends FullLifeCycleController
   bool isReview = false;
 
   //Listeners
+  var durationListener;
   var chatAcceptedListener;
   var chatEndListener;
 
@@ -111,7 +112,9 @@ class VoiceCallController extends FullLifeCycleController
 
     db = FirebaseDatabase.instance;
     dbReference = db.ref(chatGroupChild).child(channelName);
-
+    // Future.delayed(const Duration(seconds: 1), () async {
+    //   getRemainingDuration(uniqueId);
+    // });
     DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
     if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
       isChatAccepted(true);
@@ -136,8 +139,12 @@ class VoiceCallController extends FullLifeCycleController
   }
 
   @override
-  void onResumed() {
+  Future<void> onResumed() async {
     dbReference.child(customerStatus).set(true);
+    DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
+    if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
+      getRemainingDuration(uniqueId);
+    }
     if (kDebugMode) {
       print('OnResumed VCScreen');
     }
@@ -287,6 +294,22 @@ class VoiceCallController extends FullLifeCycleController
     }, onError: (error) {
       if (kDebugMode) {
         print('[ChatTab] ChatEnd:onCancelled $error');
+      }
+    });
+
+    durationListener = dbReference.child('duration').onValue.listen((event) {
+      if (event.snapshot.exists && event.snapshot.value != null) {
+        int newDuration = int.tryParse(event.snapshot.value.toString()) ?? seconds.value;
+        if (newDuration != seconds.value) {
+          seconds.value = newDuration; // UI auto update
+          if (kDebugMode) {
+            print('[VideoCall] Duration updated from Firebase: $newDuration');
+          }
+        }
+      }
+    }, onError: (error) {
+      if (kDebugMode) {
+        print('[VideoCall] Duration listener error: $error');
       }
     });
   }

@@ -116,6 +116,7 @@ class WalletController extends GetxController {
         "api_key": apiKey,
         "user_uni_id": uniId,
       });
+      debugPrint("Response$response");
       if (response.statusCode == 200) {
         walletModel = RechargeVoucherModel.fromJson(response.data);
         if (walletModel.status == AppConstants.success) {
@@ -139,10 +140,11 @@ class WalletController extends GetxController {
           print('OnApiError');
         }
       }
-    } catch (e) {
+    } catch (e, stackTrace) {
       isVoucherSuccess(false);
       if (kDebugMode) {
         print('OnException==> ${e.toString()}');
+        print('OnException==> ${stackTrace.toString()}');
       }
     } finally {
       isVoucherLoading(false);
@@ -159,9 +161,13 @@ class WalletController extends GetxController {
         "user_uni_id": uniId,
         "wallet_id": walletId,
         "payment_method": paymentMethod
+        ,"uniqeid": _uniqueId ?? "",
       });
 
-      print("Request $apiKey $uniId $walletId $paymentMethod");
+      print("callDuration===>4");
+      print(_uniqueId);
+      print("Request $apiKey $uniId $walletId $paymentMethod $_uniqueId");
+      print("Response $response");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();

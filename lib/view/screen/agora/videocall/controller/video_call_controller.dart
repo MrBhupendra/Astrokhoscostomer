@@ -94,7 +94,9 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
 
     db = FirebaseDatabase.instance;
     dbReference = db.ref(chatGroupChild).child(channelName);
-
+    // Future.delayed(const Duration(seconds: 1), () async {
+    //   getRemainingDuration(uniqueId);
+    // });
     DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
     if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
       isChatAccepted(true);
@@ -120,8 +122,12 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
   }
 
   @override
-  void onResumed() {
+  Future<void> onResumed() async {
     dbReference.child(customerStatus).set(true);
+    DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
+    if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
+      getRemainingDuration(uniqueId);
+    }
     if (kDebugMode) {
       print('OnResumed VCScreen');
     }

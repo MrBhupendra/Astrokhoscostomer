@@ -362,16 +362,19 @@ class WalletScreen extends StatelessWidget {
                                         ],
                                       ),
                                       const Gap(8),
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          CustomTextRegular(
-                                              "${AppStrings.gst.tr} @${walletController.gstPercent}%",
-                                              color: ColorResources.black2),
-                                          CustomTextRegular(
-                                              "${configController.currencySymbol} ${walletController.gstAmount}"),
-                                        ],
+                                      Visibility(
+                                        visible: (configController.phoneCode == AppConstants.defaultPhoneCode) ? true : false,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            CustomTextRegular(
+                                                "${AppStrings.gst.tr} @${walletController.gstPercent}%",
+                                                color: ColorResources.black2),
+                                            CustomTextRegular(
+                                                "${configController.currencySymbol} ${walletController.gstAmount}"),
+                                          ],
+                                        ),
                                       ),
                                       const Gap(8),
                                       Row(
