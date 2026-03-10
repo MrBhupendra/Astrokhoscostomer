@@ -910,12 +910,27 @@ Future<void> onActionReceivedImplementationMethod(
   debugPrint(
       'main notification (onActionReceivedImplementationMethod) $receivedAction');
   if (receivedAction.actionLifeCycle == NotificationLifeCycle.Foreground) {
+    if (receivedAction.payload == null ||
+        receivedAction.payload?['type'] == null ||
+        receivedAction.payload?['type'] == "android") {
+      Get.toNamed('/notificationScreen');
+      return;
+    }
+    final type = receivedAction.payload?['type'];
+    if (type == "chat" || type == "video" || type == "call") {
+      debugPrint("HIIII");
+      Get.toNamed('/queue_list');
+      return;
+    }
+  }
+  if (receivedAction.actionLifeCycle == NotificationLifeCycle.Foreground) {
     debugPrint('Notification tapped in foreground.');
-    if (receivedAction.buttonKeyPressed == "ACCEPT") {
-      Get.toNamed('/queue_list');
-    } else if (receivedAction.buttonKeyPressed == "REJECT") {
-      Get.toNamed('/queue_list');
-    } else if (receivedAction.buttonKeyPressed == "ACCEPT SERVICE") {
+    // if (receivedAction.buttonKeyPressed == "ACCEPT") {
+    //   Get.toNamed('/queue_list');
+    // } else if (receivedAction.buttonKeyPressed == "REJECT") {
+    //   Get.toNamed('/queue_list');
+    // } else
+      if (receivedAction.buttonKeyPressed == "ACCEPT SERVICE") {
       Get.toNamed('/orders_tab_screen', arguments: {'index': 2});
     } else if (receivedAction.buttonKeyPressed == "REJECT SERVICE") {
       Get.toNamed('/orders_tab_screen', arguments: {'index': 2});

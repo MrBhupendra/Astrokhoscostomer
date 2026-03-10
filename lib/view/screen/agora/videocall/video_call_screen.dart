@@ -190,7 +190,7 @@ class VideoCallScreen extends StatelessWidget {
                          mainAxisAlignment: MainAxisAlignment.center,
                          children: [
                            GestureDetector(
-                             onTap: () {
+                             onTap: () async {
                                if (!Get.isRegistered<WalletController>()) {
                                  Get.put(WalletController());
                                }
@@ -205,7 +205,11 @@ class VideoCallScreen extends StatelessWidget {
                                } else {
                                  debugPrint("⚠️ uniqueId is NULL or EMPTY in ChatController");
                                }
-                               Get.toNamed('/wallet');
+                               await Get.toNamed('/wallet');
+
+                               Future.delayed(const Duration(seconds: 10), () {
+                                 controller.getRemainingDuration(controller.uniqueId);
+                               });
                              },
                              child: Container(
                                decoration: BoxDecoration(

@@ -538,7 +538,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
       Map<String, dynamic> notificationData, {bool? isFromResume}) {
     if (actionKey == null) {
       if (content['payload']['type'] == "chat") {
-        Get.toNamed('/dashboard');
+        Get.toNamed('/queue_list');
       }
     } else {
       if (isFromResume == true) {

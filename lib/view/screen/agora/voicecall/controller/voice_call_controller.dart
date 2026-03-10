@@ -419,7 +419,11 @@ class VoiceCallController extends FullLifeCycleController
                     print("⚠️ uniqueId is NULL or EMPTY in ChatController");
                   }
 
-                  Get.toNamed('/wallet');
+                  await Get.toNamed('/wallet');
+
+                  Future.delayed(const Duration(seconds: 10), () {
+                    getRemainingDuration(uniqueId);
+                  });
                 },
               ),
             );
