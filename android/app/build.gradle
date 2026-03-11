@@ -16,7 +16,7 @@ if (localPropertiesFile.exists()) {
     }
 }
 
-def flutterVersionCode = '2'
+def flutterVersionCode = '3'
 def flutterVersionName = '1.0.1'
 //def flutterVersionCode = localProperties.getProperty('flutter.versionCode')
 //if (flutterVersionCode == null) {
@@ -72,7 +72,7 @@ android {
     }
     buildTypes {
         release {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             minifyEnabled false
             shrinkResources false
         }
