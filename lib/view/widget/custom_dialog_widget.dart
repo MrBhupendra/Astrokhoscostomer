@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
+import '../../utill/app_strings.dart';
 import '../../utill/color_resources.dart';
 import '../../utill/dimensions.dart';
 
@@ -90,7 +91,7 @@ class CustomDialogWidget extends StatelessWidget {
                             border: Border.all(color: ColorResources.colorPrimary), // Replace with your primary color
                           ),
                           child: CustomTextRegular(
-                              noText ?? "No",
+                              noText ?? AppStrings.no.tr,
                               textAlign: TextAlign.center,
                               color: ColorResources.colorPrimary // Replace with your primary color
                           ),
@@ -112,7 +113,7 @@ class CustomDialogWidget extends StatelessWidget {
                             border: Border.all(color: btnColor ?? ColorResources.colorPrimary),
                           ),
                           child: CustomTextRegular(
-                            yesText ?? "Yes",
+                            yesText ?? AppStrings.yes.tr,
                             textAlign: TextAlign.center,
                             // fontSize: Dimensions.fontSizeSmall,
                             color: textColor ?? ColorResources.toolbarText,

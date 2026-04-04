@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:astro_brahmand/view/widget/custom_app_bar.dart';
 import 'package:get/get.dart';
 
+import '../../../utill/app_strings.dart';
 import '../../../utill/color_resources.dart';
 
 class LiveOrdersTabScreen extends GetView<OrderController> {
@@ -15,7 +16,7 @@ class LiveOrdersTabScreen extends GetView<OrderController> {
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
-          appBar: const CustomAppBar(title: "Live Orders"),
+          appBar:  CustomAppBar(title: AppStrings.liveOrders.tr),
           body: Column(
             children: [
               Container(
@@ -24,11 +25,11 @@ class LiveOrdersTabScreen extends GetView<OrderController> {
                   tabs: [
                     SizedBox(
                       width: Get.width/4,
-                      child: const Tab(text: 'Consulting'),
+                      child: Tab(text: AppStrings.consulting.tr),
                     ),
                     SizedBox(
                       width: Get.width/4,
-                      child: const Tab(text: 'Gift'),
+                      child: Tab(text: AppStrings.gift.tr),
                     ),
                   ],
                 ),

@@ -87,7 +87,7 @@ class AppFeatures {
   static const bool privateCall = false;
 
   //Private Setting
-  static const bool privateSetting = false;
+  static const bool privateSetting = true;
 
   //Your free chat time is about to end. The call will now continue at the standard chat rate
   static const bool freeChatOfferDialog = false;

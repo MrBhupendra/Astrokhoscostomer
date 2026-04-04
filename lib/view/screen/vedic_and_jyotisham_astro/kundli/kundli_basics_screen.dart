@@ -60,22 +60,22 @@ class KundliBasicsScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         CustomTableTwoRowWidget(
-                            title: "Name",
+                            title: AppStrings.name.tr,
                             data: data.name,
                             color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
-                            title: "D.O.B",
+                            title: AppStrings.dob.tr,
                             data: data.dob,
                             color: ColorResources.colorTableRowOdd
                         ),
                         CustomTableTwoRowWidget(
-                            title: "T.O.B",
+                            title: AppStrings.tob.tr,
                             data: data.tob,
                             color: ColorResources.colorTableRowEven
                         ),
                         CustomTableTwoRowWidget(
-                            title: "P.O.B",
+                            title: AppStrings.pob.tr,
                             data: data.place,
                             color: ColorResources.colorTableRowOdd
                         ),

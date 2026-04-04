@@ -59,7 +59,7 @@ class ServiceCategoryListScreen extends GetView<ServiceController> {
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide.none,
                       ),
-                      hintText: 'Search Service Category',
+                      hintText: AppStrings.searchServiceCategory.tr,
                       // hintStyle: TextStyle(color: ColorResources.colorPrimary),
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(12.0),

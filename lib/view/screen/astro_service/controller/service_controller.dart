@@ -398,7 +398,7 @@ class ServiceController extends GetxController {
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 6),
                             child: CustomTextMedium(
-                              AppStrings.serviceDetail,
+                              AppStrings.serviceDetail.tr,
                               color: ColorResources.colorPrimary,
                               fontSize: Dimensions.fontSizeLarge,
                             ),
@@ -410,7 +410,7 @@ class ServiceController extends GetxController {
                               children: [
                                 Expanded(
                                   child: CustomTextRegular(
-                                    "Name",
+                                    AppStrings.name.tr,
                                     color: ColorResources.black1,
                                   ),
                                 ),
@@ -431,7 +431,7 @@ class ServiceController extends GetxController {
                               children: [
                                 Expanded(
                                   child: CustomTextRegular(
-                                    "Duration",
+                                    AppStrings.duration.tr,
                                     color: ColorResources.black1,
                                   ),
                                 ),
@@ -452,7 +452,7 @@ class ServiceController extends GetxController {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomTextRegular(
-                                  "Price",
+                                  AppStrings.price.tr,
                                   color: ColorResources.black1,
                                 ),
                                 CustomTextRegular(
@@ -471,7 +471,7 @@ class ServiceController extends GetxController {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 children: [
                                   CustomTextRegular(
-                                    "Wallet",
+                                    AppStrings.wallet.tr,
                                     color: ColorResources.black1,
                                   ),
                                   Obx(() => CustomTextRegular(
@@ -504,7 +504,7 @@ class ServiceController extends GetxController {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 CustomTextRegular(
-                                  "Offer Discount",
+                                  AppStrings.offerDiscount.tr,
                                   color: ColorResources.colorPrimaryDark,
                                 ),
                                 Obx(() => CustomTextRegular(
@@ -520,7 +520,7 @@ class ServiceController extends GetxController {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                CustomTextMedium("Total Payable",
+                                CustomTextMedium(AppStrings.totalPayable.tr,
                                     color: ColorResources.black),
                                 Obx(() => CustomTextMedium(
                                     "${configController.currencySymbol} ${totalPayableAmount.value}",
@@ -534,7 +534,7 @@ class ServiceController extends GetxController {
                   ),
         
                   const Gap(Dimensions.gapDefault),
-                  const CustomText(hintText: "Booking Date"),
+                  CustomText(hintText: AppStrings.bookingDate.tr),
                   const Gap(Dimensions.gapExtraSmall),
                   GestureDetector(
                     onTap: () async {
@@ -544,13 +544,13 @@ class ServiceController extends GetxController {
                     },
                     child: CustomTextField(
                       controller: birthDateController,
-                      hintText: 'Select Date for service ',
+                      hintText: AppStrings.selectDateForService.tr,
                       enabled: false,
                     ),
                   ),
         
                   const Gap(Dimensions.gapDefault),
-                  const CustomText(hintText: "Booking Time"),
+                  const CustomText(hintText: AppStrings.bookingTime),
                   const SizedBox(height: Dimensions.gapExtraSmall),
                   GestureDetector(
                     onTap: () async {
@@ -560,7 +560,7 @@ class ServiceController extends GetxController {
                     },
                     child: CustomTextField(
                       controller: birthTimeController,
-                      hintText: 'Select Time for service',
+                      hintText: AppStrings.selectTimeForService.tr,
                       enabled: false,
                     ),
                   ),
@@ -766,9 +766,9 @@ class ServiceController extends GetxController {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CustomTextRegular("Wallet"),
+                              CustomTextRegular(AppStrings.wallet.tr),
                               CustomTextRegular(
-                                "Available for payment ${configController.currencySymbol} ${calculationData?.myWalletAmount}",
+                                "${AppStrings.availableForPayment.tr} ${configController.currencySymbol} ${calculationData?.myWalletAmount}",
                                 color: ColorResources.black1,
                                 fontSize: Dimensions.fontSizeSmall,
                               ),
@@ -859,9 +859,9 @@ class ServiceController extends GetxController {
                                   );
                                 }
                               }else if(birthDateController.text.isEmpty){
-                                CustomSnackBar.showBottom("Please Select Date");
+                                CustomSnackBar.showBottom(AppStrings.pleaseSelectDate.tr);
                               }else if(birthTimeController.text.isEmpty){
-                                CustomSnackBar.showBottom("Please Select Time");
+                                CustomSnackBar.showBottom(AppStrings.pleaseSelectTime.tr);
                               }
                               }
                             );
@@ -871,7 +871,7 @@ class ServiceController extends GetxController {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               CustomTextRegular(
-                                "Pay Using",
+                                AppStrings.payUsing.tr,
                                 fontSize: Dimensions.fontSizeSmall,
                                 color: ColorResources.black2,
                               ),
@@ -918,9 +918,9 @@ class ServiceController extends GetxController {
                                   );
                                 }
                               }else if(birthDateController.text.isEmpty){
-                                CustomSnackBar.showBottom("Please Select Date");
+                                CustomSnackBar.showBottom(AppStrings.pleaseSelectDate.tr);
                               }else if(birthTimeController.text.isEmpty){
-                                CustomSnackBar.showBottom("Please Select Time");
+                                CustomSnackBar.showBottom(AppStrings.pleaseSelectTime.tr);
                               }
         
                             },
@@ -933,7 +933,7 @@ class ServiceController extends GetxController {
                               ),
                             ),
                             child: CustomTextMedium(
-                              AppStrings.proceedToPay,
+                              AppStrings.proceedToPay.tr,
                               color: ColorResources.toolbarText,
                               textAlign: TextAlign.center,
                             ),
@@ -951,7 +951,7 @@ class ServiceController extends GetxController {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          CustomTextMedium("Recharge",
+                          CustomTextMedium(AppStrings.recharge.tr,
                               color: ColorResources.colorPrimary),
                         ],
                       ),

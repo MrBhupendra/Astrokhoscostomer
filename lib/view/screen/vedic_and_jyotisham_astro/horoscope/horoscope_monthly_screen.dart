@@ -150,7 +150,7 @@ class _HoroscopeMonthalyScreenState extends State<HoroscopeMonthalyScreen> {
                                       padding: const EdgeInsets.all(8.0),
                                       child: Column(
                                         children: [
-                                          CustomTextMedium("Challenging Days"),
+                                          CustomTextMedium(AppStrings.challengingDays.tr),
                                           CustomTextMedium("${controller.horoscopeMonthlyModel.response?.challengingDays}"),
                                         ],
                                       ),
@@ -174,7 +174,7 @@ class _HoroscopeMonthalyScreenState extends State<HoroscopeMonthalyScreen> {
                                       padding: const EdgeInsets.all(8.0),
                                        child: Column(
                                          children: [
-                                            CustomTextMedium("Standout Days"),
+                                            CustomTextMedium(AppStrings.standoutDays.tr),
                                             CustomTextMedium("${controller.horoscopeMonthlyModel.response?.standoutDays}"),
                                          ],
                                        ),

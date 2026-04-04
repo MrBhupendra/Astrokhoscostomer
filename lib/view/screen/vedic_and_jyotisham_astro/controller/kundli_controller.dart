@@ -341,7 +341,7 @@ class KundliController extends GetxController {
         String? jyotishamApiKey = await SharedPreferencesHelper.getData(AppConstants.jyotishamApiKey);
         setHeader(jyotishamApiKey.toString());
         String? language = await SharedPreferencesHelper.getData(AppConstants.appLanguage);
-        final response = await _dio.get('${AppConstants.getJyotishamAstroKundliChart}$type?date=${data.dob}&time=${CommonMethods().convertTimeInputVedic(data.tob)}&latitude=${data.latitude}&longitude=${data.longitude}&tz=${data.timeZone}&style=$style&lang=$language&colored_planets=true&color=%230b0932');
+        final response = await _dio.get('${AppConstants.getJyotishamAstroKundliChart}$type?date=${data.dob}&time=${CommonMethods().convertTimeInputVedic(data.tob)}&latitude=${data.latitude}&longitude=${data.longitude}&tz=${data.timeZone}&style=$style&lang=$language&colored_planets=false&color=%230b0932');
         if (response.statusCode == AppConstants.vedicSuccess) {
           var decodedData = xml.XmlDocument.parse(response.data);
           isChartSuccess(true);

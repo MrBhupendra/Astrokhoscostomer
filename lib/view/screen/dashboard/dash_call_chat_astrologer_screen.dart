@@ -290,7 +290,7 @@ class CallChatAstrologerScreen extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.0),
                     borderSide: BorderSide.none,
                   ),
-                  hintText: 'Search Astrologer here',
+                  hintText: AppStrings.searchAstrologerHere.tr,
                   // hintStyle: TextStyle(color: ColorResources.colorPrimary),
                   prefixIcon: Padding(
                     padding: const EdgeInsets.all(12.0),

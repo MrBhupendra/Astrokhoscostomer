@@ -41,7 +41,7 @@ class KundliSubmitScreen extends StatelessWidget {
     Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
     String title = arguments['title'] ?? '';
 
-    if(title == "Edit Kundli"){
+    if(title == AppStrings.editKundli.tr){
       _nameController.text = controller.updateKundliData.name.toString();
       _birthDateController.text = controller.updateKundliData.dob.toString();
       _birthTimeController.text = controller.updateKundliData.tob.toString();
@@ -69,7 +69,7 @@ class KundliSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _nameController,
-                      hintText: 'Enter your name here',
+                      hintText: AppStrings.enterFullName.tr,
                       prefixIcon: Icons.person,
                       focusNode: _nameFocusNode,
                       onFieldSubmitted: (_) => _birthPlaceFocusNode.requestFocus(),
@@ -89,7 +89,7 @@ class KundliSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _birthDateController,
-                      hintText: 'Select date',
+                      hintText: AppStrings.selectDate.tr,
                       prefixIcon: CupertinoIcons.calendar,
                       enabled: false,
                       focusNode: _birthDateFocusNode,
@@ -111,7 +111,7 @@ class KundliSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _birthTimeController,
-                      hintText: 'Select time',
+                      hintText: AppStrings.selectTime.tr,
                       prefixIcon: CupertinoIcons.clock_fill,
                       enabled: false,
                       focusNode: _birthTimeFocusNode,
@@ -133,7 +133,7 @@ class KundliSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _birthPlaceController,
-                      hintText: 'Select birth place',
+                      hintText: AppStrings.selectBirthPlace.tr,
                       prefixIcon: CupertinoIcons.building_2_fill,
                       enabled: false,
                       focusNode: _birthPlaceFocusNode,
@@ -163,11 +163,11 @@ class KundliSubmitScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: Dimensions.paddingSizeDefault),
                 child: CustomElevatedButton(
-                  text: title.contains("Create Kundli") ? "Create Kundli" : "Edit Kundli",
+                  text: title.contains(AppStrings.createKundli.tr) ? AppStrings.createKundli.tr : AppStrings.editKundli.tr,
                   backgroundColor: ColorResources.colorPrimary,
                   textColor: ColorResources.toolbarText,
                   onPressed: () async {
-                    if (title.contains('Create Kundli')) {
+                    if (title.contains(AppStrings.createKundli.tr)) {
                       print("TimeZone->${_kundliTimezone.text}");
                       print("lat->${_kundliLatitude.text}");
                       print("long->${_kundliLongitude.text}");
@@ -190,7 +190,7 @@ class KundliSubmitScreen extends StatelessWidget {
                           ),
                         );
                       }
-                    } else if (title.contains('Edit Kundli')) {
+                    } else if (title.contains(AppStrings.editKundli.tr)) {
                       print("TimeZone->${_kundliTimezone.text}");
                       print("lat->${_kundliLatitude.text}");
                       print("long->${_kundliLongitude.text}");

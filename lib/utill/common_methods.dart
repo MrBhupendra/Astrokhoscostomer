@@ -1095,55 +1095,231 @@ class CommonMethods {
           fit: BoxFit.contain,
         ),
       );
-    } else if (tag == "most_choice") {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-        child: Image.asset(
-          Images.astroMostChoiceTag,
-          height: 35,
+    }
+    // else if (tag == "most_choice") {
+    //   return Padding(
+    //     padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+    //     child: Image.asset(
+    //       Images.astroMostChoiceTag,
+    //       height: 35,
+    //     ),
+    //   );
+    // }
+    else if (tag == "most_choice") {
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Most Popular",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
         ),
       );
-    } else if (tag == "top_choice") {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-        child: Image.asset(
-          Images.astroTopChoiceTag,
-          height: 35,
+    }
+    else if (tag == "top_choice") {
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Top Choice",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
         ),
       );
     } else if (tag == "New" || tag == "new") {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-        child: Image.asset(
-          Images.astroNewTag,
-          height: 35,
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "New",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
         ),
       );
     } else if (tag == "rising_star") {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-        child: Image.asset(
-          Images.astroRisingStarTag,
-          height: 35,
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Rising Star",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
         ),
       );
     }else if (tag == "premium") {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-        child: Image.asset(
-          Images.astroPremiumTag,
-          height: 35,
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Premium",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
         ),
       );
-    }else if (tag == "celebrity") {
-      return Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 6),
-        child: Image.asset(
-          Images.astroCelebrityTag,
-          height: 35,
+    }
+    else if (tag == "celebrity") {
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Celebrity",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
         ),
       );
-    } else {
+    }
+    else if (tag == "special_deal") {
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Special Deal",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
+        ),
+      );
+    } else if (tag == "flat_deal") {
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Flat Deal",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
+        ),
+      );
+    } else if (tag == "best_deal") {
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Best Deal",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
+        ),
+      );
+    } else if (tag == "festival_deal") {
+      return Container(
+        height: 20.0,
+        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 3.0),
+        decoration: BoxDecoration(
+          color: ColorResources.colorPrimary.withOpacity(0.7),borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(10.0),
+          bottomRight: Radius.circular(20.0),
+        ),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CustomTextMedium(
+              "Festival Deal",
+              fontSize: Dimensions.fontSizeOverSmall,
+              color: ColorResources.white,
+            ),
+          ],
+        ),
+      );
+    }
+    else {
       // Default image if none of the conditions match
       return const SizedBox();
     }

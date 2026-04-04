@@ -2,13 +2,14 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:android_intent_plus/android_intent.dart';
+import 'package:android_intent_plus/flag.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/dio.dart' as dio;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_ringtone_player/flutter_ringtone_player.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/multipart/form_data.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
 import '../../../../../model/success_model.dart';
@@ -18,9 +19,7 @@ import '../../../../../utill/app_strings.dart';
 import '../../../../../utill/common_methods.dart';
 import '../../../../../utill/images.dart';
 import '../../../../../utill/shared_preference.dart';
-import '../../../../widget/custom_default_dialog.dart';
 import '../../../../widget/custom_dialog_widget.dart';
-import '../../../../widget/custom_progress_dialog.dart';
 import '../../../../widget/custom_snack_bar.dart';
 import '../../../chat/controller/chat_intake_form_controller.dart';
 import '../../../chat/controller/image_picker_controller.dart';
@@ -28,7 +27,7 @@ import '../../../chat/model/chat_birth_model.dart';
 import '../../../chat/model/chat_remaining_time_model.dart';
 import '../../../chat/model/chat_session_model.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
-
+import 'package:flutter/material.dart';
 import '../../../dashboard/controller/dashboard_controller.dart';
 import '../../../wallet/controller/wallet_controller.dart';
 
@@ -91,35 +90,111 @@ class VoiceCallController extends FullLifeCycleController
   RxInt offerSeconds = 0.obs;
   bool hasShownOfferDialog = false;
 
+  String? customerName;
+  String? customerImage;
+
   //Sensor Handle
   RxBool isNear = false.obs;
   late StreamSubscription<dynamic> _streamSubscription;
 
   bool isBackPressed = false;
 
+  // @override
+  // Future<void> onInit() async {
+  //   super.onInit();
+  //   listenSensor();
+  //   startOnGoingCallNotification(seconds.value);
+  //   startMicNotification();
+  //   if (Get.context != null) {
+  //     try {
+  //       WidgetsBinding.instance.addPostFrameCallback((_) async {
+  //         try {
+  //           WakelockPlus.enable();
+  //         } catch (e) {
+  //           debugPrint("[VCController] Failed to enable wakelock: $e");
+  //         }
+  //       });
+  //     } catch (e) {
+  //       debugPrint("[VCController] Failed to enable wakelock: $e");
+  //     }
+  //   }
+  //   // WakelockPlus.enable();
+  //   Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
+  //   channelName = arguments['channelName'] ?? '';
+  //   uniqueId = arguments['uniqueId'] ?? '';
+  //   agoraAppId = arguments['agoraAppId'] ?? '';
+  //   agoraToken = arguments['token'] ?? '';
+  //
+  //   print("VoiceController Data-> channel:$channelName uniqueId:$uniqueId agoraAppId:$agoraAppId token:$agoraToken");
+  //
+  //   db = FirebaseDatabase.instance;
+  //   dbReference = db.ref(chatGroupChild).child(channelName);
+  //   // Future.delayed(const Duration(seconds: 1), () async {
+  //   //   getRemainingDuration(uniqueId);
+  //   // });
+  //   DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
+  //   if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
+  //     isChatAccepted(true);
+  //     getRemainingDuration(uniqueId);
+  //   } else {
+  //     playSound();
+  //     initChatSession(
+  //       ChatSessionModel(
+  //           chatId: uniqueId,
+  //           chatAccepted: false,
+  //           chatEnd: false,
+  //           customerStatus: true,
+  //           duration: seconds.value,
+  //           chatDeclinedBy: "",
+  //           type: chatIntakeFormController.callType == AppConstants.emergencyCall ? AppConstants.emergencyCall : AppConstants.call),
+  //     );
+  //   }
+  //
+  //   dbReference.child(customerStatus).set(true);
+  //   registerListeners();
+  //   initAgora();
+  // }
+
   @override
   Future<void> onInit() async {
     super.onInit();
     listenSensor();
-    WakelockPlus.enable();
+    startOnGoingCallNotification(seconds.value);
+    startMicNotification();
+    if (Get.context != null) {
+      try {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          try {
+            WakelockPlus.enable();
+          } catch (e) {
+            debugPrint("[VCController] Failed to enable wakelock: $e");
+          }
+        });
+      } catch (e) {
+        debugPrint("[VCController] Failed to enable wakelock: $e");
+      }
+    }
     Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
     channelName = arguments['channelName'] ?? '';
     uniqueId = arguments['uniqueId'] ?? '';
     agoraAppId = arguments['agoraAppId'] ?? '';
     agoraToken = arguments['token'] ?? '';
+    customerName = await SharedPreferencesHelper.getData(AppConstants.name);
+    customerImage =
+    await SharedPreferencesHelper.getData(AppConstants.profileImage);
 
-    print("VoiceController Data-> channel:$channelName uniqueId:$uniqueId agoraAppId:$agoraAppId token:$agoraToken");
+    print(
+        "VoiceController Data-> channel:$channelName uniqueId:$uniqueId agoraAppId:$agoraAppId token:$agoraToken");
 
     db = FirebaseDatabase.instance;
     dbReference = db.ref(chatGroupChild).child(channelName);
-    // Future.delayed(const Duration(seconds: 1), () async {
-    //   getRemainingDuration(uniqueId);
-    // });
+
     DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
     if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
-      isChatAccepted(true);
+      // isChatAccepted(true);
       getRemainingDuration(uniqueId);
     } else {
+      print('No data available or new session.');
       playSound();
       initChatSession(
         ChatSessionModel(
@@ -133,18 +208,19 @@ class VoiceCallController extends FullLifeCycleController
       );
     }
 
-    dbReference.child(customerStatus).set(true);
+    // dbReference.child(customerStatus).set(true);
     registerListeners();
+
     initAgora();
   }
 
   @override
   Future<void> onResumed() async {
     dbReference.child(customerStatus).set(true);
-    DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
-    if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
-      getRemainingDuration(uniqueId);
-    }
+    // DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
+    // if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
+    //   getRemainingDuration(uniqueId);
+    // }
     if (kDebugMode) {
       print('OnResumed VCScreen');
     }
@@ -152,7 +228,8 @@ class VoiceCallController extends FullLifeCycleController
 
   @override
   void onPaused() {
-    dbReference.child(customerStatus).set(false);
+    startMicNotification();
+    // dbReference.child(customerStatus).set(false);
     if (kDebugMode) {
       print('onPaused VCScreen');
     }
@@ -161,10 +238,22 @@ class VoiceCallController extends FullLifeCycleController
   @override
   Future<void> onClose() async {
     super.onClose();
-    dbReference.child(customerStatus).set(false);
+    // dbReference.child(customerStatus).set(false);
     stopTimer();
     stopSound();
-    WakelockPlus.disable();
+    if (Get.context != null) {
+      try {
+        WidgetsBinding.instance.addPostFrameCallback((_) async {
+          try {
+            WakelockPlus.disable();
+          } catch (e) {
+            debugPrint("[VCController] Failed to disable wakelock: $e");
+          }
+        });
+      } catch (e) {
+        debugPrint("[VCController] Failed to disable wakelock: $e");
+      }
+    }
     await engine.leaveChannel();
     await engine.release();
     _streamSubscription.cancel();
@@ -172,6 +261,7 @@ class VoiceCallController extends FullLifeCycleController
       print('onClose VCScreen');
     }
     if (!isBackPressed) {
+      stopOngoingCallNotification();
       if (Get.isRegistered<VoiceCallController>()) {
         await Get.delete<VoiceCallController>(force: true);
       }
@@ -262,6 +352,8 @@ class VoiceCallController extends FullLifeCycleController
       }
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
+        stopOngoingCallNotification();
+        stopMicNotification();
         chatAcceptedListener.cancel();
         chatEndListener.cancel();
         if (Get.isRegistered<VoiceCallController>()) {
@@ -357,8 +449,11 @@ class VoiceCallController extends FullLifeCycleController
           if(AppFeatures.freeChatOfferDialog) {
             offerSeconds.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
           }
-          updateDurationInDb();
-          startTimer();
+          // updateDurationInDb();
+          // startTimer();
+          Future.delayed(const Duration(seconds: 1), () {
+            startTimer();
+          });
         } else {
           isGetTimeSuccess(false);
         }
@@ -380,9 +475,10 @@ class VoiceCallController extends FullLifeCycleController
   void startTimer() {
     if (!isTimerRunning.value) {
       isTimerRunning.toggle();
-      _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
         if (seconds.value > 0) {
           seconds--;
+          await updateCallDuration(seconds.value);
         } else {
           endCall();
         }
@@ -472,6 +568,12 @@ class VoiceCallController extends FullLifeCycleController
       channelProfile: ChannelProfileType.channelProfileCommunication,
     ));
 
+    try {
+      await engine.leaveChannel();
+    } catch (e) {
+      print("Leave error (ignore): $e");
+    }
+
     engine.registerEventHandler(
       RtcEngineEventHandler(
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
@@ -523,6 +625,123 @@ class VoiceCallController extends FullLifeCycleController
       // print("event = ${event}");
       isNear.value = (event > 0) ? true : false;
     });
+  }
+
+  void startOnGoingCallNotification(int seconds) async {
+    if (Platform.isAndroid) {
+      try {
+        var intent = AndroidIntent(
+          action: "com.astrobrahmand.customer.START_CALL_NOTIFICATION",
+          package: "com.astrobrahmand.customer",
+          arguments: <String, dynamic>{
+            "call_duration_seconds": seconds,
+          },
+          flags: <int>[
+            Flag.FLAG_INCLUDE_STOPPED_PACKAGES,
+            Flag.FLAG_RECEIVER_FOREGROUND
+          ],
+        );
+        await intent.sendBroadcast();
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error starting call notification: $e");
+        }
+      }
+    }
+  }
+
+  void startMicNotification() async {
+    if (Platform.isAndroid) {
+      try {
+        var intent = const AndroidIntent(
+          action: "com.astrobrahmand.customer.START_MICROPHONE_NOTIFICATION",
+          package: "com.astrobrahmand.customer",
+          flags: <int>[
+            Flag.FLAG_INCLUDE_STOPPED_PACKAGES,
+            Flag.FLAG_RECEIVER_FOREGROUND
+          ],
+        );
+        if (kDebugMode) {
+          print("Sending STARTMICNOTIFICATION broadcast...");
+        }
+        await intent.sendBroadcast();
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error starting mic notification: $e");
+        }
+      }
+    }
+  }
+
+  Future<void> updateCallDuration(int seconds) async {
+    if (Platform.isAndroid) {
+      await Future.delayed(const Duration(milliseconds: 300));
+      try {
+        var intent = AndroidIntent(
+          action: "com.astrobrahmand.customer.UPDATE_CALL_NOTIFICATION",
+          package: "com.astrobrahmand.customer",
+          arguments: <String, dynamic>{
+            "call_duration_seconds": seconds, // Pass call duration in intent
+          },
+          flags: <int>[
+            Flag.FLAG_INCLUDE_STOPPED_PACKAGES,
+            Flag.FLAG_RECEIVER_FOREGROUND
+          ],
+        );
+        if (kDebugMode) {
+          print("Sending UPDATECALLNOTIFICATION broadcast...");
+        }
+        await intent.sendBroadcast();
+      } catch (e) {
+        debugPrint("Error triggering call notification: $e");
+      }
+    }
+  }
+
+  void stopOngoingCallNotification() async {
+    if (Platform.isAndroid) {
+      try {
+        var intent = const AndroidIntent(
+          action: "com.astrobrahmand.customer.STOP_CALL_NOTIFICATION",
+          package: "com.astrobrahmand.customer",
+          flags: <int>[
+            Flag.FLAG_INCLUDE_STOPPED_PACKAGES,
+            Flag.FLAG_RECEIVER_FOREGROUND
+          ],
+        );
+        if (kDebugMode) {
+          print("Sending STOP_CALL_NOTIFICATION broadcast...");
+        }
+        await intent.sendBroadcast();
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error stopping call notification: $e");
+        }
+      }
+    }
+  }
+
+  void stopMicNotification() async {
+    if (Platform.isAndroid) {
+      try {
+        var intent = const AndroidIntent(
+          action: "com.astrobrahmand.customer.STOP_MIC_NOTIFICATION",
+          package: "com.astrobrahmand.customer",
+          flags: <int>[
+            Flag.FLAG_INCLUDE_STOPPED_PACKAGES,
+            Flag.FLAG_RECEIVER_FOREGROUND
+          ],
+        );
+        if (kDebugMode) {
+          print("Sending STOP_MIC_NOTIFICATION broadcast...");
+        }
+        await intent.sendBroadcast();
+      } catch (e) {
+        if (kDebugMode) {
+          print("Error stopping call notification: $e");
+        }
+      }
+    }
   }
 
   Future<void> sendImage(String uniqeId, File imageFile) async {

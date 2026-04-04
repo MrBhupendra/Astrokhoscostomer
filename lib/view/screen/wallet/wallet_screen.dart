@@ -72,10 +72,10 @@ class WalletScreen extends StatelessWidget {
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        const Expanded(
+                                        Expanded(
                                           child: Text(
-                                            AppConstants.appName,
-                                            style: TextStyle(
+                                            AppConstants.appName.tr,
+                                            style: const TextStyle(
                                               color: ColorResources.toolbarText,
                                               fontWeight: FontWeight.w500,
                                               fontSize:
@@ -444,7 +444,7 @@ class WalletScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 CustomTextRegular(
-                                  "Pay Using",
+                                  AppStrings.payUsing.tr,
                                   fontSize: Dimensions.fontSizeSmall,
                                   color: ColorResources.black2,
                                 ),

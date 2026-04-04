@@ -638,9 +638,24 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                           fontSize: Dimensions.fontSizeSmall,
                                           color: Colors.grey.shade600,
                                         ),
+                                        const Gap(6),
+                                        Container(
+                                          width: 4,
+                                          height: 4,
+                                          decoration: BoxDecoration(
+                                            color: Colors.grey.shade400,
+                                            shape: BoxShape.circle,
+                                          ),
+                                        ),
+                                        const Gap(6),
+                                        CustomTextRegular(
+                                          "${controller.astrologerData.value.followerCount} Followers",
+                                          fontSize: Dimensions.fontSizeSmall,
+                                          color: Colors.grey.shade600,
+                                        ),
                                       ],
                                     ),
-                                    const Gap(Dimensions.gapDefault),
+
 
                                     // Skills Tags
                                     if (controller.astrologerData.value
@@ -2052,11 +2067,23 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                     },
                                     service: "Call Now",
                                     servicePrice: callRate,
-                                    backgroundColor: controller.astrologerData
-                                                .value.callStatus ==
+                                    backgroundColor: controller.astrologerData.value
+                                        .callStatus ==
+                                        1 &&
+                                        controller.astrologerData.value
+                                            .busyStatus ==
                                             1
+                                        ? Colors.yellow
+                                        : controller.astrologerData.value
+                                        .callStatus ==
+                                        1
                                         ? Colors.green
                                         : ColorResources.black7,
+                                    // backgroundColor: controller.astrologerData
+                                    //             .value.callStatus ==
+                                    //         1
+                                    //     ? Colors.green
+                                    //     : ColorResources.black7,
                                     textColor: controller.astrologerData.value
                                                     .callStatus ==
                                                 1 &&
@@ -2216,11 +2243,23 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                     },
                                     service: "Chat Now",
                                     servicePrice: chatRate,
-                                    backgroundColor: controller.astrologerData
-                                                .value.chatStatus ==
+                                    backgroundColor: controller.astrologerData.value
+                                        .chatStatus ==
+                                        1 &&
+                                        controller.astrologerData.value
+                                            .busyStatus ==
                                             1
+                                        ? Colors.yellow
+                                        : controller.astrologerData.value
+                                        .chatStatus ==
+                                        1
                                         ? Colors.green
                                         : ColorResources.black7,
+                                    // backgroundColor: controller.astrologerData
+                                    //             .value.chatStatus ==
+                                    //         1
+                                    //     ? Colors.green
+                                    //     : ColorResources.black7,
                                     textColor: controller.astrologerData.value
                                                     .chatStatus ==
                                                 1 &&
@@ -2365,11 +2404,23 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                     },
                                     service: "Video Call",
                                     servicePrice: videoRate,
-                                    backgroundColor: controller.astrologerData
-                                                .value.videoStatus ==
+                                    backgroundColor: controller.astrologerData.value
+                                        .videoStatus ==
+                                        1 &&
+                                        controller.astrologerData.value
+                                            .busyStatus ==
                                             1
+                                        ? Colors.yellow
+                                        : controller.astrologerData.value
+                                        .videoStatus ==
+                                        1
                                         ? Colors.green
                                         : ColorResources.black7,
+                                    // backgroundColor: controller.astrologerData.value.videoStatus == 1
+                                    //     ? Colors.green
+                                    //     : controller.astrologerData.value.busyStatus == 1
+                                    //     ? Colors.yellow
+                                    //     : ColorResources.black7,
                                     textColor: controller.astrologerData.value
                                                     .videoStatus ==
                                                 1 &&

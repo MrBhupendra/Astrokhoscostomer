@@ -57,7 +57,7 @@ class KundliDashaScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(
                                 Dimensions.paddingSizeExtraSmall),
                             child: CustomTextRegular(
-                              "Current Mahadasha",
+                              AppStrings.currentMahadasha.tr,
                               color: controller.dashaSelectedType.value ==
                                       "Current Mahadasha"
                                   ? ColorResources
@@ -90,7 +90,7 @@ class KundliDashaScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(
                                 Dimensions.paddingSizeExtraSmall),
                             child: CustomTextRegular(
-                              "Specific Dasha",
+                              AppStrings.specificDasha.tr,
                               color: controller.dashaSelectedType.value ==
                                       "Specific Dasha"
                                   ? ColorResources
@@ -122,7 +122,7 @@ class KundliDashaScreen extends StatelessWidget {
                             padding: const EdgeInsets.all(
                                 Dimensions.paddingSizeExtraSmall),
                             child: CustomTextRegular(
-                              "Mahadasha Full",
+                              AppStrings.mahadashaFull.tr,
                               color: controller.dashaSelectedType.value ==
                                       "Mahadasha Full"
                                   ? ColorResources

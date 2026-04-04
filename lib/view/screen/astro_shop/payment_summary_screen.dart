@@ -49,7 +49,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
 
     return SafeArea(
       child: Scaffold(
-        appBar: const CustomAppBar(title: "Payment Summary"),
+        appBar: CustomAppBar(title: AppStrings.paymentSummary.tr),
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -90,7 +90,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                         padding: const EdgeInsets.symmetric(
                                             vertical: 2),
                                         child: CustomTextMedium(
-                                          "Product Detail",
+                                          AppStrings.productDetail.tr,
                                           color:
                                               ColorResources.colorPrimaryDark,
                                           fontSize: Dimensions.fontSizeLarge,
@@ -106,7 +106,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                           children: [
                                             Expanded(
                                               child: CustomTextRegular(
-                                                "Product Name",
+                                                AppStrings.productName.tr,
                                                 color: ColorResources.black1,
                                               ),
                                             ),
@@ -130,7 +130,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             CustomTextRegular(
-                                              "Price",
+                                              AppStrings.price.tr,
                                               color: ColorResources.black1,
                                             ),
                                             CustomTextRegular(
@@ -148,7 +148,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             CustomTextRegular(
-                                              "Quantity",
+                                              AppStrings.quantity.tr,
                                               color: ColorResources.black1,
                                             ),
                                             CustomTextRegular(
@@ -168,7 +168,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                                         .spaceBetween,
                                                 children: [
                                                   CustomTextRegular(
-                                                    "Wallet",
+                                                    AppStrings.wallet.tr,
                                                     color:
                                                         ColorResources.black1,
                                                   ),
@@ -216,7 +216,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                                       .spaceBetween,
                                               children: [
                                                 CustomTextRegular(
-                                                  "Reference Discount",
+                                                  AppStrings.referenceDiscount.tr,
                                                   color: ColorResources
                                                       .black1,
                                                 ),
@@ -262,7 +262,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                               .spaceBetween,
                                           children: [
                                             CustomTextRegular(
-                                              "Offer Discount",
+                                              AppStrings.offerDiscount.tr,
                                               color: ColorResources
                                                   .colorPrimaryDark,
                                             ),
@@ -285,7 +285,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                                                       .spaceBetween,
                                               children: [
                                                 CustomTextMedium(
-                                                    "Total Payable",
+                                                    AppStrings.totalPayable.tr,
                                                     color:
                                                         ColorResources.black),
                                                 CustomTextMedium(
@@ -744,7 +744,7 @@ class PaymentSummaryScreen extends GetView<ProductsController> {
                           ),
                         ),
                         child: CustomTextMedium(
-                          AppStrings.proceedToPay,
+                          AppStrings.proceedToPay.tr,
                           color: ColorResources.toolbarText,
                           textAlign: TextAlign.center,
                         ),

@@ -264,7 +264,7 @@ class CustomDashboardDrawer extends StatelessWidget {
 
                   CustomDrawerItem(
                     iconPath: Images.appRating,
-                    title: "Rate App",
+                    title: AppStrings.rateApp.tr,
                     onTap: () {
                       requestReview();
                     },

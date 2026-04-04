@@ -265,7 +265,7 @@ class AstrologerProfileCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Center(
-        child: CustomTextRegular("CONNECT", color: Colors.white,fontSize: 13,),
+        child: CustomTextRegular(AppStrings.conNect.tr, color: Colors.white,fontSize: 13,),
       ),
     );
   }

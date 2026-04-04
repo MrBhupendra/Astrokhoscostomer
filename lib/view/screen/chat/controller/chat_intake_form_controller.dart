@@ -183,6 +183,7 @@ class ChatIntakeFormController extends GetxController {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? cusImage = await SharedPreferencesHelper.getData(AppConstants.profileImage);
+      String? cusName = await SharedPreferencesHelper.getData(AppConstants.name);
       debugPrint("[CHAT] startChat request=> $apiKey $uniId $astrologerUniId $cusImage");
       final response = await _dio.post(AppConstants.startChat, data: {
         'api_key': apiKey,
@@ -195,9 +196,9 @@ class ChatIntakeFormController extends GetxController {
         chatSuccessModel = ChatSuccessModel.fromJson(response.data);
         if (chatSuccessModel.status == AppConstants.success) {
           isSuccess(true);
-
+           print("ChatResponse->$response");
           if (chatSuccessModel.joinStatus == 0) {
-            AppDialog().showCallDialog(chatSuccessModel.msg.toString(), "Queue",AppConstants.chat, cusImage.toString(), chatSuccessModel.data!.name.toString(), astrologerImage.toString(), astrologerName.toString());
+            AppDialog().showCallDialog(chatSuccessModel.msg.toString(), "Queue",AppConstants.chat, cusImage.toString(), cusName.toString(), astrologerImage.toString(), astrologerName.toString());
           } else if (chatSuccessModel.joinStatus == 1 || chatSuccessModel.joinStatus == 2) {
             String? customerUniUd = await SharedPreferencesHelper.getData(AppConstants.userUniId);
             String channelName = '$customerUniUd-$astrologerUniId';
@@ -309,6 +310,7 @@ class ChatIntakeFormController extends GetxController {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? cusImage = await SharedPreferencesHelper.getData(AppConstants.profileImage);
+      String? cusName = await SharedPreferencesHelper.getData(AppConstants.name);
       final response = await _dio.post(AppConstants.startVoiceCall, data: {
         'api_key': apiKey,
         "user_uni_id": uniId,
@@ -323,10 +325,10 @@ class ChatIntakeFormController extends GetxController {
 
           if (startVoiceCallModel.joinStatus == 0) {
             // showCallDialog(startVoiceCallModel.msg.toString(), "Queue");
-            AppDialog().showCallDialog(startVoiceCallModel.msg.toString(), "Queue",AppConstants.call,  cusImage.toString(), startVoiceCallModel.data!.name.toString(), astrologerImage.toString(), astrologerName.toString());
+            AppDialog().showCallDialog(startVoiceCallModel.msg.toString(), "Queue",AppConstants.call,  cusImage.toString(), cusName.toString(), astrologerImage.toString(), astrologerName.toString());
           } else {
             // showCallDialog(startVoiceCallModel.msg.toString(), "Init");
-            AppDialog().showCallDialog(startVoiceCallModel.msg.toString(), "Init",AppConstants.call,  cusImage.toString(), startVoiceCallModel.data!.name.toString(), astrologerImage.toString(), astrologerName.toString());
+            AppDialog().showCallDialog(startVoiceCallModel.msg.toString(), "Init",AppConstants.call,  cusImage.toString(), cusName.toString(), astrologerImage.toString(), astrologerName.toString());
 
           }
 
@@ -368,6 +370,7 @@ class ChatIntakeFormController extends GetxController {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? cusImage = await SharedPreferencesHelper.getData(AppConstants.profileImage);
+      String? cusName = await SharedPreferencesHelper.getData(AppConstants.name);
       final response = await _dio.post(AppConstants.startInAppVoiceCall, data: {
         'api_key': apiKey,
         "user_uni_id": uniId,
@@ -382,7 +385,7 @@ class ChatIntakeFormController extends GetxController {
           // Get.back();
           if (startInAppVoiceCallModel.joinStatus == 0) {
             // showCallDialog(startInAppVoiceCallModel.msg.toString(), "Queue");
-            AppDialog().showCallDialog(startInAppVoiceCallModel.msg.toString(), "Queue",AppConstants.call,  cusImage.toString(), startInAppVoiceCallModel.data!.name.toString(), astrologerImage.toString(), astrologerName.toString());
+            AppDialog().showCallDialog(startInAppVoiceCallModel.msg.toString(), "Queue",AppConstants.call,  cusImage.toString(), cusName.toString(), astrologerImage.toString(), astrologerName.toString());
           } else if (startInAppVoiceCallModel.joinStatus == 1 ||
               startInAppVoiceCallModel.joinStatus == 2) {
             String? customerUniUd =
@@ -561,6 +564,7 @@ class ChatIntakeFormController extends GetxController {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? cusImage = await SharedPreferencesHelper.getData(AppConstants.profileImage);
+      String? cusName = await SharedPreferencesHelper.getData(AppConstants.name);
       final response = await _dio.post(AppConstants.startVideoCall, data: {
         'api_key': apiKey,
         "user_uni_id": uniId,
@@ -575,7 +579,7 @@ class ChatIntakeFormController extends GetxController {
 
           if (startVideoCallModel.joinStatus == 0) {
             // showCallDialog(startVideoCallModel.msg.toString(), "Queue");
-            AppDialog().showCallDialog(startVideoCallModel.msg.toString(), "Queue",AppConstants.video,  cusImage.toString(), startVideoCallModel.data!.name.toString(), astrologerImage.toString(), astrologerName.toString());
+            AppDialog().showCallDialog(startVideoCallModel.msg.toString(), "Queue",AppConstants.video,  cusImage.toString(), cusName.toString(), astrologerImage.toString(), astrologerName.toString());
 
           } else if (startVideoCallModel.joinStatus == 1 || startVideoCallModel.joinStatus == 2) {
             String? customerUniUd = await SharedPreferencesHelper.getData(AppConstants.userUniId);

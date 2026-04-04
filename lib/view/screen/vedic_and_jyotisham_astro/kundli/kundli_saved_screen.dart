@@ -105,7 +105,7 @@ class KundliSavedScreen extends StatelessWidget {
                                                     controller.setKundliEditData(KundliData(name, birthDate, birthTime, tz, lat, lon, birthPlace, language.toString()),id);
 
                                                     Get.toNamed('/kundliSubmitScreen', arguments: {
-                                                      'title': "Edit Kundli"
+                                                      'title': AppStrings.editKundli.tr
                                                     });
                                                   },
                                                   child: Container(
@@ -225,7 +225,7 @@ class KundliSavedScreen extends StatelessWidget {
                     textColor: ColorResources.toolbarText,
                     onPressed: () {
                       Get.toNamed('/kundliSubmitScreen', arguments: {
-                        'title': "Create Kundli",
+                        'title': AppStrings.createKundli.tr,
                       });
                     }
                 ),

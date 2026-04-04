@@ -151,6 +151,8 @@ import 'package:astro_brahmand/view/screen/wallet/wallet_screen.dart';
 import 'controller/deeplink_controller.dart';
 import 'firebase_options.dart';
 import 'notification/notification_service.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 
 ReceivedAction? initialAction;
 
@@ -236,11 +238,30 @@ void main() async {
           Brightness.dark, // Dark style = light content (white icons) for iOS
     ));
   }
+  requestImportantPermissions();
 
   configureFirebaseMessaging();
   FacebookAppEvents().setAutoLogAppEventsEnabled(true);
   runApp(const MyApp());
 }
+
+Future<void> requestImportantPermissions() async {
+  Map<Permission, PermissionStatus> statuses = await [
+    Permission.phone, // For CALL & FOREGROUND_SERVICE_PHONE_CALL
+    Permission.notification, // For POST_NOTIFICATIONS (Android 13+)
+    Permission.microphone,
+  ].request();
+
+  statuses.forEach((permission, status) {
+    debugPrint('$permission: $status');
+  });
+
+  if (await Permission.phone.isDenied ||
+      await Permission.notification.isDenied || await Permission.microphone.isDenied) {
+    debugPrint('Some permissions were denied. App may not function properly.');
+  }
+}
+
 
 @pragma('vm:entry-point')
 Future<void> configureFirebaseMessaging() async {

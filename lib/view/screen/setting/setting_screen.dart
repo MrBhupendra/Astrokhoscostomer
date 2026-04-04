@@ -44,11 +44,12 @@ class SettingScreen extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              CustomTextMedium("Privacy",fontSize: Dimensions.fontSizeLarge,),
+                              CustomTextMedium(AppStrings.privacy.tr,fontSize: Dimensions.fontSizeLarge,),
                               const Gap(10),
                               Row(
                                 children: [
-                                  Expanded(child: CustomTextRegular("Show my name in reviews section of astrologer's profile",)),
+                                  // Expanded(child: CustomTextRegular("Show my name in reviews section of astrologer's profile",)),
+                                  Expanded(child: CustomTextRegular(AppStrings.keepMyReviewsAnonymous.tr,)),
                                   const Gap(5),
                                   Obx(() {
                                     return CustomStatusSwitch(

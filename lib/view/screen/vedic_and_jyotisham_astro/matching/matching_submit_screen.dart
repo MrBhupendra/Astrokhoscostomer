@@ -53,7 +53,7 @@ class MatchingSubmitScreen extends StatelessWidget {
     Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
     String title = arguments['title'] ?? '';
 
-    if(title == "Edit Match Matching"){
+    if(title == AppStrings.editKundliMatching.tr){
       _maleNameController.text = controller.updateMatchingData.boyName.toString();
       _maleBirthDateController.text = controller.updateMatchingData.boyDob.toString();
       _maleBirthTimeController.text = controller.updateMatchingData.boyTob.toString();
@@ -100,7 +100,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _maleNameController,
-                      hintText: 'Enter your full name',
+                      hintText: AppStrings.enterFullName.tr,
                       prefixIcon: Icons.person,
                       focusNode: _maleNameFocusNode,
                       onFieldSubmitted: (_) => _maleBirthdateFocusNode.requestFocus(),
@@ -119,7 +119,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _maleBirthDateController,
-                      hintText: 'Select date',
+                      hintText: AppStrings.selectDate.tr,
                       prefixIcon: CupertinoIcons.calendar,
                       enabled: false,
                       focusNode: _maleBirthdateFocusNode,
@@ -141,7 +141,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _maleBirthTimeController,
-                      hintText: 'Select time',
+                      hintText: AppStrings.selectTime.tr,
                       prefixIcon: CupertinoIcons.clock_fill,
                       enabled: false,
                       focusNode: _maleBirthTimeFocusNode,
@@ -163,7 +163,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _maleBirthPlaceController,
-                      hintText: 'Select birth place',
+                      hintText: AppStrings.selectBirthPlace.tr,
                       prefixIcon: CupertinoIcons.building_2_fill,
                       enabled: false,
                       focusNode: _maleBirthPlaceFocusNode,
@@ -211,7 +211,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _femaleNameController,
-                      hintText: 'Enter your full name',
+                      hintText: AppStrings.enterFullName.tr,
                       prefixIcon: Icons.person,
                       focusNode: _femaleNameFocusNode,
                       onFieldSubmitted: (_) => _femaleBirthdateFocusNode.requestFocus(),
@@ -230,7 +230,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _femaleBirthDateController,
-                      hintText: 'Select date',
+                      hintText: AppStrings.selectDate.tr,
                       prefixIcon: CupertinoIcons.calendar,
                       enabled: false,
                       focusNode: _femaleBirthdateFocusNode,
@@ -251,7 +251,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _femaleBirthTimeController,
-                      hintText: 'Select time',
+                      hintText: AppStrings.selectTime.tr,
                       prefixIcon: CupertinoIcons.clock_fill,
                       enabled: false,
                       focusNode: _femaleBirthTimeFocusNode,
@@ -272,7 +272,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                     const SizedBox(height: Dimensions.sizedBoxExtraSmall),
                     CustomFormTextField(
                       controller: _femaleBirthPlaceController,
-                      hintText: 'Select birth place',
+                      hintText: AppStrings.selectBirthPlace.tr,
                       prefixIcon: CupertinoIcons.building_2_fill,
                       enabled: false,
                       focusNode: _femaleBirthPlaceFocusNode,
@@ -301,11 +301,11 @@ class MatchingSubmitScreen extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(
                     horizontal: Dimensions.paddingSizeDefault),
                 child: CustomElevatedButton(
-                  text: title.contains('Create Kundli Matching') ? 'Create Kundli Matching' : 'Edit Match Matching',
+                  text: title.contains(AppStrings.createKundliMatching.tr) ? AppStrings.createKundliMatching.tr : AppStrings.editKundliMatching.tr,
                   backgroundColor: ColorResources.colorPrimary,
                   textColor: ColorResources.toolbarText,
                   onPressed: () async {
-                    if (title.contains('Create Kundli Matching')) {
+                    if (title.contains(AppStrings.createKundliMatching.tr)) {
                       _formKey.currentState!.validate();
                       if (_formKey.currentState!.validate()) {
                         String? appLanguage = await SharedPreferencesHelper.getData(AppConstants.appLanguage);
@@ -333,7 +333,7 @@ class MatchingSubmitScreen extends StatelessWidget {
                           ),
                         );
                       }
-                    } else if (title.contains('Edit Match Matching')) {
+                    } else if (title.contains(AppStrings.editKundliMatching.tr)) {
                       _formKey.currentState!.validate();
                       if (_formKey.currentState!.validate()) {
                         String? appLanguage = await SharedPreferencesHelper.getData(AppConstants.appLanguage);

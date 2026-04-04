@@ -142,7 +142,7 @@ class MatchingSavedScreen extends StatelessWidget {
                                                     controller.setMatchingEditData(KundliMatchData(boyName, boyBirthDate, boyBirthTime, boyTz, boyLat, boyLong, boyBirthPlace,"", girlName, girlBirthDate, girlBirthTime, girlTz, girlLat,girlLong, girlBirthPlace, language.toString()),id);
 
                                                     Get.toNamed('/matchingSubmitScreen', arguments: {
-                                                      'title': "Edit Match Matching"
+                                                      'title': AppStrings.editKundliMatching.tr
                                                     });
 
                                                   },
@@ -316,7 +316,7 @@ class MatchingSavedScreen extends StatelessWidget {
                   textColor: ColorResources.toolbarText,
                   onPressed: () {
                     Get.toNamed('/matchingSubmitScreen', arguments: {
-                      'title': 'Create Kundli Matching'
+                      'title': AppStrings.createKundliMatching.tr
                     });
                   },
                 ),

@@ -249,7 +249,7 @@ class HomeScreen extends StatelessWidget {
                                 children: [
                                   Expanded(
                                     child: CustomTextMedium(
-                                      "LIVE ASTROLOGERS",
+                                      AppStrings.liveAstrologer.tr,
                                       maxLines: 1,
                                       fontSize: Dimensions.fontSizeLarge,
                                     ),
@@ -1026,12 +1026,12 @@ class HomeScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             CustomTextMedium(
-                              'Feedback to the Admin!',
+                              AppStrings.feedbackToAdmin.tr,
                               fontSize: Dimensions.fontSizeDefault,
                             ),
                             const Gap(Dimensions.gapSmall),
                             CustomTextRegular(
-                              'Share your feedback to help us improve the app',
+                              AppStrings.shareYourFeedbackToHelp.tr,
                               color: ColorResources.black4,
                               fontSize: Dimensions.fontSizeSmall,
                             ),
@@ -1042,7 +1042,7 @@ class HomeScreen extends StatelessWidget {
                                 controller: _feedbackTextController,
                                 maxLines: 5,
                                 decoration: InputDecoration(
-                                  hintText: 'Start typing here..',
+                                  hintText: AppStrings.startTypingHere.tr,
                                   hintStyle: const TextStyle(
                                     color: Colors.grey,
                                     fontSize: Dimensions.fontSizeDefault,
@@ -1093,7 +1093,7 @@ class HomeScreen extends StatelessWidget {
                                     color: ColorResources.colorPrimary,
                                   ),
                                   child: CustomTextRegular(
-                                    "Send Feedback",
+                                    AppStrings.sendFeedback.tr,
                                     textAlign: TextAlign.center,
                                     fontSize: Dimensions.fontSizeSmall,
                                     color: ColorResources.toolbarText,

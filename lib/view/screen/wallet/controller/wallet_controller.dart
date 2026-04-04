@@ -39,6 +39,9 @@ class WalletController extends GetxController {
   RxString payAmount = '***'.obs;
   RxString walletId = '0'.obs;
 
+
+
+
   final isPurchaseLoading = false.obs;
   final isPurchaseSuccess = false.obs;
   RazorpayWalletRechargeModel razorpayModel = RazorpayWalletRechargeModel();

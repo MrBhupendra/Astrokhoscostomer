@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
 import '../../../utill/app_constants.dart';
+import '../../../utill/app_strings.dart';
 import '../../../utill/color_resources.dart';
 import '../../../utill/dimensions.dart';
 import '../../widget/custom_default_indicator.dart';
@@ -23,7 +24,7 @@ class QueueListScreen extends GetView<QueueController> {
     controller.getQueueList();
     return SafeArea(
       child: Scaffold(
-        appBar: const CustomAppBar(title: "My Queue List"),
+        appBar: CustomAppBar(title: AppStrings.myQueueList.tr),
         body: RefreshIndicator(
           onRefresh: () async {
             controller.isQueueSuccess(false);
@@ -217,39 +218,6 @@ class QueueListScreen extends GetView<QueueController> {
                                                   "CHAT",
                                                   color: ColorResources.white,
                                                 )),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                if (controller.queueListData[index].callType == "call")
-                                  Visibility(
-                                    visible: controller.queueListData[index].callType == "call",
-                                    child: Row(
-                                      children: [
-                                        Visibility(
-                                          visible: controller.queueListData[index].status == "queue",
-                                          child: Expanded(
-                                            child: ElevatedButton(
-                                                onPressed: () {
-                                                  String uniqueId = controller.queueListData[index].uniqeid.toString();
-                                                  int? id = controller.queueListData[index].id?.toInt();
-                                                    controller.declineRequest(uniqueId,index, id!);
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor:
-                                                      ColorResources.black8,
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          top: 12, bottom: 12),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8),
-                                                  ),
-                                                ),
-                                                child: CustomTextRegular(
-                                                    "Cancel")),
                                           ),
                                         ),
                                       ],

@@ -356,6 +356,7 @@ class AppStrings {
   static const String chooseMessageForEnglish = "English Language Apply successfully.";
   static const String chooseMessageForHindi = "Hindi Language Apply successfully.";
   static const String connect = "Connect";
+  static const String conNect = "CONNECT";
   static const String min = "/Min.";
   static const String liveOrders = "Live Orders";
   static const String followings = "Followings";
@@ -814,5 +815,50 @@ class AppStrings {
   static const String cancel = "Cancel";
 
   static const String outOfStock  = "Out of stock";
+
+  static const String challengingDays  = "Challenging Days";
+  static const String standoutDays  = "Standout Days";
+  static const String selectDate  = "Select Date";
+  static const String selectTime  = "Select Time";
+  static const String createKundliMatching  = "Create Kundli Matching";
+  static const String editKundliMatching  = "Edit Match Matching";
+  static const String searchAstrologerHere  = "Search Astrologer here";
+  static const String rateApp  = "Rate App";
+  static const String liveAstrologer  = "LIVE ASTROLOGER";
+  static const String searchProductCategory  = "Search Product Category";
+  static const String paymentSummary  = "Payment Summary";
+  static const String productName  = "Product Name";
+  static const String price  = "Price";
+  static const String referenceDiscount  = "Reference Discount";
+  static const String offerDiscount  = "Offer Discount";
+  static const String totalPayable  = "Total Payable";
+  static const String duration  = "Duration";
+  static const String bookingDate  = "Booking Date";
+  static const String bookingTime  = "Booking Time";
+  static const String selectDateForService  = "Select Date for service ";
+  static const String selectTimeForService  = "Select Time for service ";
+  static const String availableForPayment  = "Available for payment";
+  static const String pleaseSelectDate  = "Please Select Date";
+  static const String pleaseSelectTime  = "Please Select Time";
+  static const String recharge  = "Recharge";
+  static const String sendFeedback  = "Send Feedback";
+  static const String startTypingHere  = "Start typing here..";
+  static const String feedbackToAdmin  = "Feedback to the Admin!";
+  static const String shareYourFeedbackToHelp  = "Share your feedback to help us improve the app";
+
+  static const String supportChat  = "Support Chat";
+  static const String astrologerAssistant  = "Astrologer's Assistant";
+  static const String consulting  = "Consulting";
+  static const String gift  = "Gift";
+  static const String dob  = "D.O.B";
+  static const String tob  = "T.O.B";
+  static const String pob  = "P.O.B";
+  static const String specificDasha  = "Specific Dasha";
+  static const String privacy  = "Privacy";
+  static const String keepMyReviewsAnonymous  = "Keep my reviews anonymous so others cannot see my name publicly";
+
+
+
+
 
 }

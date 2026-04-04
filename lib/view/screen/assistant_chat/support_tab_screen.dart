@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_strings.dart';
 import 'package:astro_brahmand/view/screen/assistant_chat/support_channels_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -13,7 +14,7 @@ class SupportTabScreen extends StatelessWidget {
       child: DefaultTabController(
         length: 1,
         child: Scaffold(
-          appBar: const CustomAppBar(title: "Support Chat"),
+          appBar: CustomAppBar(title: AppStrings.supportChat.tr),
           body: Column(
             children: [
               Container(
@@ -22,7 +23,7 @@ class SupportTabScreen extends StatelessWidget {
                   tabs: [
                     SizedBox(
                       width: Get.width/1,
-                      child: const Tab(text: "Astrologer's Assistant"),
+                      child: Tab(text: AppStrings.astrologerAssistant.tr),
                     ),
                     // SizedBox(
                     //   width: Get.width/4,

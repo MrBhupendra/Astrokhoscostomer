@@ -184,7 +184,7 @@ class _HoroscopeDailyScreenState extends State<HoroscopeDailyScreen> {
                             ),
                             minimumSize: const Size(30, 30),
                           ),
-                          child: const Text("Yesterday"),
+                          child: Text(AppStrings.yesterday.tr),
                         ),
                         const SizedBox(width: 20),
                         ElevatedButton(
@@ -202,7 +202,7 @@ class _HoroscopeDailyScreenState extends State<HoroscopeDailyScreen> {
                             ),
                             minimumSize: const Size(30, 30),
                           ),
-                          child: const Text("Today"),
+                          child: Text(AppStrings.today.tr),
                         ),
                         const SizedBox(width: 20),
                         ElevatedButton(
@@ -220,7 +220,7 @@ class _HoroscopeDailyScreenState extends State<HoroscopeDailyScreen> {
                             ),
                             minimumSize: const Size(30, 30),
                           ),
-                          child: const Text("Tomorrow"),
+                          child: Text(AppStrings.tomorrow.tr),
                         ),
                       ],
                     ),

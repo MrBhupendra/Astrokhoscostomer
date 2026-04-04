@@ -45,7 +45,7 @@ class AddAddressScreen extends GetView<ProductsController> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: const CustomAppBar(title: "New Address"),
+        appBar: CustomAppBar(title: AppStrings.newAddress.tr),
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -172,7 +172,7 @@ class AddAddressScreen extends GetView<ProductsController> {
 
                           const Gap(8),
                           CustomElevatedButton(
-                            text: "SUBMIT",
+                            text: AppStrings.submit.tr,
                             backgroundColor:
                             ColorResources.colorPrimary,
                             textColor: ColorResources.toolbarText,

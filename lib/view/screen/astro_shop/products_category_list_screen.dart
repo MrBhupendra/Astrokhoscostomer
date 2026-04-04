@@ -58,7 +58,7 @@ class ProductsCategoryListScreen extends GetView<ProductsController> {
                         borderRadius: BorderRadius.circular(8.0),
                         borderSide: BorderSide.none,
                       ),
-                      hintText: 'Search Product Category',
+                      hintText: AppStrings.searchProductCategory.tr,
                       // hintStyle: TextStyle(color: ColorResources.colorPrimary),
                       prefixIcon: Padding(
                         padding: const EdgeInsets.all(12.0),
