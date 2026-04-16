@@ -346,6 +346,8 @@ class AppStrings {
   static const String proceed = "Proceed";
   static const String shareApp = "Share App";
   static const String privacyPolicy = "Privacy Policy";
+  static const String shippingPolicy = "Shipping Policy";
+  static const String cancellationPolicy = "Cancellation and Refunds";
   static const String contactus = "Contact Us";
   static const String settings = "Settings";
   static const String logout = "Logout";

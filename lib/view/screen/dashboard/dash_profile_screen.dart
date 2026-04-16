@@ -374,10 +374,30 @@ class ProfileScreen extends StatelessWidget {
 
               DashProfileListWidget(
                 onTap: () {
+                  Get.to(WebViewScreen(AppStrings.shippingPolicy.tr,
+                      AppConstants.shippingPolicyUrl));
+                },
+                image: Images.shipping,
+                title: AppStrings.shippingPolicy.tr,
+              ),
+              const Divider(color: ColorResources.black7),
+
+              DashProfileListWidget(
+                onTap: () {
                   Get.toNamed("/contact_us");
                 },
                 image: Images.contactUs,
                 title: AppStrings.contactus.tr,
+              ),
+              const Divider(color: ColorResources.black7),
+
+              DashProfileListWidget(
+                onTap: () {
+                  Get.to(WebViewScreen(AppStrings.cancellationPolicy.tr,
+                      AppConstants.cancellationPolicyUrl));
+                },
+                image: Images.refundCancellation,
+                title: AppStrings.cancellationPolicy.tr,
               ),
               const Divider(color: ColorResources.black7),
 

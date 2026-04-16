@@ -1850,30 +1850,15 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                                 return Expanded(
                                                   child: GestureDetector(
                                                     onTap: () {
-                                                      if (giftController
-                                                              .selectedGiftIndex
-                                                              .value !=
-                                                          -1) {
-                                                        giftController
-                                                            .sendGiftApi(
+                                                      print("${controller.astrologerData.value.astrologerUniId.toString()}, ${giftController.liveGiftListModel.data![giftController.selectedGiftIndex.value.toInt()].id.toString()}");
+                                                      if (giftController.selectedGiftIndex.value != -1) {
+                                                        giftController.sendGiftApi(
                                                           "0",
-                                                          giftController
-                                                              .astrologerData
-                                                              .value
-                                                              .astrologerUniId
-                                                              .toString(),
-                                                          giftController
-                                                              .liveGiftListModel
-                                                              .data![giftController
-                                                                  .selectedGiftIndex
-                                                                  .value
-                                                                  .toInt()]
-                                                              .id
-                                                              .toString(),
+                                                          controller.astrologerData.value.astrologerUniId.toString(),
+                                                          giftController.liveGiftListModel.data![giftController.selectedGiftIndex.value.toInt()].id.toString(),
                                                         );
                                                       } else {
-                                                        CustomSnackBar.showTop(
-                                                            "Please select a gift.");
+                                                        CustomSnackBar.showTop("Please select a gift.");
                                                       }
                                                     },
                                                     child: Container(

@@ -308,7 +308,9 @@ class Images {
   static String aboutApp = 'assets/images/about.png';
   static String terms = 'assets/images/terms.png';
   static String privacy = 'assets/images/privacy.png';
+  static String shipping = 'assets/images/shipping.png';
   static String contactUs = 'assets/images/contact_us.png';
+  static String refundCancellation = 'assets/images/refund_and_cancellation.png';
   static String logout = 'assets/images/logout.png';
   static String login = 'assets/images/logout.png';
   static String deleteAcc = 'assets/images/delete_acc.png';

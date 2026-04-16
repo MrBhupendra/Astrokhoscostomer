@@ -334,6 +334,8 @@ class AppConstants {
   static const String aboutUsUrl = '$baseUrl/page_app/about-us';
   static const String tncUrl = '$baseUrl/page_app/terms-condition';
   static const String privacyPolicyUrl = '$baseUrl/page_app/privacy-policy';
+  static const String shippingPolicyUrl = '$baseUrl/page_app/shipping-policy';
+  static const String cancellationPolicyUrl = '$baseUrl/page_app/refund-and-cancellation-policy';
   static const String blogShareUrl = '$baseUrl/blogs';
   static const String quoteShareUrl = '$baseUrl/quotes';
   static const String astroProfileUrl = '$baseUrl/astrologers';
