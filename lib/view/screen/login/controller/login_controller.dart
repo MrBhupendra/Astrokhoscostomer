@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:app_links/app_links.dart';
 import 'package:astro_brahmand/controller/deeplink_controller.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:dio/dio.dart';
@@ -75,6 +74,11 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    _dio.options = _dio.options.copyWith(
+      connectTimeout: const Duration(seconds: 20),
+      sendTimeout: const Duration(seconds: 20),
+      receiveTimeout: const Duration(seconds: 25),
+    );
     CommonMethods().getFCMToken();
     if (AppFeatures.otpAutoFill) {
       _initOTPListener();
@@ -159,9 +163,11 @@ class LoginController extends GetxController {
     mobileNumber = mobile.toString();
     CustomProgressDialog.showDialog();
     try {
-      final response = await _dio.post(AppConstants.otpSendUri, data: {'country_code': countryCode, 'phone': mobile});
+      final response = await _dio.post(
+        AppConstants.otpSendUri,
+        data: {'country_code': countryCode, 'phone': mobile},
+      );
       if (response.statusCode == 200) {
-        CustomProgressDialog.dismissDialog();
         otpModel = SuccessModel.fromJson(response.data);
         if (otpModel.status == AppConstants.success) {
           _otpOrderId = response.data['otpless_orderId'] ?? "";
@@ -171,16 +177,17 @@ class LoginController extends GetxController {
           CustomSnackBar.showBottom(otpModel.msg.toString());
         }
       } else {
-        CustomProgressDialog.dismissDialog();
         if (kDebugMode) {
           print('OnApiError');
         }
       }
     } catch (e) {
-      CustomProgressDialog.dismissDialog();
       if (kDebugMode) {
         print('OnException==> $e');
       }
+      CustomSnackBar.showBottom("Network error. Please try again.");
+    } finally {
+      CustomProgressDialog.dismissDialog();
     }
   }
 
@@ -213,23 +220,28 @@ class LoginController extends GetxController {
     try {
       debugPrint("mobile$mobile");
       String fcmToken = await CommonMethods().getFCMToken();
-      final response = await _dio.post(AppConstants.verifyOtpUri, data: {
-        'phone': mobile,
-        'otp': otp,
-        'user_fcm_token': fcmToken,
-        'otpless_orderId': orderId,
-        'is_updated': 1,
-        'country_code': countryCode.value.toString(),
-        'country_name': countryName.value.toString(),
-        'referral_code': deepLinkController.referrerCode.value,
-      });
+      final response = await _dio
+          .post(AppConstants.verifyOtpUri, data: {
+            'phone': mobile,
+            'otp': otp,
+            'user_fcm_token': fcmToken,
+            'otpless_orderId': orderId,
+            'is_updated': 1,
+            'country_code': countryCode.value.toString(),
+            'country_name': countryName.value.toString(),
+            'referral_code': deepLinkController.referrerCode.value,
+          })
+          .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
-        CustomProgressDialog.dismissDialog();
         verifyCustomerModel = VerifyCustomerModel.fromJson(response.data);
         if (verifyCustomerModel.status == AppConstants.success) {
           try {
-            final userCredential = await FirebaseAuth.instance.signInWithCustomToken(verifyCustomerModel.data!.firebaseAuthToken.toString());
+            await FirebaseAuth.instance
+                .signInWithCustomToken(
+                  verifyCustomerModel.data!.firebaseAuthToken.toString(),
+                )
+                .timeout(const Duration(seconds: 25));
             await AppEvents().sendSignInEvent("mobile", verifyCustomerModel.data!.customerUniId.toString(), mobile.toString());
             configController.setCurrency(
                 currencySymbol: verifyCustomerModel.data!.currencySymbol ?? AppConstants.defaultCurrencySymbol,
@@ -250,6 +262,8 @@ class LoginController extends GetxController {
               Get.offAllNamed('/updateProfile',
                   arguments: {'mobile': mobile, 'type': "Register"});
             }
+          } on TimeoutException {
+            CustomSnackBar.showBottom("Network is slow. Please try again.");
           } on FirebaseAuthException catch (e) {
             switch (e.code) {
               case "invalid-custom-token":
@@ -274,16 +288,19 @@ class LoginController extends GetxController {
           CustomSnackBar.showBottom(verifyCustomerModel.msg.toString());
         }
       } else {
-        CustomProgressDialog.dismissDialog();
         if (kDebugMode) {
           print('OnApiError');
         }
       }
+    } on TimeoutException {
+      CustomSnackBar.showBottom("Network is slow. Please try again.");
     } catch (e) {
-      CustomProgressDialog.dismissDialog();
       if (kDebugMode) {
         print('OnException==> $e');
       }
+      CustomSnackBar.showBottom("Something went wrong. Please try again.");
+    } finally {
+      CustomProgressDialog.dismissDialog();
     }
   }
 
@@ -368,10 +385,7 @@ class LoginController extends GetxController {
       countryCode.value = country.dialCode; //Ex: +91, +1
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      final credential = GoogleAuthProvider.credential(
-        accessToken: googleAuth.accessToken,
-        idToken: googleAuth.idToken,
-      );
+      // Using backend login with Google ID token; Firebase credential not required here.
 
       // Fetch user information
       String? customerName = googleUser.displayName;
@@ -416,7 +430,9 @@ class LoginController extends GetxController {
         verifyCustomerModel = VerifyCustomerModel.fromJson(response.data);
         if (verifyCustomerModel.status == AppConstants.success) {
           try {
-            final userCredential = await FirebaseAuth.instance.signInWithCustomToken(verifyCustomerModel.data!.firebaseAuthToken.toString());
+            await FirebaseAuth.instance.signInWithCustomToken(
+              verifyCustomerModel.data!.firebaseAuthToken.toString(),
+            );
             debugPrint("Sign-in successful.");
             await AppEvents().sendSignInEvent("gmail",verifyCustomerModel.data!.customerUniId.toString(), "");
             configController.setCurrency(
