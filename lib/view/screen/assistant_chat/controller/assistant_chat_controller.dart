@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:astro_brahmand/utill/color_resources.dart';
-import 'package:astro_brahmand/view/widget/custom_okdialog_widget.dart';
 import 'package:astro_brahmand/view/widget/custom_snack_bar.dart';
 import 'package:dio/dio.dart' show Dio, FormData, MultipartFile;
 import 'package:firebase_database/firebase_database.dart';
@@ -44,7 +42,13 @@ class AssistantChatController extends FullLifeCycleController
   late var storageReference;
 
   var onMessageListener;
+  var onMessageChangedListener;
   var onTypingListener;
+
+  bool _isChatScreenActive = false;
+  Timer? _markReadDebounceTimer;
+  final Set<String> _deliveredWritesInFlight = <String>{};
+  final Set<String> _readWritesInFlight = <String>{};
 
   //Chat history
   final Dio _dio = Dio();
@@ -71,7 +75,6 @@ class AssistantChatController extends FullLifeCycleController
   //Timer
   RxInt seconds = 60.obs;
   RxBool isTimerRunning = false.obs;
-  Timer? _timer;
 
   //Voice Note duration
   final RxInt recordingDuration = 0.obs;
@@ -152,6 +155,7 @@ class AssistantChatController extends FullLifeCycleController
     if (kDebugMode) {
       print('OnInit ChatScreen');
     }
+    _isChatScreenActive = false;
   }
 
 
@@ -165,6 +169,7 @@ class AssistantChatController extends FullLifeCycleController
 
   @override
   void onResumed() {
+    _isChatScreenActive = true;
     dbReference.child(customerStatus).set(true);
     configController.setCurrentScreen(AppConstants.chat);
     if (messageController.text.isNotEmpty) {
@@ -175,10 +180,12 @@ class AssistantChatController extends FullLifeCycleController
     if (kDebugMode) {
       print('OnResumed ChatScreen');
     }
+    markMessagesAsRead();
   }
 
   @override
   void onPaused() {
+    _isChatScreenActive = false;
     dbReference.child(customerStatus).set(false);
     typingReference.child(customerTypingChild).set(false);
     configController.setCurrentScreen('');
@@ -189,6 +196,8 @@ class AssistantChatController extends FullLifeCycleController
 
   @override
   void onClose() {
+    _isChatScreenActive = false;
+    _markReadDebounceTimer?.cancel();
     dbReference.child(customerStatus).set(false);
     typingReference.child(customerTypingChild).set(false);
     configController.setCurrentScreen('');
@@ -232,12 +241,18 @@ class AssistantChatController extends FullLifeCycleController
 
   void registerListeners() {
     onMessageListener = messageReference.onChildAdded.listen((event) {
-      final json = event.snapshot.value as Map<dynamic, dynamic>;
-      final message = ChatMessageModel.fromJson(json);
-      addMessage(message);
+      _upsertMessageFromSnapshot(event.snapshot);
     }, onError: (error) {
       if (kDebugMode) {
         print('[ChatScreenController] onMessageListener $error');
+      }
+    });
+
+    onMessageChangedListener = messageReference.onChildChanged.listen((event) {
+      _upsertMessageFromSnapshot(event.snapshot);
+    }, onError: (error) {
+      if (kDebugMode) {
+        print('[ChatScreenController] onMessageChangedListener $error');
       }
     });
 
@@ -259,7 +274,42 @@ class AssistantChatController extends FullLifeCycleController
   }
 
   void addMessage(ChatMessageModel messageModel) {
-    chatHistoryList.insert(0, messageModel);
+    _upsertMessageLocally(messageModel);
+  }
+
+  void _upsertMessageFromSnapshot(DataSnapshot snapshot) {
+    if (snapshot.value == null) return;
+    final json = Map<dynamic, dynamic>.from(snapshot.value as Map);
+    final message = ChatMessageModel.fromJson(json);
+    message.messageId ??= snapshot.key;
+
+    _upsertMessageLocally(message);
+
+    final myId = uniId?.toString();
+    if (myId != null &&
+        message.senderUniId != null &&
+        message.senderUniId.toString() != myId) {
+      final status = (message.deliveryStatus ?? 'sent').toString().toLowerCase();
+      if (message.messageId != null && message.messageId!.isNotEmpty && status == 'sent') {
+        markDelivered(message.messageId!);
+      }
+    }
+
+    if (_isChatScreenActive) {
+      markMessagesAsRead();
+    }
+  }
+
+  void _upsertMessageLocally(ChatMessageModel message) {
+    final id = message.messageId;
+    if (id != null && id.isNotEmpty) {
+      final index = chatHistoryList.indexWhere((m) => m.messageId == id);
+      if (index != -1) {
+        chatHistoryList[index] = message;
+        return;
+      }
+    }
+    chatHistoryList.insert(0, message);
   }
 
   Future<void> getChatHistory(String channelName, String firstMsgId, num page, bool chatEnd) async {
@@ -387,8 +437,11 @@ class AssistantChatController extends FullLifeCycleController
     }
   }
 
-  void sendMessage(ChatMessageModel message, File? imageFile, String fileName) {
-    messageReference.push().set(message.toJson());
+  Future<void> sendMessage(ChatMessageModel message, File? imageFile, String fileName) async {
+    final newRef = messageReference.push();
+    message.messageId = newRef.key;
+    message.deliveryStatus = 'sent';
+    await newRef.set(message.toJson());
     saveChatApi(
         uniqueId,
         channelName,
@@ -398,6 +451,82 @@ class AssistantChatController extends FullLifeCycleController
         message.messageType.toString(),
         imageFile,
         fileName);
+  }
+
+  Future<void> markDelivered(String messageId) async {
+    if (messageId.isEmpty) return;
+    if (_deliveredWritesInFlight.contains(messageId)) return;
+
+    final myId = uniId?.toString();
+    if (myId == null || myId.isEmpty) return;
+
+    final index = chatHistoryList.indexWhere((m) => m.messageId == messageId);
+    if (index != -1) {
+      final msg = chatHistoryList[index];
+      if (msg.senderUniId?.toString() == myId) return;
+      final status = (msg.deliveryStatus ?? 'sent').toString().toLowerCase();
+      if (status != 'sent') return;
+    }
+
+    _deliveredWritesInFlight.add(messageId);
+    try {
+      await messageReference.child(messageId).update({
+        'deliveryStatus': 'delivered',
+        'deliveredAt': getCurrentDateTime(),
+      });
+    } finally {
+      _deliveredWritesInFlight.remove(messageId);
+    }
+  }
+
+  Future<void> markRead(String messageId) async {
+    if (messageId.isEmpty) return;
+    if (_readWritesInFlight.contains(messageId)) return;
+
+    final myId = uniId?.toString();
+    if (myId == null || myId.isEmpty) return;
+
+    final index = chatHistoryList.indexWhere((m) => m.messageId == messageId);
+    if (index != -1) {
+      final msg = chatHistoryList[index];
+      if (msg.senderUniId?.toString() == myId) return;
+      final status = (msg.deliveryStatus ?? 'sent').toString().toLowerCase();
+      if (status == 'read') return;
+    }
+
+    _readWritesInFlight.add(messageId);
+    try {
+      await messageReference.child(messageId).update({
+        'deliveryStatus': 'read',
+        'readAt': getCurrentDateTime(),
+      });
+    } finally {
+      _readWritesInFlight.remove(messageId);
+    }
+  }
+
+  void markMessagesAsRead() {
+    if (!_isChatScreenActive) return;
+    _markReadDebounceTimer?.cancel();
+    _markReadDebounceTimer = Timer(const Duration(milliseconds: 350), () async {
+      final myId = uniId?.toString();
+      if (myId == null || myId.isEmpty) return;
+
+      final idsToRead = <String>{};
+      for (final m in chatHistoryList) {
+        if (m.senderUniId == null || m.senderUniId.toString() == myId) continue;
+        final id = m.messageId;
+        if (id == null || id.isEmpty) continue;
+        final status = (m.deliveryStatus ?? 'sent').toString().toLowerCase();
+        if (status != 'read') {
+          idsToRead.add(id);
+        }
+      }
+
+      for (final id in idsToRead) {
+        await markRead(id);
+      }
+    });
   }
 
   void sendImage(File imageFile, String fileName) async {

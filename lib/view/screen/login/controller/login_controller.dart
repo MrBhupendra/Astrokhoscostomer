@@ -171,15 +171,17 @@ class LoginController extends GetxController {
         otpModel = SuccessModel.fromJson(response.data);
         if (otpModel.status == AppConstants.success) {
           _otpOrderId = response.data['otpless_orderId'] ?? "";
+          // Important: close loader BEFORE navigating, otherwise dismissDialog()
+          // may pop the newly pushed route instead of the dialog.
+          CustomProgressDialog.dismissDialog();
           Get.toNamed('/verifyOtp');
           startTimer();
         } else {
           CustomSnackBar.showBottom(otpModel.msg.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        if (kDebugMode) print('OnApiError: ${response.statusCode}');
+        CustomSnackBar.showBottom("Something went wrong. Please try again.");
       }
     } catch (e) {
       if (kDebugMode) {
