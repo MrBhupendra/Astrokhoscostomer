@@ -7,7 +7,6 @@ import '../../../../utill/color_resources.dart';
 import '../../../widget/custom_round_network_image.dart';
 import '../../../widget/custom_text_regular.dart';
 import '../model/chat_message_model.dart';
-import 'message_status_icon.dart';
 
 class ChatVoiceNoteWidget extends StatefulWidget {
   final ChatMessageModel message;
@@ -104,17 +103,10 @@ class _ChatVoiceNoteWidgetState extends State<ChatVoiceNoteWidget> {
                         //   message.name!,
                         // ),
                         const Gap(2),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomTextRegular(
-                              widget.message.date.toString(),
-                              fontSize: 10.0,
-                              color: ColorResources.black4,
-                            ),
-                            const Gap(4),
-                            buildMessageStatusIcon(widget.message, widget.userUniId),
-                          ],
+                        CustomTextRegular(
+                          widget.message.date.toString(),
+                          fontSize: 10.0,
+                          color: ColorResources.black4,
                         ),
                       ],
                     ),

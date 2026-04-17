@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:astro_brahmand/utill/color_resources.dart';
+import 'package:astro_brahmand/view/screen/architect/architect_chat/controller/architect_chat_intake_form_controller.dart';
 import 'package:astro_brahmand/view/screen/architect/architect_chat/controller/architect_image_picker_controller.dart';
 import 'package:astro_brahmand/view/screen/slot_booking/slot_chat/controller/slot_chat_intake_form_controller.dart';
 import 'package:dio/dio.dart' show Dio, FormData, MultipartFile;
@@ -47,12 +48,6 @@ class SlotChatScreenController extends FullLifeCycleController with FullLifeCycl
   var chatAcceptedListener;
   var chatEndListener;
   var onMessageListener;
-  var onMessageChangedListener;
-
-  bool _isChatScreenActive = false;
-  Timer? _markReadDebounceTimer;
-  final Set<String> _deliveredWritesInFlight = <String>{};
-  final Set<String> _readWritesInFlight = <String>{};
 
   //Chat history
   final Dio _dio = Dio();
@@ -170,22 +165,18 @@ class SlotChatScreenController extends FullLifeCycleController with FullLifeCycl
     if (kDebugMode) {
       print('OnInit ChatScreen');
     }
-    _isChatScreenActive = false;
   }
 
   @override
   void onResumed() {
-    _isChatScreenActive = true;
     dbReference.child(customerStatus).set(true);
     if (kDebugMode) {
       print('OnResumed ChatScreen');
     }
-    markMessagesAsRead();
   }
 
   @override
   void onPaused() {
-    _isChatScreenActive = false;
     dbReference.child(customerStatus).set(false);
     if (kDebugMode) {
       print('onPaused ChatScreen');
@@ -194,8 +185,6 @@ class SlotChatScreenController extends FullLifeCycleController with FullLifeCycl
 
   @override
   void onClose() {
-    _isChatScreenActive = false;
-    _markReadDebounceTimer?.cancel();
     dbReference.child(customerStatus).set(false);
    // stopTimer();
     super.onClose();
@@ -287,59 +276,18 @@ class SlotChatScreenController extends FullLifeCycleController with FullLifeCycl
     });
 
     onMessageListener = messageReference.onChildAdded.listen((event) {
-      _upsertMessageFromSnapshot(event.snapshot);
+      final json = event.snapshot.value as Map<dynamic, dynamic>;
+      final message = ChatMessageModel.fromJson(json);
+      addMessage(message);
     }, onError: (error) {
       if (kDebugMode) {
         print('[ChatScreenController] onMessageListener $error');
       }
     });
-
-    onMessageChangedListener = messageReference.onChildChanged.listen((event) {
-      _upsertMessageFromSnapshot(event.snapshot);
-    }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatScreenController] onMessageChangedListener $error');
-      }
-    });
   }
 
   void addMessage(ChatMessageModel messageModel) {
-    _upsertMessageLocally(messageModel);
-  }
-
-  void _upsertMessageFromSnapshot(DataSnapshot snapshot) {
-    if (snapshot.value == null) return;
-    final json = Map<dynamic, dynamic>.from(snapshot.value as Map);
-    final message = ChatMessageModel.fromJson(json);
-    message.messageId ??= snapshot.key;
-
-    _upsertMessageLocally(message);
-
-    final myId = uniId?.toString();
-    if (myId != null &&
-        message.senderUniId != null &&
-        message.senderUniId.toString() != myId) {
-      final status = (message.deliveryStatus ?? 'sent').toString().toLowerCase();
-      if (message.messageId != null && message.messageId!.isNotEmpty && status == 'sent') {
-        markDelivered(message.messageId!);
-      }
-    }
-
-    if (_isChatScreenActive) {
-      markMessagesAsRead();
-    }
-  }
-
-  void _upsertMessageLocally(ChatMessageModel message) {
-    final id = message.messageId;
-    if (id != null && id.isNotEmpty) {
-      final index = chatHistoryList.indexWhere((m) => m.messageId == id);
-      if (index != -1) {
-        chatHistoryList[index] = message;
-        return;
-      }
-    }
-    chatHistoryList.insert(0, message);
+    chatHistoryList.insert(0, messageModel);
   }
 
   Future<void> getChatHistory(
@@ -541,11 +489,8 @@ class SlotChatScreenController extends FullLifeCycleController with FullLifeCycl
     sendMessage(chatMessage, null, '');
   }
 
-  Future<void> sendMessage(ChatMessageModel message, File? imageFile, String fileName) async {
-    final newRef = messageReference.push();
-    message.messageId = newRef.key;
-    message.deliveryStatus = 'sent';
-    await newRef.set(message.toJson());
+  void sendMessage(ChatMessageModel message, File? imageFile, String fileName) {
+    messageReference.push().set(message.toJson());
     saveChatApi(
         uniqueId,
         channelName,
@@ -555,82 +500,6 @@ class SlotChatScreenController extends FullLifeCycleController with FullLifeCycl
         message.messageType.toString(),
         imageFile,
         fileName);
-  }
-
-  Future<void> markDelivered(String messageId) async {
-    if (messageId.isEmpty) return;
-    if (_deliveredWritesInFlight.contains(messageId)) return;
-
-    final myId = uniId?.toString();
-    if (myId == null || myId.isEmpty) return;
-
-    final index = chatHistoryList.indexWhere((m) => m.messageId == messageId);
-    if (index != -1) {
-      final msg = chatHistoryList[index];
-      if (msg.senderUniId?.toString() == myId) return;
-      final status = (msg.deliveryStatus ?? 'sent').toString().toLowerCase();
-      if (status != 'sent') return;
-    }
-
-    _deliveredWritesInFlight.add(messageId);
-    try {
-      await messageReference.child(messageId).update({
-        'deliveryStatus': 'delivered',
-        'deliveredAt': getCurrentDateTime(),
-      });
-    } finally {
-      _deliveredWritesInFlight.remove(messageId);
-    }
-  }
-
-  Future<void> markRead(String messageId) async {
-    if (messageId.isEmpty) return;
-    if (_readWritesInFlight.contains(messageId)) return;
-
-    final myId = uniId?.toString();
-    if (myId == null || myId.isEmpty) return;
-
-    final index = chatHistoryList.indexWhere((m) => m.messageId == messageId);
-    if (index != -1) {
-      final msg = chatHistoryList[index];
-      if (msg.senderUniId?.toString() == myId) return;
-      final status = (msg.deliveryStatus ?? 'sent').toString().toLowerCase();
-      if (status == 'read') return;
-    }
-
-    _readWritesInFlight.add(messageId);
-    try {
-      await messageReference.child(messageId).update({
-        'deliveryStatus': 'read',
-        'readAt': getCurrentDateTime(),
-      });
-    } finally {
-      _readWritesInFlight.remove(messageId);
-    }
-  }
-
-  void markMessagesAsRead() {
-    if (!_isChatScreenActive) return;
-    _markReadDebounceTimer?.cancel();
-    _markReadDebounceTimer = Timer(const Duration(milliseconds: 350), () async {
-      final myId = uniId?.toString();
-      if (myId == null || myId.isEmpty) return;
-
-      final idsToRead = <String>{};
-      for (final m in chatHistoryList) {
-        if (m.senderUniId == null || m.senderUniId.toString() == myId) continue;
-        final id = m.messageId;
-        if (id == null || id.isEmpty) continue;
-        final status = (m.deliveryStatus ?? 'sent').toString().toLowerCase();
-        if (status != 'read') {
-          idsToRead.add(id);
-        }
-      }
-
-      for (final id in idsToRead) {
-        await markRead(id);
-      }
-    });
   }
 
   void sendImage(File imageFile, String fileName) async {

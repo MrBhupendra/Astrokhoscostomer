@@ -12,10 +12,9 @@ import '../../../widget/custom_text_regular.dart';
 import '../../ask_question/controller/typing_controller.dart';
 import '../controller/chat_intake_form_controller.dart';
 import '../model/chat_message_model.dart';
-import 'message_status_icon.dart';
 
 class ChatMessageWidget extends StatelessWidget {
-  final ChatMessageModel message;
+  ChatMessageModel message;
   final String? userUniId;
   final bool isLastMessage;
   ChatMessageWidget(this.message, this.userUniId, {required this.isLastMessage,super.key});
@@ -90,17 +89,10 @@ class ChatMessageWidget extends StatelessWidget {
                           )
                       ),
                       const Gap(2),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CustomTextRegular(
-                            CommonMethods().formatDateTimeOutput(message.date.toString()),
-                            fontSize: 10.0,
-                            color: ColorResources.black4,
-                          ),
-                          const Gap(4),
-                          buildMessageStatusIcon(message, userUniId),
-                        ],
+                      CustomTextRegular(
+                        CommonMethods().formatDateTimeOutput(message.date.toString()),
+                        fontSize: 10.0,
+                        color: ColorResources.black4,
                       ),
                     ],
                   ),

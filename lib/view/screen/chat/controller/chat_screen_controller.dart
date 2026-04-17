@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'package:astro_brahmand/utill/color_resources.dart';
 import 'package:astro_brahmand/view/screen/chat/model/chat_birth_model.dart';
+import 'package:astro_brahmand/view/widget/custom_default_dialog.dart';
 import 'package:astro_brahmand/view/widget/custom_okdialog_widget.dart';
 import 'package:astro_brahmand/view/widget/custom_snack_bar.dart';
 import 'package:dio/dio.dart' show Dio, FormData, MultipartFile;
@@ -57,7 +58,6 @@ class ChatScreenController extends FullLifeCycleController
   var chatAcceptedListener;
   var chatEndListener;
   var onMessageListener;
-  var onMessageChangedListener;
   var onTypingListener;
 
   //Chat history
@@ -136,19 +136,6 @@ class ChatScreenController extends FullLifeCycleController
   //For AI Astrologer
   final TypingController typingController = Get.put(TypingController());
 
-  bool _isChatScreenVisible = false;
-  bool _isAppActive = true;
-  Timer? _markReadDebounceTimer;
-
-  bool get _canMarkRead => _isChatScreenVisible && _isAppActive;
-
-  void setChatScreenVisible(bool visible) {
-    _isChatScreenVisible = visible;
-    if (_canMarkRead) {
-      markMessagesAsRead();
-    }
-  }
-
   @override
   Future<void> onInit() async {
     super.onInit();
@@ -203,11 +190,7 @@ class ChatScreenController extends FullLifeCycleController
     if(chatIntakeFormController.isVirtualAstrologer == 1){
       dbReference.child("astrologer_status").set(true);
     }
-    // IMPORTANT: don't wipe RTDB messages for an ongoing chat session.
-    // Otherwise read/delivered status updates can't be applied after returning to the screen.
-    if (chatEnd == true) {
-      clearFirebaseMessages();
-    }
+    clearFirebaseMessages();
     getChatHistory(channelName, "0", offsetCount, chatEnd);
 
     scrollController.addListener(() {
@@ -235,7 +218,6 @@ class ChatScreenController extends FullLifeCycleController
 
   @override
   void onResumed() {
-    _isAppActive = true;
     dbReference.child(customerStatus).set(true);
     configController.setCurrentScreen(AppConstants.chat);
     if (messageController.text.isNotEmpty) {
@@ -246,14 +228,10 @@ class ChatScreenController extends FullLifeCycleController
     if (kDebugMode) {
       print('OnResumed ChatScreen');
     }
-    if (_canMarkRead) {
-      markMessagesAsRead();
-    }
   }
 
   @override
   void onPaused() {
-    _isAppActive = false;
     dbReference.child(customerStatus).set(false);
     typingReference.child(customerTypingChild).set(false);
     configController.setCurrentScreen('');
@@ -358,7 +336,6 @@ class ChatScreenController extends FullLifeCycleController
         chatAcceptedListener.cancel();
         onTypingListener.cancel();
         onMessageListener.cancel();
-        onMessageChangedListener.cancel();
       }
     }, onError: (error) {
       if (kDebugMode) {
@@ -367,18 +344,12 @@ class ChatScreenController extends FullLifeCycleController
     });
 
     onMessageListener = messageReference.onChildAdded.listen((event) {
-      _upsertMessageFromSnapshot(event.snapshot);
+      final json = event.snapshot.value as Map<dynamic, dynamic>;
+      final message = ChatMessageModel.fromJson(json);
+      addMessage(message);
     }, onError: (error) {
       if (kDebugMode) {
         print('[ChatScreenController] onMessageListener $error');
-      }
-    });
-
-    onMessageChangedListener = messageReference.onChildChanged.listen((event) {
-      _upsertMessageFromSnapshot(event.snapshot);
-    }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatScreenController] onMessageChangedListener $error');
       }
     });
 
@@ -400,190 +371,11 @@ class ChatScreenController extends FullLifeCycleController
   }
 
   void addMessage(ChatMessageModel messageModel) {
-    _upsertMessageLocally(messageModel);
-  }
+    chatHistoryList.insert(0, messageModel);
 
-  void _upsertMessageFromSnapshot(DataSnapshot snapshot) {
-    if (snapshot.value == null) return;
-
-    final json = snapshot.value as Map<dynamic, dynamic>;
-    final message = ChatMessageModel.fromJson(json);
-    // Always trust the RTDB node key as the canonical messageId.
-    // This prevents missed merges when payload has missing/stale messageId.
-    message.messageId = snapshot.key;
-
-    String? beforeStatus;
-    final idxBefore = (message.messageId == null || message.messageId!.isEmpty)
-        ? -1
-        : chatHistoryList.indexWhere((m) => m.messageId == message.messageId);
-    if (idxBefore != -1) {
-      beforeStatus = chatHistoryList[idxBefore].deliveryStatus;
-    }
-
-    _upsertMessageLocally(message);
-
-    if (kDebugMode &&
-        uniId != null &&
-        message.senderUniId != null &&
-        message.senderUniId.toString() == uniId.toString()) {
-      final afterStatus = (message.deliveryStatus ?? 'sent').toString().toLowerCase();
-      final b = (beforeStatus ?? '').toString().toLowerCase();
-      if (b != afterStatus) {
-        debugPrint(
-            '[CHAT][STATUS] myMsgId=${message.messageId} $b -> $afterStatus (readAt=${message.readAt}, deliveredAt=${message.deliveredAt})');
-      }
-    }
-
-    final currentUserUniId = uniId;
-    if (currentUserUniId != null &&
-        message.senderUniId != null &&
-        message.senderUniId != currentUserUniId) {
-      final status = (message.deliveryStatus ?? 'sent').toLowerCase();
-      if (message.messageId != null && status == 'sent') {
-        markDelivered(message.messageId!);
-      }
-    }
-
-    if (_canMarkRead) {
-      markMessagesAsRead();
-    }
-  }
-
-  void _upsertMessageLocally(ChatMessageModel message) {
-    final didUpdate = updateMessageStatusLocally(message);
-    if (!didUpdate) {
-      chatHistoryList.insert(0, message);
-    }
-
-    if (chatIntakeFormController.isVirtualAstrologer == 1) {
+    if(chatIntakeFormController.isVirtualAstrologer == 1){
       typingController.isTyping(true);
     }
-  }
-
-  bool updateMessageStatusLocally(ChatMessageModel incoming) {
-    int _rank(String? s) {
-      switch ((s ?? 'sent').toLowerCase()) {
-        case 'read':
-          return 3;
-        case 'delivered':
-          return 2;
-        case 'sent':
-        default:
-          return 1;
-      }
-    }
-
-    ChatMessageModel _mergePreservingHighest(ChatMessageModel existing, ChatMessageModel next) {
-      final existingRank = _rank(existing.deliveryStatus);
-      final nextRank = _rank(next.deliveryStatus);
-      if (existingRank > nextRank) {
-        // Keep existing status/timestamps; still update other fields if needed.
-        next.deliveryStatus = existing.deliveryStatus;
-        next.deliveredAt = existing.deliveredAt;
-        next.readAt = existing.readAt;
-      }
-      return next;
-    }
-
-    final id = incoming.messageId;
-    if (id != null && id.isNotEmpty) {
-      final index = chatHistoryList.indexWhere((m) => m.messageId == id);
-      if (index != -1) {
-        chatHistoryList[index] = _mergePreservingHighest(chatHistoryList[index], incoming);
-        return true;
-      }
-    }
-
-    // Backward-compat: API history items may not have messageId.
-    // Try to match them to an incoming RTDB update so ticks can update.
-    final fallbackIndex = chatHistoryList.indexWhere((m) {
-      if (m.messageId != null && m.messageId!.isNotEmpty) return false;
-      if (m.senderUniId?.toString() != incoming.senderUniId?.toString()) return false;
-      if (m.messageType?.toString() != incoming.messageType?.toString()) return false;
-      if (m.date?.toString() != incoming.date?.toString()) return false;
-
-      final incomingText = (incoming.text ?? '').toString();
-      final incomingFile = (incoming.fileUrl ?? '').toString();
-      final myText = (m.text ?? '').toString();
-      final myFile = (m.fileUrl ?? '').toString();
-
-      if (incomingText.isNotEmpty) return myText == incomingText;
-      if (incomingFile.isNotEmpty) return myFile == incomingFile;
-      return false;
-    });
-
-    if (fallbackIndex != -1) {
-      chatHistoryList[fallbackIndex] =
-          _mergePreservingHighest(chatHistoryList[fallbackIndex], incoming);
-      return true;
-    }
-
-    return false;
-  }
-
-  Future<void> markDelivered(String messageId) async {
-    if (messageId.isEmpty) return;
-    final currentUserUniId = uniId;
-    if (currentUserUniId == null) return;
-
-    final index = chatHistoryList.indexWhere((m) => m.messageId == messageId);
-    if (index != -1) {
-      final msg = chatHistoryList[index];
-      if (msg.senderUniId == currentUserUniId) return; // don't mark own message
-      final currentStatus = (msg.deliveryStatus ?? 'sent').toLowerCase();
-      if (currentStatus != 'sent') return;
-    }
-
-    final now = getCurrentDateTime();
-    await messageReference.child(messageId).update({
-      'deliveryStatus': 'delivered',
-      'deliveredAt': now,
-    });
-  }
-
-  Future<void> markRead(String messageId) async {
-    if (messageId.isEmpty) return;
-    final currentUserUniId = uniId;
-    if (currentUserUniId == null) return;
-
-    final index = chatHistoryList.indexWhere((m) => m.messageId == messageId);
-    if (index != -1) {
-      final msg = chatHistoryList[index];
-      if (msg.senderUniId == currentUserUniId) return; // don't mark own message
-      final currentStatus = (msg.deliveryStatus ?? 'sent').toLowerCase();
-      if (currentStatus == 'read') return;
-    }
-
-    final now = getCurrentDateTime();
-    await messageReference.child(messageId).update({
-      'deliveryStatus': 'read',
-      'readAt': now,
-    });
-  }
-
-  void markMessagesAsRead() {
-    if (!_canMarkRead) return;
-    _markReadDebounceTimer?.cancel();
-    _markReadDebounceTimer = Timer(const Duration(milliseconds: 350), () async {
-      if (!_canMarkRead) return;
-      final currentUserUniId = uniId;
-      if (currentUserUniId == null) return;
-
-      final idsToRead = <String>{};
-      for (final m in chatHistoryList) {
-        if (m.senderUniId == null || m.senderUniId == currentUserUniId) continue;
-        final id = m.messageId;
-        if (id == null || id.isEmpty) continue;
-        final status = (m.deliveryStatus ?? 'sent').toLowerCase();
-        if (status != 'read') {
-          idsToRead.add(id);
-        }
-      }
-
-      for (final id in idsToRead) {
-        await markRead(id);
-      }
-    });
   }
 
   Future<void> getChatHistory(String channelName, String firstMsgId, num page, bool chatEnd) async {
@@ -615,7 +407,6 @@ class ChatScreenController extends FullLifeCycleController
           if (chatHistoryModel.data!.isNotEmpty) {
             chatHistoryModel.data?.forEach((message) {
               var cm = ChatMessageModel(
-                  messageId: message.firebaseMessageId,
                   senderUniId: message.userUniId,
                   name: message.userName,
                   text: message.message,
@@ -624,10 +415,7 @@ class ChatScreenController extends FullLifeCycleController
                   messageType: message.messageType,
                   profileImageUrl: message.userImageUrl,
                   selectedText: message.selectedText,
-                  selectedType: message.selectedType,
-                  deliveryStatus: (message.deliveryStatus ?? 'sent').toString(),
-                  deliveredAt: message.deliveredAt?.toString(),
-                  readAt: message.readAt?.toString());
+                  selectedType: message.selectedType);
               chatHistoryList.add(cm);
             });
           } else {
@@ -822,15 +610,8 @@ class ChatScreenController extends FullLifeCycleController
     sendMessage(chatMessage, null, '',isFirstMsg: 1);
   }
 
-  void sendMessage(ChatMessageModel message, File? imageFile, String fileName,{int isFirstMsg = 0}) async {
-    final newRef = messageReference.push();
-    message.messageId = newRef.key;
-    message.deliveryStatus = 'sent';
-
-    // Optimistic UI: show single-tick immediately and allow later status merges.
-    _upsertMessageLocally(message);
-
-    await newRef.set(message.toJson());
+  void sendMessage(ChatMessageModel message, File? imageFile, String fileName,{int isFirstMsg = 0}) {
+    messageReference.push().set(message.toJson());
     saveChatApi(
         uniqueId,
         channelName,

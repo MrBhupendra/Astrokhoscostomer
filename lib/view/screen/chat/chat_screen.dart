@@ -1,4 +1,5 @@
 import 'package:astro_brahmand/utill/app_strings.dart';
+import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:astro_brahmand/utill/dimensions.dart';
 import 'package:astro_brahmand/view/screen/chat/controller/image_picker_controller.dart';
 import 'package:astro_brahmand/view/screen/chat/widget/chat_image_widget.dart';
@@ -27,14 +28,14 @@ import 'controller/chat_intake_form_controller.dart';
 import 'controller/chat_screen_controller.dart';
 import 'model/chat_message_model.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class ChatScreen extends StatelessWidget {
+  ChatScreen({super.key}){
+    controller.scrollController.addListener(_scrollListener);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _scrollToTop();
+    });
+  }
 
-  @override
-  State<ChatScreen> createState() => _ChatScreenState();
-}
-
-class _ChatScreenState extends State<ChatScreen> {
   final ScrollController _scrollController = ScrollController();
   final ValueNotifier<bool> _showScrollToTop = ValueNotifier(false);
 
@@ -65,26 +66,6 @@ class _ChatScreenState extends State<ChatScreen> {
 
   //For Bg Notification
   final ConfigController configController = Get.find();
-
-  @override
-  void initState() {
-    super.initState();
-    controller.scrollController.addListener(_scrollListener);
-    controller.setChatScreenVisible(true);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollToTop();
-      controller.markMessagesAsRead();
-    });
-  }
-
-  @override
-  void dispose() {
-    controller.scrollController.removeListener(_scrollListener);
-    controller.setChatScreenVisible(false);
-    _showScrollToTop.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {

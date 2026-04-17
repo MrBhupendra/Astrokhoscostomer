@@ -8,7 +8,6 @@ import '../../../../utill/color_resources.dart';
 import '../../../widget/custom_round_network_image.dart';
 import '../../../widget/custom_text_regular.dart';
 import '../model/chat_message_model.dart';
-import 'message_status_icon.dart';
 
 class ChatImageWidget extends StatelessWidget {
   final ChatMessageModel message;
@@ -75,17 +74,10 @@ class ChatImageWidget extends StatelessWidget {
                       //   message.name!,
                       // ),
                       const Gap(2),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CustomTextRegular(
-                            message.date.toString(),
-                            fontSize: 10.0,
-                            color: ColorResources.black4,
-                          ),
-                          const Gap(4),
-                          buildMessageStatusIcon(message, userUniId),
-                        ],
+                      CustomTextRegular(
+                        message.date.toString(),
+                        fontSize: 10.0,
+                        color: ColorResources.black4,
                       ),
                     ],
                   ),

@@ -47,10 +47,6 @@ class Data {
     this.selectedType,
     this.fileUrl,
     this.messageType,
-    this.firebaseMessageId,
-    this.deliveryStatus,
-    this.deliveredAt,
-    this.readAt,
     this.status,
     this.createdAt,
     this.updatedAt,
@@ -69,10 +65,6 @@ class Data {
     selectedType = json['selected_type'];
     fileUrl = json['file_url'];
     messageType = json['message_type'];
-    firebaseMessageId = json['firebase_message_id'] ?? json['message_id'];
-    deliveryStatus = json['delivery_status'] ?? json['deliveryStatus'];
-    deliveredAt = json['delivered_at'] ?? json['deliveredAt'];
-    readAt = json['read_at'] ?? json['readAt'];
     status = json['status'];
     createdAt = json['created_at'];
     updatedAt = json['updated_at'];
@@ -90,10 +82,6 @@ class Data {
   String? selectedType;
   String? fileUrl;
   String? messageType;
-  String? firebaseMessageId;
-  dynamic deliveryStatus;
-  dynamic deliveredAt;
-  dynamic readAt;
   num? status;
   String? createdAt;
   String? updatedAt;
@@ -112,10 +100,6 @@ class Data {
     map['selected_type'] = selectedType;
     map['file_url'] = fileUrl;
     map['message_type'] = messageType;
-    map['firebase_message_id'] = firebaseMessageId;
-    map['delivery_status'] = deliveryStatus;
-    map['delivered_at'] = deliveredAt;
-    map['read_at'] = readAt;
     map['status'] = status;
     map['created_at'] = createdAt;
     map['updated_at'] = updatedAt;
