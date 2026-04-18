@@ -153,7 +153,6 @@ import 'firebase_options.dart';
 import 'notification/notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-
 ReceivedAction? initialAction;
 
 void main() async {
@@ -257,11 +256,11 @@ Future<void> requestImportantPermissions() async {
   });
 
   if (await Permission.phone.isDenied ||
-      await Permission.notification.isDenied || await Permission.microphone.isDenied) {
+      await Permission.notification.isDenied ||
+      await Permission.microphone.isDenied) {
     debugPrint('Some permissions were denied. App may not function properly.');
   }
 }
-
 
 @pragma('vm:entry-point')
 Future<void> configureFirebaseMessaging() async {
@@ -951,7 +950,7 @@ Future<void> onActionReceivedImplementationMethod(
     // } else if (receivedAction.buttonKeyPressed == "REJECT") {
     //   Get.toNamed('/queue_list');
     // } else
-      if (receivedAction.buttonKeyPressed == "ACCEPT SERVICE") {
+    if (receivedAction.buttonKeyPressed == "ACCEPT SERVICE") {
       Get.toNamed('/orders_tab_screen', arguments: {'index': 2});
     } else if (receivedAction.buttonKeyPressed == "REJECT SERVICE") {
       Get.toNamed('/orders_tab_screen', arguments: {'index': 2});

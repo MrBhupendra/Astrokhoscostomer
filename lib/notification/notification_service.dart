@@ -9,8 +9,7 @@ import '../firebase_options.dart';
 import '../utill/color_resources.dart';
 import '../view/screen/splash/controller/config_controller.dart';
 
-class NotificationService{
-
+class NotificationService {
   @pragma('vm:entry-point')
   Future<void> configureFirebaseMessaging() async {
     FirebaseMessaging.instance.requestPermission(
@@ -27,7 +26,8 @@ class NotificationService{
 
     // Handle the received message when the app is in foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      debugPrint("main notification (onMessage) Data-> ${message.data.toString()}");
+      debugPrint(
+          "main notification (onMessage) Data-> ${message.data.toString()}");
 
       String? title;
       String? body;
@@ -85,9 +85,7 @@ class NotificationService{
                   autoDismissible: true),
             ]);
         startListeningNotificationEvents();
-      }
-
-      else if (type == "video") {
+      } else if (type == "video") {
         cancelAllNotifications();
         AwesomeNotifications().createNotification(
             content: NotificationContent(
@@ -271,29 +269,29 @@ class NotificationService{
         if (image.isNotEmpty) {
           AwesomeNotifications().createNotification(
               content: NotificationContent(
-                id: notificationId,
-                channelKey: "alert_channel",
-                icon: 'resource://drawable/ic_notification',
-                color: ColorResources.colorPrimary,
-                title: title,
-                body: body,
-                backgroundColor: ColorResources.colorPrimary,
-                largeIcon: logo,
-                bigPicture: image,
-                notificationLayout: NotificationLayout.BigPicture,
-              ));
+            id: notificationId,
+            channelKey: "alert_channel",
+            icon: 'resource://drawable/ic_notification',
+            color: ColorResources.colorPrimary,
+            title: title,
+            body: body,
+            backgroundColor: ColorResources.colorPrimary,
+            largeIcon: logo,
+            bigPicture: image,
+            notificationLayout: NotificationLayout.BigPicture,
+          ));
         } else {
           AwesomeNotifications().createNotification(
               content: NotificationContent(
-                id: notificationId,
-                channelKey: "alert_channel",
-                icon: 'resource://drawable/ic_notification',
-                color: ColorResources.colorPrimary,
-                title: title,
-                body: body,
-                backgroundColor: ColorResources.colorPrimary,
-                largeIcon: logo,
-              ));
+            id: notificationId,
+            channelKey: "alert_channel",
+            icon: 'resource://drawable/ic_notification',
+            color: ColorResources.colorPrimary,
+            title: title,
+            body: body,
+            backgroundColor: ColorResources.colorPrimary,
+            largeIcon: logo,
+          ));
         }
       } else if (type == "cancel") {
         cancelNotification(notificationId);
@@ -311,7 +309,8 @@ class NotificationService{
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint("main notification (onMessageOpenedApp) Data-> ${message.data.toString()}");
+      debugPrint(
+          "main notification (onMessageOpenedApp) Data-> ${message.data.toString()}");
       String type = "alert";
       if (message.data.isNotEmpty) {
         type = message.data['type'];
@@ -333,11 +332,13 @@ class NotificationService{
   }
 
   @pragma('vm:entry-point')
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage message) async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
-    debugPrint("main notification (onBackgroundMessage) Data-> ${message.data.toString()}");
+    debugPrint(
+        "main notification (onBackgroundMessage) Data-> ${message.data.toString()}");
     String? title;
     String? body;
     String type = "alert";
@@ -578,29 +579,29 @@ class NotificationService{
       if (image.isNotEmpty) {
         AwesomeNotifications().createNotification(
             content: NotificationContent(
-              id: notificationId,
-              channelKey: "alert_channel",
-              icon: 'resource://drawable/ic_notification',
-              color: ColorResources.colorPrimary,
-              title: title,
-              body: body,
-              backgroundColor: ColorResources.colorPrimary,
-              largeIcon: logo,
-              bigPicture: image,
-              notificationLayout: NotificationLayout.BigPicture,
-            ));
+          id: notificationId,
+          channelKey: "alert_channel",
+          icon: 'resource://drawable/ic_notification',
+          color: ColorResources.colorPrimary,
+          title: title,
+          body: body,
+          backgroundColor: ColorResources.colorPrimary,
+          largeIcon: logo,
+          bigPicture: image,
+          notificationLayout: NotificationLayout.BigPicture,
+        ));
       } else {
         AwesomeNotifications().createNotification(
             content: NotificationContent(
-              id: notificationId,
-              channelKey: "alert_channel",
-              icon: 'resource://drawable/ic_notification',
-              color: ColorResources.colorPrimary,
-              title: title,
-              body: body,
-              backgroundColor: ColorResources.colorPrimary,
-              largeIcon: logo,
-            ));
+          id: notificationId,
+          channelKey: "alert_channel",
+          icon: 'resource://drawable/ic_notification',
+          color: ColorResources.colorPrimary,
+          title: title,
+          body: body,
+          backgroundColor: ColorResources.colorPrimary,
+          largeIcon: logo,
+        ));
       }
     } else if (type == "cancel") {
       cancelNotification(notificationId);
@@ -619,7 +620,8 @@ class NotificationService{
 
   Future<void> startListeningNotificationEvents() async {
     debugPrint('main notification (startListeningNotificationEvents)');
-    AwesomeNotifications().setListeners(onActionReceivedMethod: onActionReceivedMethod);
+    AwesomeNotifications()
+        .setListeners(onActionReceivedMethod: onActionReceivedMethod);
   }
 
   @pragma('vm:entry-point')
@@ -628,8 +630,10 @@ class NotificationService{
     return onActionReceivedImplementationMethod(receivedAction);
   }
 
-  Future<void> onActionReceivedImplementationMethod(ReceivedAction receivedAction) async {
-    debugPrint('main notification (onActionReceivedImplementationMethod) $receivedAction');
+  Future<void> onActionReceivedImplementationMethod(
+      ReceivedAction receivedAction) async {
+    debugPrint(
+        'main notification (onActionReceivedImplementationMethod) $receivedAction');
     if (receivedAction.buttonKeyPressed == "ACCEPT") {
       Get.toNamed('/queue_list');
     } else if (receivedAction.buttonKeyPressed == "REJECT") {
@@ -655,9 +659,9 @@ class NotificationService{
     AwesomeNotifications().cancel(id);
   }
 
-  void showMessageNotification(RemoteMessage message){
+  void showMessageNotification(RemoteMessage message) {
     ConfigController configController = Get.put(ConfigController());
-    if(configController.currentScreen.value != AppConstants.chat){
+    if (configController.currentScreen.value != AppConstants.chat) {
       String? title;
       String? body;
       String type = "message";
@@ -682,31 +686,31 @@ class NotificationService{
       if (image.isNotEmpty) {
         AwesomeNotifications().createNotification(
             content: NotificationContent(
-              id: notificationId,
-              channelKey: "alert_channel",
-              icon: 'resource://drawable/ic_notification',
-              color: ColorResources.colorPrimary,
-              title: title,
-              body: body,
-              backgroundColor: ColorResources.colorPrimary,
-              largeIcon: logo,
-              bigPicture: image,
-              notificationLayout: NotificationLayout.BigPicture,
-              payload: {'url': url},
-            ));
+          id: notificationId,
+          channelKey: "alert_channel",
+          icon: 'resource://drawable/ic_notification',
+          color: ColorResources.colorPrimary,
+          title: title,
+          body: body,
+          backgroundColor: ColorResources.colorPrimary,
+          largeIcon: logo,
+          bigPicture: image,
+          notificationLayout: NotificationLayout.BigPicture,
+          payload: {'url': url},
+        ));
       } else {
         AwesomeNotifications().createNotification(
             content: NotificationContent(
-              id: notificationId,
-              channelKey: "alert_channel",
-              icon: 'resource://drawable/ic_notification',
-              color: ColorResources.colorPrimary,
-              title: title,
-              body: body,
-              backgroundColor: ColorResources.colorPrimary,
-              largeIcon: logo,
-              payload: {'url': url},
-            ));
+          id: notificationId,
+          channelKey: "alert_channel",
+          icon: 'resource://drawable/ic_notification',
+          color: ColorResources.colorPrimary,
+          title: title,
+          body: body,
+          backgroundColor: ColorResources.colorPrimary,
+          largeIcon: logo,
+          payload: {'url': url},
+        ));
       }
     }
   }

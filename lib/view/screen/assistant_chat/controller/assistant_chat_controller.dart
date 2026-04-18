@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:astro_brahmand/utill/color_resources.dart';
-import 'package:astro_brahmand/view/widget/custom_okdialog_widget.dart';
 import 'package:astro_brahmand/view/widget/custom_snack_bar.dart';
 import 'package:dio/dio.dart' show Dio, FormData, MultipartFile;
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_sound/public/flutter_sound_recorder.dart';
 import 'package:get/get.dart' as myGet;
 import 'package:get/state_manager.dart';
@@ -44,7 +43,13 @@ class AssistantChatController extends FullLifeCycleController
   late var storageReference;
 
   var onMessageListener;
+  var onMessageChangedListener;
   var onTypingListener;
+
+  final Set<String> _deliveredWriteOnce = <String>{};
+  final Set<String> _readWriteOnce = <String>{};
+  final Set<String> _incomingSoundOnce = <String>{};
+  bool _isScreenActive = false;
 
   //Chat history
   final Dio _dio = Dio();
@@ -71,7 +76,6 @@ class AssistantChatController extends FullLifeCycleController
   //Timer
   RxInt seconds = 60.obs;
   RxBool isTimerRunning = false.obs;
-  Timer? _timer;
 
   //Voice Note duration
   final RxInt recordingDuration = 0.obs;
@@ -138,7 +142,14 @@ class AssistantChatController extends FullLifeCycleController
 
     dbReference.child(customerStatus).set(true);
     clearFirebaseMessages();
+    _deliveredWriteOnce.clear();
+    _readWriteOnce.clear();
+    _incomingSoundOnce.clear();
     getChatHistory(channelName, "0", offsetCount, false);
+
+    // Treat initial open as active (onResumed is not guaranteed to fire).
+    _isScreenActive = true;
+    configController.setCurrentScreen(AppConstants.chat);
 
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -167,11 +178,13 @@ class AssistantChatController extends FullLifeCycleController
   void onResumed() {
     dbReference.child(customerStatus).set(true);
     configController.setCurrentScreen(AppConstants.chat);
+    _isScreenActive = true;
     if (messageController.text.isNotEmpty) {
       typingReference.child(customerTypingChild).set(true);
     } else if (messageController.text.isEmpty) {
       typingReference.child(customerTypingChild).set(false);
     }
+    _markMessagesAsReadIfNeeded();
     if (kDebugMode) {
       print('OnResumed ChatScreen');
     }
@@ -179,6 +192,7 @@ class AssistantChatController extends FullLifeCycleController
 
   @override
   void onPaused() {
+    _isScreenActive = false;
     dbReference.child(customerStatus).set(false);
     typingReference.child(customerTypingChild).set(false);
     configController.setCurrentScreen('');
@@ -189,6 +203,7 @@ class AssistantChatController extends FullLifeCycleController
 
   @override
   void onClose() {
+    _isScreenActive = false;
     dbReference.child(customerStatus).set(false);
     typingReference.child(customerTypingChild).set(false);
     configController.setCurrentScreen('');
@@ -227,17 +242,24 @@ class AssistantChatController extends FullLifeCycleController
   }
 
   void clearFirebaseMessages() {
-    messageReference.remove();
+    // IMPORTANT: Do not delete RTDB messages on screen open.
+    // Clearing breaks delivered/read propagation when the other user opens later.
   }
 
   void registerListeners() {
     onMessageListener = messageReference.onChildAdded.listen((event) {
-      final json = event.snapshot.value as Map<dynamic, dynamic>;
-      final message = ChatMessageModel.fromJson(json);
-      addMessage(message);
+      _handleMessageSnapshot(event.snapshot);
     }, onError: (error) {
       if (kDebugMode) {
         print('[ChatScreenController] onMessageListener $error');
+      }
+    });
+
+    onMessageChangedListener = messageReference.onChildChanged.listen((event) {
+      _handleMessageSnapshot(event.snapshot);
+    }, onError: (error) {
+      if (kDebugMode) {
+        print('[ChatScreenController] onMessageChangedListener $error');
       }
     });
 
@@ -258,8 +280,90 @@ class AssistantChatController extends FullLifeCycleController
     });
   }
 
-  void addMessage(ChatMessageModel messageModel) {
-    chatHistoryList.insert(0, messageModel);
+  void _handleMessageSnapshot(DataSnapshot snapshot) {
+    if (snapshot.value == null) return;
+    final raw = snapshot.value;
+    if (raw is! Map) return;
+    final json = Map<String, dynamic>.from(raw);
+    json['messageId'] ??= snapshot.key;
+    final message = ChatMessageModel.fromJson(json);
+    final isNew = _upsertMessage(message);
+    _maybePlayIncomingSound(message, isNew: isNew);
+    _maybeMarkDelivered(message);
+    _markMessagesAsReadIfNeeded();
+  }
+
+  bool _upsertMessage(ChatMessageModel messageModel) {
+    final id = messageModel.messageId;
+    if (id == null || id.isEmpty) {
+      chatHistoryList.insert(0, messageModel);
+      return true;
+    }
+    final idx = chatHistoryList.indexWhere((m) => m.messageId == id);
+    if (idx >= 0) {
+      chatHistoryList[idx] = messageModel;
+      return false;
+    } else {
+      chatHistoryList.insert(0, messageModel);
+      return true;
+    }
+  }
+
+  void _maybePlayIncomingSound(ChatMessageModel message, {required bool isNew}) {
+    final currentUserId = uniId;
+    final id = message.messageId;
+    if (!isNew) return;
+    if (currentUserId == null || id == null || id.isEmpty) return;
+    if (message.senderUniId == currentUserId) return;
+    if (_incomingSoundOnce.contains(id)) return;
+
+    _incomingSoundOnce.add(id);
+    // Lightweight in-app sound for new incoming messages (foreground).
+    SystemSound.play(SystemSoundType.click);
+  }
+
+  void _maybeMarkDelivered(ChatMessageModel message) {
+    final currentUserId = uniId;
+    final id = message.messageId;
+    if (currentUserId == null || id == null || id.isEmpty) return;
+    if (message.senderUniId == currentUserId) return;
+    if (_deliveredWriteOnce.contains(id)) return;
+    if (message.normalizedDeliveryStatus() != 'sent') return;
+
+    _deliveredWriteOnce.add(id);
+    messageReference.child(id).update({
+      'deliveryStatus': 'delivered',
+      'deliveredAt': ServerValue.timestamp,
+    });
+  }
+
+  void _markMessagesAsReadIfNeeded() {
+    if (!_isScreenActive) return;
+    final currentUserId = uniId;
+    if (currentUserId == null) return;
+
+    final Map<String, Object?> updates = <String, Object?>{};
+    for (final m in chatHistoryList) {
+      final id = m.messageId;
+      if (id == null || id.isEmpty) continue;
+      if (m.senderUniId == currentUserId) continue;
+      if (_readWriteOnce.contains(id)) continue;
+      // WhatsApp-style: never jump sent -> read.
+      // First mark delivered, then read after delivered arrives via onChildChanged.
+      if (m.normalizedDeliveryStatus() == 'sent') {
+        continue;
+      }
+      if (m.normalizedDeliveryStatus() == 'read') {
+        _readWriteOnce.add(id);
+        continue;
+      }
+      _readWriteOnce.add(id);
+      updates['$id/deliveryStatus'] = 'read';
+      updates['$id/readAt'] = ServerValue.timestamp;
+    }
+    if (updates.isNotEmpty) {
+      messageReference.update(updates);
+    }
   }
 
   Future<void> getChatHistory(String channelName, String firstMsgId, num page, bool chatEnd) async {
@@ -290,6 +394,7 @@ class AssistantChatController extends FullLifeCycleController
           if (chatHistoryModel.data!.isNotEmpty) {
             chatHistoryModel.data?.forEach((message) {
               var cm = ChatMessageModel(
+                  messageId: message.firebaseMessageId,
                   senderUniId: message.userUniId,
                   name: message.userName,
                   text: message.message,
@@ -298,7 +403,8 @@ class AssistantChatController extends FullLifeCycleController
                   messageType: message.messageType,
                   profileImageUrl: message.userImageUrl,
                   selectedText: message.selectedText,
-                  selectedType: message.selectedType);
+                  selectedType: message.selectedType,
+                  deliveryStatus: message.deliveryStatus);
               chatHistoryList.add(cm);
             });
           } else {
@@ -338,7 +444,8 @@ class AssistantChatController extends FullLifeCycleController
       String selectedType,
       String type,
       File? imageFile,
-      String fileName) async {
+      String fileName,
+      {String? firebaseMessageId}) async {
     isSaveChatLoading(true);
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
@@ -356,7 +463,9 @@ class AssistantChatController extends FullLifeCycleController
         "selected_type": selectedType,
         "message_type": type,
         "is_first_chat" : 0, //0 to send notification 1 to don't send
-        "is_assistant_chat" : 1
+        "is_assistant_chat" : 1,
+        if (firebaseMessageId != null && firebaseMessageId.isNotEmpty)
+          "firebase_message_id": firebaseMessageId,
       });
 
       if (type == AppConstants.image || type == AppConstants.voiceNote) {
@@ -388,7 +497,10 @@ class AssistantChatController extends FullLifeCycleController
   }
 
   void sendMessage(ChatMessageModel message, File? imageFile, String fileName) {
-    messageReference.push().set(message.toJson());
+    final newRef = messageReference.push();
+    message.messageId = newRef.key;
+    message.deliveryStatus = 'sent';
+    newRef.set(message.toJson());
     saveChatApi(
         uniqueId,
         channelName,
@@ -397,7 +509,8 @@ class AssistantChatController extends FullLifeCycleController
         message.selectedType.toString(),
         message.messageType.toString(),
         imageFile,
-        fileName);
+        fileName,
+        firebaseMessageId: message.messageId);
   }
 
   void sendImage(File imageFile, String fileName) async {

@@ -104,7 +104,6 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   }
 
   @override
-
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.resumed) {
       debugPrint("App is in resumed state, fetching notification data...");
@@ -129,20 +128,25 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     });
 
     try {
-      String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      final response = await _dio.post(AppConstants.getDashboard, data: {"user_uni_id": uniId});
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      final response = await _dio
+          .post(AppConstants.getDashboard, data: {"user_uni_id": uniId});
       if (response.statusCode == 200) {
         dashboardModel = DashboardModel.fromJson(response.data);
         if (dashboardModel.status == AppConstants.success) {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             isDashboardSuccess(true);
 
-            inProgressStatus.value = dashboardModel.data!.inProgressOrder!.status!.toInt();
-            callType.value = dashboardModel.data?.inProgressOrder!.callType ?? '';
+            inProgressStatus.value =
+                dashboardModel.data!.inProgressOrder!.status!.toInt();
+            callType.value =
+                dashboardModel.data?.inProgressOrder!.callType ?? '';
 
             bannerList = dashboardModel.data?.banners;
             //Live
-            List<AstrologerData> astrologers = dashboardModel.data?.liveAstrologers ?? [];
+            List<AstrologerData> astrologers =
+                dashboardModel.data?.liveAstrologers ?? [];
             liveAstrologerListData.assignAll(astrologers);
 
             serviceCategoryList = dashboardModel.data?.services;
@@ -155,7 +159,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
             if (dashboardModel.data?.inReview?.isReview == 1) {
               Get.off(FeedbackScreen(
                   dashboardModel.data!.inReview!.idForReview.toString(),
-                  dashboardModel.data!.inReview!.displayNameForReview.toString(),
+                  dashboardModel.data!.inReview!.displayNameForReview
+                      .toString(),
                   dashboardModel.data!.inReview!.astroImg.toString(),
                   dashboardModel.data!.inReview!.uniqeid.toString()));
             }
@@ -195,7 +200,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     });
 
     try {
-      String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
 
       final response = await _dio.post(AppConstants.getAllAstrologer,
           data: {"user_uni_id": uniId, "offset": 0});
@@ -243,11 +249,11 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     });
 
     try {
-      String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
 
       final response = await _dio.post(AppConstants.getAllAstrologer,
-          data: {"user_uni_id": uniId, "offset": 0,"is_virtual" : 1});
-
+          data: {"user_uni_id": uniId, "offset": 0, "is_virtual": 1});
 
       if (response.statusCode == 200) {
         aiAstrologerModel = AstrologerModel.fromJson(response.data);
@@ -290,11 +296,13 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     });
 
     try {
-      String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      String? categoryId = await SharedPreferencesHelper.getData(AppConstants.homeopathyCategoryId);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      String? categoryId = await SharedPreferencesHelper.getData(
+          AppConstants.homeopathyCategoryId);
 
       final response = await _dio.post(AppConstants.getAllAstrologer,
-          data: {"user_uni_id": uniId, "offset": 0,"category": categoryId});
+          data: {"user_uni_id": uniId, "offset": 0, "category": categoryId});
 
       if (response.statusCode == 200) {
         electroModel = AstrologerModel.fromJson(response.data);
@@ -329,32 +337,34 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     }
   }
 
-  Future<void> joinLiveStream(int astrologerUID,String uniqueId, String astrologerUniId) async {
+  Future<void> joinLiveStream(
+      int astrologerUID, String uniqueId, String astrologerUniId) async {
     CustomProgressDialog.showDialog();
     try {
-      String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
-      String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      String? agoraAppId = await SharedPreferencesHelper.getData(AppConstants.agoraAppId);
-      final response = await _dio.post(AppConstants.joinLiveStream, data: {
-        'api_key': apiKey,
-        'user_uni_id': uniId,
-        'uniqeid' : uniqueId
-      });
+      String? apiKey =
+          await SharedPreferencesHelper.getData(AppConstants.userApiKey);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      String? agoraAppId =
+          await SharedPreferencesHelper.getData(AppConstants.agoraAppId);
+      final response = await _dio.post(AppConstants.joinLiveStream,
+          data: {'api_key': apiKey, 'user_uni_id': uniId, 'uniqeid': uniqueId});
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         liveJoinModel = SuccessModel.fromJson(response.data);
-        if(liveJoinModel.status == AppConstants.success){
+        if (liveJoinModel.status == AppConstants.success) {
           print("Success -> ${response.data.toString()}");
           String? token = response.data["data"]["token"];
-          Get.toNamed('/liveStreamScreen',arguments: {
+          Get.toNamed('/liveStreamScreen', arguments: {
             'uniqueId': uniqueId,
             'agoraAppId': agoraAppId,
             'token': token,
             'astrologerId': astrologerUniId,
             'astrologerUID': astrologerUID
           });
-          print("As1 Req $token $uniqueId $agoraAppId $astrologerUniId $astrologerUID");
-        }else{
+          print(
+              "As1 Req $token $uniqueId $agoraAppId $astrologerUniId $astrologerUID");
+        } else {
           CustomSnackBar.showBottom(liveJoinModel.msg.toString());
         }
       } else {
@@ -390,8 +400,10 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     CustomProgressDialog.showDialog();
     isFeedbackLoading(true);
     try {
-      String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
-      String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      String? apiKey =
+          await SharedPreferencesHelper.getData(AppConstants.userApiKey);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
       final response = await _dio.post(AppConstants.sendSuggestions, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
@@ -404,8 +416,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
           isFeedbackSuccess(true);
           // CustomSnackBar.showTop(feedbackModel.msg.toString());
           CustomDefaultDialog.showOkDialog(
-              AppStrings.success.tr,
-              AppStrings.successFeedbackMsg.tr, () {
+              AppStrings.success.tr, AppStrings.successFeedbackMsg.tr, () {
             Get.back();
           });
         } else {
@@ -435,8 +446,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
       }
 
       final Map<dynamic, dynamic>? data =
-
-      await platform.invokeMethod('notificationData');
+          await platform.invokeMethod('notificationData');
 
       if (data != null) {
         if (kDebugMode) {
@@ -448,9 +458,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
         final notificationJson = data['notificationJson'];
 
         if (notificationJson != null) {
-
           final Map<String, dynamic> notificationData =
-          jsonDecode(notificationJson);
+              jsonDecode(notificationJson);
 
           if (kDebugMode) {
             print("Parsed notificationData: $notificationData");
@@ -458,7 +467,6 @@ class HomeController extends GetxController with WidgetsBindingObserver {
           }
 
           final Map<String, dynamic> content =
-
               notificationData['content'] ?? {};
 
           final Map<String, dynamic> payload = content['payload'] ?? {};
@@ -471,7 +479,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
 
           String? rawNotificationId = await SharedPreferencesHelper.getData(
               AppConstants.lastProcessedNotificationId);
-          lastProcessedNotificationId = int.tryParse(rawNotificationId ?? '') ?? 0;
+          lastProcessedNotificationId =
+              int.tryParse(rawNotificationId ?? '') ?? 0;
           if (kDebugMode) {
             print(
                 "Raw Notification ID from SharedPreferences: $rawNotificationId");
@@ -497,7 +506,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
                 if (kDebugMode) {
                   print("Handling notification on resume...");
                 }
-                handleNavigation(content, actionKey, notificationData, isFromResume: isFromResume);
+                handleNavigation(content, actionKey, notificationData,
+                    isFromResume: isFromResume);
               } else {
                 WidgetsBinding.instance.addPostFrameCallback((_) {
                   handleNavigation(content, actionKey, notificationData);
@@ -535,7 +545,8 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   }
 
   void handleNavigation(Map<String, dynamic> content, String? actionKey,
-      Map<String, dynamic> notificationData, {bool? isFromResume}) {
+      Map<String, dynamic> notificationData,
+      {bool? isFromResume}) {
     if (actionKey == null) {
       if (content['payload']['type'] == "chat") {
         Get.toNamed('/queue_list');
@@ -556,7 +567,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
     // WidgetsBinding.instance.addPostFrameCallback((_) async {
     try {
       final int? notificationId =
-      int.tryParse(notificationJson['content']['id']?.toString() ?? '');
+          int.tryParse(notificationJson['content']['id']?.toString() ?? '');
       if (notificationId == null) {
         if (kDebugMode) {
           print("Invalid or null notificationId");
@@ -564,8 +575,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
         return;
       }
 
-      if (receivedActionKey == "ACCEPT" ||
-          receivedActionKey == "REJECT") {
+      if (receivedActionKey == "ACCEPT" || receivedActionKey == "REJECT") {
         Get.toNamed('/queue_list');
       } else if (receivedActionKey == "ACCEPT SERVICE" ||
           receivedActionKey == "REJECT SERVICE") {
@@ -589,7 +599,7 @@ class HomeController extends GetxController with WidgetsBindingObserver {
       }
 
       final Map<dynamic, dynamic>? data =
-      await alertPlatform.invokeMethod('alertNotificationData');
+          await alertPlatform.invokeMethod('alertNotificationData');
 
       if (data != null) {
         if (kDebugMode) {
@@ -602,32 +612,38 @@ class HomeController extends GetxController with WidgetsBindingObserver {
         }
         final notificationJson = data['notificationJson'];
         if (notificationJson != null) {
-          final Map<String, dynamic> notificationData = jsonDecode(notificationJson);
+          final Map<String, dynamic> notificationData =
+              jsonDecode(notificationJson);
 
           if (kDebugMode) {
             print("Parsed alertNotificationData: $notificationData");
           }
 
-          final Map<String, dynamic> content = notificationData['content'] ?? {};
+          final Map<String, dynamic> content =
+              notificationData['content'] ?? {};
           final Map<String, dynamic> payload = content['payload'] ?? {};
           final String url = payload['url'] ?? '';
           final int notificationId = content['id'] ?? 0;
 
-          String? rawNotificationId = await SharedPreferencesHelper.getData(AppConstants.lastProcessedAlertNotificationId);
-          lastProcessedAlertNotificationId = int.tryParse(rawNotificationId ?? '') ?? 0;
+          String? rawNotificationId = await SharedPreferencesHelper.getData(
+              AppConstants.lastProcessedAlertNotificationId);
+          lastProcessedAlertNotificationId =
+              int.tryParse(rawNotificationId ?? '') ?? 0;
 
           if (kDebugMode) {
-            print("URL: $url, ID: $notificationId, lastID: $lastProcessedAlertNotificationId");
+            print(
+                "URL: $url, ID: $notificationId, lastID: $lastProcessedAlertNotificationId");
           }
 
           // if (channelKey == 'alert_channel') {
-            print("Alert Notification Received: $data");
-            if (url.isNotEmpty &&
-                notificationId != lastProcessedAlertNotificationId) {
-              await SharedPreferencesHelper.saveData(AppConstants.lastProcessedAlertNotificationId,
-                  notificationId.toString());
-              navigateBasedOnUri(url);
-            }
+          print("Alert Notification Received: $data");
+          if (url.isNotEmpty &&
+              notificationId != lastProcessedAlertNotificationId) {
+            await SharedPreferencesHelper.saveData(
+                AppConstants.lastProcessedAlertNotificationId,
+                notificationId.toString());
+            navigateBasedOnUri(url);
+          }
           // } else {
           //   print("Ignoring non-alert notification");
           // }
@@ -645,10 +661,11 @@ class HomeController extends GetxController with WidgetsBindingObserver {
       if (kDebugMode) {
         print("Failed to get alertNotificationData: ${e.message}");
       }
-    }on MissingPluginException catch (e) {
+    } on MissingPluginException catch (e) {
       // Handle the case where the method isn't implemented on the native side
       if (kDebugMode) {
-        print("MissingPluginException: Method not implemented on native side - ${e.message}");
+        print(
+            "MissingPluginException: Method not implemented on native side - ${e.message}");
       }
       // Optionally, you can fallback to default data or notify the user here
     } catch (e) {
@@ -682,5 +699,4 @@ class HomeController extends GetxController with WidgetsBindingObserver {
       }
     }
   }
-
 }

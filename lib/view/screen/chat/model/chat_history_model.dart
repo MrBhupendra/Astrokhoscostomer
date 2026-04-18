@@ -52,6 +52,10 @@ class Data {
     this.updatedAt,
     this.userName,
     this.userImageUrl,
+    this.firebaseMessageId,
+    this.deliveryStatus,
+    this.deliveredAt,
+    this.readAt,
   });
 
   Data.fromJson(dynamic json) {
@@ -70,6 +74,11 @@ class Data {
     updatedAt = json['updated_at'];
     userName = json['user_name'];
     userImageUrl = json['user_image_url'];
+
+    firebaseMessageId = json['firebase_message_id']?.toString();
+    deliveryStatus = json['delivery_status']?.toString();
+    deliveredAt = json['delivered_at']?.toString();
+    readAt = json['read_at']?.toString();
   }
 
   num? id;
@@ -87,6 +96,10 @@ class Data {
   String? updatedAt;
   String? userName;
   String? userImageUrl;
+  String? firebaseMessageId;
+  String? deliveryStatus;
+  String? deliveredAt;
+  String? readAt;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -105,6 +118,10 @@ class Data {
     map['updated_at'] = updatedAt;
     map['user_name'] = userName;
     map['user_image_url'] = userImageUrl;
+    map['firebase_message_id'] = firebaseMessageId;
+    map['delivery_status'] = deliveryStatus;
+    map['delivered_at'] = deliveredAt;
+    map['read_at'] = readAt;
     return map;
   }
 }

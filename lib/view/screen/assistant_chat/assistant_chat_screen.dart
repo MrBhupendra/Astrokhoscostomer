@@ -26,7 +26,7 @@ import '../splash/controller/config_controller.dart';
 import 'controller/assistant_chat_controller.dart';
 
 class AssistantChatScreen extends StatelessWidget {
-  AssistantChatScreen({super.key}){
+  AssistantChatScreen({super.key}) {
     _scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToTop();
@@ -58,7 +58,8 @@ class AssistantChatScreen extends StatelessWidget {
   }
 
   final AssistantChatController controller = Get.put(AssistantChatController());
-  final ImagePickerController imagePickerController = Get.put(ImagePickerController());
+  final ImagePickerController imagePickerController =
+      Get.put(ImagePickerController());
   final ChatIntakeFormController chatIntakeFormController = Get.find();
 
   //For Bg Notification
@@ -80,7 +81,7 @@ class AssistantChatScreen extends StatelessWidget {
             backgroundColor: ColorResources.colorPrimary,
             automaticallyImplyLeading: false,
             title: Row(
-              // mainAxisSize: MainAxisSize.min,
+                // mainAxisSize: MainAxisSize.min,
                 children: [
                   IconButton(
                       icon: const Icon(
@@ -93,7 +94,8 @@ class AssistantChatScreen extends StatelessWidget {
                       }),
                   const Gap(5),
                   CustomRoundNetworkImage(
-                      imageUrl: chatIntakeFormController.astrologerImage.toString(),
+                      imageUrl:
+                          chatIntakeFormController.astrologerImage.toString(),
                       height: 40,
                       width: 40),
                   const Gap(10),
@@ -124,54 +126,60 @@ class AssistantChatScreen extends StatelessWidget {
                     child: const Text("Loading.."))),
                 Expanded(
                   child: Obx(
-                        () => ListView.builder(
+                    () => ListView.builder(
                       itemCount: controller.chatHistoryList.length,
                       controller: _scrollController,
                       reverse: true,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {
                         ChatMessageModel message =
-                        controller.chatHistoryList[index];
+                            controller.chatHistoryList[index];
                         if (message.messageType == AppConstants.text) {
                           return SwipeTo(
-                            child: ChatMessageWidget(message, controller.uniId,isLastMessage: index == 0,),
+                            child: ChatMessageWidget(
+                              message,
+                              controller.uniId,
+                              isLastMessage: index == 0,
+                            ),
                             onRightSwipe: (details) {
-                              controller.selectedType.value =
-                                  AppConstants.text;
+                              controller.selectedType.value = AppConstants.text;
                               controller.selectedText.value = controller
                                   .chatHistoryList[index].text
                                   .toString();
                               controller.selectedPersonName.value = (controller
-                                  .chatHistoryList[index].senderUniId
-                                  .toString() ==
-                                  controller.uniId
+                                          .chatHistoryList[index].senderUniId
+                                          .toString() ==
+                                      controller.uniId
                                   ? "You"
                                   : controller.chatHistoryList[index].name
-                                  .toString());
+                                      .toString());
                               controller.isMessageSelected(true);
                             },
                           );
-                        }
-                        else if (message.messageType == AppConstants.image) {
+                        } else if (message.messageType == AppConstants.image) {
                           return SwipeTo(
                             child: ChatImageWidget(message, controller.uniId),
                             onRightSwipe: (details) {
-                              controller.selectedType.value = AppConstants.image;
-                              controller.selectedText.value = controller.chatHistoryList[index].fileUrl.toString();
+                              controller.selectedType.value =
+                                  AppConstants.image;
+                              controller.selectedText.value = controller
+                                  .chatHistoryList[index].fileUrl
+                                  .toString();
                               controller.selectedPersonName.value = (controller
-                                  .chatHistoryList[index].senderUniId
-                                  .toString() ==
-                                  controller.uniId
+                                          .chatHistoryList[index].senderUniId
+                                          .toString() ==
+                                      controller.uniId
                                   ? "You"
                                   : controller.chatHistoryList[index].name
-                                  .toString());
+                                      .toString());
                               controller.isMessageSelected(true);
                             },
                           );
-                        }
-                        else if (message.messageType == AppConstants.voiceNote) {
+                        } else if (message.messageType ==
+                            AppConstants.voiceNote) {
                           return SwipeTo(
-                            child: ChatVoiceNoteWidget(message, controller.uniId),
+                            child:
+                                ChatVoiceNoteWidget(message, controller.uniId),
                             onRightSwipe: (details) {
                               // controller.selectedType.value = AppConstants.voiceNote;
                               // controller.selectedText.value = controller.chatHistoryList[index].fileUrl.toString();
@@ -185,10 +193,12 @@ class AssistantChatScreen extends StatelessWidget {
                               // controller.isMessageSelected(true);
                             },
                           );
-                        }
-                        else if (message.messageType == AppConstants.product || message.messageType == AppConstants.service) {
+                        } else if (message.messageType ==
+                                AppConstants.product ||
+                            message.messageType == AppConstants.service) {
                           return SwipeTo(
-                            child: ChatProductWidget(message, controller.uniId, message.messageType),
+                            child: ChatProductWidget(
+                                message, controller.uniId, message.messageType),
                             onRightSwipe: (details) {
                               // controller.selectedType.value = AppConstants.product;
                               // controller.selectedText.value = controller.chatHistoryList[index].fileUrl.toString();
@@ -214,20 +224,20 @@ class AssistantChatScreen extends StatelessWidget {
                       color: ColorResources.white,
                       borderRadius: BorderRadius.only(
                           topRight: Radius.circular(15),
-                          topLeft: Radius.circular(15))
-                  ),
+                          topLeft: Radius.circular(15))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       //Typing Indicators
                       Obx(
-                            () {
+                        () {
                           if (controller.isAstrologerTyping.isTrue) {
                             return Visibility(
                                 visible: controller.isAstrologerTyping.isTrue,
                                 child: Container(
                                   color: ColorResources.blackTransparent,
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 0),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 0),
                                   child: Row(
                                     children: [
                                       CustomTextRegular("Typing"),
@@ -240,7 +250,7 @@ class AssistantChatScreen extends StatelessWidget {
                                     ],
                                   ),
                                 ));
-                          }else{
+                          } else {
                             return const SizedBox();
                           }
                         },
@@ -248,13 +258,15 @@ class AssistantChatScreen extends StatelessWidget {
 
                       //Voice Note Uploading
                       Obx(
-                            () {
+                        () {
                           if (controller.isRecordingUploading.isTrue) {
                             return Visibility(
                                 visible: controller.isRecordingUploading.isTrue,
                                 child: Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 10),
-                                  child: CustomTextRegular('Uploading recording...'),
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 8.0, vertical: 10),
+                                  child: CustomTextRegular(
+                                      'Uploading recording...'),
                                 ));
                           } else {
                             return const SizedBox.shrink();
@@ -280,18 +292,20 @@ class AssistantChatScreen extends StatelessWidget {
                       //   },
                       // ),
                       Obx(
-                            () {
+                        () {
                           if (controller.isRecording.isTrue) {
                             return Visibility(
                               visible: controller.isRecording.isTrue,
                               child: Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 8),
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 8),
                                 child: Row(
                                   children: [
                                     CustomTextRegular('Recording...'),
                                     const Gap(5),
                                     if (controller.isRecording.value)
-                                      CustomTextRegular('${(controller.recordingDuration ~/ 60).toString().padLeft(2, '0')}:${(controller.recordingDuration % 60).toString().padLeft(2, '0')}'),
+                                      CustomTextRegular(
+                                          '${(controller.recordingDuration ~/ 60).toString().padLeft(2, '0')}:${(controller.recordingDuration % 60).toString().padLeft(2, '0')}'),
                                   ],
                                 ),
                               ),
@@ -316,32 +330,28 @@ class AssistantChatScreen extends StatelessWidget {
 
                       //Image Uploading
                       Obx(
-                            () {
-                          if (imagePickerController
-                              .isImagePicked.isTrue) {
+                        () {
+                          if (imagePickerController.isImagePicked.isTrue) {
                             //SendImage
                             controller.sendImage(
                                 imagePickerController.imageFile.value!,
-                                imagePickerController.fileName
-                                    .toString());
+                                imagePickerController.fileName.toString());
 
                             return Visibility(
-                                visible: imagePickerController
-                                    .isImagePicked.isTrue,
+                                visible:
+                                    imagePickerController.isImagePicked.isTrue,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 8.0),
                                   child: Row(
                                     children: [
                                       Image.file(
-                                        imagePickerController
-                                            .imageFile.value!,
+                                        imagePickerController.imageFile.value!,
                                         width: 50,
                                         height: 50,
                                       ),
                                       const Gap(5),
-                                      CustomTextRegular(
-                                          'Uploading image..')
+                                      CustomTextRegular('Uploading image..')
                                     ],
                                   ),
                                 ));
@@ -354,103 +364,85 @@ class AssistantChatScreen extends StatelessWidget {
 
                       //Selected
                       Obx(
-                            () {
+                        () {
                           if (controller.isMessageSelected.isTrue &&
                               controller.selectedType.value ==
                                   AppConstants.text) {
                             return Visibility(
-                                visible:
-                                controller.isMessageSelected.isTrue &&
-                                    controller.selectedType
-                                        .value ==
+                                visible: controller.isMessageSelected.isTrue &&
+                                    controller.selectedType.value ==
                                         AppConstants.text,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0),
                                   child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
                                           Obx(() => Expanded(
-                                            child: CustomTextBold(
-                                              'Replying to ${controller.selectedPersonName.value.toString()}',
-                                            ),
-                                          )),
+                                                child: CustomTextBold(
+                                                  'Replying to ${controller.selectedPersonName.value.toString()}',
+                                                ),
+                                              )),
                                           GestureDetector(
                                               onTap: () {
-                                                controller
-                                                    .selectedType
-                                                    .value = "";
-                                                controller.selectedText
-                                                    .value = "";
-                                                controller
-                                                    .selectedPersonName
+                                                controller.selectedType.value =
+                                                    "";
+                                                controller.selectedText.value =
+                                                    "";
+                                                controller.selectedPersonName
                                                     .value = "";
                                                 controller
-                                                    .isMessageSelected(
-                                                    false);
+                                                    .isMessageSelected(false);
                                               },
-                                              child: Image.asset(
-                                                  Images.close,
-                                                  height: 12,
-                                                  width: 12))
+                                              child: Image.asset(Images.close,
+                                                  height: 12, width: 12))
                                         ],
                                       ),
-                                      Obx(() => CustomTextRegular(
-                                          controller.selectedText.value
-                                              .toString()))
+                                      Obx(() => CustomTextRegular(controller
+                                          .selectedText.value
+                                          .toString()))
                                     ],
                                   ),
                                 ));
-                          }
-                          else if (controller
-                              .isMessageSelected.isTrue &&
+                          } else if (controller.isMessageSelected.isTrue &&
                               controller.selectedType.value ==
                                   AppConstants.image) {
                             return Visibility(
-                                visible:
-                                controller.isMessageSelected.isTrue &&
-                                    controller.selectedType
-                                        .value ==
+                                visible: controller.isMessageSelected.isTrue &&
+                                    controller.selectedType.value ==
                                         AppConstants.image,
                                 child: Padding(
                                   padding: const EdgeInsets.symmetric(
                                       horizontal: 10.0),
                                   child: Column(
-                                    mainAxisAlignment:
-                                    MainAxisAlignment.start,
+                                    mainAxisAlignment: MainAxisAlignment.start,
                                     crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                        CrossAxisAlignment.start,
                                     children: [
                                       Row(
                                         children: [
                                           Obx(() => Expanded(
-                                            child: CustomTextBold(
-                                              'Replying to ${controller.selectedPersonName.value.toString()}',
-                                            ),
-                                          )),
+                                                child: CustomTextBold(
+                                                  'Replying to ${controller.selectedPersonName.value.toString()}',
+                                                ),
+                                              )),
                                           GestureDetector(
                                               onTap: () {
-                                                controller
-                                                    .selectedType
-                                                    .value = "";
-                                                controller.selectedText
-                                                    .value = "";
-                                                controller
-                                                    .selectedPersonName
+                                                controller.selectedType.value =
+                                                    "";
+                                                controller.selectedText.value =
+                                                    "";
+                                                controller.selectedPersonName
                                                     .value = "";
                                                 controller
-                                                    .isMessageSelected(
-                                                    false);
+                                                    .isMessageSelected(false);
                                               },
-                                              child: Image.asset(
-                                                  Images.close,
-                                                  height: 12,
-                                                  width: 12))
+                                              child: Image.asset(Images.close,
+                                                  height: 12, width: 12))
                                         ],
                                       ),
                                       Obx(() => CustomNetworkImage(
@@ -599,14 +591,17 @@ class AssistantChatScreen extends StatelessWidget {
                                 imagePickerController.showSelectBottomSheet();
                               },
                               child: Padding(
-                                padding: const EdgeInsets.only(left: 10.0, right: 10),
-                                child: Image.asset(Images.icAttachment, height: 20, width: 20),
+                                padding: const EdgeInsets.only(
+                                    left: 10.0, right: 10),
+                                child: Image.asset(Images.icAttachment,
+                                    height: 20, width: 20),
                               ),
                             ),
                             Flexible(
                               child: TextField(
                                 controller: controller.messageController,
-                                style: const TextStyle(fontSize: 16, color: ColorResources.black),
+                                style: const TextStyle(
+                                    fontSize: 16, color: ColorResources.black),
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   hintText: 'Enter Message...',
@@ -619,86 +614,127 @@ class AssistantChatScreen extends StatelessWidget {
                             Obx(() {
                               return controller.isTyping.value
                                   ? GestureDetector(
-                                    onTap: () async {
-                                      if (controller.messageController.text.isNotEmpty) {
-                                        String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-                                        ChatMessageModel chatMessage = ChatMessageModel(
-                                          senderUniId: uniId,
-                                          date: controller.getCurrentDateTime(),
-                                          fileUrl: "",
-                                          messageType: AppConstants.text,
-                                          name: controller.customerName,
-                                          profileImageUrl: controller.customerImage,
-                                          selectedText: controller.isMessageSelected.isTrue
-                                              ? controller.selectedText.value.toString()
-                                              : "",
-                                          selectedType: controller.isMessageSelected.isTrue
-                                              ? controller.selectedType.value.toString()
-                                              : "",
-                                          text: controller.messageController.text.toString(),
-                                        );
+                                      onTap: () async {
+                                        if (controller.messageController.text
+                                            .isNotEmpty) {
+                                          String? uniId =
+                                              await SharedPreferencesHelper
+                                                  .getData(
+                                                      AppConstants.userUniId);
+                                          ChatMessageModel chatMessage =
+                                              ChatMessageModel(
+                                            senderUniId: uniId,
+                                            date:
+                                                controller.getCurrentDateTime(),
+                                            fileUrl: "",
+                                            messageType: AppConstants.text,
+                                            name: controller.customerName,
+                                            profileImageUrl:
+                                                controller.customerImage,
+                                            selectedText: controller
+                                                    .isMessageSelected.isTrue
+                                                ? controller.selectedText.value
+                                                    .toString()
+                                                : "",
+                                            selectedType: controller
+                                                    .isMessageSelected.isTrue
+                                                ? controller.selectedType.value
+                                                    .toString()
+                                                : "",
+                                            text: controller
+                                                .messageController.text
+                                                .toString(),
+                                          );
 
-                                        controller.sendMessage(chatMessage, null, '');
-                                        controller.messageController.clear();
-                                        controller.selectedType.value = "";
-                                        controller.selectedText.value = "";
-                                        controller.selectedPersonName.value = "";
-                                        controller.isMessageSelected(false);
-                                        controller.isTyping.value = false; // Reset typing status
-                                      }
-                                    },
-                                    child: Container(
-                                    padding: const EdgeInsets.all(10),
-                                    decoration: const BoxDecoration(
-                                        color: ColorResources.colorPrimary,
-                                        shape: BoxShape.circle
-                                    ),
-                                    child: Image.asset(Images.sendChat,height: 20,color: ColorResources.toolbarText)
-                                    ),
-                                  )
+                                          controller.sendMessage(
+                                              chatMessage, null, '');
+                                          controller.messageController.clear();
+                                          controller.selectedType.value = "";
+                                          controller.selectedText.value = "";
+                                          controller.selectedPersonName.value =
+                                              "";
+                                          controller.isMessageSelected(false);
+                                          controller.isTyping.value =
+                                              false; // Reset typing status
+                                        }
+                                      },
+                                      child: Container(
+                                          padding: const EdgeInsets.all(10),
+                                          decoration: const BoxDecoration(
+                                              color:
+                                                  ColorResources.colorPrimary,
+                                              shape: BoxShape.circle),
+                                          child: Image.asset(Images.sendChat,
+                                              height: 20,
+                                              color:
+                                                  ColorResources.toolbarText)),
+                                    )
                                   : Obx(() {
-                                return GestureDetector(
-                                  onTap: () {
-                                    CustomSnackBar.showTop("Press and hold the button to record");
-                                  },
-                                  onLongPressStart: (_) => controller.checkPermissionStartRecording(),
-                                  onLongPressEnd: (_) => controller.stopRecording(),
-                                  child: AnimatedContainer(
-                                    duration: const Duration(milliseconds: 300),
-                                    alignment: Alignment.center,
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        AnimatedContainer(
-                                          duration: const Duration(milliseconds: 300),
-                                          width: controller.isRecording.value ? 60 : 40,
-                                          height: controller.isRecording.value ? 60 : 40,
-                                          decoration: BoxDecoration(
-                                            color: ColorResources.colorPrimary,
-                                            shape: BoxShape.circle,
-                                            border: Border.all(
-                                              color: controller.isRecording.value ? ColorResources.colorPrimary : ColorResources.colorPrimary,
-                                              width: controller.isRecording.value ? 4 : 2,
-                                            ),
-                                          ),
-                                          child: Icon(
-                                            Icons.mic,
-                                            color: ColorResources.toolbarText,
-                                            size: controller.isRecording.value ? 35 : 30,
+                                      return GestureDetector(
+                                        onTap: () {
+                                          CustomSnackBar.showTop(
+                                              "Press and hold the button to record");
+                                        },
+                                        onLongPressStart: (_) => controller
+                                            .checkPermissionStartRecording(),
+                                        onLongPressEnd: (_) =>
+                                            controller.stopRecording(),
+                                        child: AnimatedContainer(
+                                          duration:
+                                              const Duration(milliseconds: 300),
+                                          alignment: Alignment.center,
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              AnimatedContainer(
+                                                duration: const Duration(
+                                                    milliseconds: 300),
+                                                width:
+                                                    controller.isRecording.value
+                                                        ? 60
+                                                        : 40,
+                                                height:
+                                                    controller.isRecording.value
+                                                        ? 60
+                                                        : 40,
+                                                decoration: BoxDecoration(
+                                                  color: ColorResources
+                                                      .colorPrimary,
+                                                  shape: BoxShape.circle,
+                                                  border: Border.all(
+                                                    color: controller
+                                                            .isRecording.value
+                                                        ? ColorResources
+                                                            .colorPrimary
+                                                        : ColorResources
+                                                            .colorPrimary,
+                                                    width: controller
+                                                            .isRecording.value
+                                                        ? 4
+                                                        : 2,
+                                                  ),
+                                                ),
+                                                child: Icon(
+                                                  Icons.mic,
+                                                  color: ColorResources
+                                                      .toolbarText,
+                                                  size: controller
+                                                          .isRecording.value
+                                                      ? 35
+                                                      : 30,
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              });
+                                      );
+                                    });
                             }),
                             const Gap(Dimensions.gapExtraSmall)
                           ],
                         ),
                       )
-
-
                     ],
                   ),
                 )
@@ -714,7 +750,7 @@ class AssistantChatScreen extends StatelessWidget {
                   if (value)
                     Positioned(
                       bottom: 40, // Adjust as needed
-                      left: 295,  // Adjust as needed
+                      left: 295, // Adjust as needed
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
@@ -723,7 +759,8 @@ class AssistantChatScreen extends StatelessWidget {
                             elevation: 0, // Remove elevation
                             shape: const CircleBorder(), // Circular shape
                             padding: EdgeInsets.zero, // Remove padding
-                            fillColor: ColorResources.colorPrimary, // Set background color
+                            fillColor: ColorResources
+                                .colorPrimary, // Set background color
                             child: Image.asset(
                               Images.bottomArrowOnChat,
                               height: 20,

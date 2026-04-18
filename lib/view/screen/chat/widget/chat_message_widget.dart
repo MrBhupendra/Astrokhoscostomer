@@ -14,12 +14,27 @@ import '../controller/chat_intake_form_controller.dart';
 import '../model/chat_message_model.dart';
 
 class ChatMessageWidget extends StatelessWidget {
-  ChatMessageModel message;
+  final ChatMessageModel message;
   final String? userUniId;
   final bool isLastMessage;
   ChatMessageWidget(this.message, this.userUniId, {required this.isLastMessage,super.key});
   final TypingController typingController = Get.put(TypingController());
   final ChatIntakeFormController chatIntakeFormController = Get.put(ChatIntakeFormController());
+
+  Widget _statusTicks(ChatMessageModel m) {
+    final s = m.normalizedDeliveryStatus();
+    if (s == 'sent') {
+      return const Icon(Icons.check, size: 14, color: Colors.grey);
+    }
+    if (s == 'delivered') {
+      return const Icon(Icons.done_all, size: 14, color: Colors.grey);
+    }
+    if (s == 'read') {
+      return const Icon(Icons.done_all, size: 14, color: Colors.blue);
+    }
+    return const SizedBox.shrink();
+  }
+
   @override
   Widget build(BuildContext context) {
     if(chatIntakeFormController.isVirtualAstrologer == 1 && typingController.isTyping.isTrue && isLastMessage && message.senderUniId != userUniId){
@@ -89,10 +104,17 @@ class ChatMessageWidget extends StatelessWidget {
                           )
                       ),
                       const Gap(2),
-                      CustomTextRegular(
-                        CommonMethods().formatDateTimeOutput(message.date.toString()),
-                        fontSize: 10.0,
-                        color: ColorResources.black4,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomTextRegular(
+                            CommonMethods().formatDateTimeOutput(message.date.toString()),
+                            fontSize: 10.0,
+                            color: ColorResources.black4,
+                          ),
+                          const SizedBox(width: 4),
+                          _statusTicks(message),
+                        ],
                       ),
                     ],
                   ),

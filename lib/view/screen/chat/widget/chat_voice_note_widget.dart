@@ -23,6 +23,20 @@ class _ChatVoiceNoteWidgetState extends State<ChatVoiceNoteWidget> {
   var isPlaying = false.obs;
   var currentPlayingUrl = ''.obs;
 
+  Widget _statusTicks(ChatMessageModel m) {
+    final s = m.normalizedDeliveryStatus();
+    if (s == 'sent') {
+      return const Icon(Icons.check, size: 14, color: Colors.grey);
+    }
+    if (s == 'delivered') {
+      return const Icon(Icons.done_all, size: 14, color: Colors.grey);
+    }
+    if (s == 'read') {
+      return const Icon(Icons.done_all, size: 14, color: Colors.blue);
+    }
+    return const SizedBox.shrink();
+  }
+
   Future<void> playVoiceNote(String url) async {
     if (currentPlayingUrl.value == url && isPlaying.value) {
       await audioPlayer.stop();
@@ -103,10 +117,17 @@ class _ChatVoiceNoteWidgetState extends State<ChatVoiceNoteWidget> {
                         //   message.name!,
                         // ),
                         const Gap(2),
-                        CustomTextRegular(
-                          widget.message.date.toString(),
-                          fontSize: 10.0,
-                          color: ColorResources.black4,
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomTextRegular(
+                              widget.message.date.toString(),
+                              fontSize: 10.0,
+                              color: ColorResources.black4,
+                            ),
+                            const SizedBox(width: 4),
+                            _statusTicks(widget.message),
+                          ],
                         ),
                       ],
                     ),

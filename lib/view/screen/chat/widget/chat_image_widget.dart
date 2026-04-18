@@ -15,6 +15,20 @@ class ChatImageWidget extends StatelessWidget {
 
   const ChatImageWidget(this.message, this.userUniId, {super.key});
 
+  Widget _statusTicks(ChatMessageModel m) {
+    final s = m.normalizedDeliveryStatus();
+    if (s == 'sent') {
+      return const Icon(Icons.check, size: 14, color: Colors.grey);
+    }
+    if (s == 'delivered') {
+      return const Icon(Icons.done_all, size: 14, color: Colors.grey);
+    }
+    if (s == 'read') {
+      return const Icon(Icons.done_all, size: 14, color: Colors.blue);
+    }
+    return const SizedBox.shrink();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -74,10 +88,17 @@ class ChatImageWidget extends StatelessWidget {
                       //   message.name!,
                       // ),
                       const Gap(2),
-                      CustomTextRegular(
-                        message.date.toString(),
-                        fontSize: 10.0,
-                        color: ColorResources.black4,
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          CustomTextRegular(
+                            message.date.toString(),
+                            fontSize: 10.0,
+                            color: ColorResources.black4,
+                          ),
+                          const SizedBox(width: 4),
+                          _statusTicks(message),
+                        ],
                       ),
                     ],
                   ),
