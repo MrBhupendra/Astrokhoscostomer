@@ -140,6 +140,7 @@ class AssistantChatScreen extends StatelessWidget {
                               message,
                               controller.uniId,
                               isLastMessage: index == 0,
+                              showStatusTicks: true,
                             ),
                             onRightSwipe: (details) {
                               controller.selectedType.value = AppConstants.text;
@@ -158,7 +159,8 @@ class AssistantChatScreen extends StatelessWidget {
                           );
                         } else if (message.messageType == AppConstants.image) {
                           return SwipeTo(
-                            child: ChatImageWidget(message, controller.uniId),
+                            child: ChatImageWidget(message, controller.uniId,
+                                showStatusTicks: true),
                             onRightSwipe: (details) {
                               controller.selectedType.value =
                                   AppConstants.image;
@@ -179,7 +181,8 @@ class AssistantChatScreen extends StatelessWidget {
                             AppConstants.voiceNote) {
                           return SwipeTo(
                             child:
-                                ChatVoiceNoteWidget(message, controller.uniId),
+                                ChatVoiceNoteWidget(message, controller.uniId,
+                                    showStatusTicks: true),
                             onRightSwipe: (details) {
                               // controller.selectedType.value = AppConstants.voiceNote;
                               // controller.selectedText.value = controller.chatHistoryList[index].fileUrl.toString();

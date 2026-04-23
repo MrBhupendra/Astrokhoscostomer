@@ -17,7 +17,9 @@ class ChatMessageWidget extends StatelessWidget {
   final ChatMessageModel message;
   final String? userUniId;
   final bool isLastMessage;
-  ChatMessageWidget(this.message, this.userUniId, {required this.isLastMessage,super.key});
+  final bool showStatusTicks;
+  ChatMessageWidget(this.message, this.userUniId,
+      {required this.isLastMessage, this.showStatusTicks = false, super.key});
   final TypingController typingController = Get.put(TypingController());
   final ChatIntakeFormController chatIntakeFormController = Get.put(ChatIntakeFormController());
 
@@ -104,18 +106,25 @@ class ChatMessageWidget extends StatelessWidget {
                           )
                       ),
                       const Gap(2),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CustomTextRegular(
-                            CommonMethods().formatDateTimeOutput(message.date.toString()),
-                            fontSize: 10.0,
-                            color: ColorResources.black4,
-                          ),
-                          const SizedBox(width: 4),
-                          _statusTicks(message),
-                        ],
-                      ),
+                      if (!showStatusTicks)
+                        CustomTextRegular(
+                          CommonMethods().formatDateTimeOutput(message.date.toString()),
+                          fontSize: 10.0,
+                          color: ColorResources.black4,
+                        )
+                      else
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomTextRegular(
+                              CommonMethods().formatDateTimeOutput(message.date.toString()),
+                              fontSize: 10.0,
+                              color: ColorResources.black4,
+                            ),
+                            const SizedBox(width: 4),
+                            _statusTicks(message),
+                          ],
+                        ),
                     ],
                   ),
                   const SizedBox(width: 5.0),

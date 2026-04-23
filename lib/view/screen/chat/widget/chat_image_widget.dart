@@ -12,8 +12,10 @@ import '../model/chat_message_model.dart';
 class ChatImageWidget extends StatelessWidget {
   final ChatMessageModel message;
   final String? userUniId;
+  final bool showStatusTicks;
 
-  const ChatImageWidget(this.message, this.userUniId, {super.key});
+  const ChatImageWidget(this.message, this.userUniId,
+      {this.showStatusTicks = false, super.key});
 
   Widget _statusTicks(ChatMessageModel m) {
     final s = m.normalizedDeliveryStatus();
@@ -88,18 +90,25 @@ class ChatImageWidget extends StatelessWidget {
                       //   message.name!,
                       // ),
                       const Gap(2),
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          CustomTextRegular(
-                            message.date.toString(),
-                            fontSize: 10.0,
-                            color: ColorResources.black4,
-                          ),
-                          const SizedBox(width: 4),
-                          _statusTicks(message),
-                        ],
-                      ),
+                      if (!showStatusTicks)
+                        CustomTextRegular(
+                          message.date.toString(),
+                          fontSize: 10.0,
+                          color: ColorResources.black4,
+                        )
+                      else
+                        Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            CustomTextRegular(
+                              message.date.toString(),
+                              fontSize: 10.0,
+                              color: ColorResources.black4,
+                            ),
+                            const SizedBox(width: 4),
+                            _statusTicks(message),
+                          ],
+                        ),
                     ],
                   ),
                   const SizedBox(width: 5.0),

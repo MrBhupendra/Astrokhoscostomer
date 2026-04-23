@@ -1,586 +1,231 @@
+/// Firebase Messaging + Awesome Notifications: display only.
+///
+/// All [Get.toNamed] calls live in [NotificationRouter]. This service registers
+/// FCM streams, the background isolate entrypoint, and Awesome [setListeners].
 import 'package:astro_brahmand/utill/app_constants.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 
 import '../firebase_options.dart';
 import '../utill/color_resources.dart';
 import '../view/screen/splash/controller/config_controller.dart';
+import 'notification_router.dart';
 
+// --- Firebase background isolate (must be top-level) -------------------------
+
+@pragma('vm:entry-point')
+Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  if (kDebugMode) {
+    debugPrint(
+        '[NotificationService] background isolate message: ${message.data}');
+  }
+  await NotificationService.showNotification(message);
+}
+
+// --- Awesome foreground action (must be top-level for plugin) ---------------
+
+@pragma('vm:entry-point')
+Future<void> awesomeNotificationsActionHandler(
+    ReceivedAction receivedAction) async {
+  if (kDebugMode) {
+    debugPrint(
+        '[NotificationService] onActionReceived: ${receivedAction.payload} btn=${receivedAction.buttonKeyPressed}');
+  }
+  await NotificationRouter.handleAwesomeAction(receivedAction);
+}
+
+/// Receives FCM, displays local notifications via Awesome Notifications,
+/// and registers listeners. Navigation is delegated to [NotificationRouter].
 class NotificationService {
-  @pragma('vm:entry-point')
-  Future<void> configureFirebaseMessaging() async {
-    FirebaseMessaging.instance.requestPermission(
-        alert: true,
-        announcement: false,
-        badge: true,
-        carPlay: false,
-        criticalAlert: true,
-        provisional: false,
-        sound: true);
+  factory NotificationService() => _instance;
+  NotificationService._internal();
+  static final NotificationService _instance = NotificationService._internal();
 
-    // Handle the received message when the app is in background
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  static bool _awesomeListenersRegistered = false;
+  static bool _firebaseConfigured = false;
 
-    // Handle the received message when the app is in foreground
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+  /// Maps FCM data values to string payload for Awesome (required for taps).
+  static Map<String, String> fcmDataToPayloadMap(Map<String, dynamic> data) {
+    final out = <String, String>{};
+    for (final e in data.entries) {
+      out[e.key] = e.value?.toString() ?? '';
+    }
+    return out;
+  }
+
+  /// Single entry: show/update local notification from FCM (foreground + background).
+  static Future<void> showNotification(RemoteMessage message) async {
+    final data = message.data;
+    final payloadMap = fcmDataToPayloadMap(data);
+    final type = notificationTypeFromString(payloadMap['type']);
+
+    if (kDebugMode) {
       debugPrint(
-          "main notification (onMessage) Data-> ${message.data.toString()}");
+          '[NotificationService] showNotification type=$type id=${message.messageId} data=$data');
+    }
 
-      String? title;
-      String? body;
-      String type = "alert";
-      String image = '';
-      String logo = '';
-      int notificationId = -1;
-      if (message.data.isNotEmpty) {
-        //PayloadData
-        title = message.data['title'];
-        body = message.data['body'];
-        type = message.data['type'];
-        image = message.data['image'];
-        logo = message.data['logo'];
-        notificationId = int.parse(message.data['notification_id']);
-      } else {
-        title = message.notification?.title;
-        body = message.notification?.body;
-      }
+    switch (type) {
+      case NotificationType.cancel:
+        final id = int.tryParse(payloadMap['notification_id'] ?? '') ?? -1;
+        _instance.cancelNotification(id);
+        return;
+      case NotificationType.message:
+        await _instance._showMessageNotification(message, payloadMap);
+        return;
+      case NotificationType.chat:
+      case NotificationType.video:
+      case NotificationType.call:
+      case NotificationType.serviceVideo:
+      case NotificationType.architectServiceVideo:
+      case NotificationType.architectServiceOrder:
+        final nid =
+            int.tryParse(payloadMap['notification_id'] ?? '') ?? -1;
+        final t = (payloadMap['title'] ?? '').isNotEmpty
+            ? payloadMap['title']
+            : message.notification?.title;
+        final b = (payloadMap['body'] ?? '').isNotEmpty
+            ? payloadMap['body']
+            : message.notification?.body;
+        await _instance._showIncomingStyle(
+          notificationId: nid,
+          title: t,
+          body: b,
+          type: type,
+          payloadMap: payloadMap,
+        );
+        return;
+      case NotificationType.android:
+        final nid =
+            int.tryParse(payloadMap['notification_id'] ?? '') ?? -1;
+        final t = (payloadMap['title'] ?? '').isNotEmpty
+            ? payloadMap['title']
+            : message.notification?.title;
+        final b = (payloadMap['body'] ?? '').isNotEmpty
+            ? payloadMap['body']
+            : message.notification?.body;
+        await _instance._showAndroidStyle(
+          notificationId: nid,
+          title: t,
+          body: b,
+          image: payloadMap['image'] ?? '',
+          logo: payloadMap['logo'] ?? '',
+          payloadMap: payloadMap,
+        );
+        return;
+      case NotificationType.alert:
+      case NotificationType.unknown:
+        final nid =
+            int.tryParse(payloadMap['notification_id'] ?? '') ?? -1;
+        final t = (payloadMap['title'] ?? '').isNotEmpty
+            ? payloadMap['title']
+            : message.notification?.title;
+        final b = (payloadMap['body'] ?? '').isNotEmpty
+            ? payloadMap['body']
+            : message.notification?.body;
+        await _instance._showDefaultAlert(
+          notificationId: nid,
+          title: t,
+          body: b,
+          payloadMap: payloadMap,
+        );
+        return;
+    }
+  }
 
-      if (type == "chat") {
-        cancelAllNotifications();
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: notificationId,
-                channelKey: "chat_channel",
-                title: title,
-                body: body,
-                icon: 'resource://drawable/ic_notification',
-                showWhen: true,
-                wakeUpScreen: true,
-                fullScreenIntent: true,
-                criticalAlert: true,
-                autoDismissible: true,
-                color: ColorResources.colorPrimary,
-                chronometer: Duration.zero,
-                timeoutAfter: const Duration(seconds: 180),
-                backgroundColor: ColorResources.colorPrimary,
-                notificationLayout: NotificationLayout.Default,
-                category: NotificationCategory.Call,
-                locked: true,
-                displayOnBackground: true,
-                displayOnForeground: true,
-                playState: NotificationPlayState.playing),
-            actionButtons: [
-              NotificationActionButton(
-                  key: "ACCEPT",
-                  label: "Accept Chat",
-                  color: ColorResources.green,
-                  autoDismissible: true),
-              NotificationActionButton(
-                  key: "REJECT",
-                  label: "Reject Chat",
-                  color: ColorResources.red,
-                  autoDismissible: true),
-            ]);
-        startListeningNotificationEvents();
-      } else if (type == "video") {
-        cancelAllNotifications();
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: notificationId,
-                channelKey: "chat_channel",
-                title: title,
-                body: body,
-                icon: 'resource://drawable/ic_notification',
-                showWhen: true,
-                wakeUpScreen: true,
-                fullScreenIntent: true,
-                criticalAlert: true,
-                autoDismissible: true,
-                color: ColorResources.colorPrimary,
-                chronometer: Duration.zero,
-                timeoutAfter: const Duration(seconds: 180),
-                backgroundColor: ColorResources.colorPrimary,
-                notificationLayout: NotificationLayout.Default,
-                category: NotificationCategory.Call,
-                locked: true,
-                displayOnBackground: true,
-                displayOnForeground: true,
-                playState: NotificationPlayState.playing),
-            actionButtons: [
-              NotificationActionButton(
-                  key: "ACCEPT",
-                  label: "Accept Video",
-                  color: ColorResources.green,
-                  autoDismissible: true),
-              NotificationActionButton(
-                  key: "REJECT",
-                  label: "Reject Video",
-                  color: ColorResources.red,
-                  autoDismissible: true),
-            ]);
-        startListeningNotificationEvents();
-      } else if (type == "call") {
-        cancelAllNotifications();
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: notificationId,
-                channelKey: "chat_channel",
-                title: title,
-                body: body,
-                icon: 'resource://drawable/ic_notification',
-                showWhen: true,
-                wakeUpScreen: true,
-                fullScreenIntent: true,
-                criticalAlert: true,
-                autoDismissible: true,
-                color: ColorResources.colorPrimary,
-                chronometer: Duration.zero,
-                timeoutAfter: const Duration(seconds: 180),
-                backgroundColor: ColorResources.colorPrimary,
-                notificationLayout: NotificationLayout.Default,
-                category: NotificationCategory.Call,
-                locked: true,
-                displayOnBackground: true,
-                displayOnForeground: true,
-                playState: NotificationPlayState.playing),
-            actionButtons: [
-              NotificationActionButton(
-                  key: "ACCEPT",
-                  label: "Accept Call",
-                  color: ColorResources.green,
-                  autoDismissible: true),
-              NotificationActionButton(
-                  key: "REJECT",
-                  label: "Reject Call",
-                  color: ColorResources.red,
-                  autoDismissible: true),
-            ]);
-        startListeningNotificationEvents();
-      } else if (type == "service_video") {
-        cancelAllNotifications();
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: notificationId,
-                channelKey: "chat_channel",
-                title: title,
-                body: body,
-                icon: 'resource://drawable/ic_notification',
-                showWhen: true,
-                wakeUpScreen: true,
-                fullScreenIntent: true,
-                criticalAlert: true,
-                autoDismissible: true,
-                color: ColorResources.colorPrimary,
-                chronometer: Duration.zero,
-                timeoutAfter: const Duration(seconds: 180),
-                backgroundColor: ColorResources.colorPrimary,
-                notificationLayout: NotificationLayout.Default,
-                category: NotificationCategory.Call,
-                locked: true,
-                displayOnBackground: true,
-                displayOnForeground: true,
-                playState: NotificationPlayState.playing),
-            actionButtons: [
-              NotificationActionButton(
-                  key: "ACCEPT SERVICE",
-                  label: "Accept Video",
-                  color: ColorResources.green,
-                  autoDismissible: true),
-              NotificationActionButton(
-                  key: "REJECT SERVICE",
-                  label: "Reject Video",
-                  color: ColorResources.red,
-                  autoDismissible: true),
-            ]);
-        startListeningNotificationEvents();
-      } else if (type == "architect_service_video") {
-        cancelAllNotifications();
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: notificationId,
-                channelKey: "chat_channel",
-                title: title,
-                body: body,
-                icon: 'resource://drawable/ic_notification',
-                showWhen: true,
-                wakeUpScreen: true,
-                fullScreenIntent: true,
-                criticalAlert: true,
-                autoDismissible: true,
-                color: ColorResources.colorPrimary,
-                chronometer: Duration.zero,
-                timeoutAfter: const Duration(seconds: 180),
-                backgroundColor: ColorResources.colorPrimary,
-                notificationLayout: NotificationLayout.Default,
-                category: NotificationCategory.Call,
-                locked: true,
-                displayOnBackground: true,
-                displayOnForeground: true,
-                playState: NotificationPlayState.playing),
-            actionButtons: [
-              NotificationActionButton(
-                  key: "ACCEPT ARCHITECT",
-                  label: "Accept Video",
-                  color: ColorResources.green,
-                  autoDismissible: true),
-              NotificationActionButton(
-                  key: "REJECT ARCHITECT",
-                  label: "Reject Video",
-                  color: ColorResources.red,
-                  autoDismissible: true),
-            ]);
-        startListeningNotificationEvents();
-      } else if (type == "architect_service_order") {
-        cancelAllNotifications();
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: notificationId,
-                channelKey: "chat_channel",
-                title: title,
-                body: body,
-                icon: 'resource://drawable/ic_notification',
-                showWhen: true,
-                wakeUpScreen: true,
-                fullScreenIntent: true,
-                criticalAlert: true,
-                autoDismissible: true,
-                color: ColorResources.colorPrimary,
-                chronometer: Duration.zero,
-                timeoutAfter: const Duration(seconds: 180),
-                backgroundColor: ColorResources.colorPrimary,
-                notificationLayout: NotificationLayout.Default,
-                category: NotificationCategory.Call,
-                locked: true,
-                displayOnBackground: true,
-                displayOnForeground: true,
-                playState: NotificationPlayState.playing),
-            actionButtons: [
-              NotificationActionButton(
-                  key: "ACCEPT ARCHITECT",
-                  label: "JOIN",
-                  color: ColorResources.green,
-                  autoDismissible: true),
-            ]);
-        startListeningNotificationEvents();
-      } else if (type == "android") {
-        if (image.isNotEmpty) {
-          AwesomeNotifications().createNotification(
-              content: NotificationContent(
-            id: notificationId,
-            channelKey: "alert_channel",
-            icon: 'resource://drawable/ic_notification',
-            color: ColorResources.colorPrimary,
-            title: title,
-            body: body,
-            backgroundColor: ColorResources.colorPrimary,
-            largeIcon: logo,
-            bigPicture: image,
-            notificationLayout: NotificationLayout.BigPicture,
-          ));
-        } else {
-          AwesomeNotifications().createNotification(
-              content: NotificationContent(
-            id: notificationId,
-            channelKey: "alert_channel",
-            icon: 'resource://drawable/ic_notification',
-            color: ColorResources.colorPrimary,
-            title: title,
-            body: body,
-            backgroundColor: ColorResources.colorPrimary,
-            largeIcon: logo,
-          ));
-        }
-      } else if (type == "cancel") {
-        cancelNotification(notificationId);
-      } else {
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-                id: notificationId,
-                channelKey: "alert_channel",
-                icon: 'resource://drawable/ic_notification',
-                color: ColorResources.colorPrimary,
-                title: title,
-                body: body,
-                backgroundColor: ColorResources.colorPrimary));
+  /// One-time FCM + Awesome wiring (call from [main] after Firebase init).
+  Future<void> configureFirebaseMessaging() async {
+    if (_firebaseConfigured) {
+      if (kDebugMode) {
+        debugPrint('[NotificationService] configureFirebaseMessaging: skipped');
       }
+      return;
+    }
+    _firebaseConfigured = true;
+
+    await FirebaseMessaging.instance.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: true,
+      provisional: false,
+      sound: true,
+    );
+
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
+
+    _ensureAwesomeListenersRegistered();
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      if (kDebugMode) {
+        debugPrint('[NotificationService] onMessage: ${message.data}');
+      }
+      showNotification(message);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      debugPrint(
-          "main notification (onMessageOpenedApp) Data-> ${message.data.toString()}");
-      String type = "alert";
-      if (message.data.isNotEmpty) {
-        type = message.data['type'];
+      if (kDebugMode) {
+        debugPrint('[NotificationService] onMessageOpenedApp: ${message.data}');
       }
-      if (type == "chat") {
-        Get.toNamed('/queue_list');
-      } else if (type == "video") {
-        Get.toNamed('/queue_list');
-      } else if (type == "call") {
-        Get.toNamed('/queue_list');
-      } else if (type == "service_video") {
-        Get.toNamed('/orders_tab_screen', arguments: {'index': 2});
-      } else if (type == "architect_service_video") {
-        Get.toNamed("/architect_orders_tab_screen");
-      } else {
-        Get.toNamed('/dashboard');
-      }
+      NotificationRouter.onMessageOpenedApp(message);
     });
+
+    final initial = await FirebaseMessaging.instance.getInitialMessage();
+    if (initial != null) {
+      NotificationRouter.queuePendingRemote(initial);
+    }
   }
 
-  @pragma('vm:entry-point')
-  Future<void> _firebaseMessagingBackgroundHandler(
-      RemoteMessage message) async {
-    await Firebase.initializeApp(
-      options: DefaultFirebaseOptions.currentPlatform,
+  static void _ensureAwesomeListenersRegistered() {
+    if (_awesomeListenersRegistered) return;
+    _awesomeListenersRegistered = true;
+    AwesomeNotifications().setListeners(
+      onActionReceivedMethod: awesomeNotificationsActionHandler,
     );
-    debugPrint(
-        "main notification (onBackgroundMessage) Data-> ${message.data.toString()}");
-    String? title;
-    String? body;
-    String type = "alert";
-    String image = '';
-    String logo = '';
-    int notificationId = -1;
-    if (message.data.isNotEmpty) {
-      //PayloadData
-      title = message.data['title'];
-      body = message.data['body'];
-      type = message.data['type'];
-      image = message.data['image'];
-      logo = message.data['logo'];
-      notificationId = int.parse(message.data['notification_id']);
-    } else {
-      title = message.notification?.title;
-      body = message.notification?.body;
+    if (kDebugMode) {
+      debugPrint('[NotificationService] Awesome setListeners registered');
+    }
+  }
+
+  Future<void> _showMessageNotification(
+    RemoteMessage message,
+    Map<String, String> payloadMap,
+  ) async {
+    if (Get.isRegistered<ConfigController>()) {
+      final configController = Get.find<ConfigController>();
+      if (configController.currentScreen.value == AppConstants.chat) {
+        if (kDebugMode) {
+          debugPrint('[NotificationService] skip message notif — on chat');
+        }
+        return;
+      }
     }
 
-    if (type == "chat") {
-      cancelAllNotifications();
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: notificationId,
-              channelKey: "chat_channel",
-              title: title,
-              body: body,
-              icon: 'resource://drawable/ic_notification',
-              showWhen: true,
-              wakeUpScreen: true,
-              fullScreenIntent: true,
-              criticalAlert: true,
-              autoDismissible: true,
-              color: ColorResources.colorPrimary,
-              chronometer: Duration.zero,
-              timeoutAfter: const Duration(seconds: 180),
-              backgroundColor: ColorResources.colorPrimary,
-              notificationLayout: NotificationLayout.Default,
-              category: NotificationCategory.Call,
-              locked: true,
-              displayOnBackground: true,
-              displayOnForeground: true,
-              playState: NotificationPlayState.playing),
-          actionButtons: [
-            NotificationActionButton(
-                key: "ACCEPT",
-                label: "Accept Chat",
-                color: ColorResources.green,
-                autoDismissible: true),
-            NotificationActionButton(
-                key: "REJECT",
-                label: "Reject Chat",
-                color: ColorResources.red,
-                autoDismissible: true),
-          ]);
-      startListeningNotificationEvents();
-    } else if (type == "video") {
-      cancelAllNotifications();
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: notificationId,
-              channelKey: "chat_channel",
-              title: title,
-              body: body,
-              icon: 'resource://drawable/ic_notification',
-              showWhen: true,
-              wakeUpScreen: true,
-              fullScreenIntent: true,
-              criticalAlert: true,
-              autoDismissible: true,
-              color: ColorResources.colorPrimary,
-              chronometer: Duration.zero,
-              timeoutAfter: const Duration(seconds: 180),
-              backgroundColor: ColorResources.colorPrimary,
-              notificationLayout: NotificationLayout.Default,
-              category: NotificationCategory.Call,
-              locked: true,
-              displayOnBackground: true,
-              displayOnForeground: true,
-              playState: NotificationPlayState.playing),
-          actionButtons: [
-            NotificationActionButton(
-                key: "ACCEPT",
-                label: "Accept Video",
-                color: ColorResources.green,
-                autoDismissible: true),
-            NotificationActionButton(
-                key: "REJECT",
-                label: "Reject Video",
-                color: ColorResources.red,
-                autoDismissible: true),
-          ]);
-      startListeningNotificationEvents();
-    } else if (type == "call") {
-      cancelAllNotifications();
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: notificationId,
-              channelKey: "chat_channel",
-              title: title,
-              body: body,
-              icon: 'resource://drawable/ic_notification',
-              showWhen: true,
-              wakeUpScreen: true,
-              fullScreenIntent: true,
-              criticalAlert: true,
-              autoDismissible: true,
-              color: ColorResources.colorPrimary,
-              chronometer: Duration.zero,
-              timeoutAfter: const Duration(seconds: 180),
-              backgroundColor: ColorResources.colorPrimary,
-              notificationLayout: NotificationLayout.Default,
-              category: NotificationCategory.Call,
-              locked: true,
-              displayOnBackground: true,
-              displayOnForeground: true,
-              playState: NotificationPlayState.playing),
-          actionButtons: [
-            NotificationActionButton(
-                key: "ACCEPT",
-                label: "Accept Call",
-                color: ColorResources.green,
-                autoDismissible: true),
-            NotificationActionButton(
-                key: "REJECT",
-                label: "Reject Call",
-                color: ColorResources.red,
-                autoDismissible: true),
-          ]);
-      startListeningNotificationEvents();
-    } else if (type == "service_video") {
-      cancelAllNotifications();
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: notificationId,
-              channelKey: "chat_channel",
-              title: title,
-              body: body,
-              icon: 'resource://drawable/ic_notification',
-              showWhen: true,
-              wakeUpScreen: true,
-              fullScreenIntent: true,
-              criticalAlert: true,
-              autoDismissible: true,
-              color: ColorResources.colorPrimary,
-              chronometer: Duration.zero,
-              timeoutAfter: const Duration(seconds: 180),
-              backgroundColor: ColorResources.colorPrimary,
-              notificationLayout: NotificationLayout.Default,
-              category: NotificationCategory.Call,
-              locked: true,
-              displayOnBackground: true,
-              displayOnForeground: true,
-              playState: NotificationPlayState.playing),
-          actionButtons: [
-            NotificationActionButton(
-                key: "ACCEPT SERVICE",
-                label: "Accept Video",
-                color: ColorResources.green,
-                autoDismissible: true),
-            NotificationActionButton(
-                key: "REJECT SERVICE",
-                label: "Reject Video",
-                color: ColorResources.red,
-                autoDismissible: true),
-          ]);
-      startListeningNotificationEvents();
-    } else if (type == "architect_service_video") {
-      cancelAllNotifications();
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: notificationId,
-              channelKey: "chat_channel",
-              title: title,
-              body: body,
-              icon: 'resource://drawable/ic_notification',
-              showWhen: true,
-              wakeUpScreen: true,
-              fullScreenIntent: true,
-              criticalAlert: true,
-              autoDismissible: true,
-              color: ColorResources.colorPrimary,
-              chronometer: Duration.zero,
-              timeoutAfter: const Duration(seconds: 180),
-              backgroundColor: ColorResources.colorPrimary,
-              notificationLayout: NotificationLayout.Default,
-              category: NotificationCategory.Call,
-              locked: true,
-              displayOnBackground: true,
-              displayOnForeground: true,
-              playState: NotificationPlayState.playing),
-          actionButtons: [
-            NotificationActionButton(
-                key: "ACCEPT ARCHITECT",
-                label: "Accept Video",
-                color: ColorResources.green,
-                autoDismissible: true),
-            NotificationActionButton(
-                key: "REJECT ARCHITECT",
-                label: "Reject Video",
-                color: ColorResources.red,
-                autoDismissible: true),
-          ]);
-      startListeningNotificationEvents();
-    } else if (type == "architect_service_order") {
-      cancelAllNotifications();
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: notificationId,
-              channelKey: "chat_channel",
-              title: title,
-              body: body,
-              icon: 'resource://drawable/ic_notification',
-              showWhen: true,
-              wakeUpScreen: true,
-              fullScreenIntent: true,
-              criticalAlert: true,
-              autoDismissible: true,
-              color: ColorResources.colorPrimary,
-              chronometer: Duration.zero,
-              timeoutAfter: const Duration(seconds: 180),
-              backgroundColor: ColorResources.colorPrimary,
-              notificationLayout: NotificationLayout.Default,
-              category: NotificationCategory.Call,
-              locked: true,
-              displayOnBackground: true,
-              displayOnForeground: true,
-              playState: NotificationPlayState.playing),
-          actionButtons: [
-            NotificationActionButton(
-                key: "ACCEPT ARCHITECT",
-                label: "JOIN",
-                color: ColorResources.green,
-                autoDismissible: true),
-          ]);
-      startListeningNotificationEvents();
-    } else if (type == "android") {
-      if (image.isNotEmpty) {
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
+    final title = (payloadMap['title'] ?? '').isNotEmpty
+        ? payloadMap['title']
+        : message.notification?.title;
+    final body = (payloadMap['body'] ?? '').isNotEmpty
+        ? payloadMap['body']
+        : message.notification?.body;
+    final image = payloadMap['image'] ?? '';
+    final logo = payloadMap['logo'] ?? '';
+    final url = payloadMap['url'] ?? '';
+    final notificationId =
+        int.tryParse(payloadMap['notification_id'] ?? '') ?? -1;
+
+    final payload = <String, String>{...payloadMap, 'url': url};
+
+    if (image.isNotEmpty) {
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
           id: notificationId,
-          channelKey: "alert_channel",
+          channelKey: 'alert_channel',
           icon: 'resource://drawable/ic_notification',
           color: ColorResources.colorPrimary,
           title: title,
@@ -589,66 +234,217 @@ class NotificationService {
           largeIcon: logo,
           bigPicture: image,
           notificationLayout: NotificationLayout.BigPicture,
-        ));
-      } else {
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
+          payload: payload,
+        ),
+      );
+    } else {
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
           id: notificationId,
-          channelKey: "alert_channel",
+          channelKey: 'alert_channel',
           icon: 'resource://drawable/ic_notification',
           color: ColorResources.colorPrimary,
           title: title,
           body: body,
           backgroundColor: ColorResources.colorPrimary,
           largeIcon: logo,
-        ));
-      }
-    } else if (type == "cancel") {
-      cancelNotification(notificationId);
-    } else {
-      AwesomeNotifications().createNotification(
-          content: NotificationContent(
-              id: notificationId,
-              channelKey: "alert_channel",
-              icon: 'resource://drawable/ic_notification',
-              color: ColorResources.colorPrimary,
-              title: title,
-              body: body,
-              backgroundColor: ColorResources.colorPrimary));
+          payload: payload,
+        ),
+      );
+    }
+    _ensureAwesomeListenersRegistered();
+  }
+
+  Future<void> _showIncomingStyle({
+    required int notificationId,
+    required String? title,
+    required String? body,
+    required NotificationType type,
+    required Map<String, String> payloadMap,
+  }) async {
+    cancelAllNotifications();
+    final buttons = _incomingActionButtons(type);
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: notificationId,
+        channelKey: 'chat_channel',
+        title: title,
+        body: body,
+        icon: 'resource://drawable/ic_notification',
+        showWhen: true,
+        wakeUpScreen: true,
+        fullScreenIntent: true,
+        criticalAlert: true,
+        autoDismissible: true,
+        color: ColorResources.colorPrimary,
+        chronometer: Duration.zero,
+        timeoutAfter: const Duration(seconds: 180),
+        backgroundColor: ColorResources.colorPrimary,
+        notificationLayout: NotificationLayout.Default,
+        category: NotificationCategory.Call,
+        locked: true,
+        displayOnBackground: true,
+        displayOnForeground: true,
+        playState: NotificationPlayState.playing,
+        payload: payloadMap,
+      ),
+      actionButtons: buttons,
+    );
+    _ensureAwesomeListenersRegistered();
+  }
+
+  List<NotificationActionButton> _incomingActionButtons(NotificationType type) {
+    switch (type) {
+      case NotificationType.chat:
+        return [
+          NotificationActionButton(
+            key: 'ACCEPT',
+            label: 'Accept Chat',
+            color: ColorResources.green,
+            autoDismissible: true,
+          ),
+          NotificationActionButton(
+            key: 'REJECT',
+            label: 'Reject Chat',
+            color: ColorResources.red,
+            autoDismissible: true,
+          ),
+        ];
+      case NotificationType.video:
+        return [
+          NotificationActionButton(
+            key: 'ACCEPT',
+            label: 'Accept Video',
+            color: ColorResources.green,
+            autoDismissible: true,
+          ),
+          NotificationActionButton(
+            key: 'REJECT',
+            label: 'Reject Video',
+            color: ColorResources.red,
+            autoDismissible: true,
+          ),
+        ];
+      case NotificationType.call:
+        return [
+          NotificationActionButton(
+            key: 'ACCEPT',
+            label: 'Accept Call',
+            color: ColorResources.green,
+            autoDismissible: true,
+          ),
+          NotificationActionButton(
+            key: 'REJECT',
+            label: 'Reject Call',
+            color: ColorResources.red,
+            autoDismissible: true,
+          ),
+        ];
+      case NotificationType.serviceVideo:
+        return [
+          NotificationActionButton(
+            key: 'ACCEPT SERVICE',
+            label: 'Accept Video',
+            color: ColorResources.green,
+            autoDismissible: true,
+          ),
+          NotificationActionButton(
+            key: 'REJECT SERVICE',
+            label: 'Reject Video',
+            color: ColorResources.red,
+            autoDismissible: true,
+          ),
+        ];
+      case NotificationType.architectServiceVideo:
+        return [
+          NotificationActionButton(
+            key: 'ACCEPT ARCHITECT',
+            label: 'Accept Video',
+            color: ColorResources.green,
+            autoDismissible: true,
+          ),
+          NotificationActionButton(
+            key: 'REJECT ARCHITECT',
+            label: 'Reject Video',
+            color: ColorResources.red,
+            autoDismissible: true,
+          ),
+        ];
+      case NotificationType.architectServiceOrder:
+        return [
+          NotificationActionButton(
+            key: 'ACCEPT ARCHITECT',
+            label: 'JOIN',
+            color: ColorResources.green,
+            autoDismissible: true,
+          ),
+        ];
+      default:
+        return [];
     }
   }
 
-  Future<void> startListeningNotificationEvents() async {
-    debugPrint('main notification (startListeningNotificationEvents)');
-    AwesomeNotifications()
-        .setListeners(onActionReceivedMethod: onActionReceivedMethod);
-  }
-
-  @pragma('vm:entry-point')
-  Future<void> onActionReceivedMethod(ReceivedAction receivedAction) async {
-    debugPrint('main notification (onActionReceivedMethod) $receivedAction');
-    return onActionReceivedImplementationMethod(receivedAction);
-  }
-
-  Future<void> onActionReceivedImplementationMethod(
-      ReceivedAction receivedAction) async {
-    debugPrint(
-        'main notification (onActionReceivedImplementationMethod) $receivedAction');
-    if (receivedAction.buttonKeyPressed == "ACCEPT") {
-      Get.toNamed('/queue_list');
-    } else if (receivedAction.buttonKeyPressed == "REJECT") {
-      Get.toNamed('/queue_list');
-    } else if (receivedAction.buttonKeyPressed == "ACCEPT SERVICE") {
-      Get.toNamed('/orders_tab_screen', arguments: {'index': 2});
-    } else if (receivedAction.buttonKeyPressed == "REJECT SERVICE") {
-      Get.toNamed('/orders_tab_screen', arguments: {'index': 2});
-    } else if (receivedAction.buttonKeyPressed == "ACCEPT ARCHITECT") {
-      Get.toNamed("/architect_orders_tab_screen");
-    } else if (receivedAction.buttonKeyPressed == "REJECT ARCHITECT") {
-      Get.toNamed("/architect_orders_tab_screen");
+  Future<void> _showAndroidStyle({
+    required int notificationId,
+    required String? title,
+    required String? body,
+    required String image,
+    required String logo,
+    required Map<String, String> payloadMap,
+  }) async {
+    if (image.isNotEmpty) {
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: notificationId,
+          channelKey: 'alert_channel',
+          icon: 'resource://drawable/ic_notification',
+          color: ColorResources.colorPrimary,
+          title: title,
+          body: body,
+          backgroundColor: ColorResources.colorPrimary,
+          largeIcon: logo,
+          bigPicture: image,
+          notificationLayout: NotificationLayout.BigPicture,
+          payload: payloadMap,
+        ),
+      );
     } else {
-      Get.toNamed('/dashboard');
+      await AwesomeNotifications().createNotification(
+        content: NotificationContent(
+          id: notificationId,
+          channelKey: 'alert_channel',
+          icon: 'resource://drawable/ic_notification',
+          color: ColorResources.colorPrimary,
+          title: title,
+          body: body,
+          backgroundColor: ColorResources.colorPrimary,
+          largeIcon: logo,
+          payload: payloadMap,
+        ),
+      );
     }
+    _ensureAwesomeListenersRegistered();
+  }
+
+  Future<void> _showDefaultAlert({
+    required int notificationId,
+    required String? title,
+    required String? body,
+    required Map<String, String> payloadMap,
+  }) async {
+    await AwesomeNotifications().createNotification(
+      content: NotificationContent(
+        id: notificationId,
+        channelKey: 'alert_channel',
+        icon: 'resource://drawable/ic_notification',
+        color: ColorResources.colorPrimary,
+        title: title,
+        body: body,
+        backgroundColor: ColorResources.colorPrimary,
+        payload: payloadMap,
+      ),
+    );
+    _ensureAwesomeListenersRegistered();
   }
 
   void cancelAllNotifications() {
@@ -657,61 +453,5 @@ class NotificationService {
 
   void cancelNotification(int id) {
     AwesomeNotifications().cancel(id);
-  }
-
-  void showMessageNotification(RemoteMessage message) {
-    ConfigController configController = Get.put(ConfigController());
-    if (configController.currentScreen.value != AppConstants.chat) {
-      String? title;
-      String? body;
-      String type = "message";
-      String image = '';
-      String logo = '';
-      String url = '';
-      int notificationId = -1;
-      if (message.data.isNotEmpty) {
-        //PayloadData
-        title = message.data['title'];
-        body = message.data['body'];
-        type = message.data['type'];
-        image = message.data['image'];
-        logo = message.data['logo'];
-        url = message.data['url'];
-        notificationId = int.parse(message.data['notification_id']);
-      } else {
-        title = message.notification?.title;
-        body = message.notification?.body;
-      }
-
-      if (image.isNotEmpty) {
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: notificationId,
-          channelKey: "alert_channel",
-          icon: 'resource://drawable/ic_notification',
-          color: ColorResources.colorPrimary,
-          title: title,
-          body: body,
-          backgroundColor: ColorResources.colorPrimary,
-          largeIcon: logo,
-          bigPicture: image,
-          notificationLayout: NotificationLayout.BigPicture,
-          payload: {'url': url},
-        ));
-      } else {
-        AwesomeNotifications().createNotification(
-            content: NotificationContent(
-          id: notificationId,
-          channelKey: "alert_channel",
-          icon: 'resource://drawable/ic_notification',
-          color: ColorResources.colorPrimary,
-          title: title,
-          body: body,
-          backgroundColor: ColorResources.colorPrimary,
-          largeIcon: logo,
-          payload: {'url': url},
-        ));
-      }
-    }
   }
 }

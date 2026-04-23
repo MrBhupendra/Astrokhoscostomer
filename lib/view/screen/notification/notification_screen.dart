@@ -146,7 +146,12 @@ class NotificationScreen extends StatelessWidget {
                                                 mainAxisAlignment: MainAxisAlignment.end,
                                                 children: [
                                                   CustomTextRegular(
-                                                    CommonMethods().formatDateTimeOutput(controller.notificationListData[index].createdAt.toString()),
+                                                    CommonMethods().formatDateTimeOutput(
+                                                      (controller.notificationListData[index].createdAt != null &&
+                                                              controller.notificationListData[index].createdAt!.trim().isNotEmpty)
+                                                          ? controller.notificationListData[index].createdAt ?? ""
+                                                          : (controller.notificationListData[index].updatedAt ?? ""),
+                                                    ),
                                                     fontSize: Dimensions.fontSizeExtraSmall,
                                                     color: ColorResources.black3,
                                                     textAlign: TextAlign.end,

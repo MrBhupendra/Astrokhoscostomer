@@ -11,8 +11,10 @@ import '../model/chat_message_model.dart';
 class ChatVoiceNoteWidget extends StatefulWidget {
   final ChatMessageModel message;
   final String? userUniId;
+  final bool showStatusTicks;
 
-  const ChatVoiceNoteWidget(this.message, this.userUniId, {super.key});
+  const ChatVoiceNoteWidget(this.message, this.userUniId,
+      {this.showStatusTicks = false, super.key});
 
   @override
   State<ChatVoiceNoteWidget> createState() => _ChatVoiceNoteWidgetState();
@@ -117,18 +119,25 @@ class _ChatVoiceNoteWidgetState extends State<ChatVoiceNoteWidget> {
                         //   message.name!,
                         // ),
                         const Gap(2),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            CustomTextRegular(
-                              widget.message.date.toString(),
-                              fontSize: 10.0,
-                              color: ColorResources.black4,
-                            ),
-                            const SizedBox(width: 4),
-                            _statusTicks(widget.message),
-                          ],
-                        ),
+                        if (!widget.showStatusTicks)
+                          CustomTextRegular(
+                            widget.message.date.toString(),
+                            fontSize: 10.0,
+                            color: ColorResources.black4,
+                          )
+                        else
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              CustomTextRegular(
+                                widget.message.date.toString(),
+                                fontSize: 10.0,
+                                color: ColorResources.black4,
+                              ),
+                              const SizedBox(width: 4),
+                              _statusTicks(widget.message),
+                            ],
+                          ),
                       ],
                     ),
                     const SizedBox(width: 5.0),

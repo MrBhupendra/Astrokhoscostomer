@@ -17,6 +17,7 @@ import 'package:otp_autofill/otp_autofill.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:phonecodes/phonecodes.dart';
 
+import '../../../../notification/notification_router.dart';
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/app_events.dart';
 import '../../../../utill/app_features.dart';
@@ -74,6 +75,9 @@ class LoginController extends GetxController {
   @override
   void onInit() {
     super.onInit();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await NotificationRouter.flushColdStartQueue();
+    });
     _dio.options = _dio.options.copyWith(
       connectTimeout: const Duration(seconds: 20),
       sendTimeout: const Duration(seconds: 20),
@@ -163,24 +167,35 @@ class LoginController extends GetxController {
     mobileNumber = mobile.toString();
     CustomProgressDialog.showDialog();
     try {
-      final response = await _dio.post(
-        AppConstants.otpSendUri,
-        data: {'country_code': countryCode, 'phone': mobile},
-      );
+      final response = await _dio
+          .post(
+            AppConstants.otpSendUri,
+            data: {'country_code': countryCode, 'phone': mobile},
+          )
+          .timeout(const Duration(seconds: 30));
       if (response.statusCode == 200) {
         otpModel = SuccessModel.fromJson(response.data);
         if (otpModel.status == AppConstants.success) {
           _otpOrderId = response.data['otpless_orderId'] ?? "";
+          // Dismiss loader BEFORE navigation. `dismissDialog` uses Get.back();
+          // if we navigate first, finally would pop the OTP route instead of the dialog.
+          CustomProgressDialog.dismissDialog();
           Get.toNamed('/verifyOtp');
           startTimer();
+          return;
         } else {
           CustomSnackBar.showBottom(otpModel.msg.toString());
         }
       } else {
+        CustomSnackBar.showBottom(
+            'Unable to send OTP (${response.statusCode}). Please try again.');
         if (kDebugMode) {
-          print('OnApiError');
+          print('OnApiError otpSend status=${response.statusCode}');
         }
       }
+    } on TimeoutException {
+      CustomSnackBar.showBottom(
+          'Request timed out. Check your connection and try again.');
     } catch (e) {
       if (kDebugMode) {
         print('OnException==> $e');

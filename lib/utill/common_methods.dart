@@ -1021,18 +1021,16 @@ class CommonMethods {
       return "N/A";
     } else {
       try {
-        String dateTimeString = "${date.trim()}";
+        String dateTimeString = date.trim();
 
-        DateTime dateTime = DateFormat('yyyy-MM-dd HH:mm:ss').parse(
-            dateTimeString);
+        DateTime dateTime = DateFormat('yyyy-MM-dd HH:mm:ss').parse(dateTimeString);
 
-        String formattedDateTime = DateFormat('dd/MM/yyyy hh:mm a').format(
-            dateTime);
+        String formattedDateTime = DateFormat('dd/MM/yyyy hh:mm a').format(dateTime);
 
         return formattedDateTime;
       } catch (e) {
         print("Error parsing dateTime: $e");
-        return "Invalid Date/Time";
+        return date;
       }
     }
   }

@@ -1,9 +1,6 @@
-import 'dart:convert';
-
 import 'package:astro_brahmand/model/group_puja_category_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
 import 'package:astro_brahmand/model/astrologer_model.dart';
@@ -16,14 +13,14 @@ import '../../../../model/service_category_model.dart';
 import '../../../../model/success_model.dart';
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/app_strings.dart';
+import '../../../../notification/notification_router.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_default_dialog.dart';
 import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
 import '../../feedback/feedback_screen.dart';
-import '../../mandir_darshan/model/mandir_assign_list_model.dart';
 
-class HomeController extends GetxController with WidgetsBindingObserver {
+class HomeController extends GetxController {
   final Dio _dio = Dio();
 
   // Dashboard
@@ -75,42 +72,18 @@ class HomeController extends GetxController with WidgetsBindingObserver {
   AstrologerModel electroModel = AstrologerModel();
   List<AstrologerData> electroListData = [];
 
-  static const platform = MethodChannel('Chat notifications');
-  static const alertPlatform = MethodChannel('Alert notifications');
-  Map<String, dynamic>? notificationData;
-  Map<String, dynamic>? notificationDataStored;
-  int? lastProcessedNotificationId;
-  int? lastProcessedAlertNotificationId;
-
   var inProgressStatus = 0.obs;
   var callType = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
-    WidgetsBinding.instance.addObserver(this);
     getDashboard(false);
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      await getNotificationData();
+      // FCM / Awesome cold-start navigation (after GetMaterialApp + shell ready)
+      await NotificationRouter.flushColdStartQueue();
     });
-    getAlertNotificationData();
     isLoginValue();
-  }
-
-  @override
-  void onClose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.onClose();
-  }
-
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) {
-      debugPrint("App is in resumed state, fetching notification data...");
-      WidgetsBinding.instance.addPostFrameCallback((_) async {
-        await getNotificationData(isFromResume: true);
-      });
-    }
   }
 
   Future<void> isLoginValue() async {
@@ -436,267 +409,6 @@ class HomeController extends GetxController with WidgetsBindingObserver {
       }
     } finally {
       isFeedbackLoading(false);
-    }
-  }
-
-  Future<void> getNotificationData({bool? isFromResume}) async {
-    try {
-      if (kDebugMode) {
-        print("Invoking method channel to get notification data...");
-      }
-
-      final Map<dynamic, dynamic>? data =
-          await platform.invokeMethod('notificationData');
-
-      if (data != null) {
-        if (kDebugMode) {
-          print("Received data: $data");
-        }
-
-        final String? actionKey = data['key'];
-
-        final notificationJson = data['notificationJson'];
-
-        if (notificationJson != null) {
-          final Map<String, dynamic> notificationData =
-              jsonDecode(notificationJson);
-
-          if (kDebugMode) {
-            print("Parsed notificationData: $notificationData");
-            print("Channel Key: ${notificationData['content']?['channelKey']}");
-          }
-
-          final Map<String, dynamic> content =
-              notificationData['content'] ?? {};
-
-          final Map<String, dynamic> payload = content['payload'] ?? {};
-
-          final String url = payload['url'] ?? '';
-
-          final int notificationId = content['id'] ?? 0;
-
-          final String channelKey = content['channelKey'] ?? '';
-
-          String? rawNotificationId = await SharedPreferencesHelper.getData(
-              AppConstants.lastProcessedNotificationId);
-          lastProcessedNotificationId =
-              int.tryParse(rawNotificationId ?? '') ?? 0;
-          if (kDebugMode) {
-            print(
-                "Raw Notification ID from SharedPreferences: $rawNotificationId");
-          }
-
-          if (kDebugMode) {
-            print(
-                "URL: $url, ID: $notificationId, lastID: $lastProcessedNotificationId");
-          }
-
-          if (notificationId != lastProcessedNotificationId) {
-            await SharedPreferencesHelper.saveData(
-                AppConstants.lastProcessedNotificationId,
-                notificationId.toString());
-
-            if (kDebugMode) {
-              print("called");
-            }
-
-            if (channelKey == 'chat_channel') {
-              print("Chat Notification Received: $data");
-              if (isFromResume == true) {
-                if (kDebugMode) {
-                  print("Handling notification on resume...");
-                }
-                handleNavigation(content, actionKey, notificationData,
-                    isFromResume: isFromResume);
-              } else {
-                WidgetsBinding.instance.addPostFrameCallback((_) {
-                  handleNavigation(content, actionKey, notificationData);
-                });
-              }
-            } else {
-              print("Ignoring non-chat notification");
-              // getAlertNotificationData();
-            }
-          }
-        } else {
-          if (kDebugMode) {
-            print("No notificationJson found");
-          }
-        }
-      } else {
-        if (kDebugMode) {
-          print("No data received from method channel");
-        }
-      }
-    } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print("Failed to get notification data: ${e.message}");
-      }
-    } on MissingPluginException catch (e) {
-      if (kDebugMode) {
-        print(
-            "MissingPluginException: Method not implemented on native side - ${e.message}");
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error fetching notification data: $e");
-      }
-    }
-  }
-
-  void handleNavigation(Map<String, dynamic> content, String? actionKey,
-      Map<String, dynamic> notificationData,
-      {bool? isFromResume}) {
-    if (actionKey == null) {
-      if (content['payload']['type'] == "chat") {
-        Get.toNamed('/queue_list');
-      }
-    } else {
-      if (isFromResume == true) {
-        processNotificationAction(notificationData, actionKey);
-      } else {
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          processNotificationAction(notificationData, actionKey);
-        });
-      }
-    }
-  }
-
-  Future<void> processNotificationAction(
-      Map<String, dynamic> notificationJson, String receivedActionKey) async {
-    // WidgetsBinding.instance.addPostFrameCallback((_) async {
-    try {
-      final int? notificationId =
-          int.tryParse(notificationJson['content']['id']?.toString() ?? '');
-      if (notificationId == null) {
-        if (kDebugMode) {
-          print("Invalid or null notificationId");
-        }
-        return;
-      }
-
-      if (receivedActionKey == "ACCEPT" || receivedActionKey == "REJECT") {
-        Get.toNamed('/queue_list');
-      } else if (receivedActionKey == "ACCEPT SERVICE" ||
-          receivedActionKey == "REJECT SERVICE") {
-        Get.toNamed('/orders_tab_screen', arguments: {'index': 2});
-      } else if (receivedActionKey == "ACCEPT ARCHITECT" ||
-          receivedActionKey == "REJECT ARCHITECT") {
-        Get.toNamed("/architect_orders_tab_screen");
-      }
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error during navigation: $e");
-      }
-    }
-    // });
-  }
-
-  Future<void> getAlertNotificationData() async {
-    try {
-      if (kDebugMode) {
-        print("Invoking method channel to get alertNotificationData...");
-      }
-
-      final Map<dynamic, dynamic>? data =
-          await alertPlatform.invokeMethod('alertNotificationData');
-
-      if (data != null) {
-        if (kDebugMode) {
-          print("Received alertNotificationData data: $data");
-        }
-
-        final String? channelKey = data['channelKey'];
-        if (kDebugMode) {
-          print("Parsed channelKey: $channelKey");
-        }
-        final notificationJson = data['notificationJson'];
-        if (notificationJson != null) {
-          final Map<String, dynamic> notificationData =
-              jsonDecode(notificationJson);
-
-          if (kDebugMode) {
-            print("Parsed alertNotificationData: $notificationData");
-          }
-
-          final Map<String, dynamic> content =
-              notificationData['content'] ?? {};
-          final Map<String, dynamic> payload = content['payload'] ?? {};
-          final String url = payload['url'] ?? '';
-          final int notificationId = content['id'] ?? 0;
-
-          String? rawNotificationId = await SharedPreferencesHelper.getData(
-              AppConstants.lastProcessedAlertNotificationId);
-          lastProcessedAlertNotificationId =
-              int.tryParse(rawNotificationId ?? '') ?? 0;
-
-          if (kDebugMode) {
-            print(
-                "URL: $url, ID: $notificationId, lastID: $lastProcessedAlertNotificationId");
-          }
-
-          // if (channelKey == 'alert_channel') {
-          print("Alert Notification Received: $data");
-          if (url.isNotEmpty &&
-              notificationId != lastProcessedAlertNotificationId) {
-            await SharedPreferencesHelper.saveData(
-                AppConstants.lastProcessedAlertNotificationId,
-                notificationId.toString());
-            navigateBasedOnUri(url);
-          }
-          // } else {
-          //   print("Ignoring non-alert notification");
-          // }
-        } else {
-          if (kDebugMode) {
-            print("No alertNotificationData notificationJson found");
-          }
-        }
-      } else {
-        if (kDebugMode) {
-          print("No alertNotificationData data received from method channel");
-        }
-      }
-    } on PlatformException catch (e) {
-      if (kDebugMode) {
-        print("Failed to get alertNotificationData: ${e.message}");
-      }
-    } on MissingPluginException catch (e) {
-      // Handle the case where the method isn't implemented on the native side
-      if (kDebugMode) {
-        print(
-            "MissingPluginException: Method not implemented on native side - ${e.message}");
-      }
-      // Optionally, you can fallback to default data or notify the user here
-    } catch (e) {
-      // Catch any other exceptions that might occur
-      if (kDebugMode) {
-        print("Error fetching alertNotificationData: $e");
-      }
-    }
-  }
-
-  void navigateBasedOnUri(String url) {
-    Uri uri = Uri.parse(url);
-    if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'products') {
-      if (uri.pathSegments.length == 2) {
-        String productSlug = uri.pathSegments[1].toString();
-        Get.toNamed('/productDetail/$productSlug');
-      } else if (uri.pathSegments.length == 3) {
-        String productSlug = uri.pathSegments[1].toString();
-        String astrologerId = uri.pathSegments[2].toString();
-        Get.toNamed('/productDetail/$productSlug/$astrologerId');
-      }
-    } else if (uri.pathSegments.isNotEmpty &&
-        uri.pathSegments.first == 'services') {
-      if (uri.pathSegments.length == 2) {
-        String serviceSlug = uri.pathSegments[1].toString();
-        Get.toNamed('/serviceDetail/$serviceSlug');
-      } else if (uri.pathSegments.length == 3) {
-        String serviceSlug = uri.pathSegments[1].toString();
-        String astrologerId = uri.pathSegments[2].toString();
-        Get.toNamed('/serviceDetail/$serviceSlug/$astrologerId');
-      }
     }
   }
 }
