@@ -585,12 +585,71 @@ class AssistantChatScreen extends StatelessWidget {
                       //   ),
                       // ),
 
+                      // Remaining messages banner (just above input)
+                      Obx(() {
+                        final remaining = controller.remainingMessages.value;
+
+                        Color color;
+                        String text;
+                        IconData icon;
+
+                        if (remaining <= 0) {
+                          color = Colors.red;
+                          text = "Daily message limit reached. Try again tomorrow";
+                          icon = Icons.block; // ❌ limit reached
+                        } else if (remaining <= 2) {
+                          color = Colors.red;
+                          text = "Only $remaining messages left for today";
+                          icon = Icons.warning_amber_rounded; // ⚠️ warning
+                        } else {
+                          color = ColorResources.black4;
+                          text = "$remaining messages remaining today";
+                          icon = Icons.chat; // 💬 normal
+                        }
+
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                          child: Align(
+                            alignment: Alignment.centerLeft,
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.9),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(icon, size: 16, color: color),
+                                  const SizedBox(width: 6),
+                                  Flexible(
+                                    child: Text(
+                                      text,
+                                      style: TextStyle(
+                                        color: color,
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        );
+                      }),
+
                       Padding(
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
                         child: Row(
                           children: [
                             GestureDetector(
                               onTap: () {
+                                if (!controller.canSendAssistantMessage()) {
+                                  CustomSnackBar.showBottom(
+                                      "Daily Message limit reached");
+                                  return;
+                                }
                                 imagePickerController.showSelectBottomSheet();
                               },
                               child: Padding(
@@ -605,9 +664,13 @@ class AssistantChatScreen extends StatelessWidget {
                                 controller: controller.messageController,
                                 style: const TextStyle(
                                     fontSize: 16, color: ColorResources.black),
-                                decoration: const InputDecoration(
+                                enabled: controller.remainingMessages.value > 0,
+                                decoration: InputDecoration(
                                   border: InputBorder.none,
-                                  hintText: 'Enter Message...',
+                                  hintText: controller.remainingMessages.value >
+                                          0
+                                      ? 'Enter Message...'
+                                      : 'Message limit reached',
                                 ),
                                 onChanged: (value) {
                                   controller.isTyping.value = value.isNotEmpty;
@@ -618,6 +681,11 @@ class AssistantChatScreen extends StatelessWidget {
                               return controller.isTyping.value
                                   ? GestureDetector(
                                       onTap: () async {
+                                        if (!controller.canSendAssistantMessage()) {
+                                          CustomSnackBar.showBottom(
+                                              "Message limit reached");
+                                          return;
+                                        }
                                         if (controller.messageController.text
                                             .isNotEmpty) {
                                           String? uniId =
@@ -679,7 +747,11 @@ class AssistantChatScreen extends StatelessWidget {
                                               "Press and hold the button to record");
                                         },
                                         onLongPressStart: (_) => controller
-                                            .checkPermissionStartRecording(),
+                                            .canSendAssistantMessage()
+                                            ? controller
+                                                .checkPermissionStartRecording()
+                                            : CustomSnackBar.showBottom(
+                                                "Message limit reached"),
                                         onLongPressEnd: (_) =>
                                             controller.stopRecording(),
                                         child: AnimatedContainer(

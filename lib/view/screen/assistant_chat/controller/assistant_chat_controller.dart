@@ -58,6 +58,11 @@ class AssistantChatController extends FullLifeCycleController
   ChatHistoryModel chatHistoryModel = ChatHistoryModel();
   RxList<ChatMessageModel> chatHistoryList = <ChatMessageModel>[].obs;
 
+  // Assistant chat message limit (from getChatChannelHistory response)
+  final RxInt totalMessages = 0.obs;
+  final RxInt usedMessages = 0.obs;
+  final RxInt remainingMessages = 0.obs;
+
   //SaveChat
   final isSaveChatLoading = false.obs;
   final isSaveChatSuccess = false.obs;
@@ -239,6 +244,23 @@ class AssistantChatController extends FullLifeCycleController
 
   // NOTE: Chat history order is controlled by backend response.
   // We intentionally do not reorder messages client-side.
+
+  void _updateAssistantLimitFromHistory(ChatHistoryModel model) {
+    final total = (model.assistantChatAllowed ?? 0).toInt();
+    final used = (model.assistantChatCount ?? 0).toInt();
+    final remaining = (model.assistantChatRemaining ?? 0).toInt();
+    totalMessages.value = total < 0 ? 0 : total;
+    usedMessages.value = used < 0 ? 0 : used;
+    remainingMessages.value = remaining < 0 ? 0 : remaining;
+  }
+
+  bool canSendAssistantMessage() => remainingMessages.value > 0;
+
+  void _consumeAssistantMessageLocally() {
+    if (remainingMessages.value <= 0) return;
+    remainingMessages.value = remainingMessages.value - 1;
+    usedMessages.value = usedMessages.value + 1;
+  }
 
   void initChatSession(ChatSessionModel chatSessionModel) async {
     dbReference.set(chatSessionModel.toJson());
@@ -435,12 +457,14 @@ class AssistantChatController extends FullLifeCycleController
         'user_uni_id': uniId,
         'channel_name': '$chatGroupChild/$channelName',
         'first_msg_id': firstMsgId,
-        'page': page
+        'page': page,
+        'is_assistant_chat': 1,
       });
       debugPrint("[ASSISTANT-CHAT] getChatHistory response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         chatHistoryModel = ChatHistoryModel.fromJson(response.data);
         if (chatHistoryModel.status == AppConstants.success) {
+          _updateAssistantLimitFromHistory(chatHistoryModel);
           offsetCount = chatHistoryModel.page!;
           isChatHistorySuccess(true);
 
@@ -550,10 +574,21 @@ class AssistantChatController extends FullLifeCycleController
   }
 
   void sendMessage(ChatMessageModel message, File? imageFile, String fileName) {
+    // Block sending if assistant message limit reached (all message types).
+    if (message.senderUniId == uniId && !canSendAssistantMessage()) {
+      CustomSnackBar.showBottom("Daily Message limit reached");
+      return;
+    }
+
     final newRef = messageReference.push();
     message.messageId = newRef.key;
     message.deliveryStatus = 'sent';
     newRef.set(message.toJson());
+
+    // Instant feedback (UI): decrement remaining locally for any sent message.
+    if (message.senderUniId == uniId) {
+      _consumeAssistantMessageLocally();
+    }
     saveChatApi(
         uniqueId,
         channelName,

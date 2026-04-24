@@ -3,6 +3,9 @@ class ChatHistoryModel {
     this.status,
     this.data,
     this.page,
+    this.assistantChatAllowed,
+    this.assistantChatCount,
+    this.assistantChatRemaining,
     this.msg,
   });
 
@@ -15,12 +18,24 @@ class ChatHistoryModel {
       });
     }
     page = json['page'];
+    assistantChatAllowed = _parseNum(json['assistant_chat_allowed']);
+    assistantChatCount = _parseNum(json['assistant_chat_count']);
+    assistantChatRemaining = _parseNum(json['assistant_chat_remaining']);
     msg = json['msg'];
+  }
+
+  static num? _parseNum(dynamic v) {
+    if (v == null) return null;
+    if (v is num) return v;
+    return num.tryParse(v.toString());
   }
 
   num? status;
   List<Data>? data;
   num? page;
+  num? assistantChatAllowed;
+  num? assistantChatCount;
+  num? assistantChatRemaining;
   String? msg;
 
   Map<String, dynamic> toJson() {
@@ -30,6 +45,9 @@ class ChatHistoryModel {
       map['data'] = data?.map((v) => v.toJson()).toList();
     }
     map['page'] = page;
+    map['assistant_chat_allowed'] = assistantChatAllowed;
+    map['assistant_chat_count'] = assistantChatCount;
+    map['assistant_chat_remaining'] = assistantChatRemaining;
     map['msg'] = msg;
     return map;
   }
