@@ -27,18 +27,18 @@ import 'controller/assistant_chat_controller.dart';
 
 class AssistantChatScreen extends StatelessWidget {
   AssistantChatScreen({super.key}) {
-    _scrollController.addListener(_scrollListener);
+    // Controller owns the scroll controller (used for pagination in controller).
+    controller.scrollController.addListener(_scrollListener);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _scrollToTop();
     });
   }
 
-  final ScrollController _scrollController = ScrollController();
   final ValueNotifier<bool> _showScrollToTop = ValueNotifier(false);
 
   void _scrollListener() {
     // Show the "scroll to top" button when not at the top
-    if (_scrollController.offset > 15.0) {
+    if (controller.scrollController.offset > 15.0) {
       _showScrollToTop.value = true;
     } else {
       _showScrollToTop.value = false;
@@ -47,8 +47,8 @@ class AssistantChatScreen extends StatelessWidget {
 
   void _scrollToTop() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
-        _scrollController.animateTo(
+      if (controller.scrollController.hasClients) {
+        controller.scrollController.animateTo(
           0, // Scroll to the top
           duration: const Duration(milliseconds: 300),
           curve: Curves.easeOut,
@@ -128,7 +128,7 @@ class AssistantChatScreen extends StatelessWidget {
                   child: Obx(
                     () => ListView.builder(
                       itemCount: controller.chatHistoryList.length,
-                      controller: _scrollController,
+                      controller: controller.scrollController,
                       reverse: true,
                       shrinkWrap: true,
                       itemBuilder: (context, index) {

@@ -237,6 +237,9 @@ class AssistantChatController extends FullLifeCycleController
     return '$formattedDate $formattedTime';
   }
 
+  // NOTE: Chat history order is controlled by backend response.
+  // We intentionally do not reorder messages client-side.
+
   void initChatSession(ChatSessionModel chatSessionModel) async {
     dbReference.set(chatSessionModel.toJson());
   }
@@ -335,6 +338,51 @@ class AssistantChatController extends FullLifeCycleController
       'deliveryStatus': 'delivered',
       'deliveredAt': ServerValue.timestamp,
     });
+    _updateChatMessageStatusApi(
+      firebaseMessageId: id,
+      deliveryStatus: 'delivered',
+      deliveredAt: DateTime.now().millisecondsSinceEpoch.toString(),
+    );
+  }
+
+  Future<void> _updateChatMessageStatusApi({
+    required String firebaseMessageId,
+    required String deliveryStatus,
+    String? deliveredAt,
+    String? readAt,
+  }) async {
+    try {
+      final apiKey =
+          await SharedPreferencesHelper.getData(AppConstants.userApiKey);
+      final userUniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      if (apiKey == null || apiKey.toString().isEmpty) return;
+      if (userUniId == null || userUniId.toString().isEmpty) return;
+
+      final data = <String, dynamic>{
+        'api_key': apiKey,
+        'user_uni_id': userUniId,
+        'firebase_message_id': firebaseMessageId,
+        'delivery_status': deliveryStatus,
+      };
+      if (deliveredAt != null) data['delivered_at'] = deliveredAt;
+      if (readAt != null) data['read_at'] = readAt;
+
+
+
+      // Backend expects form-data (per API docs / Postman).
+      final formData = FormData.fromMap(data);
+      debugPrint("[ASSISTANT-CHAT] _updateChatMessageStatusApi request=> ${formData.fields}");
+
+      final response = await _dio
+          .post(AppConstants.updateChatMessageStatus, data: formData)
+          .timeout(const Duration(seconds: 20));
+
+      debugPrint("[ASSISTANT-CHAT] _updateChatMessageStatusApi response=> ${response.data.toString()}");
+
+    } catch (_) {
+      // No-op: status sync is best-effort; RTDB remains source of truth for realtime.
+    }
   }
 
   void _markMessagesAsReadIfNeeded() {
@@ -360,6 +408,11 @@ class AssistantChatController extends FullLifeCycleController
       _readWriteOnce.add(id);
       updates['$id/deliveryStatus'] = 'read';
       updates['$id/readAt'] = ServerValue.timestamp;
+      _updateChatMessageStatusApi(
+        firebaseMessageId: id,
+        deliveryStatus: 'read',
+        readAt: DateTime.now().millisecondsSinceEpoch.toString(),
+      );
     }
     if (updates.isNotEmpty) {
       messageReference.update(updates);

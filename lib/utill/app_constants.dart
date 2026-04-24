@@ -165,6 +165,7 @@ class AppConstants {
   static const String startAssistantChat = '$baseUrl/api/startAssistantChat';
   static const String getChatHistory = '$baseUrl/api/getChatChannelHistory';
   static const String saveChat = '$baseUrl/api/saveChat';
+  static const String updateChatMessageStatus = '$baseUrl/api/updateChatMessageStatus';
   static const String getChatRemainingTime = '$baseUrl/api/remainingChatTime';
   static const String getQueueList = '$baseUrl/api/getCustomerQueueList';
   static const String declineQueueRequest = '$baseUrl/api/declineRequest';
