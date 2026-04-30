@@ -193,6 +193,7 @@ class VoiceCallController extends FullLifeCycleController
     if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
       // isChatAccepted(true);
       getRemainingDuration(uniqueId);
+      _ensureBirthDataWritten();
     } else {
       print('No data available or new session.');
       playSound();
@@ -212,6 +213,33 @@ class VoiceCallController extends FullLifeCycleController
     registerListeners();
 
     initAgora();
+  }
+
+  void _ensureBirthDataWritten() {
+    try {
+      sendBirthData(ChatBirthModel(
+          name: chatIntakeFormController.name,
+          gender: chatIntakeFormController.gender.toString().toUpperCase(),
+          dob: chatIntakeFormController.dob,
+          tob: CommonMethods().convertTimeInputVedic(chatIntakeFormController.tob.toString()),
+          pob: chatIntakeFormController.birthPlace,
+          latitude: chatIntakeFormController.latitude,
+          longitude: chatIntakeFormController.longitude,
+          partnerName: chatIntakeFormController.partnerName.toString(),
+          partnerGender: chatIntakeFormController.partnerGender.toString().toUpperCase(),
+          partnerDob: chatIntakeFormController.partnerDob,
+          partnerTob: chatIntakeFormController.partnerTob.toString().isNotEmpty
+              ? CommonMethods().convertTimeInputVedic(chatIntakeFormController.partnerTob.toString())
+              : "",
+          partnerPob: chatIntakeFormController.partnerBirthPlace,
+          partnerLatitude: chatIntakeFormController.partnerLatitude,
+          partnerLongitude: chatIntakeFormController.partnerLongitude
+      ));
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint("[Customer VCController] _ensureBirthDataWritten failed: $e");
+      }
+    }
   }
 
   @override
@@ -422,10 +450,6 @@ class VoiceCallController extends FullLifeCycleController
     if (Get.isRegistered<VoiceCallController>()) {
       await Get.delete<VoiceCallController>(force: true);
     }
-  }
-
-  Future<void> _dispose() async {
-
   }
 
   //API

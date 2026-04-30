@@ -50,6 +50,7 @@ class AssistantChatController extends FullLifeCycleController
   final Set<String> _readWriteOnce = <String>{};
   final Set<String> _incomingSoundOnce = <String>{};
   bool _isScreenActive = false;
+  bool _normalizeOrderScheduled = false;
 
   //Chat history
   final Dio _dio = Dio();
@@ -99,7 +100,8 @@ class AssistantChatController extends FullLifeCycleController
 
   //Scroll
   ScrollController scrollController = ScrollController();
-  num offsetCount = 1;
+  int page = 1;
+  bool isPaginating = false;
   bool isNoMoreData = false;
 
   //Voice Note
@@ -150,18 +152,28 @@ class AssistantChatController extends FullLifeCycleController
     _deliveredWriteOnce.clear();
     _readWriteOnce.clear();
     _incomingSoundOnce.clear();
-    getChatHistory(channelName, "0", offsetCount, false);
+    page = 1;
+    isNoMoreData = false;
+    isPaginating = false;
+    getChatHistory(channelName, "0", page, false);
 
     // Treat initial open as active (onResumed is not guaranteed to fire).
     _isScreenActive = true;
     configController.setCurrentScreen(AppConstants.chat);
 
-    scrollController.addListener(() {
+    scrollController.addListener(() async {
+      // if (scrollController.position.pixels ==
+      //     scrollController.position.maxScrollExtent) {
+      //   if (isChatHistoryLoading.isFalse && !isNoMoreData) {
+      //     getChatHistory(channelName, "0", page, false);
+      //   }
+      // }
+      if (!scrollController.hasClients) return;
+      // Match `ChatScreenController` behavior: paginate only when user
+      // actually scrolls to the top edge (maxScrollExtent in reversed list).
       if (scrollController.position.pixels ==
           scrollController.position.maxScrollExtent) {
-        if (isChatHistoryLoading.isFalse && !isNoMoreData) {
-          getChatHistory(channelName, "0", offsetCount, false);
-        }
+        await paginateOlderMessagesIfNeeded();
       }
     });
 
@@ -313,6 +325,7 @@ class AssistantChatController extends FullLifeCycleController
     json['messageId'] ??= snapshot.key;
     final message = ChatMessageModel.fromJson(json);
     final isNew = _upsertMessage(message);
+    _scheduleNormalizeOrder();
     _maybePlayIncomingSound(message, isNew: isNew);
     _maybeMarkDelivered(message);
     _markMessagesAsReadIfNeeded();
@@ -331,6 +344,65 @@ class AssistantChatController extends FullLifeCycleController
     } else {
       chatHistoryList.insert(0, messageModel);
       return true;
+    }
+  }
+
+  void _scheduleNormalizeOrder() {
+    if (_normalizeOrderScheduled) return;
+    _normalizeOrderScheduled = true;
+    Future.microtask(() {
+      _normalizeOrderScheduled = false;
+      _normalizeOrder();
+    });
+  }
+
+  DateTime _parseMessageDate(ChatMessageModel m) {
+    final raw = (m.date ?? '').toString().trim();
+    if (raw.isEmpty) return DateTime.fromMillisecondsSinceEpoch(0);
+
+    // Supports common formats like "2026-04-27 15:30:11"
+    // by converting to a parseable ISO-like string.
+    final isoish = raw.contains(' ') ? raw.replaceFirst(' ', 'T') : raw;
+    final dt = DateTime.tryParse(isoish);
+    if (dt != null) return dt;
+
+    // Fallback: epoch millis stored as string.
+    final millis = int.tryParse(raw);
+    if (millis != null) {
+      try {
+        return DateTime.fromMillisecondsSinceEpoch(millis);
+      } catch (_) {}
+    }
+
+    return DateTime.fromMillisecondsSinceEpoch(0);
+  }
+
+  void _normalizeOrder() {
+    if (chatHistoryList.length <= 1) return;
+
+    final sorted = chatHistoryList.toList();
+    sorted.sort((a, b) {
+      final ad = _parseMessageDate(a);
+      final bd = _parseMessageDate(b);
+      final cmp = bd.compareTo(ad); // newest first
+      if (cmp != 0) return cmp;
+
+      // Stable-ish tie-breaker.
+      final aid = (a.messageId ?? '').toString();
+      final bid = (b.messageId ?? '').toString();
+      return bid.compareTo(aid);
+    });
+
+    // Only update if order actually changed.
+    bool changed = false;
+    for (var i = 0; i < sorted.length; i++) {
+      if (!identical(sorted[i], chatHistoryList[i])) {
+        changed = true;
+        break;
+      }
+    }
+    if (changed) {
+      chatHistoryList.assignAll(sorted);
     }
   }
 
@@ -441,9 +513,23 @@ class AssistantChatController extends FullLifeCycleController
     }
   }
 
+  Future<void> paginateOlderMessagesIfNeeded() async {
+    if (isPaginating || isNoMoreData) return;
+    if (isChatHistoryLoading.isTrue) return;
+    isPaginating = true;
+    try {
+      await getChatHistory(channelName, "0", page, false);
+    } finally {
+      isPaginating = false;
+    }
+  }
+
   Future<void> getChatHistory(String channelName, String firstMsgId, num page, bool chatEnd) async {
-    if (page == 1) {
-      offsetCount = 1;
+    if (isNoMoreData) return;
+    if (isPaginating && page != this.page) return;
+    final int currentPage = page.toInt();
+    if (currentPage == 1) {
+      this.page = 1;
       isNoMoreData = false;
       chatHistoryList.clear();
     }
@@ -451,13 +537,13 @@ class AssistantChatController extends FullLifeCycleController
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      debugPrint("[ASSISTANT-CHAT] getChatHistory request=> $apiKey $uniId $chatGroupChild/$channelName $firstMsgId $page");
+      debugPrint("[ASSISTANT-CHAT] getChatHistory request=> $apiKey $uniId $chatGroupChild/$channelName $firstMsgId $currentPage");
       final response = await _dio.post(AppConstants.getChatHistory, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
         'channel_name': '$chatGroupChild/$channelName',
         'first_msg_id': firstMsgId,
-        'page': page,
+        'page': currentPage,
         'is_assistant_chat': 1,
       });
       debugPrint("[ASSISTANT-CHAT] getChatHistory response=> ${response.data.toString()}");
@@ -465,35 +551,52 @@ class AssistantChatController extends FullLifeCycleController
         chatHistoryModel = ChatHistoryModel.fromJson(response.data);
         if (chatHistoryModel.status == AppConstants.success) {
           _updateAssistantLimitFromHistory(chatHistoryModel);
-          offsetCount = chatHistoryModel.page!;
           isChatHistorySuccess(true);
 
-          if (chatHistoryModel.data!.isNotEmpty) {
-            chatHistoryModel.data?.forEach((message) {
-              var cm = ChatMessageModel(
-                  messageId: message.firebaseMessageId,
-                  senderUniId: message.userUniId,
-                  name: message.userName,
-                  text: message.message,
-                  fileUrl: message.fileUrl,
-                  date: message.createdAt,
-                  messageType: message.messageType,
-                  profileImageUrl: message.userImageUrl,
-                  selectedText: message.selectedText,
-                  selectedType: message.selectedType,
-                  deliveryStatus: message.deliveryStatus);
-              chatHistoryList.add(cm);
-            });
-          } else {
+          final history = chatHistoryModel.data ?? const [];
+          if (history.isEmpty) {
             isNoMoreData = true;
+          } else {
+            final existingIds = chatHistoryList
+                .map((e) => e.messageId)
+                .whereType<String>()
+                .toSet();
+
+            final newMessages = history
+                .map((m) => ChatMessageModel(
+                      messageId: m.firebaseMessageId,
+                      senderUniId: m.userUniId,
+                      name: m.userName,
+                      text: m.message,
+                      fileUrl: m.fileUrl,
+                      date: m.createdAt,
+                      messageType: m.messageType,
+                      profileImageUrl: m.userImageUrl,
+                      selectedText: m.selectedText,
+                      selectedType: m.selectedType,
+                      deliveryStatus: m.deliveryStatus,
+                    ))
+                .where((m) =>
+                    m.messageId == null ||
+                    m.messageId!.isEmpty ||
+                    !existingIds.contains(m.messageId))
+                .toList();
+
+            // For a reverse list, index 0 is the latest (bottom).
+            // Old paginated messages must be appended to the end (top).
+            chatHistoryList.addAll(newMessages);
+            _scheduleNormalizeOrder();
+
+            // Increment locally; do NOT trust backend page value.
+            this.page = currentPage + 1;
           }
 
-          if (page == 1) {
+          if (currentPage == 1) {
             registerListeners();
           }
         } else {
           print('getChatHistory API Response else: ${response.data.toString()}');
-          if (page == 1) {
+          if (currentPage == 1) {
             isChatHistorySuccess(false);
           }
           isNoMoreData = true;

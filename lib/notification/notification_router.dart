@@ -323,11 +323,10 @@ class NotificationRouter {
       return true;
     }
     if (rawChannel.startsWith('CHAT/')) {
-      Get.toNamed('/chat_screen', arguments: {
-        'channelName': channelSegment,
-        'uniqueId': uniqueId,
-      });
-      _log('navigate live chat channel=$channelSegment uniqueId=$uniqueId');
+      // Requested behavior: do not jump into chat directly from a message push.
+      // Land on dashboard so user can open from inProgress.
+      Get.toNamed('/dashboard');
+      _log('navigate message->dashboard channel=$channelSegment uniqueId=$uniqueId');
       return true;
     }
     return false;

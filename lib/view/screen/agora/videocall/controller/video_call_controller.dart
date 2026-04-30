@@ -118,6 +118,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
       isChatAccepted(true);
       getRemainingDuration(uniqueId);
+      _ensureBirthDataWritten();
     } else {
       print('No data available or new session.');
       playSound();
@@ -136,6 +137,33 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     dbReference.child(customerStatus).set(true);
     registerListeners();
     initAgora();
+  }
+
+  void _ensureBirthDataWritten() {
+    try {
+      sendBirthData(ChatBirthModel(
+          name: chatIntakeFormController.name,
+          gender: chatIntakeFormController.gender.toString().toUpperCase(),
+          dob: chatIntakeFormController.dob,
+          tob: CommonMethods().convertTimeInputVedic(chatIntakeFormController.tob.toString()),
+          pob: chatIntakeFormController.birthPlace,
+          latitude: chatIntakeFormController.latitude,
+          longitude: chatIntakeFormController.longitude,
+          partnerName: chatIntakeFormController.partnerName.toString(),
+          partnerGender: chatIntakeFormController.partnerGender.toString().toUpperCase(),
+          partnerDob: chatIntakeFormController.partnerDob,
+          partnerTob: chatIntakeFormController.partnerTob.toString().isNotEmpty
+              ? CommonMethods().convertTimeInputVedic(chatIntakeFormController.partnerTob.toString())
+              : "",
+          partnerPob: chatIntakeFormController.partnerBirthPlace,
+          partnerLatitude: chatIntakeFormController.partnerLatitude,
+          partnerLongitude: chatIntakeFormController.partnerLongitude
+      ));
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint("[Customer VideoCallController] _ensureBirthDataWritten failed: $e");
+      }
+    }
   }
 
   @override

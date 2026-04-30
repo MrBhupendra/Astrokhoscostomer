@@ -131,6 +131,7 @@ class AssistantChatScreen extends StatelessWidget {
                       controller: controller.scrollController,
                       reverse: true,
                       shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
                       itemBuilder: (context, index) {
                         ChatMessageModel message =
                             controller.chatHistoryList[index];
@@ -660,22 +661,26 @@ class AssistantChatScreen extends StatelessWidget {
                               ),
                             ),
                             Flexible(
-                              child: TextField(
-                                controller: controller.messageController,
-                                style: const TextStyle(
-                                    fontSize: 16, color: ColorResources.black),
-                                enabled: controller.remainingMessages.value > 0,
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText: controller.remainingMessages.value >
-                                          0
-                                      ? 'Enter Message...'
-                                      : 'Message limit reached',
-                                ),
-                                onChanged: (value) {
-                                  controller.isTyping.value = value.isNotEmpty;
-                                },
-                              ),
+                              child: Obx(() {
+                                final remaining =
+                                    controller.remainingMessages.value;
+                                return TextField(
+                                  controller: controller.messageController,
+                                  style: const TextStyle(
+                                      fontSize: 16,
+                                      color: ColorResources.black),
+                                  enabled: remaining > 0,
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText: remaining > 0
+                                        ? 'Enter Message...'
+                                        : 'Message limit reached',
+                                  ),
+                                  onChanged: (value) {
+                                    controller.isTyping.value = value.isNotEmpty;
+                                  },
+                                );
+                              }),
                             ),
                             Obx(() {
                               return controller.isTyping.value
@@ -823,27 +828,22 @@ class AssistantChatScreen extends StatelessWidget {
                 children: [
                   // This is the background for your floating action button
                   if (value)
-                    Positioned(
-                      bottom: 40, // Adjust as needed
-                      left: 295, // Adjust as needed
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          RawMaterialButton(
-                            onPressed: _scrollToTop,
-                            elevation: 0, // Remove elevation
-                            shape: const CircleBorder(), // Circular shape
-                            padding: EdgeInsets.zero, // Remove padding
-                            fillColor: ColorResources
-                                .colorPrimary, // Set background color
-                            child: Image.asset(
-                              Images.bottomArrowOnChat,
-                              height: 20,
-                              color: ColorResources.toolbarText, // Icon color
-                            ),
+                    Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        RawMaterialButton(
+                          onPressed: _scrollToTop,
+                          elevation: 0,
+                          shape: const CircleBorder(),
+                          padding: EdgeInsets.zero,
+                          fillColor: ColorResources.colorPrimary,
+                          child: Image.asset(
+                            Images.bottomArrowOnChat,
+                            height: 20,
+                            color: ColorResources.toolbarText,
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                 ],
               );
