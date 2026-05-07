@@ -331,23 +331,41 @@ class CommonMethods {
   }
 
   String convertTimeInput(String time) {
-    // Parse the time string into a DateTime object
-    DateFormat format = DateFormat("hh:mm a");
-    DateTime dateTime = format.parse(time);
-
-    // Format the DateTime object to HH:mm:ss
-    String formattedTime = DateFormat("HH:mm:ss").format(dateTime);
-    return formattedTime;
+    final dt = _tryParseTimeOfDay(time);
+    if (dt == null) return time;
+    return DateFormat("HH:mm:ss").format(dt);
   }
 
   String convertTimeInputVedic(String time) {
-    // Parse the time string into a DateTime object
-    DateFormat format = DateFormat("hh:mm a");
-    DateTime dateTime = format.parse(time);
+    final dt = _tryParseTimeOfDay(time);
+    if (dt == null) return time;
+    return DateFormat("HH:mm").format(dt);
+  }
 
-    // Format the DateTime object to HH:mm:ss
-    String formattedTime = DateFormat("HH:mm").format(dateTime);
-    return formattedTime;
+  DateTime? _tryParseTimeOfDay(String input) {
+    final raw = input.trim();
+    if (raw.isEmpty) return null;
+
+    // Try common 12h formats first (the app uses `showTimePicker` → `hh:mm a`).
+    final formats = <DateFormat>[
+      DateFormat('hh:mm a'),
+      DateFormat('h:mm a'),
+      // Also accept 24h inputs if backend/UI ever sends them.
+      DateFormat('HH:mm:ss'),
+      DateFormat('H:mm:ss'),
+      DateFormat('HH:mm'),
+      DateFormat('H:mm'),
+    ];
+
+    for (final f in formats) {
+      try {
+        // `parseLoose` handles minor variations like extra spaces/case.
+        return f.parseLoose(raw);
+      } catch (_) {
+        // try next format
+      }
+    }
+    return null;
   }
 
   String convertTimeInputVedicEdit(String time) {

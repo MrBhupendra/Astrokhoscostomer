@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.IBinder
 import androidx.core.app.NotificationCompat
 import android.content.pm.ServiceInfo
+import android.util.Log
 
 class CallForegroundService : Service() {
 
@@ -44,13 +45,21 @@ class CallForegroundService : Service() {
 
     private fun startForegroundServiceProperly() {
         val notification = getNotification()
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            val serviceTypes = (ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE or
-                    ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK).toInt()
-
-            startForeground(NOTIFICATION_ID, notification, serviceTypes)
-        } else {
-            startForeground(NOTIFICATION_ID, notification)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                val serviceTypes = (ServiceInfo.FOREGROUND_SERVICE_TYPE_MICROPHONE or
+                        ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK).toInt()
+                startForeground(NOTIFICATION_ID, notification, serviceTypes)
+            } else {
+                startForeground(NOTIFICATION_ID, notification)
+            }
+        } catch (se: SecurityException) {
+            // If permissions/state are not eligible for microphone FG service (Android 12+), avoid crashing the app.
+            Log.e("CallForegroundService", "Unable to start foreground service", se)
+            stopSelf()
+        } catch (t: Throwable) {
+            Log.e("CallForegroundService", "Unexpected error while starting foreground", t)
+            stopSelf()
         }
     }
 

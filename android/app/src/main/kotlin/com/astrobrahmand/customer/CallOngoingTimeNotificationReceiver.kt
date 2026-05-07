@@ -9,6 +9,8 @@ import android.os.Handler
 import android.os.Looper
 import android.app.NotificationManager
 import android.app.ActivityManager
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 
 class CallOngoingTimeNotificationReceiver : BroadcastReceiver() {
@@ -33,8 +35,18 @@ class CallOngoingTimeNotificationReceiver : BroadcastReceiver() {
             "com.astrobrahmand.customer.START_MICROPHONE_NOTIFICATION" -> {
                 val isForeground = isAppInForeground(context)
 
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE && !isForeground) {
-                    Log.w("CallNotificationReceiver", "Skipped mic service start — Android 14+ + app not foreground")
+        val hasRecordAudioPermission =
+          ContextCompat.checkSelfPermission(context, android.Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED
+
+        if (!hasRecordAudioPermission) {
+          Log.w("CallNotificationReceiver", "Skipped mic service start — RECORD_AUDIO not granted")
+          return
+        }
+
+        // Android 12+ restricts starting foreground services from background for sensitive types (like microphone).
+        // We skip instead of crashing; voice call will continue via other components.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !isForeground) {
+          Log.w("CallNotificationReceiver", "Skipped mic service start — Android 12+ + app not foreground")
                     return
                 }
 
