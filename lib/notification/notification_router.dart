@@ -272,14 +272,20 @@ class NotificationRouter {
     if (action.actionLifeCycle == NotificationLifeCycle.Foreground) {
       if (payload.type == NotificationType.android ||
           payload.type == NotificationType.unknown) {
-        _runAfterNavigatorReady(() => Get.toNamed('/notificationScreen'));
+        _runAfterNavigatorReady(() {
+          if (_shouldRouteAndroidToSearch(payload)) {
+            Get.toNamed('/search');
+          } else {
+            Get.toNamed('/notificationScreen');
+          }
+        });
         return;
       }
       if (payload.type == NotificationType.chat ||
           payload.type == NotificationType.video ||
           payload.type == NotificationType.call) {
-        _runAfterNavigatorReady(
-            () => Get.toNamed('/queue_list', arguments: payload.toGetArguments()));
+        _runAfterNavigatorReady(() =>
+            Get.toNamed('/queue_list', arguments: payload.toGetArguments()));
         return;
       }
     }
@@ -287,11 +293,20 @@ class NotificationRouter {
     _runAfterNavigatorReady(() => _routeByPayload(payload));
   }
 
+  static bool _shouldRouteAndroidToSearch(NotificationPayload payload) {
+    // Backend sends "android" type for generic alerts.
+    // Special-case: "preferred astrologer is online/available" => go to Search.
+    final title = (payload.raw['title'] ?? '').toLowerCase();
+    final body = (payload.raw['body'] ?? '').toLowerCase();
+    final combined = '$title $body';
+    return combined.contains('preferred astrologer') &&
+        (combined.contains('online') || combined.contains('available'));
+  }
+
   /// Assistant / live chat message push: `channelName` like `ASSISTANT/CUS-ASTRO` or `CHAT/...`.
   /// Matches navigation args used from [support_channels_screen] / chat intake.
   static bool _tryNavigateFromChatMessagePayload(Map<String, String> raw) {
-    final rawChannel =
-        (raw['channelName'] ?? raw['channel_name'] ?? '').trim();
+    final rawChannel = (raw['channelName'] ?? raw['channel_name'] ?? '').trim();
     if (rawChannel.isEmpty) return false;
 
     final channelSegment = rawChannel.contains('/')
@@ -299,8 +314,7 @@ class NotificationRouter {
         : rawChannel;
     if (channelSegment.isEmpty) return false;
 
-    final uniqueId =
-        (raw['uniqueId'] ?? raw['unique_id'] ?? '').trim();
+    final uniqueId = (raw['uniqueId'] ?? raw['unique_id'] ?? '').trim();
 
     if (!Get.isRegistered<ChatIntakeFormController>()) {
       Get.put(ChatIntakeFormController());
@@ -319,14 +333,16 @@ class NotificationRouter {
         'channelName': channelSegment,
         'uniqueId': uniqueId,
       });
-      _log('navigate assistant chat channel=$channelSegment uniqueId=$uniqueId');
+      _log(
+          'navigate assistant chat channel=$channelSegment uniqueId=$uniqueId');
       return true;
     }
     if (rawChannel.startsWith('CHAT/')) {
       // Requested behavior: do not jump into chat directly from a message push.
       // Land on dashboard so user can open from inProgress.
       Get.toNamed('/dashboard');
-      _log('navigate message->dashboard channel=$channelSegment uniqueId=$uniqueId');
+      _log(
+          'navigate message->dashboard channel=$channelSegment uniqueId=$uniqueId');
       return true;
     }
     return false;
@@ -397,7 +413,11 @@ class NotificationRouter {
         }
         break;
       case NotificationType.android:
-        Get.toNamed('/notificationScreen');
+        if (_shouldRouteAndroidToSearch(payload)) {
+          Get.toNamed('/search');
+        } else {
+          Get.toNamed('/notificationScreen');
+        }
         break;
       case NotificationType.cancel:
         _log('cancel type — no navigation');

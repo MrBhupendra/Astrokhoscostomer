@@ -1,8 +1,6 @@
 import 'package:astro_brahmand/utill/app_features.dart';
 import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:astro_brahmand/utill/images.dart';
-import 'package:astro_brahmand/view/widget/astrologer_profile_card.dart';
-import 'package:astro_brahmand/view/widget/custom_progress_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -73,9 +71,28 @@ class SearchScreen extends StatelessWidget {
       }
     });
 
-    return SafeArea(
-      child: Scaffold(
-        appBar: CustomAppBar(title: AppStrings.search.tr,
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        final prev = (Get.previousRoute).toString();
+        if (prev.isEmpty || prev == '/' || prev == '/splash') {
+          Get.offAllNamed('/dashboard');
+        } else {
+          Get.back();
+        }
+      },
+      child: SafeArea(
+        child: Scaffold(
+        appBar: CustomAppBar(
+          title: AppStrings.search.tr,
+          onBackPressed: () {
+            if (Get.key.currentState?.canPop() ?? false) {
+              Get.back();
+            } else {
+              Get.offAllNamed('/dashboard');
+            }
+          },
             //filter
             isClearFilterButton: Obx(() => Visibility(
               visible : controller.filterSelectedSkills.isNotEmpty ||
@@ -337,6 +354,7 @@ class SearchScreen extends StatelessWidget {
               ),)
             ],
           ),
+        ),
         ),
       ),
     );
