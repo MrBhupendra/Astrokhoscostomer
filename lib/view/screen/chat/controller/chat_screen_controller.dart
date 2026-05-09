@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 import 'package:astro_brahmand/utill/color_resources.dart';
 import 'package:astro_brahmand/view/screen/chat/model/chat_birth_model.dart';
-import 'package:astro_brahmand/view/widget/custom_default_dialog.dart';
 import 'package:astro_brahmand/view/widget/custom_okdialog_widget.dart';
 import 'package:astro_brahmand/view/widget/custom_snack_bar.dart';
 import 'package:dio/dio.dart' show Dio, FormData, MultipartFile;
@@ -18,7 +17,6 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../model/success_model.dart';
 import '../../../../utill/app_constants.dart';
-import '../../../../utill/app_features.dart';
 import '../../../../utill/app_strings.dart';
 import '../../../../utill/common_methods.dart';
 import '../../../../utill/images.dart';
@@ -94,6 +92,8 @@ class ChatScreenController extends FullLifeCycleController
   RxInt popupAfterDuration = 60.obs;
   RxBool isTimerRunning = false.obs;
   Timer? _timer;
+  bool _isDisposed = false;
+  bool _hasShownLowBalanceDialog = false;
 
   // Remaining offer time
   RxInt offerSeconds = 0.obs;
@@ -242,6 +242,7 @@ class ChatScreenController extends FullLifeCycleController
 
   @override
   void onClose() {
+    _isDisposed = true;
     dbReference.child(customerStatus).set(false);
     typingReference.child(customerTypingChild).set(false);
     stopTimer();
@@ -525,9 +526,6 @@ class ChatScreenController extends FullLifeCycleController
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
           popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
-          if(AppFeatures.freeChatOfferDialog) {
-            offerSeconds.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
-          }
           updateDurationInDb();
           startTimer();
         } else {
@@ -795,8 +793,12 @@ class ChatScreenController extends FullLifeCycleController
 
   void startTimer() {
     if (!isTimerRunning.value) {
-      isTimerRunning.toggle();
+      isTimerRunning.value = true;
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+        if (_isDisposed || isChatEnd.value) {
+          stopTimer();
+          return;
+        }
         if (seconds.value > 0) {
           seconds--;
           // if(seconds.value == 30){
@@ -818,6 +820,12 @@ class ChatScreenController extends FullLifeCycleController
         if (popupAfterDuration.value > 0) {
           popupAfterDuration--;
           if(popupAfterDuration.value == 0){
+            // Guard against showing the popup after chat has ended or controller is disposed.
+            if (_isDisposed || isChatEnd.value) return;
+            if (_hasShownLowBalanceDialog) return;
+            if (Get.isDialogOpen == true) return;
+
+            _hasShownLowBalanceDialog = true;
             Get.dialog(
               CustomDialogWidget(
                 imagePath: Images.icCoin,
@@ -844,7 +852,9 @@ class ChatScreenController extends FullLifeCycleController
 
                   await Get.toNamed('/wallet');
                   Future.delayed(const Duration(seconds: 10), () {
-                    getChatDuration(uniqueId);
+                    if (!_isDisposed && !isChatEnd.value) {
+                      getChatDuration(uniqueId);
+                    }
                   });
 
                 },
@@ -860,10 +870,11 @@ class ChatScreenController extends FullLifeCycleController
   }
 
   void stopTimer() {
-    if (_timer != null && _timer!.isActive) {
+    if (_timer != null) {
       _timer!.cancel();
-      isTimerRunning.toggle();
+      _timer = null;
     }
+    isTimerRunning.value = false;
   }
 
   String getFormattedTime() {
@@ -991,5 +1002,6 @@ class ChatScreenController extends FullLifeCycleController
 
     dbReference.child(customerStatus).set(false);
     dbReference.child(chatAcceptedChild).set(false);
+    stopTimer();
   }
 }

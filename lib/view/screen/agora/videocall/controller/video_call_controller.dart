@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:android_intent_plus/android_intent.dart';
 import 'package:android_intent_plus/flag.dart';
-import 'package:astro_brahmand/utill/app_features.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/foundation.dart';
@@ -74,6 +73,8 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
  RxInt popupAfterDuration = 60.obs;
  RxBool isTimerRunning = false.obs;
  Timer? _timer;
+ bool _isDisposed = false;
+ bool _hasShownLowBalanceDialog = false;
 
  // Remaining offer time
  RxInt offerSeconds = 0.obs;
@@ -189,6 +190,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
 
  @override
  Future<void> onClose() async {
+   _isDisposed = true;
    // dbReference.child(customerStatus).set(false);
    _dispose();
    super.onClose();
@@ -287,6 +289,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
       }
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
+        stopTimer();
         chatAcceptedListener.cancel();
         chatEndListener.cancel();
         stopOngoingCallNotification();
@@ -344,6 +347,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
 
     dbReference.child(customerStatus).set(false);
     dbReference.child(chatAcceptedChild).set(false);
+    stopTimer();
     if (Get.isRegistered<VideoCallController>()) {
       await Get.delete<VideoCallController>(force: true);
     }
@@ -372,9 +376,6 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
           popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
-          if(AppFeatures.freeChatOfferDialog) {
-            offerSeconds.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
-          }
           // updateDurationInDb();
           // startTimer();
           Future.delayed(const Duration(seconds: 1), () {
@@ -400,8 +401,12 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
 
  void startTimer() {
    if (!isTimerRunning.value) {
-     isTimerRunning.toggle();
+     isTimerRunning.value = true;
      _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+       if (_isDisposed || isChatEnd.value) {
+         stopTimer();
+         return;
+       }
        if (seconds.value > 0) {
          seconds--;
          await updateCallDuration(seconds.value);
@@ -411,6 +416,12 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
        if (popupAfterDuration.value > 0) {
          popupAfterDuration--;
          if(popupAfterDuration.value == 0){
+           // Guard against showing the popup after call has ended or controller is disposed.
+           if (_isDisposed || isChatEnd.value) return;
+           if (_hasShownLowBalanceDialog) return;
+           if (Get.isDialogOpen == true) return;
+
+           _hasShownLowBalanceDialog = true;
            Get.dialog(
              CustomDialogWidget(
                imagePath: Images.icCoin,
@@ -437,7 +448,9 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
                  await Get.toNamed('/wallet');
 
                  Future.delayed(const Duration(seconds: 10), () {
-                   getRemainingDuration(uniqueId);
+                   if (!_isDisposed && !isChatEnd.value) {
+                     getRemainingDuration(uniqueId);
+                   }
                  });
                },
              ),
@@ -452,10 +465,11 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
  }
 
  void stopTimer() {
-   if (_timer != null && _timer!.isActive) {
+   if (_timer != null) {
      _timer!.cancel();
-     isTimerRunning.toggle();
+     _timer = null;
    }
+   isTimerRunning.value = false;
  }
 
   String getFormattedTime() {

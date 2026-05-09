@@ -14,7 +14,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:proximity_sensor/proximity_sensor.dart';
 import '../../../../../model/success_model.dart';
 import '../../../../../utill/app_constants.dart';
-import '../../../../../utill/app_features.dart';
 import '../../../../../utill/app_strings.dart';
 import '../../../../../utill/common_methods.dart';
 import '../../../../../utill/images.dart';
@@ -85,6 +84,8 @@ class VoiceCallController extends FullLifeCycleController
   RxInt popupAfterDuration = 60.obs;
   RxBool isTimerRunning = false.obs;
   Timer? _timer;
+  bool _isDisposed = false;
+  bool _hasShownLowBalanceDialog = false;
 
   // Remaining offer time
   RxInt offerSeconds = 0.obs;
@@ -265,6 +266,7 @@ class VoiceCallController extends FullLifeCycleController
 
   @override
   Future<void> onClose() async {
+    _isDisposed = true;
     super.onClose();
     // dbReference.child(customerStatus).set(false);
     stopTimer();
@@ -380,6 +382,8 @@ class VoiceCallController extends FullLifeCycleController
       }
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
+        // Ensure nothing (timer/dialog) fires after end.
+        stopTimer();
         stopOngoingCallNotification();
         stopMicNotification();
         chatAcceptedListener.cancel();
@@ -447,6 +451,7 @@ class VoiceCallController extends FullLifeCycleController
 
     dbReference.child(customerStatus).set(false);
     dbReference.child(chatAcceptedChild).set(false);
+    stopTimer();
     if (Get.isRegistered<VoiceCallController>()) {
       await Get.delete<VoiceCallController>(force: true);
     }
@@ -470,9 +475,6 @@ class VoiceCallController extends FullLifeCycleController
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
           popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
-          if(AppFeatures.freeChatOfferDialog) {
-            offerSeconds.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
-          }
           // updateDurationInDb();
           // startTimer();
           Future.delayed(const Duration(seconds: 1), () {
@@ -498,8 +500,12 @@ class VoiceCallController extends FullLifeCycleController
 
   void startTimer() {
     if (!isTimerRunning.value) {
-      isTimerRunning.toggle();
+      isTimerRunning.value = true;
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+        if (_isDisposed || isChatEnd.value) {
+          stopTimer();
+          return;
+        }
         if (seconds.value > 0) {
           seconds--;
           await updateCallDuration(seconds.value);
@@ -509,6 +515,12 @@ class VoiceCallController extends FullLifeCycleController
         if (popupAfterDuration.value > 0) {
           popupAfterDuration--;
           if(popupAfterDuration.value == 0){
+            // Guard against showing the popup after call has ended or controller is disposed.
+            if (_isDisposed || isChatEnd.value) return;
+            if (_hasShownLowBalanceDialog) return;
+            if (Get.isDialogOpen == true) return;
+
+            _hasShownLowBalanceDialog = true;
             Get.dialog(
               CustomDialogWidget(
                 imagePath: Images.icCoin,
@@ -542,7 +554,9 @@ class VoiceCallController extends FullLifeCycleController
                   await Get.toNamed('/wallet');
 
                   Future.delayed(const Duration(seconds: 10), () {
-                    getRemainingDuration(uniqueId);
+                    if (!_isDisposed && !isChatEnd.value) {
+                      getRemainingDuration(uniqueId);
+                    }
                   });
                 },
               ),
@@ -557,10 +571,11 @@ class VoiceCallController extends FullLifeCycleController
   }
 
   void stopTimer() {
-    if (_timer != null && _timer!.isActive) {
+    if (_timer != null) {
       _timer!.cancel();
-      isTimerRunning.toggle();
+      _timer = null;
     }
+    isTimerRunning.value = false;
   }
 
   String getFormattedTime() {
