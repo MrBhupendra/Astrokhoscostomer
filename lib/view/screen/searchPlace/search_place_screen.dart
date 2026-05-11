@@ -12,7 +12,7 @@ class SearchPlaceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SearchPlaceController controller = Get.put(SearchPlaceController(placeApiKey));
-
+    print("placeApiKey-> $placeApiKey");
     return SafeArea(
       child: Scaffold(
         appBar: const CustomAppBar(title: "Search Place"),

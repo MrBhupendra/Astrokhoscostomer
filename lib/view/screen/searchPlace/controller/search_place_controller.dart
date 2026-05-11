@@ -114,15 +114,15 @@ class SearchPlaceController extends GetxController {
       } else {
         debugPrint('Failed to get timezone: ${response.data}');
         return {
-          'timeZoneId': 'Unknown Timezone',
-          'offsetHours': 0.0,
+          'timeZoneId': 'Asia/Kolkata',
+          'offsetHours': 5.5,
         };
       }
     } catch (e) {
       debugPrint('Timezone API Error: ${e.toString()}');
       return {
-        'timeZoneId': 'Unknown Timezone',
-        'offsetHours': 0.0,
+        'timeZoneId': 'Asia/Kolkata',
+        'offsetHours': 5.5,
       };
     }
   }
