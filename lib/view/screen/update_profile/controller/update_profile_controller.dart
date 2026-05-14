@@ -84,13 +84,11 @@ class UpdateProfileController extends GetxController {
     String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
     String? phoneCode = await SharedPreferencesHelper.getData(AppConstants.phoneCode);
 
+    print("customerImg-> $customerImg");
     try {
-      FormData formData = FormData.fromMap({
+      final Map<String, dynamic> payload = {
         'api_key': apiKey,
         "user_uni_id": uniId,
-        "customer_img": customerImg != null
-            ? await MultipartFile.fromFile(customerImg.path, filename: 'profile.png')
-            : null,
         "name": name,
         "email": email,
         "phone": phone,
@@ -101,7 +99,18 @@ class UpdateProfileController extends GetxController {
         "latitude": latitude,
         "longitude": longitude,
         "time_zone": timezone,
-      });
+      };
+
+      // Only attach customer_img when user picked a new image, otherwise
+      // backend treats a null/empty value as "remove existing image".
+      if (customerImg != null) {
+        payload["customer_img"] = await MultipartFile.fromFile(
+          customerImg.path,
+          filename: 'profile.png',
+        );
+      }
+
+      FormData formData = FormData.fromMap(payload);
 
       final response = await _dio.post(AppConstants.updateProfileUri, data: formData);
 
