@@ -75,8 +75,12 @@ class SearchScreen extends StatelessWidget {
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
-        final prev = (Get.previousRoute).toString();
-        if (prev.isEmpty || prev == '/' || prev == '/splash') {
+        final prev = Get.previousRoute.toString();
+        final canPop = Get.key.currentState?.canPop() ?? false;
+        if (!canPop ||
+            prev.isEmpty ||
+            prev == '/' ||
+            prev == '/splash') {
           Get.offAllNamed('/dashboard');
         } else {
           Get.back();
@@ -87,10 +91,15 @@ class SearchScreen extends StatelessWidget {
         appBar: CustomAppBar(
           title: AppStrings.search.tr,
           onBackPressed: () {
-            if (Get.key.currentState?.canPop() ?? false) {
-              Get.back();
-            } else {
+            final prev = Get.previousRoute.toString();
+            final canPop = Get.key.currentState?.canPop() ?? false;
+            if (!canPop ||
+                prev.isEmpty ||
+                prev == '/' ||
+                prev == '/splash') {
               Get.offAllNamed('/dashboard');
+            } else {
+              Get.back();
             }
           },
             //filter

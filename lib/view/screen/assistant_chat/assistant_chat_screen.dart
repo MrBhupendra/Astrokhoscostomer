@@ -69,12 +69,20 @@ class AssistantChatScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     configController.setCurrentScreen(AppConstants.chat);
     return PopScope(
-      onPopInvoked: (bool isPopGesture) {
-        if (!isPopGesture) {
+      canPop: false,
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        final prev = Get.previousRoute.toString();
+        final canPop = Get.key.currentState?.canPop() ?? false;
+        if (!canPop ||
+            prev.isEmpty ||
+            prev == '/' ||
+            prev == '/splash') {
+          Get.offAllNamed('/dashboard');
+        } else {
           Get.back();
         }
       },
-      canPop: false,
       child: SafeArea(
         child: Scaffold(
           appBar: AppBar(
@@ -90,7 +98,17 @@ class AssistantChatScreen extends StatelessWidget {
                         color: ColorResources.toolbarText,
                       ),
                       onPressed: () {
-                        Get.back();
+                        final prev = Get.previousRoute.toString();
+                        final canPop =
+                            Get.key.currentState?.canPop() ?? false;
+                        if (!canPop ||
+                            prev.isEmpty ||
+                            prev == '/' ||
+                            prev == '/splash') {
+                          Get.offAllNamed('/dashboard');
+                        } else {
+                          Get.back();
+                        }
                       }),
                   const Gap(5),
                   CustomRoundNetworkImage(
