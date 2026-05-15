@@ -22,6 +22,7 @@ import '../../chat/model/chat_history_model.dart';
 import '../../chat/model/chat_message_model.dart';
 import '../../chat/model/chat_session_model.dart';
 import '../../splash/controller/config_controller.dart';
+import '../assistant_chat_delivery_helper.dart';
 
 class AssistantChatController extends FullLifeCycleController
     with FullLifeCycleMixin {
@@ -321,13 +322,19 @@ class AssistantChatController extends FullLifeCycleController
     if (snapshot.value == null) return;
     final raw = snapshot.value;
     if (raw is! Map) return;
-    final json = Map<String, dynamic>.from(raw);
+    final json = raw.map<String, dynamic>((k, v) => MapEntry(k.toString(), v));
     json['messageId'] ??= snapshot.key;
     final message = ChatMessageModel.fromJson(json);
     final isNew = _upsertMessage(message);
     _scheduleNormalizeOrder();
-    _maybePlayIncomingSound(message, isNew: isNew);
-    _maybeMarkDelivered(message);
+    final id = message.messageId;
+    ChatMessageModel effective = message;
+    if (id != null && id.isNotEmpty) {
+      final i = chatHistoryList.indexWhere((m) => m.messageId == id);
+      if (i >= 0) effective = chatHistoryList[i];
+    }
+    _maybePlayIncomingSound(effective, isNew: isNew);
+    _maybeMarkDelivered(effective);
     _markMessagesAsReadIfNeeded();
   }
 
@@ -339,7 +346,9 @@ class AssistantChatController extends FullLifeCycleController
     }
     final idx = chatHistoryList.indexWhere((m) => m.messageId == id);
     if (idx >= 0) {
-      chatHistoryList[idx] = messageModel;
+      final merged = ChatMessageModel.mergeRealtimeSnapshot(
+          chatHistoryList[idx], messageModel);
+      chatHistoryList[idx] = merged;
       return false;
     } else {
       chatHistoryList.insert(0, messageModel);
@@ -428,14 +437,9 @@ class AssistantChatController extends FullLifeCycleController
     if (message.normalizedDeliveryStatus() != 'sent') return;
 
     _deliveredWriteOnce.add(id);
-    messageReference.child(id).update({
-      'deliveryStatus': 'delivered',
-      'deliveredAt': ServerValue.timestamp,
-    });
-    _updateChatMessageStatusApi(
-      firebaseMessageId: id,
-      deliveryStatus: 'delivered',
-      deliveredAt: DateTime.now().millisecondsSinceEpoch.toString(),
+    AssistantChatDeliveryHelper.markMessageDelivered(
+      channelName: channelName,
+      messageId: id,
     );
   }
 
@@ -505,7 +509,7 @@ class AssistantChatController extends FullLifeCycleController
       _updateChatMessageStatusApi(
         firebaseMessageId: id,
         deliveryStatus: 'read',
-        readAt: DateTime.now().millisecondsSinceEpoch.toString(),
+        readAt: AssistantChatDeliveryHelper.deliveryTimestamp(),
       );
     }
     if (updates.isNotEmpty) {
@@ -574,7 +578,12 @@ class AssistantChatController extends FullLifeCycleController
                       profileImageUrl: m.userImageUrl,
                       selectedText: m.selectedText,
                       selectedType: m.selectedType,
-                      deliveryStatus: m.deliveryStatus,
+                      deliveryStatus: (m.deliveryStatus != null &&
+                              m.deliveryStatus!.trim().isNotEmpty)
+                          ? m.deliveryStatus
+                          : 'sent',
+                      deliveredAt: int.tryParse(m.deliveredAt ?? ''),
+                      readAt: int.tryParse(m.readAt ?? ''),
                     ))
                 .where((m) =>
                     m.messageId == null ||

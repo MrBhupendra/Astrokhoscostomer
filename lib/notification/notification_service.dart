@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import '../firebase_options.dart';
 import '../utill/color_resources.dart';
 import '../view/screen/splash/controller/config_controller.dart';
+import '../view/screen/assistant_chat/assistant_chat_delivery_helper.dart';
 import 'notification_router.dart';
 
 // --- Firebase background isolate (must be top-level) -------------------------
@@ -76,6 +77,7 @@ class NotificationService {
         _instance.cancelNotification(id);
         return;
       case NotificationType.message:
+        await AssistantChatDeliveryHelper.markDeliveredFromFcmData(data);
         await _instance._showMessageNotification(message, payloadMap);
         return;
       case NotificationType.chat:

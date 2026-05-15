@@ -112,6 +112,8 @@ class UpdateProfileController extends GetxController {
 
       FormData formData = FormData.fromMap(payload);
 
+      print("updateProfile Request-> ${formData.fields}");
+
       final response = await _dio.post(AppConstants.updateProfileUri, data: formData);
 
       if (response.statusCode == 200) {
