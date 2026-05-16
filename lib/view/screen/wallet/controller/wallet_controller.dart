@@ -163,8 +163,8 @@ class WalletController extends GetxController {
         'api_key': apiKey,
         "user_uni_id": uniId,
         "wallet_id": walletId,
-        "payment_method": paymentMethod
-        ,"uniqeid": _uniqueId ?? "",
+        "payment_method": paymentMethod,
+        "uniqeid": _uniqueId ?? "",
       });
 
       print("callDuration===>4");

@@ -48,6 +48,7 @@ class Images {
   static const String chatDisconnect = "assets/images/chat_disconnect.png"; // Chat Disconnected
 
   static const String emptyScreen = "assets/images/empty_screen.png";
+  static const String liveEmptyImage = "assets/images/live_empty_image.png";
 
   //Live
   static const String bgLive = 'assets/images/live_bg.png';

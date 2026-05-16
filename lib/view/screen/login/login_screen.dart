@@ -288,7 +288,7 @@ class LoginScreen extends GetView<LoginController> {
             children: [
               Container(
                 height: Get.height * 0.37,
-                color: Color(0xFF020015),
+                color: const Color(0xFF020015),
                 child: Stack(
                   children: [
                     Positioned(
@@ -436,7 +436,9 @@ class LoginScreen extends GetView<LoginController> {
                       return Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: ColorResources.colorPrimary,
+                          color: controller.isSendingOtp.value
+                              ? Colors.grey
+                              : ColorResources.colorPrimary,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ElevatedButton(
@@ -448,21 +450,16 @@ class LoginScreen extends GetView<LoginController> {
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
+                            disabledBackgroundColor: Colors.transparent,
+                            disabledForegroundColor: Colors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
                           ),
-                          child: controller.isSendingOtp.value
-                              ? const SizedBox(
-                            height: 22,
-                            width: 22,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 3,
-                            ),
-                          )
-                              : CustomTextRegular(
-                            AppStrings.sendOTP.tr,
+                          child: CustomTextRegular(
+                            controller.isSendingOtp.value
+                                ? "Sending..."
+                                : AppStrings.sendOTP.tr,
                             fontSize: 16,
                             color: ColorResources.toolbarText,
                           ),

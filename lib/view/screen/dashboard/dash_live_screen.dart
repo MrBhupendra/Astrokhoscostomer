@@ -5,7 +5,12 @@ import 'package:astro_brahmand/view/widget/upcoming_live_astrologer_widget.dart'
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../../utill/app_constants.dart';
+import '../../../utill/color_resources.dart';
+import '../../../utill/dimensions.dart';
+import '../../../utill/images.dart';
 import '../../../utill/shared_preference.dart';
+import '../../widget/custom_text_medium.dart';
+import '../../widget/custom_text_regular.dart';
 import '../../widget/simmer_widget/simmer_astrologer.dart';
 import '../agora/live_stream/controller/live_stream_init_controller.dart';
 
@@ -112,7 +117,36 @@ class LiveAstrologerScreen extends StatelessWidget {
               },
             );
           } else {
-            return const EmptyScreen();
+            return Center(
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: Dimensions.paddingSizeLarge,
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      Images.liveEmptyImage,
+                      height: 200,
+                    ),
+                    const SizedBox(height: Dimensions.gapLarge),
+                    CustomTextMedium(
+                      "No One is Live Right Now",
+                      textAlign: TextAlign.center,
+                      fontSize: Dimensions.fontSizeOverLarge,
+                      color: ColorResources.black2,
+                    ),
+                    const SizedBox(height: Dimensions.gapSmall),
+                    CustomTextRegular(
+                      "Our experts will be back shortly.\nStay tuned or explore upcoming sessions.",
+                      textAlign: TextAlign.center,
+                      fontSize: Dimensions.fontSizeSmall,
+                      color: ColorResources.black5,
+                    ),
+                  ],
+                ),
+              ),
+            );
           }
         },
       ),

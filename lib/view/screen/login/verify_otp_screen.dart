@@ -135,31 +135,30 @@ class VerifyOtpScreen extends GetView<LoginController> {
                       return Container(
                         width: double.infinity,
                         decoration: BoxDecoration(
-                          color: ColorResources.colorPrimary,
+                          color: controller.isVerifying.value
+                              ? Colors.grey
+                              : ColorResources.colorPrimary,
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: ElevatedButton(
-                          onPressed: (){
+                          onPressed: controller.isVerifying.value
+                              ? null
+                              : () {
                             controller.verifyClick(controller.mobileNumber);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.transparent,
                             shadowColor: Colors.transparent,
+                            disabledBackgroundColor: Colors.transparent,
+                            disabledForegroundColor: Colors.transparent,
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(18),
                             ),
                           ),
-                          child: controller.isVerifying.value
-                              ? const SizedBox(
-                            height: 22,
-                            width: 22,
-                            child: CircularProgressIndicator(
-                              color: Colors.white,
-                              strokeWidth: 3,
-                            ),
-                          )
-                              : CustomTextRegular(
-                            AppStrings.verifyOTP.tr,
+                          child: CustomTextRegular(
+                            controller.isVerifying.value
+                                ? "Verifying..."
+                                : AppStrings.verifyOTP.tr,
                             fontSize: 16,
                             color: ColorResources.toolbarText,
                           ),
