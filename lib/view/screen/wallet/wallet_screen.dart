@@ -428,6 +428,7 @@ class WalletScreen extends StatelessWidget {
                             onTap: (){
                               CommonMethods().showPaymentMethodBottomSheet(configController.phoneCode == AppConstants.defaultPhoneCode ? false : true,
                                   onItemSelected: (int index){
+                                print("payMethod->${configController.paymentGatewayList[index].payMethod.toString()}");
                                     if(configController.phoneCode == AppConstants.defaultPhoneCode){
                                       walletController.proceedPaymentRequest(
                                           walletController.walletId.toString(),

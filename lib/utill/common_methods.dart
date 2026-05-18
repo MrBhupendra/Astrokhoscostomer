@@ -911,10 +911,13 @@ class CommonMethods {
   void showPaymentMethodBottomSheet(bool isInternational,
       {required Function(int index) onItemSelected}) {
     final ConfigController configController = Get.find();
+    final int gatewayCount = isInternational
+        ? configController.internationalPaymentGatewayList.length
+        : configController.paymentGatewayList.length;
     Get.bottomSheet(
       SafeArea(
         child: Container(
-          height: Get.height * 0.22,
+          height: Get.height * (gatewayCount > 4 ? 0.26 : 0.22),
           decoration: const BoxDecoration(
             color: ColorResources.black8,
             borderRadius: BorderRadius.only(

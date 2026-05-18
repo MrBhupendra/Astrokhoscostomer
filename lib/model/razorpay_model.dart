@@ -40,7 +40,9 @@ class PaymentGateway {
       this.razorpayId, 
       this.email, 
       this.name, 
-      this.orderId,});
+      this.orderId,
+      this.qrId,
+      this.qrImageUrl,});
 
   PaymentGateway.fromJson(dynamic json) {
     phone = json['phone'];
@@ -49,6 +51,9 @@ class PaymentGateway {
     email = json['email'];
     name = json['name'];
     orderId = json['order_id'];
+    // Returned when payment_method = razorpay_qr in proceedPaymentRequest
+    qrId = json['qr_id'];
+    qrImageUrl = json['image_url'] ?? json['qr_image_url'] ?? json['qr_image'];
   }
   String? phone;
   num? amount;
@@ -56,6 +61,8 @@ class PaymentGateway {
   String? email;
   String? name;
   String? orderId;
+  String? qrId;
+  String? qrImageUrl;
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -65,6 +72,8 @@ class PaymentGateway {
     map['email'] = email;
     map['name'] = name;
     map['order_id'] = orderId;
+    map['qr_id'] = qrId;
+    map['image_url'] = qrImageUrl;
     return map;
   }
 

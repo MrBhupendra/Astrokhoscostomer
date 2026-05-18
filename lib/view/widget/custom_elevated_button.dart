@@ -30,7 +30,7 @@ class CustomElevatedButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final TextStyle textStyle = TextStyle(
-        color: textColor ?? ColorResources.black1,
+        color: textColor ?? ColorResources.toolbarText,
         fontSize: 14,
         letterSpacing: 1,
     );
@@ -53,10 +53,10 @@ class CustomElevatedButton extends StatelessWidget {
           }
         },
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgroundColor ?? ColorResources.black8,
+          backgroundColor: backgroundColor ?? ColorResources.colorPrimary,
           padding: const EdgeInsets.only(top: 13, bottom: 13),
           shape: RoundedRectangleBorder(
-            borderRadius: borderRadius ?? BorderRadius.circular(8),
+            borderRadius: borderRadius ?? BorderRadius.circular(12),
           ),
         ),
         child: Text(

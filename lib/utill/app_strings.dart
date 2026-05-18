@@ -769,6 +769,7 @@ class AppStrings {
 
   // Multiple PG title
   static const String razorpay = 'Razorpay';
+  static const String razorpayQr = 'Scan QR & Pay';
   static const String ccAvenue = 'CCAvenue';
   static const String phonePe = 'PhonePe';
   static const String payPal = 'Paypal';

@@ -1,6 +1,5 @@
 import 'package:astro_brahmand/model/paypal_model.dart';
 import 'package:astro_brahmand/model/payu_wallet_recharge_model.dart';
-import 'package:astro_brahmand/model/phonepe_model.dart';
 import 'package:astro_brahmand/model/razorpay_wallet_recharge_model.dart';
 import 'package:astro_brahmand/view/screen/webview/payment_webview_screen.dart';
 import 'package:astro_brahmand/view/widget/custom_snack_bar.dart';
@@ -14,13 +13,11 @@ import '../../../../controller/phonepe_controller.dart';
 import '../../../../controller/razorpay_controller.dart';
 import '../../../../model/cashfree_wallet_recharge_model.dart';
 import '../../../../model/ccavenue_wallet_recharge_model.dart';
-import '../../../../model/payment_gateway_list_model.dart';
 import '../../../../model/phonepe_wallet_recharge_model.dart';
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/app_events.dart';
 import '../../../../utill/app_strings.dart';
 import '../../../../utill/common_methods.dart';
-import '../../../../utill/images.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_progress_dialog.dart';
 import '../../splash/controller/config_controller.dart';
@@ -39,9 +36,6 @@ class WalletController extends GetxController {
   RxString payAmount = '***'.obs;
   RxString walletId = '0'.obs;
 
-
-
-
   final isPurchaseLoading = false.obs;
   final isPurchaseSuccess = false.obs;
   RazorpayWalletRechargeModel razorpayModel = RazorpayWalletRechargeModel();
@@ -52,11 +46,11 @@ class WalletController extends GetxController {
   PayuWalletRechargeModel payuWalletRechargeModel = PayuWalletRechargeModel();
 
   final CashFreeController cashfreeController = Get.put(CashFreeController());
-  CashfreeWalletRechargeModel cashfreeWalletRechargeModel = CashfreeWalletRechargeModel();
+  CashfreeWalletRechargeModel cashfreeWalletRechargeModel =
+      CashfreeWalletRechargeModel();
 
   //Multiple PG
   final ConfigController configController = Get.find();
-
 
   String? _uniqueId;
   String? _channelName;
@@ -67,10 +61,16 @@ class WalletController extends GetxController {
   String? _astroUniId;
   int? _isVirtual;
 
-  void setPaymentData({String? uniqueId, String? channelName, String? agoraAppId, String? agoraToken, String? astroName,
+  void setPaymentData({
+    String? uniqueId,
+    String? channelName,
+    String? agoraAppId,
+    String? agoraToken,
+    String? astroName,
     String? astroImage,
     String? astroUniId,
-    int? isVirtual,}) {
+    int? isVirtual,
+  }) {
     _uniqueId = uniqueId;
     _channelName = channelName;
     _agoraAppId = agoraAppId;
@@ -94,7 +94,8 @@ class WalletController extends GetxController {
   void onInit() {
     super.onInit();
     getRechargeVoucher();
-    CFPaymentGatewayService().setCallback(cashfreeController.onVerify, cashfreeController.onError);
+    CFPaymentGatewayService()
+        .setCallback(cashfreeController.onVerify, cashfreeController.onError);
   }
 
   void selectVoucher(int index) {
@@ -154,12 +155,16 @@ class WalletController extends GetxController {
     }
   }
 
-  Future<void> proceedPaymentRequest(String walletId, String paymentMethod) async {
+  Future<void> proceedPaymentRequest(
+      String walletId, String paymentMethod) async {
     CustomProgressDialog.showDialog();
     try {
-      String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
-      String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      final response = await _dio.post(AppConstants.proceedRechargeRequest, data: {
+      String? apiKey =
+          await SharedPreferencesHelper.getData(AppConstants.userApiKey);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      final response =
+          await _dio.post(AppConstants.proceedRechargeRequest, data: {
         'api_key': apiKey,
         "user_uni_id": uniId,
         "wallet_id": walletId,
@@ -174,59 +179,126 @@ class WalletController extends GetxController {
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
-        if(paymentMethod == AppConstants.payRazorpay){
+        if (paymentMethod == AppConstants.payRazorpay) {
           razorpayModel = RazorpayWalletRechargeModel.fromJson(response.data);
           if (razorpayModel.status == AppConstants.success) {
-            final RazorpayController razorpayController = Get.put(RazorpayController());
-            razorpayController.openCheckout(razorpayModel.data!, AppStrings.walletRecharge, uniId, AppConstants.wallet);
+            await SharedPreferencesHelper.saveData(
+              AppConstants.paymentGateway,
+              AppConstants.payRazorpay,
+            );
+            final RazorpayController razorpayController =
+                Get.put(RazorpayController());
+            razorpayController.openCheckout(
+              razorpayModel.data!,
+              AppStrings.walletRecharge,
+              uniId,
+              AppConstants.wallet,
+            );
           } else {
             CustomSnackBar.showBottom(razorpayModel.msg.toString());
           }
-        }
-        else if(paymentMethod == AppConstants.payCCAvenue){
+        } else if (paymentMethod == AppConstants.payRazorpayQr) {
+          razorpayModel = RazorpayWalletRechargeModel.fromJson(response.data);
+          final qrBlock = razorpayModel.razorpayQrData;
+          final walletBlock = razorpayModel.walletData;
+          final bool qrReady = razorpayModel.status == AppConstants.success &&
+              qrBlock?.status == AppConstants.success &&
+              (qrBlock?.qrId ?? '').isNotEmpty &&
+              (qrBlock?.imageUrl ?? '').isNotEmpty &&
+              (walletBlock?.orderId ?? '').isNotEmpty;
+
+          if (qrReady) {
+            await SharedPreferencesHelper.saveData(
+              AppConstants.paymentGateway,
+              AppConstants.payRazorpayQr,
+            );
+            final RazorpayController razorpayController =
+                Get.put(RazorpayController());
+            razorpayController.startQrPaymentFromProceedResponse(
+              qrIdValue: qrBlock!.qrId!,
+              imageUrl: qrBlock.imageUrl!,
+              orderId: walletBlock!.orderId!,
+              amount: walletBlock.amount ?? 0,
+              userUniId: uniId,
+              type: AppConstants.wallet,
+              walletId: walletId,
+            );
+          } else {
+            CustomSnackBar.showBottom(
+              qrBlock?.msg ?? razorpayModel.msg ?? "Unable to generate QR",
+            );
+          }
+        } else if (paymentMethod == AppConstants.payCCAvenue) {
           ccAvenueModel = CcAvenueWalletRechargeModel.fromJson(response.data);
           if (ccAvenueModel.status == AppConstants.success) {
-            String url = "${AppConstants.ccAvenueUrl}&encRequest=${ccAvenueModel.ccavenueData!.encVal.toString()}&access_code=${ccAvenueModel.ccavenueData!.accessCode.toString()}";
-            Get.to(() => PaymentWebViewScreen(AppConstants.appName,url,AppConstants.wallet,AppStrings.walletRecharge));
+            String url =
+                "${AppConstants.ccAvenueUrl}&encRequest=${ccAvenueModel.ccavenueData!.encVal.toString()}&access_code=${ccAvenueModel.ccavenueData!.accessCode.toString()}";
+            Get.to(() => PaymentWebViewScreen(AppConstants.appName, url,
+                AppConstants.wallet, AppStrings.walletRecharge));
             try {
-              AppEvents().sendInitCheckoutEvent(ccAvenueModel.data!.amount.toString(), ccAvenueModel.ccavenueData!.orderId.toString(), uniId.toString(), AppConstants.wallet);
+              AppEvents().sendInitCheckoutEvent(
+                  ccAvenueModel.data!.amount.toString(),
+                  ccAvenueModel.ccavenueData!.orderId.toString(),
+                  uniId.toString(),
+                  AppConstants.wallet);
             } catch (e) {
               debugPrint("Error Event openCheckout: $e");
             }
           } else {
             CustomSnackBar.showBottom(ccAvenueModel.msg.toString());
           }
-        }
-        else if(paymentMethod == AppConstants.payPayu){
-          payuWalletRechargeModel = PayuWalletRechargeModel.fromJson(response.data);
+        } else if (paymentMethod == AppConstants.payPayu) {
+          payuWalletRechargeModel =
+              PayuWalletRechargeModel.fromJson(response.data);
           if (payuWalletRechargeModel.status == AppConstants.success) {
             // String url = "${AppConstants.ccAvenueUrl}&encRequest=${payuWalletRechargeModel.ccavenueData!.encVal.toString()}&access_code=${ccAvenueModel.ccavenueData!.accessCode.toString()}";
-            Get.to(() => PaymentWebViewScreen(AppConstants.appName,payuWalletRechargeModel.payuData!.paymentLink.toString(),AppConstants.wallet,AppStrings.walletRecharge));
+            Get.to(() => PaymentWebViewScreen(
+                AppConstants.appName,
+                payuWalletRechargeModel.payuData!.paymentLink.toString(),
+                AppConstants.wallet,
+                AppStrings.walletRecharge));
             try {
-              AppEvents().sendInitCheckoutEvent(payuWalletRechargeModel.data!.amount.toString(), payuWalletRechargeModel.payuData!.orderId.toString(), uniId.toString(), AppConstants.wallet);
+              AppEvents().sendInitCheckoutEvent(
+                  payuWalletRechargeModel.data!.amount.toString(),
+                  payuWalletRechargeModel.payuData!.orderId.toString(),
+                  uniId.toString(),
+                  AppConstants.wallet);
             } catch (e) {
               debugPrint("Error Event openCheckout: $e");
             }
           } else {
             CustomSnackBar.showBottom(payuWalletRechargeModel.msg.toString());
           }
-        }
-        else if(paymentMethod == AppConstants.payCashfree){
-          cashfreeWalletRechargeModel = CashfreeWalletRechargeModel.fromJson(response.data);
+        } else if (paymentMethod == AppConstants.payCashfree) {
+          cashfreeWalletRechargeModel =
+              CashfreeWalletRechargeModel.fromJson(response.data);
           if (cashfreeWalletRechargeModel.status == AppConstants.success) {
-            cashfreeController.orderId.value = cashfreeWalletRechargeModel.data!.orderId!;
-            cashfreeController.sessionId.value = cashfreeWalletRechargeModel.cashfreeData!.response!.paymentSessionId!;
-            cashfreeController.webCheckout(cashfreeWalletRechargeModel.data!.amount!,uniId.toString(),AppConstants.wallet);
+            cashfreeController.orderId.value =
+                cashfreeWalletRechargeModel.data!.orderId!;
+            cashfreeController.sessionId.value = cashfreeWalletRechargeModel
+                .cashfreeData!.response!.paymentSessionId!;
+            cashfreeController.webCheckout(
+                cashfreeWalletRechargeModel.data!.amount!,
+                uniId.toString(),
+                AppConstants.wallet);
           } else {
-            CustomSnackBar.showBottom(cashfreeWalletRechargeModel.msg.toString());
+            CustomSnackBar.showBottom(
+                cashfreeWalletRechargeModel.msg.toString());
           }
-        }
-        else if(paymentMethod == AppConstants.payPayPal){
+        } else if (paymentMethod == AppConstants.payPayPal) {
           paypalModel = PaypalModel.fromJson(response.data);
           if (paypalModel.status == AppConstants.success) {
-            Get.to(() => PaymentWebViewScreen(AppConstants.appName, paypalModel.paypalData!.url.toString(),AppConstants.wallet,AppStrings.walletRecharge));
+            Get.to(() => PaymentWebViewScreen(
+                AppConstants.appName,
+                paypalModel.paypalData!.url.toString(),
+                AppConstants.wallet,
+                AppStrings.walletRecharge));
             try {
-              AppEvents().sendInitCheckoutEvent(paypalModel.data!.amount.toString(), paypalModel.paypalData!.orderId.toString(), uniId.toString(), AppConstants.wallet);
+              AppEvents().sendInitCheckoutEvent(
+                  paypalModel.data!.amount.toString(),
+                  paypalModel.paypalData!.orderId.toString(),
+                  uniId.toString(),
+                  AppConstants.wallet);
             } catch (e) {
               debugPrint("Error Event openCheckout: $e");
             }
@@ -247,21 +319,27 @@ class WalletController extends GetxController {
         //     CustomSnackBar.showBottom(phonePeModel.msg.toString());
         //   }
         // }
-        else if(paymentMethod == AppConstants.payPhonePe){
-          String? phonePeId = configController.config.data?.phonepeMerchantId.toString();
+        else if (paymentMethod == AppConstants.payPhonePe) {
+          String? phonePeId =
+              configController.config.data?.phonepeMerchantId.toString();
           phonePeModel = PhonepeWalletRechargeModel.fromJson(response.data);
           if (phonePeModel.status == AppConstants.success) {
-            final PhonePeController phonePeController = Get.put(PhonePeController(phonePeId.toString()));
-            phonePeController.startTransaction(phonePeModel.phonepeData!.encode.toString(),phonePeModel.phonepeData!.data!.callbackUrl.toString(),phonePeModel.phonepeData!.finalXHeader.toString(), AppConstants.wallet,phonePeModel.phonepeData!.orderId.toString(),phonePeModel.phonepeData!.orderId.toString(),
+            final PhonePeController phonePeController =
+                Get.put(PhonePeController(phonePeId.toString()));
+            phonePeController.startTransaction(
+                phonePeModel.phonepeData!.encode.toString(),
+                phonePeModel.phonepeData!.data!.callbackUrl.toString(),
+                phonePeModel.phonepeData!.finalXHeader.toString(),
+                AppConstants.wallet,
+                phonePeModel.phonepeData!.orderId.toString(),
+                phonePeModel.phonepeData!.orderId.toString(),
                 num.parse(phonePeModel.data!.amount.toString()),
                 phonePeModel.phonepeData!.data!.mobileNumber.toString(),
-                uniId.toString()
-            );
+                uniId.toString());
           } else {
             CustomSnackBar.showBottom(phonePeModel.msg.toString());
           }
-        }
-        else{
+        } else {
           CustomSnackBar.showBottom(AppStrings.noPaymentGatewayFound.tr);
         }
       } else {

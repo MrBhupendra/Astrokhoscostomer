@@ -430,6 +430,7 @@ class Images {
   // Multiple PG icons
   static const String phonePe = "assets/images/phonepe.png";
   static const String razorPay = "assets/images/razorpay.png";
+  static const String razorPayQr = "assets/images/razorpay_qr.png";
   static const String ccAvenue = "assets/images/ccavenue.png";
   static const String cashFree = "assets/images/cashfree.png";
   static const String paypal = "assets/images/paypal.png";
