@@ -16,6 +16,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:otp_autofill/otp_autofill.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:phonecodes/phonecodes.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../../../../notification/notification_router.dart';
 import '../../../../utill/app_constants.dart';
@@ -30,13 +31,13 @@ import '../../splash/controller/config_controller.dart';
 
 class LoginController extends GetxController {
   /// Google Login
-  final GoogleSignIn _googleSignIn = GoogleSignIn(
-    serverClientId: AppConstants.defaultWebClientId,
-    scopes: [
-      'email',
-      'profile',
-    ],
-  );
+  // final GoogleSignIn _googleSignIn = GoogleSignIn(
+  //   serverClientId: AppConstants.defaultWebClientId,
+  //   scopes: [
+  //     'email',
+  //     'profile',
+  //   ],
+  // );
   /// Google end
 
 
@@ -87,6 +88,17 @@ class LoginController extends GetxController {
     if (AppFeatures.otpAutoFill) {
       _initOTPListener();
     }
+
+    // logger
+    _dio.interceptors.add(PrettyDioLogger(
+      requestHeader: true,
+      requestBody: true,
+      responseBody: true,
+      responseHeader: false,
+      error: true,
+      compact: true,
+      maxWidth: 90,
+    ));
   }
 
   @override
@@ -398,13 +410,14 @@ class LoginController extends GetxController {
       regionCode = await getCountryCode();
       Country country = Countries.findByCode(regionCode); //Ex:India,USA
       countryCode.value = country.dialCode; //Ex: +91, +1
+      countryName.value = country.name;
 
       final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
       // Using backend login with Google ID token; Firebase credential not required here.
 
       // Fetch user information
       String? customerName = googleUser.displayName;
-      loginWithGmail(googleAuth.idToken.toString(),countryCode.value.toString(),regionCode.toString(),customerName.toString());
+      loginWithGmail(googleAuth.idToken.toString(),countryCode.value.toString(),countryName.value.toString(),customerName.toString());
     } on Exception catch (e) {
       debugPrint('[LOGIN] exception->$e');
     }
@@ -427,8 +440,16 @@ class LoginController extends GetxController {
     }
   }
 
+  void printLongString(String text) {
+    final pattern = RegExp('.{1,800}');
+    pattern.allMatches(text).forEach((match) {
+      debugPrint(match.group(0));
+    });
+  }
+
   Future<void> loginWithGmail(String idToken, String countryCode, String countryName,String customerName) async {
-    debugPrint("DebugPrint:$idToken");
+    printLongString("idToken->$idToken SS");
+    debugPrint("DebugPrint->$idToken", wrapWidth: 1024);
     CustomProgressDialog.showDialog();
     try {
       String? fcmToken = await SharedPreferencesHelper.getData(AppConstants.fcmToken);
@@ -502,7 +523,7 @@ class LoginController extends GetxController {
     }
   }
 
-  Future<void> handleSignOut() => _googleSignIn.disconnect();
+  // Future<void> handleSignOut() => _googleSignIn.disconnect();
 
 /// Google end
 }

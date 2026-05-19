@@ -8,6 +8,7 @@ import 'package:astro_brahmand/view/widget/custom_text_medium.dart';
 import 'package:astro_brahmand/view/widget/custom_text_regular.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:shimmer/shimmer.dart';
 
 class RazorpayQrPaymentScreen extends StatelessWidget {
   const RazorpayQrPaymentScreen({super.key});
@@ -124,6 +125,7 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
                                             0, 0, 0, 1, 0,
                                           ]),
                                     child: _QrNetworkImage(
+                                      key: ValueKey(imageUrl),
                                       imageUrl: imageUrl,
                                     ),
                                   ),
@@ -247,7 +249,7 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
 class _QrNetworkImage extends StatefulWidget {
   final String imageUrl;
 
-  const _QrNetworkImage({required this.imageUrl});
+  const _QrNetworkImage({super.key, required this.imageUrl});
 
   @override
   State<_QrNetworkImage> createState() => _QrNetworkImageState();
@@ -255,6 +257,8 @@ class _QrNetworkImage extends StatefulWidget {
 
 class _QrNetworkImageState extends State<_QrNetworkImage> {
   bool _timerNotified = false;
+  bool _imageLoaded = false;
+  bool _hasError = false;
 
   void _onQrImageReady() {
     if (_timerNotified) return;
@@ -262,37 +266,75 @@ class _QrNetworkImageState extends State<_QrNetworkImage> {
     Get.find<RazorpayController>().startQrExpiryTimer();
   }
 
+  Widget _buildShimmerPlaceholder() {
+    return Shimmer.fromColors(
+      baseColor: Colors.grey.shade300,
+      highlightColor: Colors.grey.shade100,
+      child: Container(
+        margin: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(16),
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Image.network(
-      widget.imageUrl,
-      height: Get.height * 0.7,
-      width: Get.width * 0.8,
-      fit: BoxFit.cover,
-      loadingBuilder: (context, child, loadingProgress) {
-        if (loadingProgress == null) {
-          WidgetsBinding.instance.addPostFrameCallback((_) {
-            _onQrImageReady();
-          });
-          return child;
-        }
-        return SizedBox(
-          height: Get.height * 0.45,
-          width: Get.width * 0.8,
-          child: const Center(
-            child: CircularProgressIndicator(
-              color: ColorResources.colorPrimary,
-            ),
+    final height = Get.height * 0.7;
+    final width = Get.width * 0.8;
+
+    if (_hasError) {
+      return SizedBox(
+        height: height,
+        width: width,
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: CustomTextRegular(
+            'Unable to load QR image.\nPlease try again.',
+            textAlign: TextAlign.center,
+            color: ColorResources.black4,
           ),
-        );
-      },
-      errorBuilder: (_, __, ___) => Padding(
-        padding: const EdgeInsets.all(24),
-        child: CustomTextRegular(
-          'Unable to load QR image.\nPlease try again.',
-          textAlign: TextAlign.center,
-          color: ColorResources.black4,
         ),
+      );
+    }
+
+    return SizedBox(
+      height: height,
+      width: width,
+      child: Stack(
+        fit: StackFit.expand,
+        children: [
+          if (!_imageLoaded) _buildShimmerPlaceholder(),
+          Image.network(
+            widget.imageUrl,
+            fit: BoxFit.cover,
+            frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
+              if (wasSynchronouslyLoaded || frame != null) {
+                if (!_imageLoaded) {
+                  WidgetsBinding.instance.addPostFrameCallback((_) {
+                    if (!mounted) return;
+                    setState(() => _imageLoaded = true);
+                    _onQrImageReady();
+                  });
+                }
+                return child;
+              }
+              return const SizedBox.shrink();
+            },
+            errorBuilder: (_, __, ___) {
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!mounted) return;
+                setState(() {
+                  _hasError = true;
+                  _imageLoaded = true;
+                });
+              });
+              return const SizedBox.shrink();
+            },
+          ),
+        ],
       ),
     );
   }

@@ -199,34 +199,38 @@ class WalletController extends GetxController {
           }
         } else if (paymentMethod == AppConstants.payRazorpayQr) {
           razorpayModel = RazorpayWalletRechargeModel.fromJson(response.data);
-          final qrBlock = razorpayModel.razorpayQrData;
-          final walletBlock = razorpayModel.walletData;
-          final bool qrReady = razorpayModel.status == AppConstants.success &&
-              qrBlock?.status == AppConstants.success &&
-              (qrBlock?.qrId ?? '').isNotEmpty &&
-              (qrBlock?.imageUrl ?? '').isNotEmpty &&
-              (walletBlock?.orderId ?? '').isNotEmpty;
+          if (razorpayModel.status == AppConstants.success) {
+            final qrBlock = razorpayModel.razorpayQrData;
+            final walletBlock = razorpayModel.walletData;
+            final bool qrReady = razorpayModel.status == AppConstants.success &&
+                qrBlock?.status == AppConstants.success &&
+                (qrBlock?.qrId ?? '').isNotEmpty &&
+                (qrBlock?.imageUrl ?? '').isNotEmpty &&
+                (walletBlock?.orderId ?? '').isNotEmpty;
 
-          if (qrReady) {
-            await SharedPreferencesHelper.saveData(
-              AppConstants.paymentGateway,
-              AppConstants.payRazorpayQr,
-            );
-            final RazorpayController razorpayController =
-                Get.put(RazorpayController());
-            razorpayController.startQrPaymentFromProceedResponse(
-              qrIdValue: qrBlock!.qrId!,
-              imageUrl: qrBlock.imageUrl!,
-              orderId: walletBlock!.orderId!,
-              amount: walletBlock.amount ?? 0,
-              userUniId: uniId,
-              type: AppConstants.wallet,
-              walletId: walletId,
-            );
+            if (qrReady) {
+              await SharedPreferencesHelper.saveData(
+                AppConstants.paymentGateway,
+                AppConstants.payRazorpayQr,
+              );
+              final RazorpayController razorpayController =
+                  Get.put(RazorpayController());
+              razorpayController.startQrPaymentFromProceedResponse(
+                qrIdValue: qrBlock!.qrId!,
+                imageUrl: qrBlock.imageUrl!,
+                orderId: walletBlock!.orderId!,
+                amount: walletBlock.amount ?? 0,
+                userUniId: uniId,
+                type: AppConstants.wallet,
+                walletId: walletId,
+              );
+            } else {
+              CustomSnackBar.showBottom(
+                qrBlock?.msg ?? razorpayModel.msg ?? "Unable to generate QR",
+              );
+            }
           } else {
-            CustomSnackBar.showBottom(
-              qrBlock?.msg ?? razorpayModel.msg ?? "Unable to generate QR",
-            );
+            CustomSnackBar.showBottom(razorpayModel.msg.toString());
           }
         } else if (paymentMethod == AppConstants.payCCAvenue) {
           ccAvenueModel = CcAvenueWalletRechargeModel.fromJson(response.data);

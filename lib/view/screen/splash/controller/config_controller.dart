@@ -87,6 +87,8 @@ class ConfigController extends GetxController {
     if (razorpay) {
       internationalPaymentGatewayList.add(PaymentGatewayListModel(
           AppStrings.razorpay, Images.razorPay, AppConstants.payRazorpay));
+      internationalPaymentGatewayList.add(PaymentGatewayListModel(
+          AppStrings.razorpayQr, Images.razorPayQr, AppConstants.payRazorpayQr));
     }
     if (ccAvenue) {
       internationalPaymentGatewayList.add(PaymentGatewayListModel(
