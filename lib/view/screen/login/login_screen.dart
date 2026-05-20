@@ -224,7 +224,7 @@ class LoginScreen extends GetView<LoginController> {
                         const Gap(Dimensions.gapLarge),
 
 
-                        Gap(200),
+                        Gap(100),
                         Center(
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4.0, vertical: 10),

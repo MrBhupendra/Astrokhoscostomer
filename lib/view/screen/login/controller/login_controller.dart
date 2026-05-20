@@ -531,29 +531,16 @@ class LoginController extends GetxController {
   Future<String> getCountryCode() async {
     try {
       debugPrint("LOCATION STEP 1");
-
-      const LocationSettings locationSettings = LocationSettings(
-        accuracy: LocationAccuracy.lowest
-      );
-
-      Position position = await Geolocator.getCurrentPosition(
-        locationSettings: locationSettings
-      );
-
+      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude,);
       debugPrint("LOCATION STEP 2");
-
-      List<Placemark> placemarks = await placemarkFromCoordinates(
-        position.latitude,
-        position.longitude,
-      );
-
-      debugPrint("LOCATION STEP 3");
 
       if (placemarks.isNotEmpty) {
         return placemarks.first.isoCountryCode ?? 'IN';
+      } else {
+        debugPrint('Country not found');
+        return 'IN';
       }
-
-      return 'IN';
     } catch (e) {
       debugPrint("LOCATION ERROR => $e");
       return 'IN';
