@@ -53,6 +53,8 @@ class LoginController extends GetxController {
   var isVerifying = false.obs;
   var isSendingOtp = false.obs;
 
+  RxBool isGoogleLoading = false.obs;
+
 
   //Verify
   final TextEditingController otpController = TextEditingController();
@@ -397,29 +399,48 @@ class LoginController extends GetxController {
 
   Future<dynamic> signInWithGoogle() async {
     try {
-      // Google Login
+      isGoogleLoading.value = true;
+
       final GoogleSignIn googleSignIn = GoogleSignIn(
-        serverClientId: configController.config.data?.gmailClientId.toString(),//AppConstants.defaultWebClientId,
+        serverClientId:
+        configController.config.data?.gmailClientId.toString(),
         scopes: [
           'email',
           'profile',
         ],
       );
-      final GoogleSignInAccount? googleUser = await googleSignIn.signIn();
-      if (googleUser == null) return; //User cancelled the sign-in
+
+      await googleSignIn.signOut();
+
+      final GoogleSignInAccount? googleUser =
+      await googleSignIn.signIn();
+
+      if (googleUser == null) {
+        isGoogleLoading.value = false;
+        return;
+      }
+
       regionCode = await getCountryCode();
-      Country country = Countries.findByCode(regionCode); //Ex:India,USA
-      countryCode.value = country.dialCode; //Ex: +91, +1
+
+      Country country = Countries.findByCode(regionCode);
+
+      countryCode.value = country.dialCode;
       countryName.value = country.name;
 
-      final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-      // Using backend login with Google ID token; Firebase credential not required here.
+      final GoogleSignInAuthentication googleAuth =
+      await googleUser.authentication;
 
-      // Fetch user information
       String? customerName = googleUser.displayName;
-      loginWithGmail(googleAuth.idToken.toString(),countryCode.value.toString(),countryName.value.toString(),customerName.toString());
-    } on Exception catch (e) {
+
+      await loginWithGmail(
+        googleAuth.idToken.toString(),
+        countryCode.value.toString(),
+        countryName.value.toString(),
+        customerName.toString(),
+      );
+    } catch (e) {
       debugPrint('[LOGIN] exception->$e');
+      isGoogleLoading.value = false;
     }
   }
 
@@ -450,7 +471,7 @@ class LoginController extends GetxController {
   Future<void> loginWithGmail(String idToken, String countryCode, String countryName,String customerName) async {
     printLongString("idToken->$idToken SS");
     debugPrint("DebugPrint->$idToken", wrapWidth: 1024);
-    CustomProgressDialog.showDialog();
+    // CustomProgressDialog.showDialog();
     try {
       String? fcmToken = await SharedPreferencesHelper.getData(AppConstants.fcmToken);
       final response = await _dio.post(AppConstants.gmailLoginUri, data: {
@@ -462,7 +483,7 @@ class LoginController extends GetxController {
         'referral_code': '',
       });
       if (response.statusCode == 200) {
-        CustomProgressDialog.dismissDialog();
+        // CustomProgressDialog.dismissDialog();
         verifyCustomerModel = VerifyCustomerModel.fromJson(response.data);
         if (verifyCustomerModel.status == AppConstants.success) {
           try {
@@ -480,6 +501,7 @@ class LoginController extends GetxController {
               await CommonMethods().saveLoginSharedPrefData(verifyCustomerModel,countryCode, true);
               await SharedPreferencesHelper.saveBoolData(AppConstants.isGoogleLogin, true);
               Get.offAllNamed('/dashboard');
+              isGoogleLoading.value = false;
             } else {
               await CommonMethods().saveLoginSharedPrefData(verifyCustomerModel,countryCode, false);
               await SharedPreferencesHelper.saveBoolData(AppConstants.isGoogleLogin, true);
@@ -490,6 +512,7 @@ class LoginController extends GetxController {
                 'name': customerName,
                 'regionCode': countryCode
               });
+              isGoogleLoading.value = false;
             }
           } on FirebaseAuthException catch (e) {
             switch (e.code) {
@@ -510,16 +533,18 @@ class LoginController extends GetxController {
           CustomSnackBar.showBottom(verifyCustomerModel.msg.toString());
         }
       } else {
-        CustomProgressDialog.dismissDialog();
+        // CustomProgressDialog.dismissDialog();
         if (kDebugMode) {
           print('OnApiError');
         }
       }
     } catch (e) {
-      CustomProgressDialog.dismissDialog();
+      // CustomProgressDialog.dismissDialog();
       if (kDebugMode) {
         print('OnException==> $e');
       }
+    } finally {
+      isGoogleLoading.value = false;
     }
   }
 
