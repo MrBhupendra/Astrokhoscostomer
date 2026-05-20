@@ -396,9 +396,10 @@ class LoginController extends GetxController {
     }
   }
 
-
   Future<dynamic> signInWithGoogle() async {
     try {
+      debugPrint("STEP 1 -> Google login started");
+
       isGoogleLoading.value = true;
 
       final GoogleSignIn googleSignIn = GoogleSignIn(
@@ -410,27 +411,51 @@ class LoginController extends GetxController {
         ],
       );
 
+      debugPrint("STEP 2 -> GoogleSignIn instance created");
+
       await googleSignIn.signOut();
+
+      debugPrint("STEP 3 -> Previous account signOut success");
 
       final GoogleSignInAccount? googleUser =
       await googleSignIn.signIn();
 
+      debugPrint("STEP 4 -> Google account picker closed");
+
       if (googleUser == null) {
+        debugPrint("STEP 5 -> User cancelled login");
+
         isGoogleLoading.value = false;
         return;
       }
 
+      debugPrint(
+          "STEP 6 -> Selected Gmail => ${googleUser.email}");
+
       regionCode = await getCountryCode();
+
+      debugPrint("STEP 7 -> Region Code => $regionCode");
 
       Country country = Countries.findByCode(regionCode);
 
       countryCode.value = country.dialCode;
       countryName.value = country.name;
 
+      debugPrint(
+          "STEP 8 -> Country => ${country.name} ${country.dialCode}");
+
       final GoogleSignInAuthentication googleAuth =
       await googleUser.authentication;
 
+      debugPrint("STEP 9 -> Google authentication success");
+
+      debugPrint(
+          "STEP 10 -> ID TOKEN => ${googleAuth.idToken}");
+
       String? customerName = googleUser.displayName;
+
+      debugPrint(
+          "STEP 11 -> Calling loginWithGmail API");
 
       await loginWithGmail(
         googleAuth.idToken.toString(),
@@ -438,25 +463,99 @@ class LoginController extends GetxController {
         countryName.value.toString(),
         customerName.toString(),
       );
-    } catch (e) {
-      debugPrint('[LOGIN] exception->$e');
+
+      debugPrint("STEP 12 -> loginWithGmail completed");
+
       isGoogleLoading.value = false;
+
+      debugPrint("STEP 13 -> Loader stopped");
+    } catch (e, stackTrace) {
+      debugPrint("GOOGLE LOGIN ERROR => $e");
+
+      debugPrint("STACKTRACE => $stackTrace");
+
+      isGoogleLoading.value = false;
+
+      debugPrint("Loader stopped from catch");
     }
   }
 
+  // Future<dynamic> signInWithGoogle() async {
+  //   try {
+  //     isGoogleLoading.value = true;
+  //
+  //     final GoogleSignIn googleSignIn = GoogleSignIn(
+  //       serverClientId:
+  //       configController.config.data?.gmailClientId.toString(),
+  //       scopes: [
+  //         'email',
+  //         'profile',
+  //       ],
+  //     );
+  //
+  //     await googleSignIn.signOut();
+  //
+  //     final GoogleSignInAccount? googleUser =
+  //     await googleSignIn.signIn();
+  //
+  //     if (googleUser == null) {
+  //       isGoogleLoading.value = false;
+  //       return;
+  //     }
+  //
+  //     regionCode = await getCountryCode();
+  //
+  //     Country country = Countries.findByCode(regionCode);
+  //
+  //     countryCode.value = country.dialCode;
+  //     countryName.value = country.name;
+  //
+  //     final GoogleSignInAuthentication googleAuth =
+  //     await googleUser.authentication;
+  //
+  //     String? customerName = googleUser.displayName;
+  //
+  //     await loginWithGmail(
+  //       googleAuth.idToken.toString(),
+  //       countryCode.value.toString(),
+  //       countryName.value.toString(),
+  //       customerName.toString(),
+  //     );
+  //     isGoogleLoading.value = false;
+  //   } catch (e) {
+  //     debugPrint('[LOGIN] exception->$e');
+  //     isGoogleLoading.value = false;
+  //   }
+  // }
+
   Future<String> getCountryCode() async {
     try {
-      Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.medium,);
-      List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude,);
+      debugPrint("LOCATION STEP 1");
+
+      const LocationSettings locationSettings = LocationSettings(
+        accuracy: LocationAccuracy.lowest
+      );
+
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: locationSettings
+      );
+
+      debugPrint("LOCATION STEP 2");
+
+      List<Placemark> placemarks = await placemarkFromCoordinates(
+        position.latitude,
+        position.longitude,
+      );
+
+      debugPrint("LOCATION STEP 3");
 
       if (placemarks.isNotEmpty) {
         return placemarks.first.isoCountryCode ?? 'IN';
-      } else {
-        debugPrint('Country not found');
-        return 'IN';
       }
+
+      return 'IN';
     } catch (e) {
-      debugPrint('Error getting location: $e');
+      debugPrint("LOCATION ERROR => $e");
       return 'IN';
     }
   }
@@ -472,6 +571,7 @@ class LoginController extends GetxController {
     printLongString("idToken->$idToken SS");
     debugPrint("DebugPrint->$idToken", wrapWidth: 1024);
     // CustomProgressDialog.showDialog();
+    isGoogleLoading.value = true;
     try {
       String? fcmToken = await SharedPreferencesHelper.getData(AppConstants.fcmToken);
       final response = await _dio.post(AppConstants.gmailLoginUri, data: {
@@ -484,6 +584,7 @@ class LoginController extends GetxController {
       });
       if (response.statusCode == 200) {
         // CustomProgressDialog.dismissDialog();
+        isGoogleLoading.value = false;
         verifyCustomerModel = VerifyCustomerModel.fromJson(response.data);
         if (verifyCustomerModel.status == AppConstants.success) {
           try {
@@ -533,18 +634,21 @@ class LoginController extends GetxController {
           CustomSnackBar.showBottom(verifyCustomerModel.msg.toString());
         }
       } else {
+        isGoogleLoading.value = false;
         // CustomProgressDialog.dismissDialog();
         if (kDebugMode) {
           print('OnApiError');
         }
       }
     } catch (e) {
+      isGoogleLoading.value = false;
       // CustomProgressDialog.dismissDialog();
       if (kDebugMode) {
         print('OnException==> $e');
       }
     } finally {
       isGoogleLoading.value = false;
+      debugPrint("Loader stopped finally");
     }
   }
 
