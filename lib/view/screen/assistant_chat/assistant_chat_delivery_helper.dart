@@ -56,6 +56,42 @@ class AssistantChatDeliveryHelper {
     return null;
   }
 
+  /// Awesome [NotificationContent.id] must be unique per push. For assistant chat
+  /// the backend often reuses the same [notification_id] for every message in a
+  /// thread, so Android replaces the previous notification instead of stacking them.
+  ///
+  /// Payload [notification_id] is unchanged — only the local display id differs.
+  static int awesomeDisplayIdForMessage(
+    Map<String, dynamic> data, {
+    String? fcmMessageId,
+  }) {
+    final backendId =
+        int.tryParse((data['notification_id'] ?? '').toString()) ?? -1;
+
+    final fbId = parseFirebaseMessageId(data);
+    if (fbId != null) {
+      return _positiveHash('asst_fb:$fbId');
+    }
+    final mid = fcmMessageId?.trim() ?? '';
+    if (mid.isNotEmpty) {
+      return _positiveHash('asst_fcm:$mid');
+    }
+    final channel = parseChannelSegment(data);
+    final body = (data['body'] ?? '').toString();
+    final title = (data['title'] ?? '').toString();
+    if (body.isNotEmpty || title.isNotEmpty) {
+      return _positiveHash('asst:$channel|$title|$body');
+    }
+    if (backendId > 0) return backendId;
+    return _positiveHash('asst_ts:${DateTime.now().microsecondsSinceEpoch}');
+  }
+
+  static int _positiveHash(String key) {
+    var h = key.hashCode;
+    if (h == 0) h = 1;
+    return h.abs().clamp(1, 0x7FFFFFFF);
+  }
+
   /// Call when an assistant message push is shown (foreground/background).
   static Future<void> markDeliveredFromFcmData(
       Map<String, dynamic> data) async {

@@ -1247,6 +1247,97 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                 color: ColorResources.colorPrimaryVariant),
                             const Gap(Dimensions.gapSmall),
 
+                            if (controller.astrologerData.value.isVirtualAstrologer == 0)
+                            Container(
+                              decoration: BoxDecoration(
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    ColorResources.colorPrimary,
+                                    ColorResources.colorPrimaryVariant,
+                                    ColorResources.colorPrimaryLight,
+                                  ],
+                                  begin: Alignment.topLeft,
+                                  end: Alignment.bottomRight,
+                                ),
+                                borderRadius:
+                                BorderRadius.circular(Dimensions.borderRadiusDefault + 4),
+                                boxShadow: const [
+                                  BoxShadow(
+                                    color: ColorResources.colorPrimaryLight,
+                                    blurRadius: 8,
+                                    spreadRadius: 1,
+                                    offset: Offset(0, 2),
+                                  ),
+                                ],
+                              ),
+                              child: InkWell(
+                                borderRadius: BorderRadius.circular(Dimensions.borderRadiusDefault + 4),
+                                onTap: () async {
+                                  bool isLogin = await SharedPreferencesHelper.getIsLogin();
+
+                                  if (isLogin) {
+                                    ChatIntakeFormController chatIntakeFormController =
+                                    Get.put(ChatIntakeFormController());
+
+                                    chatIntakeFormController.setAstrologerData(
+                                      controller.astrologerData.value.displayName.toString(),
+                                      controller.astrologerData.value.astroImg.toString(),
+                                      controller.astrologerData.value.astrologerUniId.toString(),
+                                      AppConstants.chat,
+                                      controller.astrologerData.value.isVirtualAstrologer ?? 0,
+                                    );
+
+                                    chatIntakeFormController.startAssistantChat(
+                                      controller.astrologerData.value.astrologerUniId.toString(),
+                                    );
+                                  } else {
+                                    Get.toNamed('/login');
+                                  }
+                                },
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 16,
+                                    vertical: 5,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.all(8),
+                                        decoration: BoxDecoration(
+                                          color: Colors.white.withOpacity(0.25),
+                                          shape: BoxShape.circle,
+                                        ),
+                                        child: Image.asset(
+                                          Images.chatAssistant,
+                                          height: 24,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+
+                                      const SizedBox(width: 10),
+
+                                      Expanded(
+                                        child: CustomTextMedium(
+                                          AppStrings.chatWithAss.tr,
+                                          color: Colors.white,
+                                          fontSize: 15,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 4),
+
+                                      const Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: Colors.white,
+                                        size: 18,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+
+                            const Gap(Dimensions.gapLarge),
+
                             Row(
                               children: [
                                 CustomTextMedium("Reviews:",
@@ -1562,82 +1653,6 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                     ),
                                   ),
                                 ],
-                              ),
-
-                            const Gap(Dimensions.gapSmall),
-                            if (controller
-                                    .astrologerData.value.isVirtualAstrologer ==
-                                0)
-                              Container(
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(
-                                      Dimensions.borderRadiusDefault),
-                                  boxShadow: const [
-                                    BoxShadow(
-                                      color: ColorResources.colorPrimaryLight,
-                                      spreadRadius: 1,
-                                      blurRadius: 1,
-                                      offset: Offset(0, 0),
-                                    ),
-                                  ],
-                                ),
-                                child: GestureDetector(
-                                  onTap: () async {
-                                    bool isLogin = await SharedPreferencesHelper
-                                        .getIsLogin();
-                                    if (isLogin) {
-                                      ChatIntakeFormController
-                                          chatIntakeFormController =
-                                          Get.put(ChatIntakeFormController());
-                                      chatIntakeFormController
-                                          .setAstrologerData(
-                                              controller.astrologerData.value
-                                                  .displayName
-                                                  .toString(),
-                                              controller
-                                                  .astrologerData.value.astroImg
-                                                  .toString(),
-                                              controller.astrologerData.value
-                                                  .astrologerUniId
-                                                  .toString(),
-                                              AppConstants.chat,
-                                              controller.astrologerData.value
-                                                      .isVirtualAstrologer ??
-                                                  0);
-                                      chatIntakeFormController
-                                          .startAssistantChat(controller
-                                              .astrologerData
-                                              .value
-                                              .astrologerUniId
-                                              .toString());
-                                    } else {
-                                      Get.toNamed('/login');
-                                    }
-                                  },
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: Dimensions.paddingSizeSmall,
-                                        vertical: Dimensions.paddingSizeSmall),
-                                    child: Row(
-                                      children: [
-                                        Image.asset(Images.chatAssistant,
-                                            height: 24,
-                                            color: ColorResources.black2),
-                                        const Gap(10),
-                                        Expanded(
-                                          child: CustomTextRegular(
-                                              AppStrings.chatWithAss.tr),
-                                        ),
-                                        const Icon(
-                                          Icons.arrow_forward_ios_rounded,
-                                          color: ColorResources.black2,
-                                          size: 20,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
                               ),
 
                             const Gap(Dimensions.gapSmall),

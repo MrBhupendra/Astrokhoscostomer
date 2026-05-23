@@ -218,8 +218,21 @@ class NotificationService {
     final image = payloadMap['image'] ?? '';
     final logo = payloadMap['logo'] ?? '';
     final url = payloadMap['url'] ?? '';
-    final notificationId =
+    var notificationId =
         int.tryParse(payloadMap['notification_id'] ?? '') ?? -1;
+    if (AssistantChatDeliveryHelper.isAssistantFcmPayload(
+        Map<String, dynamic>.from(payloadMap))) {
+      notificationId = AssistantChatDeliveryHelper.awesomeDisplayIdForMessage(
+        Map<String, dynamic>.from(payloadMap),
+        fcmMessageId: message.messageId,
+      );
+      if (kDebugMode) {
+        debugPrint(
+          '[NotificationService] assistant_chat displayId=$notificationId '
+          'backend_nid=${payloadMap['notification_id']}',
+        );
+      }
+    }
 
     final payload = <String, String>{...payloadMap, 'url': url};
 

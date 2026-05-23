@@ -263,6 +263,7 @@ class LoginController extends GetxController {
           .timeout(const Duration(seconds: 30));
 
       if (response.statusCode == 200) {
+        CustomProgressDialog.dismissDialog();
         verifyCustomerModel = VerifyCustomerModel.fromJson(response.data);
         if (verifyCustomerModel.status == AppConstants.success) {
           try {
@@ -317,13 +318,16 @@ class LoginController extends GetxController {
           CustomSnackBar.showBottom(verifyCustomerModel.msg.toString());
         }
       } else {
+        CustomProgressDialog.dismissDialog();
         if (kDebugMode) {
           print('OnApiError');
         }
       }
     } on TimeoutException {
+      CustomProgressDialog.dismissDialog();
       CustomSnackBar.showBottom("Network is slow. Please try again.");
     } catch (e) {
+      CustomProgressDialog.dismissDialog();
       if (kDebugMode) {
         print('OnException==> $e');
       }
