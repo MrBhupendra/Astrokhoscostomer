@@ -26,6 +26,7 @@ import 'package:astro_brahmand/view/screen/group_pooja/group_pooja_category_list
 import 'package:astro_brahmand/view/screen/group_pooja/group_pooja_detail_screen.dart';
 import 'package:astro_brahmand/view/screen/group_pooja/group_pooja_list_screen.dart';
 import 'package:astro_brahmand/view/screen/language/binding/app_language_binding.dart';
+import 'package:astro_brahmand/view/screen/maintenance/maintenance_screen.dart';
 import 'package:astro_brahmand/view/screen/notification/notification_screen.dart';
 import 'package:astro_brahmand/view/screen/orders/call_image_list_screen.dart';
 import 'package:astro_brahmand/view/screen/remedies/remedies_screen.dart';
@@ -37,6 +38,7 @@ import 'package:astro_brahmand/view/screen/subscription/binding/subscription_bin
 import 'package:astro_brahmand/view/screen/subscription/subscription_list_screen.dart';
 import 'package:astro_brahmand/view/screen/subscription/subscription_purchase_list_screen.dart';
 import 'package:astro_brahmand/view/screen/tip/tip_screen.dart';
+import 'package:astro_brahmand/view/screen/update/update_screen.dart';
 import 'package:astro_brahmand/view/screen/vastu/report/report_detail_screen.dart';
 import 'package:astro_brahmand/view/screen/vastu/report/report_horo_submit_screen.dart';
 import 'package:astro_brahmand/view/screen/vastu/report/report_list_screen.dart';
@@ -819,6 +821,9 @@ class MyApp extends StatelessWidget {
             page: () => const SubscriptionPurchaseListScreen(),
             binding: SubscriptionBinding(),
           ),
+          //Maintenance
+          GetPage(name: '/update_screen', page: () => UpdateScreen()),
+          GetPage(name: '/maintenance_screen', page: () => MaintenanceScreen()),
         ],
       ),
     );

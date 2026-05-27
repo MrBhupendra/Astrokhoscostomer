@@ -74,6 +74,15 @@ class Data {
     this.activeKundliApi,
     this.isCallRequestToOfflineAstro,
     this.gmailClientId,
+    this.maintenanceMode,
+    this.customerAppVersionAndroid,
+    this.astrologerAppVersionAndroid,
+    this.customerAppVersionIos,
+    this.astrologerAppVersionIos,
+    this.customerPlayStoreUrl,
+    this.astrologerPlayStoreUrl,
+    this.customerAppStoreUrl,
+    this.astrologerAppStoreUrl,
   });
 
   Data.fromJson(dynamic json) {
@@ -127,6 +136,15 @@ class Data {
     activeKundliApi = json['active_kundli_api'];
     isCallRequestToOfflineAstro = json['is_call_request_to_offline_astro'];
     gmailClientId = json['gmail_client_id'];
+    maintenanceMode = json['maintenance_mode'];
+    customerAppVersionAndroid = json['cust_app_version_android'];
+    astrologerAppVersionAndroid = json['astro_app_version_android'];
+    customerAppVersionIos = json['cust_app_version_ios'];
+    astrologerAppVersionIos = json['astro_app_version_ios'];
+    customerPlayStoreUrl = json['playstore_url_customer'];
+    astrologerPlayStoreUrl = json['playstore_url_astrologer'];
+    customerAppStoreUrl = json['appstore_url_customer'];
+    astrologerAppStoreUrl = json['appstore_url_astrologer'];
   }
 
   String? companyName;
@@ -179,6 +197,15 @@ class Data {
   String? activeKundliApi;
   num? isCallRequestToOfflineAstro;
   String? gmailClientId;
+  bool? maintenanceMode;
+  String? customerAppVersionAndroid;
+  String? astrologerAppVersionAndroid;
+  String? customerAppVersionIos;
+  String? astrologerAppVersionIos;
+  String? customerPlayStoreUrl;
+  String? astrologerPlayStoreUrl;
+  String? customerAppStoreUrl;
+  String? astrologerAppStoreUrl;
 
 
   Map<String, dynamic> toJson() {
@@ -237,6 +264,15 @@ class Data {
     map['active_kundli_api'] = activeKundliApi;
     map['is_call_request_to_offline_astro'] = isCallRequestToOfflineAstro;
     map['gmail_client_id'] = gmailClientId;
+    map['maintenance_mode'] = maintenanceMode;
+    map['cust_app_version_android'] = customerAppVersionAndroid;
+    map['astro_app_version_android'] = astrologerAppVersionAndroid;
+    map['cust_app_version_ios'] = customerAppVersionIos;
+    map['astro_app_version_ios'] = astrologerAppVersionIos;
+    map['playstore_url_customer'] = customerPlayStoreUrl;
+    map['playstore_url_astrologer'] = astrologerPlayStoreUrl;
+    map['appstore_url_customer'] = customerAppStoreUrl;
+    map['appstore_url_astrologer'] = astrologerAppStoreUrl;
     return map;
   }
 }

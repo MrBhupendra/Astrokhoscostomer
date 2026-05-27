@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -41,46 +42,64 @@ class SplashController extends GetxController {
           configController.setConfigData(welcomeModel);
           await CommonMethods()
               .saveConfigSharedPrefData(welcomeModel, language);
-          bool isLogin = await SharedPreferencesHelper.getIsLogin();
-          if (isLogin) {
-            String? currencyCode = await SharedPreferencesHelper.getData(
-                AppConstants.currencyCode);
-            String? currencySymbol = await SharedPreferencesHelper.getData(
-                AppConstants.currencySymbol);
-            String? phoneCode =
-                await SharedPreferencesHelper.getData(AppConstants.phoneCode);
-            configController.setCurrency(
-                currencySymbol: currencySymbol == "***"
-                    ? welcomeModel.data!.defaultCurrencySymbol.toString()
-                    : currencySymbol.toString(),
-                currencyCode: currencyCode == "***"
-                    ? welcomeModel.data!.defaultCurrencyCode.toString()
-                    : currencyCode.toString(),
-                phoneCode: phoneCode == "***"
-                    ? AppConstants.defaultPhoneCode
-                    : phoneCode.toString());
 
-            // If app was opened via notification tap (terminated state),
-            // don't override the navigation with dashboard routing.
-            if (NotificationRouter.hasPendingColdStartNavigation) {
-              await NotificationRouter.flushColdStartQueue();
-              return;
-            }
-            Get.offAllNamed('/dashboard');
+          String? minimumVersion = "0";
+          if (Platform.isIOS) {
+            minimumVersion = welcomeModel.data!.customerAppVersionIos ?? '0';
           } else {
-            configController.setCurrency(
-                currencySymbol: welcomeModel.data!.defaultCurrencySymbol ??
-                    AppConstants.defaultCurrencySymbol,
-                currencyCode: welcomeModel.data!.defaultCurrencyCode ??
-                    AppConstants.defaultCurrencyCode,
-                phoneCode: AppConstants.defaultPhoneCode);
-            // If app was opened via notification tap (terminated state),
-            // let notification router decide where to go (it may still end up on login).
-            if (NotificationRouter.hasPendingColdStartNavigation) {
-              await NotificationRouter.flushColdStartQueue();
-              return;
+            minimumVersion =
+                welcomeModel.data!.customerAppVersionAndroid ?? '0';
+          }
+
+          if (welcomeModel.data!.maintenanceMode != null &&
+              welcomeModel.data!.maintenanceMode == true){
+            Get.offAllNamed('/maintenance_screen');
+          } else if (minimumVersion != '0' &&
+              minimumVersion.isNotEmpty &&
+              compareVersions(minimumVersion, AppConstants.appVersion) == 1) {
+            Get.offAllNamed('/update_screen');
+          } else{
+            bool isLogin = await SharedPreferencesHelper.getIsLogin();
+            if (isLogin) {
+              String? currencyCode = await SharedPreferencesHelper.getData(
+                  AppConstants.currencyCode);
+              String? currencySymbol = await SharedPreferencesHelper.getData(
+                  AppConstants.currencySymbol);
+              String? phoneCode =
+                  await SharedPreferencesHelper.getData(AppConstants.phoneCode);
+              configController.setCurrency(
+                  currencySymbol: currencySymbol == "***"
+                      ? welcomeModel.data!.defaultCurrencySymbol.toString()
+                      : currencySymbol.toString(),
+                  currencyCode: currencyCode == "***"
+                      ? welcomeModel.data!.defaultCurrencyCode.toString()
+                      : currencyCode.toString(),
+                  phoneCode: phoneCode == "***"
+                      ? AppConstants.defaultPhoneCode
+                      : phoneCode.toString());
+
+              // If app was opened via notification tap (terminated state),
+              // don't override the navigation with dashboard routing.
+              if (NotificationRouter.hasPendingColdStartNavigation) {
+                await NotificationRouter.flushColdStartQueue();
+                return;
+              }
+              Get.offAllNamed('/dashboard');
+            } else {
+              configController.setCurrency(
+                  currencySymbol: welcomeModel.data!.defaultCurrencySymbol ??
+                      AppConstants.defaultCurrencySymbol,
+                  currencyCode: welcomeModel.data!.defaultCurrencyCode ??
+                      AppConstants.defaultCurrencyCode,
+                  phoneCode: AppConstants.defaultPhoneCode);
+              // If app was opened via notification tap (terminated state),
+              // let notification router decide where to go (it may still end up on login).
+              if (NotificationRouter.hasPendingColdStartNavigation) {
+                await NotificationRouter.flushColdStartQueue();
+                return;
+              }
+              Get.offAllNamed('/login');
             }
-            Get.offAllNamed('/login');
           }
         }
       } else {
@@ -96,4 +115,20 @@ class SplashController extends GetxController {
       isLoading(false);
     }
   }
+
+  int compareVersions(String minimumRequiredVersion, String currentVersion) {
+    List<String> v1Components = minimumRequiredVersion.split('.');
+    List<String> v2Components = currentVersion.split('.');
+    for (int i = 0; i < v1Components.length; i++) {
+      int v1Part = int.parse(v1Components[i]);
+      int v2Part = int.parse(v2Components[i]);
+      if (v1Part > v2Part) {
+        return 1;
+      } else if (v1Part < v2Part) {
+        return -1;
+      }
+    }
+    return 0;
+  }
+
 }

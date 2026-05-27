@@ -467,4 +467,7 @@ class Images {
 
   static String google = 'assets/images/google.png';
 
+  static const String update = 'assets/images/update.png';
+  static const String maintenance = 'assets/images/maintenance.png';
+
 }
