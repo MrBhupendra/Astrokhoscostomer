@@ -216,15 +216,34 @@ class ChatScreenController extends FullLifeCycleController
     }
   }
 
+  // @override
+  // void onResumed() {
+  //   dbReference.child(customerStatus).set(true);
+  //   configController.setCurrentScreen(AppConstants.chat);
+  //   if (messageController.text.isNotEmpty) {
+  //     typingReference.child(customerTypingChild).set(true);
+  //   } else if (messageController.text.isEmpty) {
+  //     typingReference.child(customerTypingChild).set(false);
+  //   }
+  //   if (kDebugMode) {
+  //     print('OnResumed ChatScreen');
+  //   }
+  // }
+
   @override
-  void onResumed() {
+  void onResumed() async {
     dbReference.child(customerStatus).set(true);
     configController.setCurrentScreen(AppConstants.chat);
+
     if (messageController.text.isNotEmpty) {
       typingReference.child(customerTypingChild).set(true);
-    } else if (messageController.text.isEmpty) {
+    } else {
       typingReference.child(customerTypingChild).set(false);
     }
+
+    /// IMPORTANT FIX
+    await checkChatEndState();
+
     if (kDebugMode) {
       print('OnResumed ChatScreen');
     }
@@ -609,6 +628,17 @@ class ChatScreenController extends FullLifeCycleController
   }
 
   void sendMessage(ChatMessageModel message, File? imageFile, String fileName,{int isFirstMsg = 0}) {
+
+    /// BLOCK AFTER CHAT END
+    if (isChatEnd.value) {
+
+      checkChatEndState();
+
+      CustomSnackBar.showBottom("Chat already ended");
+
+      return;
+    }
+
     messageReference.push().set(message.toJson());
     saveChatApi(
         uniqueId,
@@ -903,7 +933,7 @@ class ChatScreenController extends FullLifeCycleController
         description: "Chat Disconnected",
         imageColor: ColorResources.colorPrimary,
       ),
-      // barrierDismissible: false
+      barrierDismissible: false
     );
     // Get.defaultDialog(
     //   title: "Alert!",
@@ -1004,4 +1034,33 @@ class ChatScreenController extends FullLifeCycleController
     dbReference.child(chatAcceptedChild).set(false);
     stopTimer();
   }
+
+
+  Future<void> checkChatEndState() async {
+
+    try {
+
+      final snapshot = await dbReference.child(chatEnd).get();
+
+      if (snapshot.exists && snapshot.value == true) {
+
+        isChatEnd.value = true;
+
+        stopTimer();
+
+        /// Resume ke baad dialog close ho gaya ho to reopen karo
+        Future.delayed(const Duration(milliseconds: 300), () {
+
+          if (!_isDisposed && Get.isDialogOpen != true) {
+            showDisconnectedDialog();
+          }
+
+        });
+      }
+
+    } catch (e) {
+      debugPrint("checkChatEndState error: $e");
+    }
+  }
+
 }

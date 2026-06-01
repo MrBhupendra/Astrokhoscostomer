@@ -108,35 +108,63 @@ class ChatScreen extends StatelessWidget {
                             chatIntakeFormController.astrologerName.toString(),
                             fontSize: 16,
                             color: ColorResources.toolbarText),
-                        Obx(() => controller.isChatAccepted.isTrue
-                            ? CustomTextRegular(
-                                controller.getFormattedTime(),
-                                color: ColorResources.toolbarText,
-                                fontSize: Dimensions.fontSizeSmall,
-                              )
-                            : CustomTextRegular(
-                                AppStrings.chatWaitingMessage.tr,
-                                color: ColorResources.toolbarText,
-                                fontSize: Dimensions.fontSizeSmall)),
+                        // Obx(() => controller.isChatAccepted.isTrue
+                        //     ? CustomTextRegular(
+                        //         controller.getFormattedTime(),
+                        //         color: ColorResources.toolbarText,
+                        //         fontSize: Dimensions.fontSizeSmall,
+                        //       )
+                        //     : CustomTextRegular(
+                        //         AppStrings.chatWaitingMessage.tr,
+                        //         color: ColorResources.toolbarText,
+                        //         fontSize: Dimensions.fontSizeSmall)),
+                        Obx(() {
+                          if (controller.isChatEnd.isTrue) {
+                            return CustomTextRegular(
+                              "Chat Ended",
+                              color: Colors.red,
+                              fontSize: Dimensions.fontSizeSmall,
+                            );
+                          }
+
+                          if (controller.isChatAccepted.isTrue) {
+                            return CustomTextRegular(
+                              controller.getFormattedTime(),
+                              color: ColorResources.toolbarText,
+                              fontSize: Dimensions.fontSizeSmall,
+                            );
+                          }
+
+                          return CustomTextRegular(
+                            AppStrings.chatWaitingMessage.tr,
+                            color: ColorResources.toolbarText,
+                            fontSize: Dimensions.fontSizeSmall,
+                          );
+
+                        }),
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 0.0, right: 2),
-                    child: TextButton(
+                  Obx(() => Visibility(
+                      visible: controller.isChatEnd.isFalse,
                       child: Padding(
-                        padding: const EdgeInsets.all(0.0),
-                        child: CustomTextMedium(
-                          "End",
-                          color: Colors.white,
-                          fontSize: 14,
-                        ),
-                      ),
-                      onPressed: () {
-                        controller.showEndConfirmDialog();
-                      },
-                    ),
-                  ),
+                            padding: const EdgeInsets.only(top: 0.0, right: 2),
+                            child: TextButton(
+                              child: Padding(
+                                padding: const EdgeInsets.all(0.0),
+                                child: CustomTextMedium(
+                                  "End",
+                                  color: Colors.white,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              onPressed: () {
+                                controller.showEndConfirmDialog();
+                              },
+                            ),
+
+                      ))
+                  )
                 ]),
             titleSpacing: 0,
           ),
@@ -316,7 +344,7 @@ class ChatScreen extends StatelessWidget {
                 ),
                 const Gap(5.0),
                 Obx(() => Visibility(
-                      visible: controller.isChatAccepted.isTrue,
+                  visible: controller.isChatAccepted.isTrue && controller.isChatEnd.isFalse,
                       child: Container(
                         decoration: const BoxDecoration(
                             color: ColorResources.white,
@@ -806,6 +834,35 @@ class ChatScreen extends StatelessWidget {
                         ),
                       ),
                     )),
+                Obx(() {
+                  if (controller.isChatEnd.isTrue) {
+                    return Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 16,
+                        horizontal: 12,
+                      ),
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(15),
+                          topRight: Radius.circular(15),
+                        ),
+                      ),
+                      child: const Text(
+                        "This chat session has ended.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 15,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.red,
+                        ),
+                      ),
+                    );
+                  }
+
+                  return const SizedBox.shrink();
+                }),
               ],
             ),
           ),

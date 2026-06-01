@@ -20,7 +20,6 @@ class CallAstrologerController extends GetxController {
   final isAstrologerSuccess = false.obs;
   num offsetCount = 0;
   bool isNoMoreData = false;
-  ScrollController scrollController = ScrollController();
   AstrologerModel astrologerModel = AstrologerModel();
   List<AstrologerData> astrologerListData = [];
 
@@ -240,5 +239,51 @@ class CallAstrologerController extends GetxController {
     isVirtualAstrologer = '0';
     isSlotPermission = '0';
     isSlotAvailable = '0';
+  }
+
+  /// One-time setup when Chat/Call tab is opened (never call from [build]).
+  void initializeForDashboard(String type) {
+    isDashboardType = type;
+    resetOffset();
+    resetSearch();
+    resetData();
+    resetCategory();
+    clearAllFilters();
+    getFilters();
+    setTopCategoryFilterIndex(1);
+    fetchAstrologersForDashboard();
+  }
+
+  AstrologerRequestModel _currentDashboardRequest() {
+    return AstrologerRequestModel(
+      offset: offsetCount,
+      search: searchValue.value,
+      gender: filterSelectedGender.value,
+      language: filterSelectedLanguages.isNotEmpty
+          ? filterSelectedLanguages.toString()
+          : '',
+      category: filterSelectedCategories.isNotEmpty
+          ? filterSelectedCategories.toString()
+          : '',
+      skill: filterSelectedSkills.isNotEmpty
+          ? filterSelectedSkills.toString()
+          : '',
+      sortBy: filterSelectedSort.value,
+      slug: isSlug,
+      isVirtual: isVirtualAstrologer,
+      slotPermission: isSlotPermission,
+      isSlotAvailable: isSlotAvailable,
+      type: isDashboardType,
+      astrologerUniId: '',
+    );
+  }
+
+  void fetchAstrologersForDashboard() {
+    getAllAstrologer(_currentDashboardRequest());
+  }
+
+  void loadMoreAstrologersForDashboard() {
+    if (isAstrologerLoading.isTrue || isNoMoreData) return;
+    getAllAstrologer(_currentDashboardRequest());
   }
 }

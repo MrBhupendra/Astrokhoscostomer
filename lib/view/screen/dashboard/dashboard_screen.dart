@@ -29,19 +29,11 @@ class DashboardScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     configController.setCurrentScreen('dashboard');
-    final List<Widget> widgetOptions = <Widget>[
-      HomeScreen(),
-      CallChatAstrologerScreen(AppConstants.chat),
-      const LiveAstrologerScreen(),
-      CallChatAstrologerScreen(AppConstants.call),
-      const ProfileScreen()
-    ];
-
     return SafeArea(
       child: Scaffold(
         appBar: CustomHomeAppBar(controller),
         body: Obx(() => Center(
-          child: widgetOptions.elementAt(controller.selectedIndex.value),
+          child: _dashboardTab(controller.selectedIndex.value),
         )),
         // Drawer
         drawer: CustomDashboardDrawer(),
@@ -72,6 +64,23 @@ class DashboardScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _dashboardTab(int index) {
+    switch (index) {
+      case 0:
+        return HomeScreen();
+      case 1:
+        return CallChatAstrologerScreen(AppConstants.chat);
+      case 2:
+        return const LiveAstrologerScreen();
+      case 3:
+        return CallChatAstrologerScreen(AppConstants.call);
+      case 4:
+        return const ProfileScreen();
+      default:
+        return HomeScreen();
+    }
   }
 
   Widget _buildIconButton(int index, String imagePath, String label) {

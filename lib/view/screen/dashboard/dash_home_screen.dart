@@ -1,6 +1,5 @@
 import 'package:astro_brahmand/utill/app_features.dart';
 import 'package:astro_brahmand/view/screen/blog/controller/blog_controller.dart';
-import 'package:astro_brahmand/view/screen/mandir_darshan/controller/mandir_darshan_controller.dart';
 import 'package:astro_brahmand/view/screen/video_section/video_play_screen.dart';
 import 'package:astro_brahmand/view/widget/home_header_widget.dart';
 import 'package:astro_brahmand/view/widget/simmer_widget/simmer_banner_container.dart';
@@ -19,7 +18,6 @@ import 'package:astro_brahmand/view/widget/dash_astrologer_widget1.dart';
 import 'package:astro_brahmand/view/widget/product_category_widget.dart';
 import 'package:astro_brahmand/view/widget/service_category_widget.dart';
 import 'package:astro_brahmand/view/widget/simmer_widget/simmer_dash_astrologer.dart';
-import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../controller/all_astrologer_controller.dart';
@@ -32,13 +30,11 @@ import '../../widget/custom_round_network_image.dart';
 import '../../widget/custom_text_regular.dart';
 import '../../widget/dash_live_astrologer_widget.dart';
 import '../../widget/dash_orders_widget.dart';
-import '../../widget/group_pooja_category_widget.dart';
 import '../../widget/simmer_widget/simmer_dash_container.dart';
 import '../../widget/video_home_widget.dart';
 import '../agora/live_stream/controller/live_stream_init_controller.dart';
 import '../chat/controller/chat_history_controller.dart';
 import '../chat/controller/chat_intake_form_controller.dart';
-import '../mandir_darshan/widget/dash_mandir_astrologer_widget.dart';
 import '../splash/controller/config_controller.dart';
 import 'controller/dashboard_controller.dart';
 import 'controller/home_controller.dart';
@@ -678,161 +674,173 @@ class HomeScreen extends StatelessWidget {
                   ),
 
                   // Product Section
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14.0, vertical: 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Obx(() {
+                    final items = controller.productCategoryList;
+                    final isEmpty = items == null || items.isEmpty;
+                    if (controller.isDashboardLoading.isFalse && isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Column(
                       children: [
-                        Expanded(
-                          child: CustomTextMedium(
-                            AppStrings.dashAstroShop.tr,
-                            maxLines: 1,
-                            fontSize: Dimensions.fontSizeLarge,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14.0, vertical: 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: CustomTextMedium(
+                                  AppStrings.dashAstroShop.tr,
+                                  maxLines: 1,
+                                  fontSize: Dimensions.fontSizeLarge,
+                                ),
+                              ),
+                              CustomButton(
+                                AppStrings.viewAll.tr,
+                                onPressed: () {
+                                  Get.toNamed("/products_category");
+                                },
+                                color: ColorResources.toolbarText,
+                                fontSize: Dimensions.fontSizeExtraSmall,
+                                minimumSize: const Size(35, 25),
+                              )
+                            ],
                           ),
                         ),
-                        CustomButton(
-                          AppStrings.viewAll.tr,
-                          onPressed: () {
-                            Get.toNamed("/products_category");
-                          },
-                          color: ColorResources.toolbarText,
-                          fontSize: Dimensions.fontSizeExtraSmall,
-                          minimumSize: const Size(35, 25),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 6),
-                    child: SizedBox(
-                      height: 155,
-                      child: Obx(
-                        () {
-                          if (controller.isDashboardSuccess.isTrue) {
-                            return Visibility(
-                              visible: controller.productCategoryList != null &&
-                                  controller.productCategoryList!.isNotEmpty,
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    controller.productCategoryList?.length,
-                                itemBuilder: (context, index) {
-                                  return ProductCategoryWidget(
-                                    controller.productCategoryList![index],
-                                    onPressed: () {
-                                      Get.toNamed('/products', arguments: {
-                                        'id': controller
-                                            .productCategoryList![index].id
-                                            .toString(),
-                                        'title': controller
-                                            .productCategoryList![index].title
-                                            .toString()
-                                      });
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: SizedBox(
+                            height: 155,
+                            child: Obx(
+                              () {
+                                if (controller.isDashboardSuccess.isTrue) {
+                                  final items = controller.productCategoryList ?? [];
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: items.length,
+                                    itemBuilder: (context, index) {
+                                      return ProductCategoryWidget(
+                                        items[index],
+                                        onPressed: () {
+                                          Get.toNamed('/products', arguments: {
+                                            'id': items[index].id.toString(),
+                                            'title': items[index].title.toString()
+                                          });
+                                        },
+                                      );
                                     },
                                   );
-                                },
-                              ),
-                            );
-                          } else if (controller.isDashboardLoading.isTrue) {
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                return const SimmerDashContainer();
+                                } else if (controller.isDashboardLoading.isTrue) {
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) {
+                                      return const SimmerDashContainer();
+                                    },
+                                  );
+                                } else {
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) {
+                                      return const SimmerDashContainer();
+                                    },
+                                  );
+                                }
                               },
-                            );
-                          } else {
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                return const SimmerDashContainer();
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
 
                   //Service Section
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 14.0, vertical: 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  Obx(() {
+                    final items = controller.serviceCategoryList;
+                    final isEmpty = items == null || items.isEmpty;
+                    if (controller.isDashboardLoading.isFalse && isEmpty) {
+                      return const SizedBox.shrink();
+                    }
+
+                    return Column(
                       children: [
-                        Expanded(
-                          child: CustomTextMedium(
-                            AppStrings.dashAstroService.tr,
-                            maxLines: 1,
-                            fontSize: Dimensions.fontSizeLarge,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 14.0, vertical: 0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: CustomTextMedium(
+                                  AppStrings.dashAstroService.tr,
+                                  maxLines: 1,
+                                  fontSize: Dimensions.fontSizeLarge,
+                                ),
+                              ),
+                              CustomButton(
+                                AppStrings.viewAll.tr,
+                                onPressed: () {
+                                  Get.toNamed("/services_category");
+                                },
+                                color: ColorResources.toolbarText,
+                                fontSize: Dimensions.fontSizeExtraSmall,
+                                minimumSize: const Size(35, 25),
+                              )
+                            ],
                           ),
                         ),
-                        CustomButton(
-                          AppStrings.viewAll.tr,
-                          onPressed: () {
-                            Get.toNamed("/services_category");
-                          },
-                          color: ColorResources.toolbarText,
-                          fontSize: Dimensions.fontSizeExtraSmall,
-                          minimumSize: const Size(35, 25),
-                        )
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 6),
-                    child: SizedBox(
-                      height: 155,
-                      child: Obx(
-                        () {
-                          if (controller.isDashboardSuccess.isTrue) {
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 8),
-                              child: ListView.builder(
-                                scrollDirection: Axis.horizontal,
-                                itemCount:
-                                    controller.serviceCategoryList?.length,
-                                itemBuilder: (context, index) {
-                                  return ServiceCategoryWidget(
-                                    controller.serviceCategoryList![index],
-                                    onPressed: () {
-                                      Get.toNamed('/services', arguments: {
-                                        'id': controller
-                                            .serviceCategoryList![index].id
-                                            .toString(),
-                                        'title': controller
-                                            .serviceCategoryList![index].title
-                                            .toString()
-                                      });
+                        Padding(
+                          padding: const EdgeInsets.only(left: 6),
+                          child: SizedBox(
+                            height: 155,
+                            child: Obx(
+                              () {
+                                if (controller.isDashboardSuccess.isTrue) {
+                                  final items = controller.serviceCategoryList ?? [];
+                                  return Padding(
+                                    padding: const EdgeInsets.only(right: 8),
+                                    child: ListView.builder(
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: items.length,
+                                      itemBuilder: (context, index) {
+                                        return ServiceCategoryWidget(
+                                          items[index],
+                                          onPressed: () {
+                                            Get.toNamed('/services', arguments: {
+                                              'id': items[index].id.toString(),
+                                              'title': items[index].title.toString()
+                                            });
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  );
+                                } else if (controller.isDashboardLoading.isTrue) {
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) {
+                                      return const SimmerDashContainer();
                                     },
                                   );
-                                },
-                              ),
-                            );
-                          } else if (controller.isDashboardLoading.isTrue) {
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                return const SimmerDashContainer();
+                                } else {
+                                  return ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: 5,
+                                    itemBuilder: (context, index) {
+                                      return const SimmerDashContainer();
+                                    },
+                                  );
+                                }
                               },
-                            );
-                          } else {
-                            return ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: 5,
-                              itemBuilder: (context, index) {
-                                return const SimmerDashContainer();
-                              },
-                            );
-                          }
-                        },
-                      ),
-                    ),
-                  ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    );
+                  }),
 
                   // Blog Section
                   Obx(
