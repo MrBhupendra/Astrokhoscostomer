@@ -79,15 +79,6 @@ class WalletController extends GetxController {
     _astroImage = astroImage;
     _astroUniId = astroUniId;
     _isVirtual = isVirtual;
-    print("callDuration===>3");
-    print(uniqueId);
-    print(channelName);
-    print(agoraAppId);
-    print(agoraToken);
-    print(astroName);
-    print(astroImage);
-    print(astroUniId);
-    print(isVirtual);
   }
 
   @override
@@ -172,10 +163,10 @@ class WalletController extends GetxController {
         "uniqeid": _uniqueId ?? "",
       });
 
-      print("callDuration===>4");
-      print(_uniqueId);
-      print("Request $apiKey $uniId $walletId $paymentMethod $_uniqueId");
-      print("Response $response");
+
+
+      print("proceedPaymentRequest Request=> $apiKey $uniId $walletId $paymentMethod");
+      print("proceedPaymentRequest Response=> $response");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();

@@ -11,7 +11,7 @@ class AppConstants {
   static const String androidPackageName = 'com.astrobrahmand.customer';
   static const String androidAstrologerPackageName =
       'com.astrobrahmand.astrologer';
-  static const String appVersion = '1.0.10';
+  static const String appVersion = '1.0.11';
   static const String defaultCurrencyCode = 'INR';
   static const String defaultCurrencySymbol = '\u20B9';
   static const String defaultPhoneCode = '+91';
@@ -407,8 +407,7 @@ class AppConstants {
 
   //GroupPooja
   static const String scheduleGroupPuja = '$baseUrl/api/scheduleGroupPuja';
-  static const String groupPujaStatusChange =
-      '$baseUrl/api/groupPujaStatusChange';
+  static const String groupPujaStatusChange = '$baseUrl/api/groupPujaStatusChange';
   static const String getGroupPujaAstrologerList =
       '$baseUrl/api/groupPujaAstrologerList';
   static const String getGroupPujaCalculation =
