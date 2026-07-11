@@ -191,14 +191,20 @@ class VoiceCallController extends FullLifeCycleController
     dbReference = db.ref(chatGroupChild).child(channelName);
 
     DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
-    if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
-      // isChatAccepted(true);
+    DataSnapshot chatIdSnapshot = await dbReference.child('chatId').get();
+    final bool sameActiveSession = chatEndSnapshot.exists &&
+        chatEndSnapshot.value == false &&
+        chatIdSnapshot.exists &&
+        chatIdSnapshot.value?.toString() == uniqueId;
+
+    if (sameActiveSession) {
       getRemainingDuration(uniqueId);
       _ensureBirthDataWritten();
     } else {
       print('No data available or new session.');
       playSound();
-      initChatSession(
+      isChatEnd.value = false;
+      await initChatSession(
         ChatSessionModel(
             chatId: uniqueId,
             chatAccepted: false,
@@ -268,9 +274,9 @@ class VoiceCallController extends FullLifeCycleController
   Future<void> onClose() async {
     _isDisposed = true;
     super.onClose();
-    // dbReference.child(customerStatus).set(false);
     stopTimer();
     stopSound();
+    _cancelListeners();
     if (Get.context != null) {
       try {
         WidgetsBinding.instance.addPostFrameCallback((_) async {
@@ -284,17 +290,19 @@ class VoiceCallController extends FullLifeCycleController
         debugPrint("[VCController] Failed to disable wakelock: $e");
       }
     }
-    await engine.leaveChannel();
-    await engine.release();
-    _streamSubscription.cancel();
+    try {
+      await engine.leaveChannel();
+      await engine.release();
+    } catch (e) {
+      debugPrint("[VCController] Agora cleanup error: $e");
+    }
+    try {
+      _streamSubscription.cancel();
+    } catch (_) {}
+    stopOngoingCallNotification();
+    stopMicNotification();
     if (kDebugMode) {
       print('onClose VCScreen');
-    }
-    if (!isBackPressed) {
-      stopOngoingCallNotification();
-      if (Get.isRegistered<VoiceCallController>()) {
-        await Get.delete<VoiceCallController>(force: true);
-      }
     }
   }
 
@@ -308,29 +316,28 @@ class VoiceCallController extends FullLifeCycleController
   void onInactive() {}
 
   //Realtime
-  void initChatSession(ChatSessionModel chatSessionModel) async {
-    dbReference.set(chatSessionModel.toJson()).then((_) {
-      sendBirthData(ChatBirthModel(
-          name: chatIntakeFormController.name,
-          gender: chatIntakeFormController.gender.toString().toUpperCase(),
-          dob: chatIntakeFormController.dob,
-          tob: CommonMethods()
-              .convertTimeInputVedic(chatIntakeFormController.tob.toString()),
-          pob: chatIntakeFormController.birthPlace,
-          latitude: chatIntakeFormController.latitude,
-          longitude: chatIntakeFormController.longitude,
-          partnerName: chatIntakeFormController.partnerName.toString(),
-          partnerGender: chatIntakeFormController.partnerGender.toString().toUpperCase(),
-          partnerDob: chatIntakeFormController.partnerDob,
-          partnerTob: chatIntakeFormController.partnerTob.toString().isNotEmpty ? CommonMethods().convertTimeInputVedic(chatIntakeFormController.partnerTob.toString()) : "",
-          partnerPob: chatIntakeFormController.partnerBirthPlace,
-          partnerLatitude: chatIntakeFormController.partnerLatitude,
-          partnerLongitude: chatIntakeFormController.partnerLongitude
-      ));
-    });
+  Future<void> initChatSession(ChatSessionModel chatSessionModel) async {
+    await dbReference.set(chatSessionModel.toJson());
+    await sendBirthData(ChatBirthModel(
+        name: chatIntakeFormController.name,
+        gender: chatIntakeFormController.gender.toString().toUpperCase(),
+        dob: chatIntakeFormController.dob,
+        tob: CommonMethods()
+            .convertTimeInputVedic(chatIntakeFormController.tob.toString()),
+        pob: chatIntakeFormController.birthPlace,
+        latitude: chatIntakeFormController.latitude,
+        longitude: chatIntakeFormController.longitude,
+        partnerName: chatIntakeFormController.partnerName.toString(),
+        partnerGender: chatIntakeFormController.partnerGender.toString().toUpperCase(),
+        partnerDob: chatIntakeFormController.partnerDob,
+        partnerTob: chatIntakeFormController.partnerTob.toString().isNotEmpty ? CommonMethods().convertTimeInputVedic(chatIntakeFormController.partnerTob.toString()) : "",
+        partnerPob: chatIntakeFormController.partnerBirthPlace,
+        partnerLatitude: chatIntakeFormController.partnerLatitude,
+        partnerLongitude: chatIntakeFormController.partnerLongitude
+    ));
   }
 
-  void sendBirthData(ChatBirthModel chatBirthModel) async {
+  Future<void> sendBirthData(ChatBirthModel chatBirthModel) async {
     chatBirthModel.name ??= "anonymous";
     chatBirthModel.gender ??= "";
     chatBirthModel.latitude ??= "";
@@ -348,7 +355,7 @@ class VoiceCallController extends FullLifeCycleController
     chatBirthModel.partnerTob ??= "";
     chatBirthModel.partnerPob ??= "";
 
-    dbReference.child(birthChild).set(chatBirthModel.toJson());
+    await dbReference.child(birthChild).set(chatBirthModel.toJson());
   }
 
   void updateDurationInDb() {
@@ -380,14 +387,24 @@ class VoiceCallController extends FullLifeCycleController
       if (kDebugMode) {
         print('[VideoCall] ChatEnd:onDataChange $dataSnapshot');
       }
+      if (dataSnapshot.value == null || dataSnapshot.value is! bool) {
+        return;
+      }
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
         // Ensure nothing (timer/dialog) fires after end.
         stopTimer();
         stopOngoingCallNotification();
         stopMicNotification();
-        chatAcceptedListener.cancel();
-        chatEndListener.cancel();
+        try {
+          chatAcceptedListener?.cancel();
+        } catch (_) {}
+        try {
+          chatEndListener?.cancel();
+        } catch (_) {}
+        try {
+          durationListener?.cancel();
+        } catch (_) {}
         if (Get.isRegistered<VoiceCallController>()) {
           await Get.delete<VoiceCallController>(force: true);
         }
@@ -439,22 +456,76 @@ class VoiceCallController extends FullLifeCycleController
   }
 
   Future<void> endCall() async {
-    // dbReference.child(chatDeclinedByChild).set("Customer");
-    // dbReference.child(chatEnd).set(true);
+    // If still on connecting/ringing screen, cancel the backend request.
+    // Otherwise the orphaned call request can break the next chat with same astrologer.
+    if (!isChatAccepted.value && uniqueId.isNotEmpty) {
+      await _declineCallRequest(uniqueId);
+    }
 
-    /// Commented above code and set below one, to avoid the sequence issue of code - Zaid
+    stopTimer();
+    stopSound();
+    // Cancel before Firebase write so local hang-up isn't handled twice by chatEndListener
+    _cancelListeners();
+
+    /// Batch Firebase updates to avoid sequence issues
     final updates = {
       chatDeclinedByChild: "Customer",
       chatEnd: true,
+      customerStatus: false,
+      chatAcceptedChild: false,
     };
-    dbReference.update(updates);
+    try {
+      await dbReference.update(updates);
+    } catch (e) {
+      if (kDebugMode) {
+        print('[VoiceCall] endCall Firebase update error: $e');
+      }
+    }
 
-    dbReference.child(customerStatus).set(false);
-    dbReference.child(chatAcceptedChild).set(false);
-    stopTimer();
     if (Get.isRegistered<VoiceCallController>()) {
       await Get.delete<VoiceCallController>(force: true);
     }
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (Get.isRegistered<DashboardController>()) {
+        Get.delete<DashboardController>();
+      }
+      Get.offAllNamed('/dashboard');
+    });
+  }
+
+  Future<void> _declineCallRequest(String uniqeid) async {
+    try {
+      String? apiKey =
+          await SharedPreferencesHelper.getData(AppConstants.userApiKey);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      final response = await _dio.post(AppConstants.declineQueueRequest, data: {
+        'api_key': apiKey,
+        'user_uni_id': uniId,
+        'uniqeid': uniqeid,
+        'status': "Declined(Customer)"
+      });
+      if (kDebugMode) {
+        print('[VoiceCall] declineCallRequest response: ${response.data}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('[VoiceCall] declineCallRequest error: $e');
+      }
+    }
+  }
+
+  void _cancelListeners() {
+    try {
+      chatAcceptedListener?.cancel();
+    } catch (_) {}
+    try {
+      chatEndListener?.cancel();
+    } catch (_) {}
+    try {
+      durationListener?.cancel();
+    } catch (_) {}
   }
 
   //API

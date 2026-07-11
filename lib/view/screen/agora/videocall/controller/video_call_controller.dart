@@ -112,18 +112,22 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
 
     db = FirebaseDatabase.instance;
     dbReference = db.ref(chatGroupChild).child(channelName);
-    // Future.delayed(const Duration(seconds: 1), () async {
-    //   getRemainingDuration(uniqueId);
-    // });
     DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
-    if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
+    DataSnapshot chatIdSnapshot = await dbReference.child('chatId').get();
+    final bool sameActiveSession = chatEndSnapshot.exists &&
+        chatEndSnapshot.value == false &&
+        chatIdSnapshot.exists &&
+        chatIdSnapshot.value?.toString() == uniqueId;
+
+    if (sameActiveSession) {
       isChatAccepted(true);
       getRemainingDuration(uniqueId);
       _ensureBirthDataWritten();
     } else {
       print('No data available or new session.');
       playSound();
-      initChatSession(
+      isChatEnd.value = false;
+      await initChatSession(
         ChatSessionModel(
             chatId: uniqueId,
             chatAccepted: false,
@@ -191,17 +195,12 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
  @override
  Future<void> onClose() async {
    _isDisposed = true;
-   // dbReference.child(customerStatus).set(false);
+   _cancelListeners();
    _dispose();
+   stopOngoingCallNotification();
    super.onClose();
    if (kDebugMode) {
      print('onClose VCScreen');
-   }
-   if (!isBackPressed) {
-     stopOngoingCallNotification();
-     if (Get.isRegistered<VideoCallController>()) {
-       await Get.delete<VideoCallController>(force: true);
-     }
    }
  }
 
@@ -215,28 +214,27 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
   void onInactive() {}
 
   //Realtime
-  void initChatSession(ChatSessionModel chatSessionModel) async {
-    dbReference.set(chatSessionModel.toJson()).then((_) {
-      sendBirthData(ChatBirthModel(
-          name: chatIntakeFormController.name,
-          gender: chatIntakeFormController.gender.toString().toUpperCase(),
-          dob: chatIntakeFormController.dob,
-          tob: CommonMethods().convertTimeInputVedic(chatIntakeFormController.tob.toString()),
-          pob: chatIntakeFormController.birthPlace,
-          latitude: chatIntakeFormController.latitude,
-          longitude: chatIntakeFormController.longitude,
-          partnerName: chatIntakeFormController.partnerName.toString(),
-          partnerGender: chatIntakeFormController.partnerGender.toString().toUpperCase(),
-          partnerDob: chatIntakeFormController.partnerDob,
-          partnerTob: chatIntakeFormController.partnerTob.toString().isNotEmpty ? CommonMethods().convertTimeInputVedic(chatIntakeFormController.partnerTob.toString()) : "",
-          partnerPob: chatIntakeFormController.partnerBirthPlace,
-          partnerLatitude: chatIntakeFormController.partnerLatitude,
-          partnerLongitude: chatIntakeFormController.partnerLongitude
-      ));
-    });
+  Future<void> initChatSession(ChatSessionModel chatSessionModel) async {
+    await dbReference.set(chatSessionModel.toJson());
+    await sendBirthData(ChatBirthModel(
+        name: chatIntakeFormController.name,
+        gender: chatIntakeFormController.gender.toString().toUpperCase(),
+        dob: chatIntakeFormController.dob,
+        tob: CommonMethods().convertTimeInputVedic(chatIntakeFormController.tob.toString()),
+        pob: chatIntakeFormController.birthPlace,
+        latitude: chatIntakeFormController.latitude,
+        longitude: chatIntakeFormController.longitude,
+        partnerName: chatIntakeFormController.partnerName.toString(),
+        partnerGender: chatIntakeFormController.partnerGender.toString().toUpperCase(),
+        partnerDob: chatIntakeFormController.partnerDob,
+        partnerTob: chatIntakeFormController.partnerTob.toString().isNotEmpty ? CommonMethods().convertTimeInputVedic(chatIntakeFormController.partnerTob.toString()) : "",
+        partnerPob: chatIntakeFormController.partnerBirthPlace,
+        partnerLatitude: chatIntakeFormController.partnerLatitude,
+        partnerLongitude: chatIntakeFormController.partnerLongitude
+    ));
   }
 
-  void sendBirthData(ChatBirthModel chatBirthModel) async {
+  Future<void> sendBirthData(ChatBirthModel chatBirthModel) async {
     chatBirthModel.name ??= "anonymous";
     chatBirthModel.gender ??= "";
     chatBirthModel.latitude ??= "";
@@ -254,7 +252,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     chatBirthModel.partnerTob ??= "";
     chatBirthModel.partnerPob ??= "";
 
-    dbReference.child(birthChild).set(chatBirthModel.toJson());
+    await dbReference.child(birthChild).set(chatBirthModel.toJson());
   }
 
   void updateDurationInDb() {
@@ -335,22 +333,74 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
   }
 
   Future<void> endCall() async {
-    // dbReference.child(chatDeclinedByChild).set("Customer");
-    // dbReference.child(chatEnd).set(true);
+    // If still on connecting/ringing screen, cancel the backend request.
+    // Otherwise the orphaned call request can break the next chat with same astrologer.
+    if (!isChatAccepted.value && uniqueId.isNotEmpty) {
+      await _declineCallRequest(uniqueId);
+    }
 
-    /// Commented above code and set below one, to avoid the sequence issue of code - Zaid
+    stopTimer();
+    stopSound();
+    _cancelListeners();
+
     final updates = {
       chatDeclinedByChild: "Customer",
       chatEnd: true,
+      customerStatus: false,
+      chatAcceptedChild: false,
     };
-    dbReference.update(updates);
+    try {
+      await dbReference.update(updates);
+    } catch (e) {
+      if (kDebugMode) {
+        print('[VideoCall] endCall Firebase update error: $e');
+      }
+    }
 
-    dbReference.child(customerStatus).set(false);
-    dbReference.child(chatAcceptedChild).set(false);
-    stopTimer();
     if (Get.isRegistered<VideoCallController>()) {
       await Get.delete<VideoCallController>(force: true);
     }
+
+    Future.delayed(const Duration(milliseconds: 300), () {
+      if (Get.isRegistered<DashboardController>()) {
+        Get.delete<DashboardController>();
+      }
+      Get.offAllNamed('/dashboard');
+    });
+  }
+
+  Future<void> _declineCallRequest(String uniqeid) async {
+    try {
+      String? apiKey =
+          await SharedPreferencesHelper.getData(AppConstants.userApiKey);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      final response = await _dio.post(AppConstants.declineQueueRequest, data: {
+        'api_key': apiKey,
+        'user_uni_id': uniId,
+        'uniqeid': uniqeid,
+        'status': "Declined(Customer)"
+      });
+      if (kDebugMode) {
+        print('[VideoCall] declineCallRequest response: ${response.data}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('[VideoCall] declineCallRequest error: $e');
+      }
+    }
+  }
+
+  void _cancelListeners() {
+    try {
+      chatAcceptedListener?.cancel();
+    } catch (_) {}
+    try {
+      chatEndListener?.cancel();
+    } catch (_) {}
+    try {
+      durationListener?.cancel();
+    } catch (_) {}
   }
 
   Future<void> _dispose() async {

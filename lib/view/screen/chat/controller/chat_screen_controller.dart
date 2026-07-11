@@ -166,14 +166,24 @@ class ChatScreenController extends FullLifeCycleController
       getChatDuration(uniqueId);
     });
     DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
-    bool chatEnd;
-    if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
-      chatEnd = false;
-      // getChatDuration(uniqueId);
+    DataSnapshot chatIdSnapshot = await dbReference.child('chatId').get();
+    bool isNewSession = true;
+    // Resume only if same uniqueId is still active (chatEnd == false).
+    // Otherwise always reset so a stale chatEnd:true can't auto-end the new chat.
+    if (chatEndSnapshot.exists &&
+        chatEndSnapshot.value == false &&
+        chatIdSnapshot.exists &&
+        chatIdSnapshot.value?.toString() == uniqueId) {
+      isNewSession = false;
+      if (kDebugMode) {
+        print('[ChatScreen] Resuming active session $uniqueId');
+      }
     } else {
-      print('No data available or new session.');
-      chatEnd = true;
-      initChatSession(
+      if (kDebugMode) {
+        print('[ChatScreen] Initializing new session $uniqueId');
+      }
+      isChatEnd.value = false;
+      await initChatSession(
         ChatSessionModel(
             chatId: uniqueId,
             chatAccepted: chatIntakeFormController.isVirtualAstrologer == 1 ? true : false, //AI Astrologer
@@ -191,7 +201,7 @@ class ChatScreenController extends FullLifeCycleController
       dbReference.child("astrologer_status").set(true);
     }
     clearFirebaseMessages();
-    getChatHistory(channelName, "0", offsetCount, chatEnd);
+    getChatHistory(channelName, "0", offsetCount, isNewSession);
 
     scrollController.addListener(() {
       if (scrollController.position.pixels ==
@@ -297,25 +307,24 @@ class ChatScreenController extends FullLifeCycleController
     return '$formattedDate $formattedTime';
   }
 
-  void initChatSession(ChatSessionModel chatSessionModel) async {
-    dbReference.set(chatSessionModel.toJson()).then((_) {
-      sendBirthData(ChatBirthModel(
-          name: chatIntakeFormController.name,
-          gender: chatIntakeFormController.gender.toString().toUpperCase(),
-          dob: chatIntakeFormController.dob,
-          tob: CommonMethods().convertTimeInputVedic(chatIntakeFormController.tob.toString()),
-          pob: chatIntakeFormController.birthPlace,
-          latitude: chatIntakeFormController.latitude,
-          longitude: chatIntakeFormController.longitude,
-          partnerName: chatIntakeFormController.partnerName.toString(),
-          partnerGender: chatIntakeFormController.partnerGender.toString().toUpperCase(),
-          partnerDob: chatIntakeFormController.partnerDob,
-          partnerTob: chatIntakeFormController.partnerTob.toString().isNotEmpty ? CommonMethods().convertTimeInputVedic(chatIntakeFormController.partnerTob.toString()) : "",
-          partnerPob: chatIntakeFormController.partnerBirthPlace,
-          partnerLatitude: chatIntakeFormController.partnerLatitude,
-          partnerLongitude: chatIntakeFormController.partnerLongitude
-      ));
-    });
+  Future<void> initChatSession(ChatSessionModel chatSessionModel) async {
+    await dbReference.set(chatSessionModel.toJson());
+    await sendBirthData(ChatBirthModel(
+        name: chatIntakeFormController.name,
+        gender: chatIntakeFormController.gender.toString().toUpperCase(),
+        dob: chatIntakeFormController.dob,
+        tob: CommonMethods().convertTimeInputVedic(chatIntakeFormController.tob.toString()),
+        pob: chatIntakeFormController.birthPlace,
+        latitude: chatIntakeFormController.latitude,
+        longitude: chatIntakeFormController.longitude,
+        partnerName: chatIntakeFormController.partnerName.toString(),
+        partnerGender: chatIntakeFormController.partnerGender.toString().toUpperCase(),
+        partnerDob: chatIntakeFormController.partnerDob,
+        partnerTob: chatIntakeFormController.partnerTob.toString().isNotEmpty ? CommonMethods().convertTimeInputVedic(chatIntakeFormController.partnerTob.toString()) : "",
+        partnerPob: chatIntakeFormController.partnerBirthPlace,
+        partnerLatitude: chatIntakeFormController.partnerLatitude,
+        partnerLongitude: chatIntakeFormController.partnerLongitude
+    ));
   }
 
   void clearFirebaseMessages() {
@@ -345,6 +354,9 @@ class ChatScreenController extends FullLifeCycleController
       var dataSnapshot = event.snapshot;
       if (kDebugMode) {
         print('[ChatTab] ChatEnd:onDataChange $dataSnapshot');
+      }
+      if (dataSnapshot.value == null || dataSnapshot.value is! bool) {
+        return;
       }
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
@@ -569,7 +581,7 @@ class ChatScreenController extends FullLifeCycleController
     dbReference.child('duration').set(seconds.value);
   }
 
-  void sendBirthData(ChatBirthModel chatBirthModel) async {
+  Future<void> sendBirthData(ChatBirthModel chatBirthModel) async {
     chatBirthModel.name ??= "anonymous";
     chatBirthModel.gender ??= "";
     chatBirthModel.latitude ??= "";
@@ -587,7 +599,7 @@ class ChatScreenController extends FullLifeCycleController
     chatBirthModel.partnerTob ??= "";
     chatBirthModel.partnerPob ??= "";
 
-    dbReference.child(birthChild).set(chatBirthModel.toJson());
+    await dbReference.child(birthChild).set(chatBirthModel.toJson());
   }
 
   void sendFirstMsg() {
@@ -974,8 +986,12 @@ class ChatScreenController extends FullLifeCycleController
           imagePath: Images.queMarkFill,
           title: "Exit!",
           onYesPressed: () {
-            endChat();
             Get.back();
+            if (isChatAccepted.value) {
+              endChat();
+            } else {
+              cancelBeforeAccept();
+            }
           },
           description: "Are you sure want to exit this chat?",
           // btnColor: ColorResources.lightRed,
@@ -1020,10 +1036,7 @@ class ChatScreenController extends FullLifeCycleController
   }
 
   void endChat() {
-    // dbReference.child(chatDeclinedByChild).set("Customer");
-    // dbReference.child(chatEnd).set(true);
-
-    /// Commented above code and set below one, to avoid the sequence issue of code - Zaid
+    /// Active session end (already accepted)
     final updates = {
       chatDeclinedByChild: "Customer",
       chatEnd: true,
@@ -1033,6 +1046,73 @@ class ChatScreenController extends FullLifeCycleController
     dbReference.child(customerStatus).set(false);
     dbReference.child(chatAcceptedChild).set(false);
     stopTimer();
+  }
+
+  /// Shared cancel path for End button + back navigation while waiting to connect.
+  Future<void> cancelBeforeAccept() async {
+    if (isChatAccepted.value) {
+      endChat();
+      return;
+    }
+
+    if (uniqueId.isNotEmpty) {
+      await _declineChatRequest(uniqueId);
+    }
+
+    stopTimer();
+    try {
+      chatEndListener?.cancel();
+    } catch (_) {}
+    try {
+      chatAcceptedListener?.cancel();
+    } catch (_) {}
+    try {
+      onTypingListener?.cancel();
+    } catch (_) {}
+    try {
+      onMessageListener?.cancel();
+    } catch (_) {}
+
+    final updates = {
+      chatDeclinedByChild: "Customer",
+      chatEnd: true,
+      customerStatus: false,
+      chatAcceptedChild: false,
+    };
+    try {
+      await dbReference.update(updates);
+    } catch (e) {
+      if (kDebugMode) {
+        print('[ChatScreen] cancelBeforeAccept Firebase error: $e');
+      }
+    }
+
+    if (Get.isRegistered<DashboardController>()) {
+      Get.delete<DashboardController>();
+    }
+    Get.offAllNamed('/dashboard');
+  }
+
+  Future<void> _declineChatRequest(String uniqeid) async {
+    try {
+      String? apiKey =
+          await SharedPreferencesHelper.getData(AppConstants.userApiKey);
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId);
+      final response = await _dio.post(AppConstants.declineQueueRequest, data: {
+        'api_key': apiKey,
+        'user_uni_id': uniId,
+        'uniqeid': uniqeid,
+        'status': "Declined(Customer)"
+      });
+      if (kDebugMode) {
+        print('[ChatScreen] declineChatRequest response: ${response.data}');
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('[ChatScreen] declineChatRequest error: $e');
+      }
+    }
   }
 
 
