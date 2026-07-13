@@ -22,8 +22,8 @@ class VoiceCallScreen extends StatelessWidget {
     return PopScope(
       onPopInvoked: (bool isPopGesture) {
         if (!isPopGesture) {
-          controller.isBackPressed = true;
-          Get.offAllNamed('/dashboard');
+          // Same cleanup as hang-up so orphaned call request doesn't break next chat
+          controller.endCall();
         }
       },
       canPop: false,

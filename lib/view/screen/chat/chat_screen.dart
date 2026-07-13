@@ -73,7 +73,11 @@ class ChatScreen extends StatelessWidget {
     return PopScope(
       onPopInvoked: (bool isPopGesture) {
         if (!isPopGesture) {
-          Get.offAllNamed('/dashboard');
+          if (controller.isChatAccepted.isFalse) {
+            controller.cancelBeforeAccept();
+          } else {
+            Get.offAllNamed('/dashboard');
+          }
         }
       },
       canPop: false,
@@ -92,7 +96,11 @@ class ChatScreen extends StatelessWidget {
                         color: ColorResources.toolbarText,
                       ),
                       onPressed: () {
-                        Get.offAllNamed('/dashboard');
+                        if (controller.isChatAccepted.isFalse) {
+                          controller.cancelBeforeAccept();
+                        } else {
+                          Get.offAllNamed('/dashboard');
+                        }
                       }),
                   const Gap(5),
                   CustomRoundNetworkImage(
