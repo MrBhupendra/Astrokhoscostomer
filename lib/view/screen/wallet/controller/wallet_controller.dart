@@ -154,19 +154,29 @@ class WalletController extends GetxController {
           await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId =
           await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      final response =
-          await _dio.post(AppConstants.proceedRechargeRequest, data: {
+      final requestData = {
         'api_key': apiKey,
         "user_uni_id": uniId,
         "wallet_id": walletId,
         "payment_method": paymentMethod,
         "uniqeid": _uniqueId ?? "",
-      });
+      };
 
+      if (kDebugMode && paymentMethod == AppConstants.payRazorpayQr) {
+        debugPrint(
+            '[QR_PAYMENT] proceedPaymentRequest URL: ${AppConstants.proceedRechargeRequest}');
+        debugPrint('[QR_PAYMENT] proceedPaymentRequest REQUEST: $requestData');
+      }
 
+      final response =
+          await _dio.post(AppConstants.proceedRechargeRequest, data: requestData);
 
-      print("proceedPaymentRequest Request=> $apiKey $uniId $walletId $paymentMethod");
-      print("proceedPaymentRequest Response=> $response");
+      if (kDebugMode && paymentMethod == AppConstants.payRazorpayQr) {
+        debugPrint(
+            '[QR_PAYMENT] proceedPaymentRequest RESPONSE status: ${response.statusCode}');
+        debugPrint(
+            '[QR_PAYMENT] proceedPaymentRequest RESPONSE body: ${response.data}');
+      }
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -346,7 +356,11 @@ class WalletController extends GetxController {
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
+        if (paymentMethod == AppConstants.payRazorpayQr) {
+          debugPrint('[QR_PAYMENT] proceedPaymentRequest ERROR: $e');
+        } else {
+          print('OnException==> ${e.toString()}');
+        }
       }
     }
   }

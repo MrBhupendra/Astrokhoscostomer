@@ -3,6 +3,8 @@ import 'package:astro_brahmand/utill/app_constants.dart';
 import 'package:astro_brahmand/utill/app_dialogs.dart';
 import 'package:astro_brahmand/utill/color_resources.dart';
 import 'package:astro_brahmand/utill/dimensions.dart';
+import 'package:astro_brahmand/utill/images.dart';
+import 'package:astro_brahmand/view/widget/custom_dialog_widget.dart';
 import 'package:astro_brahmand/view/widget/custom_elevated_button.dart';
 import 'package:astro_brahmand/view/widget/custom_text_medium.dart';
 import 'package:astro_brahmand/view/widget/custom_text_regular.dart';
@@ -21,13 +23,37 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
     });
   }
 
+  void _showExitConfirmation(RazorpayController controller) {
+    Get.dialog(
+      CustomDialogWidget(
+        imagePath: Images.alertDialog,
+        title: 'Leave Payment Screen?',
+        description:
+            'Are you sure you want to go back? If you have already paid, please stay on this screen. Payment verification may take up to 15-20 seconds and you will be redirected automatically once confirmed.',
+        noText: 'Go Back',
+        yesText: 'Stay',
+        onNoPressed: () {
+          Get.back();
+          _cancelPaymentAndShowFailedDialog(controller);
+        },
+        onYesPressed: () => Get.back(),
+      ),
+      barrierDismissible: false,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final RazorpayController controller = Get.find<RazorpayController>();
 
     return PopScope(
+      canPop: false,
       onPopInvokedWithResult: (didPop, _) {
-        if (didPop) controller.endQrFlow();
+        if (didPop) {
+          controller.endQrFlow();
+          return;
+        }
+        _showExitConfirmation(controller);
       },
       child: Scaffold(
         appBar: AppBar(
@@ -40,7 +66,7 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
           foregroundColor: Colors.white,
           leading: IconButton(
             icon: const Icon(Icons.arrow_back),
-            onPressed: () => _cancelPaymentAndShowFailedDialog(controller),
+            onPressed: () => _showExitConfirmation(controller),
           ),
           centerTitle: true,
         ),
@@ -59,11 +85,10 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(10, 12, 10, 24),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 15, vertical: 15),
+                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(24),
@@ -76,6 +101,7 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
                       ],
                     ),
                     child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         CustomTextMedium(
                           '${AppConstants.defaultCurrencySymbol}${amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 2)}',
@@ -93,8 +119,13 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
                               : ColorResources.black4,
                           textAlign: TextAlign.center,
                         ),
-                        const SizedBox(height: 20),
+                        if (!isExpired) ...[
+                          const SizedBox(height: 12),
+                          const _QrPaymentWarningBanner(),
+                        ],
+                        const SizedBox(height: 12),
                         Container(
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
@@ -141,7 +172,7 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
                                   ),
                                 ),
                         ),
-                        const SizedBox(height: 24),
+                        const SizedBox(height: 16),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -164,9 +195,9 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
                             ),
                           ],
                         ),
-                        const SizedBox(height: 22),
+                        const SizedBox(height: 8),
                         const Divider(color: ColorResources.black7),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 5),
                         if (!isExpired) ...[
                           const SizedBox(
                             height: 22,
@@ -176,7 +207,7 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
                               color: ColorResources.colorPrimary,
                             ),
                           ),
-                          const SizedBox(height: 12),
+                          const SizedBox(height: 8),
                         ],
                         CustomTextRegular(
                           statusText,
@@ -184,34 +215,43 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
                           color: ColorResources.black5,
                           textAlign: TextAlign.center,
                         ),
+                        if (!isExpired) ...[
+                          const SizedBox(height: 10),
+                          CustomTextRegular(
+                            'Please wait on this screen. You will be redirected automatically after payment is verified.',
+                            fontSize: Dimensions.fontSizeExtraSmall,
+                            color: ColorResources.orange,
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
                       ],
                     ),
                   ),
-                  const SizedBox(height: 30),
+                  const SizedBox(height: 16),
                   if (!isExpired)
                     CustomTextMedium(
-                      'Use Google Pay, PhonePe, Paytm, BHIM or any other UPI app to complete payment',
+                      'Use Google Pay, PhonePe, Paytm, BHIM or any other UPI app',
                       fontSize: Dimensions.fontSizeSmall,
                       color: ColorResources.black4,
                       textAlign: TextAlign.center,
                     ),
                   if (!isExpired) ...[
-                    const SizedBox(height: 18),
+                    const SizedBox(height: 12),
                     const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _PaymentHintIcon(
                             icon: Icons.account_balance_wallet_outlined),
-                        SizedBox(width: 18),
+                        SizedBox(width: 14),
                         _PaymentHintIcon(icon: Icons.account_balance_outlined),
-                        SizedBox(width: 18),
+                        SizedBox(width: 14),
                         _PaymentHintIcon(icon: Icons.payments_outlined),
-                        SizedBox(width: 18),
+                        SizedBox(width: 14),
                         _PaymentHintIcon(icon: Icons.credit_card_outlined),
                       ],
                     ),
                   ],
-                  const SizedBox(height: 24),
+                  const SizedBox(height: 16),
                   if (isExpired) ...[
                     CustomElevatedButton(
                       text: 'Generate New QR',
@@ -227,8 +267,7 @@ class RazorpayQrPaymentScreen extends StatelessWidget {
                     ),
                   ],
                   TextButton(
-                    onPressed: () =>
-                        _cancelPaymentAndShowFailedDialog(controller),
+                    onPressed: () => _showExitConfirmation(controller),
                     child: CustomTextMedium(
                       'Cancel Payment',
                       color: ColorResources.red,
@@ -271,7 +310,6 @@ class _QrNetworkImageState extends State<_QrNetworkImage> {
       baseColor: Colors.grey.shade300,
       highlightColor: Colors.grey.shade100,
       child: Container(
-        margin: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           color: Colors.grey.shade300,
           borderRadius: BorderRadius.circular(16),
@@ -282,33 +320,31 @@ class _QrNetworkImageState extends State<_QrNetworkImage> {
 
   @override
   Widget build(BuildContext context) {
-    final height = Get.height * 0.7;
-    final width = Get.width * 0.8;
-
     if (_hasError) {
-      return SizedBox(
-        height: height,
-        width: width,
+      return AspectRatio(
+        aspectRatio: 1,
         child: Padding(
-          padding: const EdgeInsets.all(24),
-          child: CustomTextRegular(
-            'Unable to load QR image.\nPlease try again.',
-            textAlign: TextAlign.center,
-            color: ColorResources.black4,
+          padding: const EdgeInsets.all(16),
+          child: Center(
+            child: CustomTextRegular(
+              'Unable to load QR image.\nPlease try again.',
+              textAlign: TextAlign.center,
+              color: ColorResources.black4,
+            ),
           ),
         ),
       );
     }
 
-    return SizedBox(
-      height: height,
-      width: width,
+    return AspectRatio(
+      aspectRatio: 0.73,
       child: Stack(
         fit: StackFit.expand,
         children: [
           if (!_imageLoaded) _buildShimmerPlaceholder(),
           Image.network(
             widget.imageUrl,
+            width: double.infinity,
             fit: BoxFit.cover,
             frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
               if (wasSynchronouslyLoaded || frame != null) {
@@ -340,6 +376,41 @@ class _QrNetworkImageState extends State<_QrNetworkImage> {
   }
 }
 
+class _QrPaymentWarningBanner extends StatelessWidget {
+  const _QrPaymentWarningBanner();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+      decoration: BoxDecoration(
+        color: ColorResources.orange.withOpacity(0.12),
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(color: ColorResources.orange.withOpacity(0.45)),
+      ),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(
+            Icons.warning_amber_rounded,
+            color: ColorResources.orange,
+            size: 20,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: CustomTextRegular(
+              'Do not press back after payment. Verification may take up to 15-20 seconds. You will be redirected automatically once payment is confirmed.',
+              fontSize: Dimensions.fontSizeExtraSmall,
+              color: ColorResources.black3,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
 class _PaymentHintIcon extends StatelessWidget {
   final IconData icon;
 
@@ -348,8 +419,8 @@ class _PaymentHintIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 38,
-      width: 38,
+      height: 34,
+      width: 34,
       decoration: BoxDecoration(
         color: Colors.white.withOpacity(0.75),
         borderRadius: BorderRadius.circular(10),

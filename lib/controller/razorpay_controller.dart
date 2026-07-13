@@ -303,14 +303,29 @@ class RazorpayController extends GetxController {
       final uniId =
           await SharedPreferencesHelper.getData(AppConstants.userUniId);
 
+      final requestData = {
+        'api_key': apiKey,
+        'user_uni_id': uniId,
+        'qr_id': qrId.value,
+      };
+
+      if (kDebugMode) {
+        debugPrint(
+            '[QR_PAYMENT] razorpayQrVerify URL: ${AppConstants.razorpayQrVerify}');
+        debugPrint('[QR_PAYMENT] razorpayQrVerify REQUEST: $requestData');
+      }
+
       final response = await _dio.post(
         AppConstants.razorpayQrVerify,
-        data: {
-          'api_key': apiKey,
-          'user_uni_id': uniId,
-          'qr_id': qrId.value,
-        },
+        data: requestData,
       );
+
+      if (kDebugMode) {
+        debugPrint(
+            '[QR_PAYMENT] razorpayQrVerify RESPONSE status: ${response.statusCode}');
+        debugPrint(
+            '[QR_PAYMENT] razorpayQrVerify RESPONSE body: ${response.data}');
+      }
 
       if (response.statusCode == 200) {
         final verifyResp = RazorpayQrVerifyResponse.fromJson(response.data);
@@ -335,7 +350,9 @@ class RazorpayController extends GetxController {
       }
     } catch (e) {
       qrStatusText('Still waiting... (network issue, retrying)');
-      debugPrint('OnException _verifyQrPaymentOnce==> ${e.toString()}');
+      if (kDebugMode) {
+        debugPrint('[QR_PAYMENT] razorpayQrVerify ERROR: $e');
+      }
     }
   }
 
@@ -410,28 +427,59 @@ class RazorpayController extends GetxController {
       final paymentMethod =
           await SharedPreferencesHelper.getData(AppConstants.paymentGateway);
 
-      final response =
-          await _dio.post(AppConstants.updatePaymentRequest, data: {
+      final requestData = {
         'api_key': apiKey,
         "user_uni_id": uniId,
         "payment_method": paymentMethod,
         "order_id": orderId,
-        "payment_id": paymentId
-      });
+        "payment_id": paymentId,
+      };
+
+      if (kDebugMode && paymentMethod == AppConstants.payRazorpayQr) {
+        debugPrint(
+            '[QR_PAYMENT] updateOnlinePayment URL: ${AppConstants.updatePaymentRequest}');
+        debugPrint('[QR_PAYMENT] updateOnlinePayment REQUEST: $requestData');
+      }
+
+      final response =
+          await _dio.post(AppConstants.updatePaymentRequest, data: requestData);
 
       if (response.statusCode == 200) {
         if (kDebugMode) {
-          print('OnApiSuccess updateOnlinePayment ${response.data.toString()}');
+          if (paymentMethod == AppConstants.payRazorpayQr) {
+            debugPrint(
+                '[QR_PAYMENT] updateOnlinePayment RESPONSE status: ${response.statusCode}');
+            debugPrint(
+                '[QR_PAYMENT] updateOnlinePayment RESPONSE body: ${response.data}');
+          } else {
+            print(
+                'OnApiSuccess updateOnlinePayment ${response.data.toString()}');
+          }
         }
         successModel = SuccessModel.fromJson(response.data);
         success = successModel.status == AppConstants.success;
         isUpdateSuccess(success);
       } else {
-        debugPrint('OnApiError updateOnlinePayment');
+        if (kDebugMode && paymentMethod == AppConstants.payRazorpayQr) {
+          debugPrint(
+              '[QR_PAYMENT] updateOnlinePayment ERROR status: ${response.statusCode}');
+          debugPrint(
+              '[QR_PAYMENT] updateOnlinePayment ERROR body: ${response.data}');
+        } else {
+          debugPrint('OnApiError updateOnlinePayment');
+        }
       }
     } catch (e) {
       isUpdateSuccess(false);
-      debugPrint('OnException updateOnlinePayment==> ${e.toString()}');
+      if (kDebugMode) {
+        final paymentMethod =
+            await SharedPreferencesHelper.getData(AppConstants.paymentGateway);
+        if (paymentMethod == AppConstants.payRazorpayQr) {
+          debugPrint('[QR_PAYMENT] updateOnlinePayment ERROR: $e');
+        } else {
+          debugPrint('OnException updateOnlinePayment==> ${e.toString()}');
+        }
+      }
     } finally {
       if (showProgressDialog) {
         CustomProgressDialog.dismissDialog();
