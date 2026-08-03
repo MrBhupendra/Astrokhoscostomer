@@ -23,6 +23,10 @@ class BlogController extends GetxController{
   RxBool isLike = false.obs;
   SuccessModel blogLikeModel = SuccessModel();
 
+  // blog detail (deeplink)
+  final isBlogDetailLoading = false.obs;
+  final isBlogDetailSuccess = false.obs;
+
   List<BlogsData> blogsListData = [];
   num offsetCount = 0;
   bool isNoMoreData = false;
@@ -97,6 +101,55 @@ class BlogController extends GetxController{
       }
     } finally {
       isLoading(false);
+    }
+  }
+
+  Future<void> getBlogBySlug(String slug) async {
+    isBlogDetailLoading(true);
+    isBlogDetailSuccess(false);
+    num offset = 0;
+    try {
+      String? apiKey =
+          await SharedPreferencesHelper.getData(AppConstants.userApiKey) ?? "";
+      String? uniId =
+          await SharedPreferencesHelper.getData(AppConstants.userUniId) ?? "";
+
+      while (true) {
+        final response = await _dio.post(AppConstants.getBlog, data: {
+          "offset": offset,
+          "api_key": apiKey,
+          "user_uni_id": uniId,
+          "search": "",
+          "astrologer_uni_id": ""
+        });
+
+        if (response.statusCode == 200) {
+          BlogModel model = BlogModel.fromJson(response.data);
+          if (model.status == AppConstants.success) {
+            offset = model.offset!;
+            for (BlogsData element in (model.data ?? [])) {
+              if (element.slug == slug) {
+                blogsData = element;
+                isBlogDetailSuccess(true);
+                return;
+              }
+            }
+            if ((model.data ?? []).isEmpty) {
+              break;
+            }
+          } else {
+            break;
+          }
+        } else {
+          break;
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        print('OnException getBlogBySlug==> ${e.toString()}');
+      }
+    } finally {
+      isBlogDetailLoading(false);
     }
   }
 

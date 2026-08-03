@@ -449,6 +449,14 @@ class NotificationRouter {
         final astrologerId = uri.pathSegments[2].toString();
         Get.toNamed('/serviceDetail/$serviceSlug/$astrologerId');
       }
+    } else if (uri.pathSegments.isNotEmpty &&
+        uri.pathSegments.first == 'blogs') {
+      if (uri.pathSegments.length == 2) {
+        final blogSlug = uri.pathSegments[1].toString();
+        Get.toNamed('/blogDetail/$blogSlug');
+      } else {
+        Get.toNamed('/blog');
+      }
     }
   }
 }

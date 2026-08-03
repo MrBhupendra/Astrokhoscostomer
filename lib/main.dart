@@ -18,6 +18,7 @@ import 'package:astro_brahmand/view/screen/ask_question/ask_question_screen_new.
 import 'package:astro_brahmand/view/screen/assistant_chat/assistant_chat_screen.dart';
 import 'package:astro_brahmand/view/screen/assistant_chat/support_tab_screen.dart';
 import 'package:astro_brahmand/view/screen/deeplink/deeplink_service_detail.dart';
+import 'package:astro_brahmand/view/screen/deeplink/deeplink_blog_detail.dart';
 import 'package:astro_brahmand/view/screen/electro_homeopathy/electro_homeopathy_list.dart';
 import 'package:astro_brahmand/view/screen/electro_homeopathy/electro_homeopathy_screen.dart';
 import 'package:astro_brahmand/view/screen/group_pooja/binding/group_pooja_binding.dart';
@@ -778,7 +779,14 @@ class MyApp extends StatelessWidget {
           GetPage(
               name: '/serviceDetail/:slug/:id',
               page: () => const DeeplinkServiceDetail()),
-          GetPage(name: '/tipScreen', page: () => TipScreen()),
+          //Blog
+          GetPage(
+              name: '/blogDetail/:slug',
+              page: () => const DeeplinkBlogDetail()),
+
+          GetPage(
+              name: '/tipScreen',
+              page: () => TipScreen()),
           //GroupPooja
           GetPage(
               name: '/group_pooja_category',

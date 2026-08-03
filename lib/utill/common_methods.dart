@@ -457,9 +457,7 @@ class CommonMethods {
           "$astroSlugUrl\nhttp://play.google.com/store/apps/details?id=${AppConstants
               .androidPackageName}");
     } else if (type == "blog") {
-      Share.share(
-          "$quoteSlug\n$blogUrl\nhttp://play.google.com/store/apps/details?id=${AppConstants
-              .androidPackageName}");
+      Share.share("$quoteSlug\n$blogUrl");
     } else if (type == "architect") {
       _shareImage(astroSlugUrl);
     }else if (type == "refer") {

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 
+import '../../../utill/app_constants.dart';
 import '../../../utill/color_resources.dart';
 import '../../../utill/common_methods.dart';
 import '../../../utill/dimensions.dart';
@@ -321,12 +322,10 @@ class BlogScreen extends GetView<BlogController> {
                                             const Gap(Dimensions.gapMedium),
                                             GestureDetector(
                                               onTap: () async {
-                                                String astroSlugUrl = controller.blogsListData[index].slug.toString();
-                                                String quoteSlug = controller.blogsListData[index].title.toString() ?? '';
-                                                String blogContent = (controller.blogsListData[index].content ?? '')
-                                                    .replaceAll(RegExp(r'<[^>]*>'), '');
-                                                String imageUrl = controller.blogsListData[index].blogImage.toString();
-                                                CommonMethods().shareApp("blog", astroSlugUrl: astroSlugUrl, quoteSlug: quoteSlug, blogUrl: blogContent, imageUrl: imageUrl);
+                                                String slug = controller.blogsListData[index].slug.toString();
+                                                String title = controller.blogsListData[index].title.toString();
+                                                String blogUrl = "${AppConstants.blogShareUrl}/$slug"; 
+                                                CommonMethods().shareApp("blog", quoteSlug: title, blogUrl: blogUrl);
                                               },
                                               child: const Icon(
                                                 Icons.share,

@@ -130,7 +130,15 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
           String astrologerId = uri.pathSegments[2].toString();
           Get.toNamed('/serviceDetail/$serviceSlug/$astrologerId');
         }
-      } else if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'jeevini') {
+      } else if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'blogs') {
+        if (uri.pathSegments.length == 2) {
+          String blogSlug = uri.pathSegments[1].toString();
+          Get.toNamed('/blogDetail/$blogSlug');
+        } else {
+          Get.toNamed('/blog');
+        }
+      }
+      else if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'jeevini') {
         Get.toNamed('/sanjeeviniList');
       } else if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'divine-code') {
         Get.toNamed('/switchList');
