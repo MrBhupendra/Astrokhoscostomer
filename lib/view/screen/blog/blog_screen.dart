@@ -324,7 +324,7 @@ class BlogScreen extends GetView<BlogController> {
                                               onTap: () async {
                                                 String slug = controller.blogsListData[index].slug.toString();
                                                 String title = controller.blogsListData[index].title.toString();
-                                                String blogUrl = "${AppConstants.blogShareUrl}/$slug"; 
+                                                String blogUrl = "${AppConstants.blogShareUrl}/$slug";
                                                 CommonMethods().shareApp("blog", quoteSlug: title, blogUrl: blogUrl);
                                               },
                                               child: const Icon(
