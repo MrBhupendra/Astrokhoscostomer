@@ -37,7 +37,7 @@
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:exported="true"
             android:hardwareAccelerated="true"
-            android:launchMode="singleTop"
+            android:launchMode="singleTask"
             android:usesCleartextTraffic="true"
             android:theme="@style/LaunchTheme"
             android:windowSoftInputMode="adjustResize">
@@ -54,11 +54,15 @@
             </intent-filter>
 
             <!--Deeplink-->
+            <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+
+            <!--Deeplink-->
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="https" android:host="astrobrahmand.com" />
+                <data android:scheme="http" />
             </intent-filter>
         </activity>
         <!--FB app event-->
@@ -68,8 +72,7 @@
         <!--Map in compass-->
         <meta-data android:name="com.google.android.geo.API_KEY" android:value="@string/google_map_key"/>
 
-        <!--Deeplink-->
-        <meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+
 
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->

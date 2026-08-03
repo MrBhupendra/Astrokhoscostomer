@@ -23,7 +23,8 @@ class VideoCallScreen extends StatelessWidget {
       onPopInvoked: (bool isPopGesture) {
         if (!isPopGesture) {
           // Same cleanup as hang-up so orphaned call request doesn't break next chat
-          controller.endCall();
+          controller.isBackPressed = true;
+          Get.offAllNamed('/dashboard');
         }
       },
       canPop: false,

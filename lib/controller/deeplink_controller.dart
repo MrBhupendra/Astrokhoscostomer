@@ -13,7 +13,7 @@ class DeepLinkController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _initDeepLinks();
+    // _initDeepLinks();
     if(Platform.isAndroid){
       _fetchInstallReferrer();
     }

@@ -323,9 +323,10 @@ class BlogScreen extends GetView<BlogController> {
                                               onTap: () async {
                                                 String astroSlugUrl = controller.blogsListData[index].slug.toString();
                                                 String quoteSlug = controller.blogsListData[index].title.toString() ?? '';
-                                                String blogUrl = controller.blogsListData[index].content.toString() ?? '';
+                                                String blogContent = (controller.blogsListData[index].content ?? '')
+                                                    .replaceAll(RegExp(r'<[^>]*>'), '');
                                                 String imageUrl = controller.blogsListData[index].blogImage.toString();
-                                                CommonMethods().shareApp("blog", astroSlugUrl: astroSlugUrl, quoteSlug: quoteSlug, blogUrl: blogUrl, imageUrl: imageUrl);
+                                                CommonMethods().shareApp("blog", astroSlugUrl: astroSlugUrl, quoteSlug: quoteSlug, blogUrl: blogContent, imageUrl: imageUrl);
                                               },
                                               child: const Icon(
                                                 Icons.share,
