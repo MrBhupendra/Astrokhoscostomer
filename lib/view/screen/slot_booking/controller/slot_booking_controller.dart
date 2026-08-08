@@ -12,6 +12,7 @@ import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
 import '../../chat/controller/chat_intake_form_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SlotBookingController extends GetxController {
   final Dio _dio = Dio();
   //SlotAvailability
@@ -66,15 +67,11 @@ class SlotBookingController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isScheduleSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isScheduleLoading(false);
     }
@@ -85,7 +82,7 @@ class SlotBookingController extends GetxController {
     String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
     String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
     try {
-      print("$apiKey $uniId $astrologerUniId $slotStart $slotEnd $serialNo $scheduleId");
+      AppLogger.d("$apiKey $uniId $astrologerUniId $slotStart $slotEnd $serialNo $scheduleId");
       final response = await _dio.post(AppConstants.bookAstroSchedule, data: {
         'api_key': apiKey,
         'customer_uni_id': uniId,
@@ -107,15 +104,11 @@ class SlotBookingController extends GetxController {
           CustomSnackBar.showBottom(bookScheduleModel.msg.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
+      AppLogger.d('OnException==> $e');
     }
   }
 }

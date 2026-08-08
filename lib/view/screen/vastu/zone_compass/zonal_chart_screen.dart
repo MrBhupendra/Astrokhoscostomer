@@ -20,6 +20,7 @@ import '../../../widget/custom_app_bar.dart';
 import '../../../widget/custom_icon_elevated_button.dart';
 import '../../../widget/custom_service_button.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class DataModel {
   final int serialNo;
   final String name;
@@ -279,7 +280,7 @@ Future<dynamic> showCapturedWidget(BuildContext context, List<DataModel> data) {
         .then((capturedImage) async {
       generateAndSavePDF(data, capturedImage!);
     }).catchError((onError) {
-      print(onError);
+      AppLogger.d(onError);
     });
   }
 
@@ -289,7 +290,7 @@ Future<dynamic> showCapturedWidget(BuildContext context, List<DataModel> data) {
         .then((capturedImage) async {
       shareScreenshotPDF(data, capturedImage!);
     }).catchError((onError) {
-      print(onError);
+      AppLogger.d(onError);
     });
   }
 
@@ -1221,7 +1222,6 @@ Future<dynamic> showCapturedWidget(BuildContext context, List<DataModel> data) {
 // }
 
 
-
 // Function to generate and save PDF
 
 Future<void> generateAndSavePDF(List<DataModel> data, Uint8List capturedImage) async {
@@ -1274,7 +1274,7 @@ void shareScreenshotPDF(List<DataModel> data, Uint8List capturedImage) async {
   if (await file.exists()) {
     //Share.shareFiles([file.path]);
   } else {
-    print('PDF file does not exist');
+    AppLogger.d('PDF file does not exist');
   }
 }
 
@@ -1294,7 +1294,6 @@ void shareScreenshotPDF(List<DataModel> data, Uint8List capturedImage) async {
 //     ),
 //   );
 // }
-
 
 
 // Function to get the status based on serial number and value

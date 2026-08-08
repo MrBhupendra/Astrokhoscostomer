@@ -15,6 +15,7 @@ import '../../widget/simmer_widget/simmer_list_view.dart';
 import '../splash/controller/config_controller.dart';
 import 'controller/order_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class LiveOrdersScreen extends GetView<OrderController> {
   final String type;
   const LiveOrdersScreen(this.type, {super.key});
@@ -261,7 +262,7 @@ class LiveOrdersScreen extends GetView<OrderController> {
             );
           }
           else {
-            print("SS->${controller.liveOrderHistoryModel.data?.length}");
+            AppLogger.d("SS->${controller.liveOrderHistoryModel.data?.length}");
             return controller.isLiveHistorySuccess.isTrue
                 ? Padding(
               padding: const EdgeInsets.symmetric(

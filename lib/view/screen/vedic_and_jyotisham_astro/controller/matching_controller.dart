@@ -16,6 +16,7 @@ import '../model/matching_saved_kundli.dart';
 import '../model/vedic_data.dart';
 import 'kundli_intake_form_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class MatchingController extends GetxController {
   final Dio _dio = Dio();
 
@@ -158,11 +159,11 @@ class MatchingController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        debugPrint('[MatchingController] saveKundliMatching->OnApiError');
+        AppLogger.d('[MatchingController] saveKundliMatching->OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      debugPrint('[MatchingController] saveKundliMatching->OnException:${e.toString()}');
+      AppLogger.d('[MatchingController] saveKundliMatching->OnException:${e.toString()}');
     }
   }
 
@@ -203,11 +204,11 @@ class MatchingController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        debugPrint('[MatchingController] getSavedKundli->OnApiError');
+        AppLogger.d('[MatchingController] getSavedKundli->OnApiError');
       }
     } catch (e) {
       isSavedSuccess(false);
-      debugPrint('[MatchingController] getSavedKundli->OnException:${e.toString()}');
+      AppLogger.d('[MatchingController] getSavedKundli->OnException:${e.toString()}');
     } finally {
       isSavedLoading(false);
     }
@@ -255,11 +256,11 @@ class MatchingController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        debugPrint('[KundliController] updateKundli->OnApiError');
+        AppLogger.d('[KundliController] updateKundli->OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      debugPrint('[KundliController] updateKundli->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] updateKundli->OnException:${e.toString()}');
     }
   }
 
@@ -285,11 +286,11 @@ class MatchingController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        debugPrint('[MatchingController] deleteKundli->OnApiError');
+        AppLogger.d('[MatchingController] deleteKundli->OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      debugPrint('[MatchingController] deleteKundli->OnException:${e.toString()}');
+      AppLogger.d('[MatchingController] deleteKundli->OnException:${e.toString()}');
     }
   }
 
@@ -333,7 +334,7 @@ class MatchingController extends GetxController {
             isAsthakootSuccess(false);
           }
         } else {
-          debugPrint('[MatchingController] getAsthakoot->OnApiError');
+          AppLogger.d('[MatchingController] getAsthakoot->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -348,13 +349,13 @@ class MatchingController extends GetxController {
             isAsthakootSuccess(false);
           }
         } else {
-          debugPrint('[MatchingController] getAsthakoot->OnApiError');
+          AppLogger.d('[MatchingController] getAsthakoot->OnApiError');
         }
       }
 
     } catch (e) {
       isAsthakootSuccess(false);
-      debugPrint('[MatchingController] getAsthakoot->OnException:${e.toString()}');
+      AppLogger.d('[MatchingController] getAsthakoot->OnException:${e.toString()}');
     } finally {
       isAsthakootLoading(false);
     }
@@ -389,7 +390,7 @@ class MatchingController extends GetxController {
             isDashakootSuccess(false);
           }
         } else {
-          debugPrint('[MatchingController] getDashakoot->OnApiError');
+          AppLogger.d('[MatchingController] getDashakoot->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -403,13 +404,12 @@ class MatchingController extends GetxController {
             isDashakootSuccess(false);
           }
         } else {
-          debugPrint('[MatchingController] getDashakoot->OnApiError');
+          AppLogger.d('[MatchingController] getDashakoot->OnApiError');
         }
       }
     } catch (e) {
       isDashakootSuccess(false);
-      debugPrint(
-          '[MatchingController] getDashakoot->OnException:${e.toString()}');
+      AppLogger.d('[MatchingController] getDashakoot->OnException:${e.toString()}');
     } finally {
       isDashakootLoading(false);
     }
@@ -445,7 +445,7 @@ class MatchingController extends GetxController {
             isAggregateSuccess(false);
           }
         } else {
-          debugPrint('[MatchingController] getAggregate->OnApiError');
+          AppLogger.d('[MatchingController] getAggregate->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -459,13 +459,12 @@ class MatchingController extends GetxController {
             isAggregateSuccess(false);
           }
         } else {
-          debugPrint('[MatchingController] getAggregate->OnApiError');
+          AppLogger.d('[MatchingController] getAggregate->OnApiError');
         }
       }
     } catch (e) {
       isAggregateSuccess(false);
-      debugPrint(
-          '[MatchingController] getAggregate->OnException:${e.toString()}');
+      AppLogger.d('[MatchingController] getAggregate->OnException:${e.toString()}');
     } finally {
       isAggregateLoading(false);
     }
@@ -491,7 +490,7 @@ class MatchingController extends GetxController {
             isNakshatraSuccess(false);
           }
         } else {
-          debugPrint('[MatchingController] getNakshatra->OnApiError');
+          AppLogger.d('[MatchingController] getNakshatra->OnApiError');
         }
       }else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -506,12 +505,12 @@ class MatchingController extends GetxController {
             isNakshatraSuccess(false);
           }
         } else {
-          debugPrint('[MatchingController] getNakshatra->OnApiError');
+          AppLogger.d('[MatchingController] getNakshatra->OnApiError');
         }
       }
     } catch (e) {
       isNakshatraSuccess(false);
-      debugPrint('[MatchingController] getNakshatra->OnException:${e.toString()}');
+      AppLogger.d('[MatchingController] getNakshatra->OnException:${e.toString()}');
     } finally {
       isNakshatraLoading(false);
     }

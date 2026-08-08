@@ -7,6 +7,7 @@ import '../../../../utill/app_constants.dart';
 import '../../../../utill/shared_preference.dart';
 import '../model/daily_tarot_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class DailyTarotController extends GetxController {
   final Dio _dio = Dio();
 
@@ -32,11 +33,11 @@ class DailyTarotController extends GetxController {
         }
       } else {
         isTarotLoading(false);
-        debugPrint('[KundliController] getAvakhada->OnApiError');
+        AppLogger.d('[KundliController] getAvakhada->OnApiError');
       }
     }catch (e) {
       isTarotSuccess(false);
-      debugPrint('[KundliController] getAvakhada->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getAvakhada->OnException:${e.toString()}');
     } finally {
       isTarotLoading(false);
     }

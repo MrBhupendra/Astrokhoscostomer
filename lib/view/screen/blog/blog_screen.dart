@@ -21,6 +21,7 @@ import 'package:path_provider/path_provider.dart';
 
 import 'controller/blog_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class BlogScreen extends GetView<BlogController> {
   const BlogScreen({super.key});
 
@@ -292,7 +293,7 @@ class BlogScreen extends GetView<BlogController> {
                                                         index,
                                                         likeCount
                                                     );
-                                                    print(controller.blogsListData[index].liked.value);
+                                                    AppLogger.d(controller.blogsListData[index].liked.value);
                                                   },
                                                 )),
                                             Expanded(

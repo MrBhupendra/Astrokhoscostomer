@@ -13,6 +13,7 @@ import '../../../utill/images.dart';
 import '../../widget/custom_app_bar.dart';
 import '../../widget/custom_empty_screen.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ProductsListScreen extends GetView<ProductsController> {
   const ProductsListScreen({super.key});
 
@@ -30,7 +31,7 @@ class ProductsListScreen extends GetView<ProductsController> {
       title = arguments.productName.toString();
       categoryId = arguments.id.toString();
     }
-    print("categoryId Screen-> $categoryId");
+    AppLogger.d("categoryId Screen-> $categoryId");
     controller.getProducts(controller.offsetCount, categoryId, "");
 
     void searchProducts(String query) {
@@ -38,7 +39,7 @@ class ProductsListScreen extends GetView<ProductsController> {
       controller.debounce = Timer(const Duration(seconds: 1), () {
         controller.searchQuery.value = query;
         controller.offsetCount = 0;
-        print("categoryId-> $categoryId");
+        AppLogger.d("categoryId-> $categoryId");
         controller.getProducts(controller.offsetCount, categoryId ,query);
       });
     }

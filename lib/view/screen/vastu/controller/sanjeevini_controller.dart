@@ -26,6 +26,7 @@ import '../../../widget/custom_text_medium.dart';
 import '../../../widget/custom_text_regular.dart';
 import '../../splash/controller/config_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SanjeeviniController extends GetxController {
   final Dio _dio = Dio();
   final isSanjeeviniLoading = false.obs;
@@ -121,15 +122,11 @@ class SanjeeviniController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isSanjeeviniSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isSanjeeviniLoading(false);
     }
@@ -181,16 +178,12 @@ class SanjeeviniController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -228,15 +221,11 @@ class SanjeeviniController extends GetxController {
           CustomSnackBar.showBottom(AppStrings.noPaymentGatewayFound.tr);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }

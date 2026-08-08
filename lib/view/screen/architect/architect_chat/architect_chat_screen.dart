@@ -20,6 +20,7 @@ import '../../chat/model/chat_message_model.dart';
 import 'controller/architect_chat_intake_form_controller.dart';
 import 'controller/architect_chat_screen_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ArchitectChatScreen extends StatelessWidget {
   ArchitectChatScreen({super.key});
 
@@ -248,8 +249,8 @@ class ArchitectChatScreen extends StatelessWidget {
                             () {
                           if (imagePickerController.isCaptureImage.isTrue) {
                             // Send Image
-                            print("isCaptureImage.isTrue ${imagePickerController.isCaptureImage.isTrue}");
-                            print("imageFile.value ${imagePickerController.imageFile.value}");
+                            AppLogger.d("isCaptureImage.isTrue ${imagePickerController.isCaptureImage.isTrue}");
+                            AppLogger.d("imageFile.value ${imagePickerController.imageFile.value}");
                             return Visibility(
                                 visible: imagePickerController.isCaptureImage.isTrue,
                                 child: Padding(

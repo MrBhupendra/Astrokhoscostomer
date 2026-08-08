@@ -11,6 +11,7 @@ import '../../widget/custom_empty_screen.dart';
 import '../../widget/custom_network_image.dart';
 import '../../widget/simmer_widget/simmer_grid_container2.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class CallImageListScreen extends StatelessWidget {
   const CallImageListScreen({super.key});
 
@@ -24,7 +25,7 @@ class CallImageListScreen extends StatelessWidget {
     if (arguments is Map<String, dynamic>) {
       uniqueId = arguments["uniqueId"] ?? "";
     }
-    print("uniqueId->$uniqueId");
+    AppLogger.d("uniqueId->$uniqueId");
     controller.getImage(uniqueId);
     return SafeArea(
         child: Scaffold(

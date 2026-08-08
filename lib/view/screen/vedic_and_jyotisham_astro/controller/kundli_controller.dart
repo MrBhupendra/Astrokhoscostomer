@@ -31,6 +31,7 @@ import '../model/kundli_save_data_model.dart';
 import '../model/vedic_data.dart';
 import 'kundli_intake_form_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class KundliController extends GetxController {
   final Dio _dio = Dio();
 
@@ -202,11 +203,11 @@ class KundliController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        debugPrint('[KundliController] saveKundli->OnApiError');
+        AppLogger.d('[KundliController] saveKundli->OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      debugPrint('[KundliController] saveKundli->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] saveKundli->OnException:${e.toString()}');
     }
   }
 
@@ -246,11 +247,11 @@ class KundliController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        debugPrint('[KundliController] getSavedKundli->OnApiError');
+        AppLogger.d('[KundliController] getSavedKundli->OnApiError');
       }
     } catch (e) {
       isSavedSuccess(false);
-      debugPrint('[KundliController] getSavedKundli->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getSavedKundli->OnException:${e.toString()}');
     } finally {
       isSavedLoading(false);
     }
@@ -292,11 +293,11 @@ class KundliController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        debugPrint('[KundliController] updateKundli->OnApiError');
+        AppLogger.d('[KundliController] updateKundli->OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      debugPrint('[KundliController] updateKundli->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] updateKundli->OnException:${e.toString()}');
     }
   }
 
@@ -323,17 +324,17 @@ class KundliController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        debugPrint('[KundliController] deleteKundli->OnApiError');
+        AppLogger.d('[KundliController] deleteKundli->OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      debugPrint('[KundliController] deleteKundli->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] deleteKundli->OnException:${e.toString()}');
     }
   }
 
   //Charts
   Future<void> getCharts(String type, KundliData data, String style) async {
-    print("getCharts->$type, $style");
+    AppLogger.d("getCharts->$type, $style");
     isChartLoading(true);
     try {
       String? activeKundliApi = configController.config.data?.activeKundliApi.toString();
@@ -347,7 +348,7 @@ class KundliController extends GetxController {
           isChartSuccess(true);
           chartSvg.value = decodedData.toString(); // Update the value of chartSvg
         } else {
-          debugPrint('[KundliController] getCharts->OnApiError');
+          AppLogger.d('[KundliController] getCharts->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -358,11 +359,11 @@ class KundliController extends GetxController {
           isChartSuccess(true);
           chartSvg.value = decodedData.toString(); // Update the value of chartSvg
         } else {
-          debugPrint('[KundliController] getCharts->OnApiError');
+          AppLogger.d('[KundliController] getCharts->OnApiError');
         }
       }
     } catch (e) {
-      debugPrint('[KundliController] getCharts->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getCharts->OnException:${e.toString()}');
     } finally {
       isChartLoading(false);
     }
@@ -370,7 +371,7 @@ class KundliController extends GetxController {
 
   // Transit Chart
   Future<void> getTransitChart(String type, KundliData data, String style) async {
-    print("getTransitChart->$type, $style");
+    AppLogger.d("getTransitChart->$type, $style");
 
     isChartLoading(true);
     try {
@@ -389,7 +390,7 @@ class KundliController extends GetxController {
           isChartSuccess(true);
           chartSvg.value = decodedData.toString(); // Update the value of chartSvg
         } else {
-          debugPrint('[KundliController] getCharts->OnApiError');
+          AppLogger.d('[KundliController] getCharts->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -400,11 +401,11 @@ class KundliController extends GetxController {
           isChartSuccess(true);
           chartSvg.value = decodedData.toString(); // Update the value of chartSvg
         } else {
-          debugPrint('[KundliController] getCharts->OnApiError');
+          AppLogger.d('[KundliController] getCharts->OnApiError');
         }
       }
     } catch (e) {
-      debugPrint('[KundliController] getCharts->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getCharts->OnException:${e.toString()}');
     } finally {
       isChartLoading(false);
     }
@@ -429,7 +430,7 @@ class KundliController extends GetxController {
           }
         } else {
           isBasicsDetailsLoading(false);
-          debugPrint('[KundliController] getAvakhada->OnApiError');
+          AppLogger.d('[KundliController] getAvakhada->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -444,13 +445,13 @@ class KundliController extends GetxController {
           }
         } else {
           isBasicsDetailsLoading(false);
-          debugPrint('[KundliController] getAvakhada->OnApiError');
+          AppLogger.d('[KundliController] getAvakhada->OnApiError');
         }
       }
     }
     catch (e) {
       isBasicsDetailsSuccess(false);
-      debugPrint('[KundliController] getAvakhada->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getAvakhada->OnException:${e.toString()}');
     } finally {
       isBasicsDetailsLoading(false);
     }
@@ -475,7 +476,7 @@ class KundliController extends GetxController {
             isPlanetasSuccess(false);
           }
         } else {
-          debugPrint('[KundliController] getPlanets->OnApiError');
+          AppLogger.d('[KundliController] getPlanets->OnApiError');
         }
       }else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -489,12 +490,12 @@ class KundliController extends GetxController {
             isPlanetasSuccess(false);
           }
         } else {
-          debugPrint('[KundliController] getPlanets->OnApiError');
+          AppLogger.d('[KundliController] getPlanets->OnApiError');
         }
       }
     } catch (e) {
       isPlanetasSuccess(false);
-      debugPrint('[KundliController] getPlanets->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getPlanets->OnException:${e.toString()}');
     } finally {
       isPlanetasLoading(false);
     }
@@ -519,7 +520,7 @@ class KundliController extends GetxController {
             isDashaSuccess(false);
           }
         } else {
-          debugPrint('[KundliController] getMahaDasha->OnApiError');
+          AppLogger.d('[KundliController] getMahaDasha->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -533,14 +534,13 @@ class KundliController extends GetxController {
             isDashaSuccess(false);
           }
         } else {
-          debugPrint('[KundliController] getMahaDasha->OnApiError');
+          AppLogger.d('[KundliController] getMahaDasha->OnApiError');
         }
       }
 
     } catch (e) {
       isDashaSuccess(false);
-      debugPrint(
-          '[KundliController] getMahaDasha->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getMahaDasha->OnException:${e.toString()}');
     } finally {
       isDashaLoading(false);
     }
@@ -596,7 +596,7 @@ class KundliController extends GetxController {
           }
         }
         else {
-          debugPrint('[KundliController] getSpecificDasha->OnApiError');
+          AppLogger.d('[KundliController] getSpecificDasha->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -642,12 +642,11 @@ class KundliController extends GetxController {
           }
         }
         else {
-          debugPrint('[KundliController] getSpecificDasha->OnApiError');
+          AppLogger.d('[KundliController] getSpecificDasha->OnApiError');
         }
       }
     } catch (e) {
-      debugPrint(
-          '[KundliController] getSpecificDasha->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getSpecificDasha->OnException:${e.toString()}');
     } finally {
       isMahaDashaLoading(false);
     }
@@ -672,7 +671,7 @@ class KundliController extends GetxController {
             isCurrentMahaDashaFullSuccess(false);
           }
         } else {
-          debugPrint('[KundliController] getCurrentMahaDashaFull->OnApiError');
+          AppLogger.d('[KundliController] getCurrentMahaDashaFull->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -686,13 +685,12 @@ class KundliController extends GetxController {
             isCurrentMahaDashaFullSuccess(false);
           }
         } else {
-          debugPrint('[KundliController] getCurrentMahaDashaFull->OnApiError');
+          AppLogger.d('[KundliController] getCurrentMahaDashaFull->OnApiError');
         }
       }
     } catch (e) {
       isCurrentMahaDashaFullSuccess(false);
-      debugPrint(
-          '[KundliController] getCurrentMahaDashaFull->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getCurrentMahaDashaFull->OnException:${e.toString()}');
     } finally {
       isCurrentMahaDashaFullLoading(false);
     }
@@ -717,12 +715,12 @@ class KundliController extends GetxController {
         }
       } else {
         isFriendshipLoading(false);
-        debugPrint('[KundliController] getAvakhada->OnApiError');
+        AppLogger.d('[KundliController] getAvakhada->OnApiError');
       }
     }
     catch (e) {
       isFriendshipSuccess(false);
-      debugPrint('[KundliController] getAvakhada->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getAvakhada->OnException:${e.toString()}');
     } finally {
       isFriendshipLoading(false);
     }
@@ -748,9 +746,7 @@ class KundliController extends GetxController {
             isAshtakvargaSuccess(false);
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -764,16 +760,12 @@ class KundliController extends GetxController {
             isAshtakvargaSuccess(false);
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       }
     } catch (e) {
       isAshtakvargaSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAshtakvargaLoading(false);
     }
@@ -799,7 +791,7 @@ class KundliController extends GetxController {
             isAscendantsSuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getAscendants->OnApiError');
+          AppLogger.d('[HoroscopeController] getAscendants->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -813,14 +805,12 @@ class KundliController extends GetxController {
             isAscendantsSuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getAscendants->OnApiError');
+          AppLogger.d('[HoroscopeController] getAscendants->OnApiError');
         }
       }
     } catch (e) {
       isAscendantsSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAscendantsLoading(false);
     }
@@ -842,7 +832,7 @@ class KundliController extends GetxController {
           isKpChartSuccess(true);
           chartSvg.value = decodedData.toString(); // Update the value of chartSvg
         } else {
-          debugPrint('[KundliController] getKPCharts->OnApiError');
+          AppLogger.d('[KundliController] getKPCharts->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -853,12 +843,12 @@ class KundliController extends GetxController {
           isKpChartSuccess(true);
           chartSvg.value = decodedData.toString();  // Update the value of chartSvg
         } else {
-          debugPrint('[KundliController] getKPCharts->OnApiError');
+          AppLogger.d('[KundliController] getKPCharts->OnApiError');
         }
       }
 
     } catch (e) {
-      debugPrint('[KundliController] getKPCharts->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getKPCharts->OnException:${e.toString()}');
     } finally {
       isKpChartLoading(false);
     }
@@ -882,7 +872,7 @@ class KundliController extends GetxController {
             isKpPlanetSuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getAscendants->OnApiError');
+          AppLogger.d('[HoroscopeController] getAscendants->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.jyotisham){
         String? jyotishamApiKey = await SharedPreferencesHelper.getData(AppConstants.jyotishamApiKey);
@@ -897,11 +887,11 @@ class KundliController extends GetxController {
             isKpPlanetSuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getAscendants->OnApiError');
+          AppLogger.d('[HoroscopeController] getAscendants->OnApiError');
         }
       }
     } catch (e) {
-      debugPrint('[KundliController] getKPCharts->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getKPCharts->OnException:${e.toString()}');
     } finally {
       isKpPlanetLoading(false);
     }
@@ -928,7 +918,7 @@ class KundliController extends GetxController {
           }
         } else {
           isMangalDoshSuccess(false);
-          debugPrint('[KundliController] getMangalDosh->OnApiError');
+          AppLogger.d('[KundliController] getMangalDosh->OnApiError');
         }
       }else if (activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -943,13 +933,12 @@ class KundliController extends GetxController {
           }
         } else {
           isMangalDoshSuccess(false);
-          debugPrint('[KundliController] getMangalDosh->OnApiError');
+          AppLogger.d('[KundliController] getMangalDosh->OnApiError');
         }
       }
     } catch (e) {
       isMangalDoshSuccess(false);
-      debugPrint(
-          '[KundliController] getMangalDosh->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getMangalDosh->OnException:${e.toString()}');
     } finally {
       isMangalDoshLoading(false);
     }
@@ -975,7 +964,7 @@ class KundliController extends GetxController {
           }
         } else {
           isKaalsarpDoshSuccess(false);
-          debugPrint('[KundliController] getKaalsarpDosh->OnApiError');
+          AppLogger.d('[KundliController] getKaalsarpDosh->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -990,13 +979,12 @@ class KundliController extends GetxController {
           }
         } else {
           isKaalsarpDoshSuccess(false);
-          debugPrint('[KundliController] getKaalsarpDosh->OnApiError');
+          AppLogger.d('[KundliController] getKaalsarpDosh->OnApiError');
         }
       }
     } catch (e) {
       isKaalsarpDoshSuccess(false);
-      debugPrint(
-          '[KundliController] getKaalsarpDosh->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getKaalsarpDosh->OnException:${e.toString()}');
     } finally {
       isKaalsarpDoshLoading(false);
     }
@@ -1022,7 +1010,7 @@ class KundliController extends GetxController {
           }
         } else {
           isManglikDoshSuccess(false);
-          debugPrint('[KundliController] getManglikDosh->OnApiError');
+          AppLogger.d('[KundliController] getManglikDosh->OnApiError');
         }
       } else if (activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -1037,13 +1025,12 @@ class KundliController extends GetxController {
           }
         } else {
           isManglikDoshSuccess(false);
-          debugPrint('[KundliController] getManglikDosh->OnApiError');
+          AppLogger.d('[KundliController] getManglikDosh->OnApiError');
         }
       }
     } catch (e) {
       isManglikDoshSuccess(false);
-      debugPrint(
-          '[KundliController] getManglikDosh->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getManglikDosh->OnException:${e.toString()}');
     } finally {
       isManglikDoshLoading(false);
     }
@@ -1069,7 +1056,7 @@ class KundliController extends GetxController {
           }
         } else {
           isPitraDoshSuccess(false);
-          debugPrint('[KundliController] getPitraDosh->OnApiError');
+          AppLogger.d('[KundliController] getPitraDosh->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -1084,13 +1071,12 @@ class KundliController extends GetxController {
           }
         } else {
           isPitraDoshSuccess(false);
-          debugPrint('[KundliController] getPitraDosh->OnApiError');
+          AppLogger.d('[KundliController] getPitraDosh->OnApiError');
         }
       }
     } catch (e) {
       isPitraDoshSuccess(false);
-      debugPrint(
-          '[KundliController] getPitraDosh->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getPitraDosh->OnException:${e.toString()}');
     } finally {
       isPitraDoshLoading(false);
     }
@@ -1117,9 +1103,7 @@ class KundliController extends GetxController {
           }
         } else {
           isRudrakshaSuggestionsSuccess(false);
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       }else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -1134,16 +1118,12 @@ class KundliController extends GetxController {
           }
         } else {
           isRudrakshaSuggestionsSuccess(false);
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       }
     } catch (e) {
       isRudrakshaSuggestionsSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isRudrakshaSuggestionsLoading(false);
     }
@@ -1170,9 +1150,7 @@ class KundliController extends GetxController {
           }
         } else {
           isGemSuggestionsSuccess(false);
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -1187,16 +1165,12 @@ class KundliController extends GetxController {
           }
         } else {
           isGemSuggestionsSuccess(false);
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       }
     } catch (e) {
       isGemSuggestionsSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isGemSuggestionsLoading(false);
     }
@@ -1207,7 +1181,6 @@ class KundliController extends GetxController {
     super.onClose();
     Get.delete<KundliIntakeFormController>();
   }
-
 
 
   void setHeader(String jyotishamApiKey) {

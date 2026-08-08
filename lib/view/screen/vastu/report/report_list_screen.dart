@@ -15,6 +15,7 @@ import '../../../widget/simmer_widget/simmer_list_view.dart';
 import '../../splash/controller/config_controller.dart';
 import 'controller/report_horo_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ReportListScreen extends StatelessWidget {
   const ReportListScreen({super.key});
 
@@ -70,7 +71,7 @@ class ReportListScreen extends StatelessWidget {
                       ),
                       child: TextField(
                         onChanged: (value) {
-                          print("Search Value-> $value");
+                          AppLogger.d("Search Value-> $value");
                           // Future.delayed(const Duration(seconds: 1), () {
                           //   controller.search(value);
                           // });

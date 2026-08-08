@@ -36,6 +36,7 @@ import '../../splash/controller/config_controller.dart';
 import '../../webview/ccavenue_webview_screen.dart';
 import '../../webview/payment_webview_screen.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class GroupPoojaController extends GetxController {
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -123,15 +124,11 @@ class GroupPoojaController extends GetxController {
           isCategorySuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isCategorySuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCategoryLoading(false);
     }
@@ -148,9 +145,7 @@ class GroupPoojaController extends GetxController {
         'offset': offset,
       });
 
-      if (kDebugMode) {
-        print("request $offset $categoryId $search $slug");
-      }
+      AppLogger.d("request $offset $categoryId $search $slug");
       if (response.statusCode == 200) {
         groupPujasListModel = GroupPujasListModel.fromJson(response.data);
         if (groupPujasListModel.status == AppConstants.success) {
@@ -163,15 +158,11 @@ class GroupPoojaController extends GetxController {
           isGroupPoojaSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isGroupPoojaSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isGroupPoojaLoading(false);
     }
@@ -210,15 +201,11 @@ class GroupPoojaController extends GetxController {
           astrologerIsNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isAstrologerSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAstrologerLoading(false);
     }
@@ -242,8 +229,8 @@ class GroupPoojaController extends GetxController {
         "customer_uni_id": uniId,
         "wallet_check": walletCheck,
       });
-      debugPrint(groupPoojaAssignId);
-      debugPrint(walletCheck.toString());
+      AppLogger.d(groupPoojaAssignId);
+      AppLogger.d(walletCheck.toString());
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         groupPoojaCalculationModel = GroupPoojaCalculationModel.fromJson(response.data);
@@ -267,16 +254,12 @@ class GroupPoojaController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -640,7 +623,7 @@ class GroupPoojaController extends GetxController {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () async {
-                                debugPrint("groupPoojaAssignId$groupPoojaAssignId");
+                                AppLogger.d("groupPoojaAssignId$groupPoojaAssignId");
                                 String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
                                 String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
                                 if(configController.phoneCode == AppConstants.defaultPhoneCode){
@@ -723,9 +706,7 @@ class GroupPoojaController extends GetxController {
         "payment_method": paymentMethod
       });
 
-      if (kDebugMode) {
-        print("Req data $apiKey $uniId $groupPoojaAssignId $astrologerId $uniId $date $time $walletCheck $paymentMethod");
-      }
+      AppLogger.d("Req data $apiKey $uniId $groupPoojaAssignId $astrologerId $uniId $date $time $walletCheck $paymentMethod");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -743,16 +724,12 @@ class GroupPoojaController extends GetxController {
           isPurchaseSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -794,7 +771,7 @@ class GroupPoojaController extends GetxController {
                 uniId.toString(),
                 AppConstants.groupPoojaOrder);
           } catch (e) {
-            debugPrint("Error Event openCheckout: $e");
+            AppLogger.d("Error Event openCheckout: $e");
           }
 
           final CCAvenueController ccAvenueController = Get.put(CCAvenueController());
@@ -832,16 +809,12 @@ class GroupPoojaController extends GetxController {
           isPurchaseSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -863,9 +836,7 @@ class GroupPoojaController extends GetxController {
         "payment_method": paymentMethod
       });
 
-      if (kDebugMode) {
-        print("Req data $apiKey $uniId $groupPoojaAssignId $astrologerId $uniId $walletCheck $paymentMethod");
-      }
+      AppLogger.d("Req data $apiKey $uniId $groupPoojaAssignId $astrologerId $uniId $walletCheck $paymentMethod");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -891,7 +862,7 @@ class GroupPoojaController extends GetxController {
               try {
                 AppEvents().sendInitCheckoutEvent(ccAvenueModel.data!.amount.toString(), ccAvenueModel.ccavenueData!.orderId.toString(), uniId.toString(), AppConstants.groupPoojaOrder);
               } catch (e) {
-                debugPrint("Error Event openCheckout: $e");
+                AppLogger.d("Error Event openCheckout: $e");
               }
             }else{
               AppDialog().showPaymentSuccessDialog(AppConstants.groupPoojaOrder);
@@ -945,11 +916,11 @@ class GroupPoojaController extends GetxController {
         //TODO Handle Phonepe
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {print('OnApiError');}
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {print('OnException==> ${e.toString()}');}
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 }

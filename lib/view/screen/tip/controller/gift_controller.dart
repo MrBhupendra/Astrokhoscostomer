@@ -10,6 +10,7 @@ import '../../../widget/custom_snack_bar.dart';
 import '../../agora/live_stream/model/live_gift_list_model.dart';
 import '../../dashboard/controller/dashboard_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class GiftController extends FullLifeCycleController with FullLifeCycleMixin{
 
   DashboardController dashboardController = Get.put(DashboardController());
@@ -44,15 +45,11 @@ class GiftController extends FullLifeCycleController with FullLifeCycleMixin{
           isGiftSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isGiftSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isGiftLoading(false);
     }
@@ -89,15 +86,11 @@ class GiftController extends FullLifeCycleController with FullLifeCycleMixin{
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 

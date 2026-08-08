@@ -12,6 +12,7 @@ import '../../widget/custom_empty_screen.dart';
 
 import '../../widget/simmer_widget/simmer_subscription_container.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SubscriptionPurchaseListScreen extends GetView<SubscriptionController> {
   const SubscriptionPurchaseListScreen({super.key});
 
@@ -42,7 +43,7 @@ class SubscriptionPurchaseListScreen extends GetView<SubscriptionController> {
           child: Scaffold(
             appBar: CustomAppBar(title: "Subscription Purchase List" ,onBackPressed: (){
               if (type == "payScreen") {
-                print("payScreen => $type");
+                AppLogger.d("payScreen => $type");
                 Get.offAllNamed('/dashboard');
               } else {
                 Get.back();
@@ -176,7 +177,6 @@ class SubscriptionPurchaseListScreen extends GetView<SubscriptionController> {
                                       // CustomTextMedium("${controller.subscriptionPurchaseModel.data![index].remainProductOrderDiscount}",color: ColorResources.red,),
                                     ],
                                   ),
-
 
 
                                   const Divider(

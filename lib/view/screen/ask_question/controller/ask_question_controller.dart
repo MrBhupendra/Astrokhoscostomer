@@ -25,6 +25,7 @@ import '../../splash/controller/config_controller.dart';
 import '../model/question_calculation_model.dart';
 import '../model/question_purchase_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AskQuestionController extends FullLifeCycleController
     with FullLifeCycleMixin {
   final DashboardController dashboardController = Get.put<DashboardController>(DashboardController());
@@ -122,19 +123,15 @@ class AskQuestionController extends FullLifeCycleController
             isNoMoreData = true;
           }
         } else {
-          print('getChatHistory API Response else: ${response.data.toString()}');
+          AppLogger.d('getChatHistory API Response else: ${response.data.toString()}');
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getChatHistory');
-        }
+        AppLogger.d('OnApiError getChatHistory');
       }
     } catch (e) {
       isProfileListSuccess(false);
-      if (kDebugMode) {
-        print('OnException getChatHistory==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getChatHistory==> ${e.toString()}');
     } finally {
       isProfileListLoading(false);
     }
@@ -157,15 +154,11 @@ class AskQuestionController extends FullLifeCycleController
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError getChatHistory');
-        }
+        AppLogger.d('OnApiError getChatHistory');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException getChatHistory==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getChatHistory==> ${e.toString()}');
     }
   }
 
@@ -184,9 +177,7 @@ class AskQuestionController extends FullLifeCycleController
           data: {'api_key': apiKey, 'user_uni_id': uniId, 'page': page});
 
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print('API Response getChatHistory: ${response.data.toString()}');
-        }
+        AppLogger.d('API Response getChatHistory: ${response.data.toString()}');
         questionHistoryListModel = QuestionHistoryListModel.fromJson(response.data);
         if (questionHistoryListModel.status == AppConstants.success) {
           offsetCount = questionHistoryListModel.page!;
@@ -204,19 +195,15 @@ class AskQuestionController extends FullLifeCycleController
             getProfiles();
           }
         } else {
-          print('getChatHistory API Response else: ${response.data.toString()}');
+          AppLogger.d('getChatHistory API Response else: ${response.data.toString()}');
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getChatHistory');
-        }
+        AppLogger.d('OnApiError getChatHistory');
       }
     } catch (e) {
       isChatHistorySuccess(false);
-      if (kDebugMode) {
-        print('OnException getChatHistory==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getChatHistory==> ${e.toString()}');
     } finally {
       isChatHistoryLoading(false);
     }
@@ -247,15 +234,11 @@ class AskQuestionController extends FullLifeCycleController
           isCalculationSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -320,16 +303,12 @@ class AskQuestionController extends FullLifeCycleController
       } else {
         CustomProgressDialog.dismissDialog();
         // CustomSnackBar.showBottom(purchaseModel.msg.toString());
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -553,7 +532,7 @@ class AskQuestionController extends FullLifeCycleController
 
   @override
   void onResumed() {
-    print("AskQuestionController onResumed");
+    AppLogger.d("AskQuestionController onResumed");
   }
 
 }

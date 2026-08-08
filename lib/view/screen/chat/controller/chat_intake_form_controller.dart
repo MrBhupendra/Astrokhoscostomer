@@ -20,6 +20,7 @@ import '../../../widget/custom_okdialog_widget.dart';
 import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ChatIntakeFormController extends GetxController {
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -184,19 +185,19 @@ class ChatIntakeFormController extends GetxController {
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? cusImage = await SharedPreferencesHelper.getData(AppConstants.profileImage);
       String? cusName = await SharedPreferencesHelper.getData(AppConstants.name);
-      debugPrint("[CHAT] startChat request=> $apiKey $uniId $astrologerUniId $cusImage");
+      AppLogger.d("[CHAT] startChat request=> $apiKey $uniId $astrologerUniId $cusImage");
       final response = await _dio.post(AppConstants.startChat, data: {
         'api_key': apiKey,
         "user_uni_id": uniId,
         'astrologer_uni_id': astrologerUniId
       });
-      debugPrint("[CHAT] startChat response=> ${response.data.toString()}");
+      AppLogger.d("[CHAT] startChat response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         chatSuccessModel = ChatSuccessModel.fromJson(response.data);
         if (chatSuccessModel.status == AppConstants.success) {
           isSuccess(true);
-           print("ChatResponse->$response");
+           AppLogger.d("ChatResponse->$response");
           if (chatSuccessModel.joinStatus == 0) {
             AppDialog().showCallDialog(chatSuccessModel.msg.toString(), "Queue",AppConstants.chat, cusImage.toString(), cusName.toString(), astrologerImage.toString(), astrologerName.toString());
           } else if (chatSuccessModel.joinStatus == 1 || chatSuccessModel.joinStatus == 2) {
@@ -224,15 +225,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -246,14 +243,14 @@ class ChatIntakeFormController extends GetxController {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? cusImage = await SharedPreferencesHelper.getData(AppConstants.profileImage);
-      print("Request $apiKey $uniId $astrologerUniId");
+      AppLogger.d("Request $apiKey $uniId $astrologerUniId");
       final response = await _dio.post(AppConstants.startEmergencyChat, data: {
         'api_key': apiKey,
         "user_uni_id": uniId,
         'astrologer_uni_id': astrologerUniId
       });
 
-      debugPrint("[CHAT] startChat response=> ${response.data.toString()}");
+      AppLogger.d("[CHAT] startChat response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         chatEmergencySuccessModel = ChatSuccessModel.fromJson(response.data);
@@ -289,15 +286,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -349,15 +342,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -394,7 +383,7 @@ class ChatIntakeFormController extends GetxController {
                 await SharedPreferencesHelper.getData(AppConstants.agoraAppId);
             String channelName = '$customerUniUd-$astrologerUniId-Call';
 
-            print("StartInAppVoiceCall Data-> channel:$channelName uniqueId:${startInAppVoiceCallModel.data?.uniqeid.toString()} agoraAppId:$agoraAppId token:${startInAppVoiceCallModel.data!.agoraToken.toString()}");
+            AppLogger.d("StartInAppVoiceCall Data-> channel:$channelName uniqueId:${startInAppVoiceCallModel.data?.uniqeid.toString()} agoraAppId:$agoraAppId token:${startInAppVoiceCallModel.data!.agoraToken.toString()}");
             Get.toNamed('/voiceCallScreen', arguments: {
               'channelName': channelName,
               'uniqueId': startInAppVoiceCallModel.data?.uniqeid.toString(),
@@ -421,15 +410,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -476,15 +461,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -515,7 +496,7 @@ class ChatIntakeFormController extends GetxController {
             String? agoraAppId = await SharedPreferencesHelper.getData(AppConstants.agoraAppId);
             String channelName = '$customerUniUd-$astrologerUniId-Call';
 
-            print("StartInAppVoiceCall Data-> channel:$channelName uniqueId:${startEmergencyInAppVoiceCallModel.data?.uniqeid.toString()} agoraAppId:$agoraAppId token:${startEmergencyInAppVoiceCallModel.data!.agoraToken.toString()}");
+            AppLogger.d("StartInAppVoiceCall Data-> channel:$channelName uniqueId:${startEmergencyInAppVoiceCallModel.data?.uniqeid.toString()} agoraAppId:$agoraAppId token:${startEmergencyInAppVoiceCallModel.data!.agoraToken.toString()}");
             Get.toNamed('/voiceCallScreen', arguments: {
               'channelName': channelName,
               'uniqueId': startEmergencyInAppVoiceCallModel.data?.uniqeid.toString(),
@@ -542,15 +523,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -586,7 +563,7 @@ class ChatIntakeFormController extends GetxController {
             String? agoraAppId = await SharedPreferencesHelper.getData(AppConstants.agoraAppId);
             String channelName = '$customerUniUd-$astrologerUniId-Video';
 
-            print("StartVideoCall Data-> channel:$channelName uniqueId:${startVideoCallModel.data?.uniqeid.toString()} agoraAppId:$agoraAppId token:${startVideoCallModel.data!.agoraToken.toString()}");
+            AppLogger.d("StartVideoCall Data-> channel:$channelName uniqueId:${startVideoCallModel.data?.uniqeid.toString()} agoraAppId:$agoraAppId token:${startVideoCallModel.data!.agoraToken.toString()}");
             Get.toNamed('/videoCallScreen', arguments: {
               'channelName': channelName,
               'uniqueId': startVideoCallModel.data?.uniqeid.toString(),
@@ -615,15 +592,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -655,7 +628,7 @@ class ChatIntakeFormController extends GetxController {
             String? agoraAppId = await SharedPreferencesHelper.getData(AppConstants.agoraAppId);
             String channelName = '$customerUniUd-$astrologerUniId-Video';
 
-            print("StartVideoCall Data-> channel:$channelName uniqueId:${startEmergencyVideoCallModel.data?.uniqeid.toString()} agoraAppId:$agoraAppId token:${startEmergencyVideoCallModel.data!.agoraToken.toString()}");
+            AppLogger.d("StartVideoCall Data-> channel:$channelName uniqueId:${startEmergencyVideoCallModel.data?.uniqeid.toString()} agoraAppId:$agoraAppId token:${startEmergencyVideoCallModel.data!.agoraToken.toString()}");
             Get.toNamed('/videoCallScreen', arguments: {
               'channelName': channelName,
               'uniqueId': startEmergencyVideoCallModel.data?.uniqeid.toString(),
@@ -682,15 +655,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -702,13 +671,13 @@ class ChatIntakeFormController extends GetxController {
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      debugPrint("[ASSISTANT-CHAT] startAssistantChat request=> $apiKey $uniId $astrologerUniId");
+      AppLogger.d("[ASSISTANT-CHAT] startAssistantChat request=> $apiKey $uniId $astrologerUniId");
       final response = await _dio.post(AppConstants.startAssistantChat, data: {
         'api_key': apiKey,
         "user_uni_id": uniId,
         'astrologer_uni_id': astrologerUniId
       });
-      debugPrint("[ASSISTANT-CHAT] startAssistantChat response=> ${response.data.toString()}");
+      AppLogger.d("[ASSISTANT-CHAT] startAssistantChat response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         assistantChatSuccessModel = ChatSuccessModel.fromJson(response.data);
@@ -743,15 +712,11 @@ class ChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -787,7 +752,7 @@ class ChatIntakeFormController extends GetxController {
         'partner_long' : partnerLongitude.toString()
       });
       if (response.statusCode == 200) {
-        print('SaveIntakeData ${response.data.toString()}');
+        AppLogger.d('SaveIntakeData ${response.data.toString()}');
         saveSuccessModel = SuccessModel.fromJson(response.data);
         if (saveSuccessModel.status == AppConstants.success) {
           isSaveSuccess(true);
@@ -796,14 +761,10 @@ class ChatIntakeFormController extends GetxController {
           CustomSnackBar.showBottom(saveSuccessModel.msg.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isSaveLoading(false);
     }

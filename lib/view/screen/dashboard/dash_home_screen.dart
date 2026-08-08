@@ -41,6 +41,7 @@ import 'controller/home_controller.dart';
 import '../../../utill/color_resources.dart';
 import '../../../utill/dimensions.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
   final ConfigController configController = Get.find();
@@ -549,10 +550,7 @@ class HomeScreen extends StatelessWidget {
                   // Orders
                   Obx(
                     () {
-                      if (kDebugMode) {
-                        print(
-                            "SK->${controller.isLogin.isFalse} ${controller.chatChannels?.length}");
-                      }
+                      AppLogger.d("SK->${controller.isLogin.isFalse} ${controller.chatChannels?.length}");
                       if (controller.isDashboardSuccess.isTrue) {
                         if (controller.isLogin.isFalse ||
                             controller.chatChannels!.isEmpty) {

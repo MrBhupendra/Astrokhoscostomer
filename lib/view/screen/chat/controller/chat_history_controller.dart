@@ -10,6 +10,7 @@ import '../model/chat_channel_list_model.dart';
 import '../model/chat_history_model.dart';
 import '../model/chat_message_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ChatHistoryController extends FullLifeCycleController
     with FullLifeCycleMixin {
   final isLoading = false.obs;
@@ -44,9 +45,7 @@ class ChatHistoryController extends FullLifeCycleController
     super.onInit();
     getChatChannelsList();
 
-    if (kDebugMode) {
-      print('OnInit ChatScreen');
-    }
+    AppLogger.d('OnInit ChatScreen');
   }
 
   Future<void> getChatChannelsList() async {
@@ -54,14 +53,14 @@ class ChatHistoryController extends FullLifeCycleController
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      debugPrint("[CHAT] getChatChannelsList request=> $apiKey $uniId 0");
+      AppLogger.d("[CHAT] getChatChannelsList request=> $apiKey $uniId 0");
       final response = await _dio.post(AppConstants.getChatChannelsList, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
         'is_assistant_chat' : 0
       });
 
-      debugPrint("[CHAT] getChatChannelsList response=> ${response.data.toString()}");
+      AppLogger.d("[CHAT] getChatChannelsList response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         chatChannelListModel = ChatChannelListModel.fromJson(response.data);
         if (chatChannelListModel.status == AppConstants.success) {
@@ -70,14 +69,10 @@ class ChatHistoryController extends FullLifeCycleController
           isSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -93,7 +88,7 @@ class ChatHistoryController extends FullLifeCycleController
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      debugPrint("[CHAT] getChatHistory request=> $apiKey $uniId $channelName $firstMsgId $page");
+      AppLogger.d("[CHAT] getChatHistory request=> $apiKey $uniId $channelName $firstMsgId $page");
       final response = await _dio.post(AppConstants.getChatHistory, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
@@ -101,7 +96,7 @@ class ChatHistoryController extends FullLifeCycleController
         'first_msg_id': firstMsgId,
         'page': page
       });
-      debugPrint("[CHAT] getChatHistory response=> ${response.data.toString()}");
+      AppLogger.d("[CHAT] getChatHistory response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         chatHistoryModel = ChatHistoryModel.fromJson(response.data);
         if (chatHistoryModel.status == AppConstants.success) {
@@ -126,23 +121,18 @@ class ChatHistoryController extends FullLifeCycleController
             isNoMoreData = true;
           }
         } else {
-          print(
-              'getChatHistory API Response else: ${response.data.toString()}');
+          AppLogger.d('getChatHistory API Response else: ${response.data.toString()}');
           if (page == 1) {
             isChatHistorySuccess(false);
           }
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isChatHistorySuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isChatHistoryLoading(false);
     }
@@ -153,13 +143,13 @@ class ChatHistoryController extends FullLifeCycleController
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      debugPrint("[CHAT] deleteChatChannels request=> $apiKey $uniId $id");
+      AppLogger.d("[CHAT] deleteChatChannels request=> $apiKey $uniId $id");
       final response = await _dio.post(AppConstants.deleteChatChannel, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
         'id': id
       });
-      debugPrint("[CHAT] deleteChatChannels response=> ${response.data.toString()}");
+      AppLogger.d("[CHAT] deleteChatChannels response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         deleteModel = SuccessModel.fromJson(response.data);
         CustomSnackBar.showBottom(deleteModel.msg.toString());
@@ -172,14 +162,10 @@ class ChatHistoryController extends FullLifeCycleController
           isDeleteSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isDeleteLoading(false);
     }

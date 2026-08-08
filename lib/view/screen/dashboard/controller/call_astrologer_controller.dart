@@ -12,6 +12,7 @@ import '../../../../utill/app_constants.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../search/model/astrologer_request_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class CallAstrologerController extends GetxController {
   final Dio _dio = Dio();
 
@@ -66,16 +67,17 @@ class CallAstrologerController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // logger
-    _dio.interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      error: true,
-      compact: true,
-      maxWidth: 90,
-    ));
+    if (kDebugMode) {
+      _dio.interceptors.add(PrettyDioLogger(
+        requestHeader: true,
+        requestBody: true,
+        responseBody: true,
+        responseHeader: false,
+        error: true,
+        compact: true,
+        maxWidth: 90,
+      ));
+    }
   }
 
   void searchAstrologers(String query) {
@@ -116,11 +118,11 @@ class CallAstrologerController extends GetxController {
           isFilterSuccess(false);
         }
       } else {
-        debugPrint("getFilters [API ERROR] ${response.statusCode}->${response.statusMessage}");
+        AppLogger.d("getFilters [API ERROR] ${response.statusCode}->${response.statusMessage}");
       }
     } catch (e) {
       isFilterSuccess(false);
-      debugPrint("getFilters [EXCEPTION]");
+      AppLogger.d("getFilters [EXCEPTION]");
     } finally {
       isFilterLoading(false);
     }
@@ -141,11 +143,11 @@ class CallAstrologerController extends GetxController {
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       final requestData = request.toJson();
       requestData['user_uni_id'] = uniId;
-      debugPrint("AS1 [getAllAstrologer] request $requestData");
+      AppLogger.d("AS1 [getAllAstrologer] request $requestData");
       final response = await _dio.post(AppConstants.getAllAstrologer,data: requestData);
 
       if (_latestRequestToken != thisRequestToken) {
-        debugPrint("AS1 [getAllAstrologer] Stale response ignored");
+        AppLogger.d("AS1 [getAllAstrologer] Stale response ignored");
         return;
       }
 
@@ -165,11 +167,11 @@ class CallAstrologerController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        debugPrint("getAllAstrologer [API ERROR] ${response.statusCode}->${response.statusMessage}");
+        AppLogger.d("getAllAstrologer [API ERROR] ${response.statusCode}->${response.statusMessage}");
       }
     } catch (e) {
       isAstrologerSuccess(false);
-      debugPrint("getAllAstrologer [EXCEPTION]");
+      AppLogger.d("getAllAstrologer [EXCEPTION]");
     } finally {
       isAstrologerLoading(false);
     }

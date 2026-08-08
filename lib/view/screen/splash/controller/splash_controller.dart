@@ -11,6 +11,7 @@ import '../../../../utill/app_constants.dart';
 import '../../../../utill/shared_preference.dart';
 import 'config_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SplashController extends GetxController {
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -103,14 +104,10 @@ class SplashController extends GetxController {
           }
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }

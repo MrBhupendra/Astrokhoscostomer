@@ -13,7 +13,8 @@ class PhonePeController extends GetxController {
   Object? result;
   final String _environmentValue = 'PRODUCTION';
   final String _appId = "";
-  final bool _enableLogs = true;
+  /// PhonePe SDK logs only in debug builds.
+  final bool _enableLogs = kDebugMode;
 
   String _type = '';
 
@@ -32,10 +33,8 @@ class PhonePeController extends GetxController {
   void initPhonePeSdk() {
     PhonePePaymentSdk.init(_environmentValue, _appId, _merchantId, _enableLogs)
         .then((isInitialized) {
-      debugPrint("PhonePeController $isInitialized");
       result = 'PhonePe SDK Initialized - $isInitialized';
     }).catchError((error) {
-      debugPrint("PhonePeController Init Error $error");
       handleError(error);
       return error;
     });
@@ -86,12 +85,10 @@ class PhonePeController extends GetxController {
           result = "Flow Incomplete";
         }
       }).catchError((error) {
-        debugPrint("PhonePeController catchError $error");
         handleError(error);
         return error;
       });
     } catch (error) {
-      debugPrint("PhonePeController catch $error");
       handleError(error);
     }
   }

@@ -7,6 +7,7 @@ import '../../../../utill/app_constants.dart';
 import '../../../../utill/shared_preference.dart';
 import '../model/notification_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class NotificationController extends GetxController {
   final Dio _dio = Dio();
 
@@ -78,15 +79,11 @@ class NotificationController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isSuccess(false);
-      if (kDebugMode) {
-        print('OnExceptionAll==> ${e.toString()}');
-      }
+      AppLogger.d('OnExceptionAll==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -122,14 +119,10 @@ class NotificationController extends GetxController {
           isDeleteSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }

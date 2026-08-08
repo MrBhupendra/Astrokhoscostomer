@@ -32,6 +32,7 @@ import '../../agora/live_stream/model/live_gift_list_model.dart';
 import '../../dashboard/controller/dashboard_controller.dart';
 import '../../splash/controller/config_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AstrologerProfileController extends FullLifeCycleController
     with FullLifeCycleMixin{
 
@@ -131,15 +132,11 @@ class AstrologerProfileController extends FullLifeCycleController
           isAstrologerSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isAstrologerSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAstrologerLoading(false);
     }
@@ -178,15 +175,11 @@ class AstrologerProfileController extends FullLifeCycleController
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isReviewSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isReviewLoading(false);
     }
@@ -217,15 +210,11 @@ class AstrologerProfileController extends FullLifeCycleController
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isCallSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCallLoading(false);
     }
@@ -253,14 +242,10 @@ class AstrologerProfileController extends FullLifeCycleController
         }
 
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isFollowLoading(false);
     }

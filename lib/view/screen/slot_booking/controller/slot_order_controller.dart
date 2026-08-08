@@ -12,6 +12,7 @@ import '../../../widget/custom_snack_bar.dart';
 import '../../agora/videocall/model/service_start_video_call_model.dart';
 import '../model/slot_order_list_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SlotOrderController extends GetxController {
   final Dio _dio = Dio();
 
@@ -66,14 +67,10 @@ class SlotOrderController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isOrderLoading(false);
     }
@@ -120,15 +117,11 @@ class SlotOrderController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
     }
   }
@@ -180,15 +173,11 @@ class SlotOrderController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
     }
   }

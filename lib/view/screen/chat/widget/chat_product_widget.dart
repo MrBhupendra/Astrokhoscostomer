@@ -12,6 +12,7 @@ import '../../../widget/custom_round_network_image.dart';
 import '../../../widget/custom_text_regular.dart';
 import '../model/chat_message_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ChatProductWidget extends StatelessWidget {
   final ChatMessageModel message;
   final String? userUniId;
@@ -29,7 +30,7 @@ class ChatProductWidget extends StatelessWidget {
         productUrl =  messageMap['productUrl'].toString();
       }
     }catch(e){
-      debugPrint("exception");
+      AppLogger.d("exception");
     }
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 4),

@@ -31,6 +31,7 @@ import '../../splash/controller/config_controller.dart';
 import '../../webview/payment_webview_screen.dart';
 import '../model/product_calculation_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ProductsController extends GetxController {
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -193,15 +194,11 @@ class ProductsController extends GetxController {
           isProductCategorySuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isProductCategorySuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isProductCategoryLoading(false);
     }
@@ -229,15 +226,11 @@ class ProductsController extends GetxController {
           isProductsSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isProductsSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isProductsLoading(false);
     }
@@ -258,15 +251,11 @@ class ProductsController extends GetxController {
           isProductDetailSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isProductDetailSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isProductDetailLoading(false);
     }
@@ -291,14 +280,10 @@ class ProductsController extends GetxController {
           isAddressSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAddressLoading(false);
     }
@@ -354,15 +339,11 @@ class ProductsController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -387,21 +368,21 @@ class ProductsController extends GetxController {
         "offer_code": offerCode
       });
 
-      print("apiKey => $apiKey");
-      print("uniId => $uniId");
-      print("productId => $productId");
-      print("qty => $qty");
-      print("vendorUniId => $vendorUniId");
-      print("astroRefID => $astroRefID");
-      print("walletCheck => $walletCheck");
-      print("payMethod => $payMethod");
-      print("offerCode => $offerCode");
-      print("response2 => $response");
+      AppLogger.d("apiKey => $apiKey");
+      AppLogger.d("uniId => $uniId");
+      AppLogger.d("productId => $productId");
+      AppLogger.d("qty => $qty");
+      AppLogger.d("vendorUniId => $vendorUniId");
+      AppLogger.d("astroRefID => $astroRefID");
+      AppLogger.d("walletCheck => $walletCheck");
+      AppLogger.d("payMethod => $payMethod");
+      AppLogger.d("offerCode => $offerCode");
+      AppLogger.d("response2 => $response");
 
       if (response.statusCode == 200) {
         productCalculationModel = ProductCalculationModel.fromJson(response.data);
         if (productCalculationModel.status == AppConstants.success) {
-          print("getProductCalculation-> hit api 200");
+          AppLogger.d("getProductCalculation-> hit api 200");
           isCalculationSuccess(true);
 
           isWalletSelected.value = walletCheck;
@@ -440,22 +421,18 @@ class ProductsController extends GetxController {
           updateOfferStatus(productCalculationModel.data!.couponStatus.toString());
 
         } else {
-          print("getProductCalculation-> hit api else");
+          AppLogger.d("getProductCalculation-> hit api else");
           isCalculationSuccess(false);
           CustomSnackBar.showBottom(productCalculationModel.msg.toString());
           updateOfferStatus(productCalculationModel.data!.couponStatus.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e, stackTrace) {
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-        print('OnException==> ${stackTrace.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
+        AppLogger.d('OnException==> ${stackTrace.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -487,7 +464,7 @@ class ProductsController extends GetxController {
         "offer_code": offerCode
       });
 
-      print("Purchase Request $apiKey, $uniId, productId ${productData.id.toString()}, qty $qty, ${productData.vendorUniId.toString()}, referenceId $refId, addressId $addressId, $walletCheck,$paymentMethod");
+      AppLogger.d("Purchase Request $apiKey, $uniId, productId ${productData.id.toString()}, qty $qty, ${productData.vendorUniId.toString()}, referenceId $refId, addressId $addressId, $walletCheck,$paymentMethod");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -513,7 +490,7 @@ class ProductsController extends GetxController {
               try {
                 AppEvents().sendInitCheckoutEvent(ccAvenueModel.data!.amount.toString(), ccAvenueModel.ccavenueData!.orderId.toString(), uniId.toString(), AppConstants.shop);
               } catch (e) {
-                debugPrint("Error Event openCheckout: $e");
+                AppLogger.d("Error Event openCheckout: $e");
               }
             }else{
               AppDialog().showPaymentSuccessDialog(AppConstants.shop);
@@ -530,7 +507,7 @@ class ProductsController extends GetxController {
               try {
                 AppEvents().sendInitCheckoutEvent(payuPaymentModel.paymentGateway!.amount.toString(), payuPaymentModel.orderId.toString(), uniId.toString(), AppConstants.shop);
               } catch (e) {
-                debugPrint("Error Event openCheckout: $e");
+                AppLogger.d("Error Event openCheckout: $e");
               }
             }else{
               AppDialog().showPaymentSuccessDialog(AppConstants.shop);
@@ -600,11 +577,11 @@ class ProductsController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {print('OnApiError');}
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {print('OnException==> ${e.toString()}');}
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 

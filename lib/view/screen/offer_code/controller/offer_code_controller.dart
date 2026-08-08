@@ -18,6 +18,7 @@ import '../../../widget/custom_empty_screen.dart';
 import '../../../widget/custom_text_medium.dart';
 import '../../../widget/custom_text_regular.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class OfferCodeController extends GetxController {
   final Dio _dio = Dio();
 
@@ -50,15 +51,11 @@ class OfferCodeController extends GetxController {
           isOfferCodeSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isOfferCodeSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isOfferCodeLoading(false);
     }

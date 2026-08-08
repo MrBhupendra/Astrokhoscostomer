@@ -10,6 +10,7 @@ import '../../../../utill/app_strings.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_snack_bar.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class BlogController extends GetxController{
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -91,14 +92,10 @@ class BlogController extends GetxController{
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -145,9 +142,7 @@ class BlogController extends GetxController{
         }
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException getBlogBySlug==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getBlogBySlug==> ${e.toString()}');
     } finally {
       isBlogDetailLoading(false);
     }
@@ -166,7 +161,7 @@ class BlogController extends GetxController{
         'blog_id': blogId,
         'status': status
       });
-      print("apiKey->$apiKey uniId->$uniId blogId->$blogId status->$status");
+      AppLogger.d("apiKey->$apiKey uniId->$uniId blogId->$blogId status->$status");
       if (response.statusCode == 200) {
         blogLikeModel = SuccessModel.fromJson(response.data);
         if (blogLikeModel.status == AppConstants.success) {
@@ -180,14 +175,10 @@ class BlogController extends GetxController{
           }
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLikeLoading(false);
     }

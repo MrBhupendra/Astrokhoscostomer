@@ -9,6 +9,7 @@ import '../../splash/controller/config_controller.dart';
 import '../model/shubhmuhrat_choghadiya_model.dart';
 import '../model/shubhmuhrat_hora_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ShubhmuhratController extends GetxController {
   final Dio _dio = Dio();
   final ConfigController configController = Get.find();
@@ -49,9 +50,7 @@ class ShubhmuhratController extends GetxController {
            isChoghadiyaSuccess(false);
          }
        } else {
-         if (kDebugMode) {
-           print('OnApiError');
-         }
+         AppLogger.d('OnApiError');
        }
      } else if(activeKundliApi == AppConstants.vedicastro){
        String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -68,16 +67,12 @@ class ShubhmuhratController extends GetxController {
            isChoghadiyaSuccess(false);
          }
        } else {
-         if (kDebugMode) {
-           print('OnApiError');
-         }
+         AppLogger.d('OnApiError');
        }
      }
     } catch (e) {
       isChoghadiyaSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isChoghadiyaLoading(false);
     }
@@ -107,9 +102,7 @@ class ShubhmuhratController extends GetxController {
             isHoraSuccess(false);
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -126,16 +119,12 @@ class ShubhmuhratController extends GetxController {
             isHoraSuccess(false);
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       }
     } catch (e) {
       isHoraSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isHoraLoading(false);
     }

@@ -13,12 +13,13 @@ import '../../widget/custom_empty_screen.dart';
 import '../../widget/custom_text_regular.dart';
 import '../../widget/simmer_widget/simmer_list_view.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SaveAddressScreen extends GetView<ProductsController> {
   const SaveAddressScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    print("Sk1");
+    AppLogger.d("Sk1");
     controller.getUserAddress();
     return SafeArea(
       child: Scaffold(
@@ -28,7 +29,7 @@ class SaveAddressScreen extends GetView<ProductsController> {
             Obx(
               () {
                 if (controller.isAddressSuccess.isTrue) {
-                  print("Sk2");
+                  AppLogger.d("Sk2");
                   // controller.getUserAddress();
                   return RefreshIndicator(
                     onRefresh: () async {

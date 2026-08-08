@@ -11,6 +11,7 @@ import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class LiveAstrologerController extends GetxController {
 
   final Dio _dio = Dio();
@@ -55,15 +56,11 @@ class LiveAstrologerController extends GetxController {
           isAstrologerSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isAstrologerSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAstrologerLoading(false);
     }
@@ -84,7 +81,7 @@ class LiveAstrologerController extends GetxController {
         CustomProgressDialog.dismissDialog();
         liveJoinModel = SuccessModel.fromJson(response.data);
         if(liveJoinModel.status == AppConstants.success){
-          print("Success -> ${response.data.toString()}");
+          AppLogger.d("Success -> ${response.data.toString()}");
           String? token = response.data["data"]["token"];
           Get.toNamed('/liveStreamScreen',arguments: {
             'uniqueId': uniqueId,
@@ -98,14 +95,10 @@ class LiveAstrologerController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -131,15 +124,11 @@ class LiveAstrologerController extends GetxController {
           isUpcomingSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isUpcomingSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isUpcomingLoading(false);
     }
@@ -167,14 +156,10 @@ class LiveAstrologerController extends GetxController {
         }
 
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isFollowLoading(false);
     }

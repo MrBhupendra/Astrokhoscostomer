@@ -26,6 +26,7 @@ import '../../../widget/custom_text_medium.dart';
 import '../../../widget/custom_text_regular.dart';
 import '../../splash/controller/config_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SwitchWordController extends GetxController {
   final Dio _dio = Dio();
   final isSwitchWordLoading = false.obs;
@@ -118,15 +119,11 @@ class SwitchWordController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isSwitchWordSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isSwitchWordLoading(false);
     }
@@ -177,16 +174,12 @@ class SwitchWordController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -230,15 +223,11 @@ class SwitchWordController extends GetxController {
           CustomSnackBar.showBottom(AppStrings.noPaymentGatewayFound.tr);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -552,7 +541,7 @@ class SwitchWordController extends GetxController {
                   ),
                   GestureDetector(
                     onTap: (){
-                      print("Tap");
+                      AppLogger.d("Tap");
                       Get.toNamed("/wallet");
                     },
                     child: Padding(

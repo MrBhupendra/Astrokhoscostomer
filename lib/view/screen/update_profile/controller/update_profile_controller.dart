@@ -12,6 +12,7 @@ import '../../../../utill/common_methods.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_snack_bar.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class UpdateProfileController extends GetxController {
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -62,7 +63,7 @@ class UpdateProfileController extends GetxController {
 
   void setGender(String gender) {
     selectedGender.value = gender;
-    print('AS1 ${selectedGender.value}');
+    AppLogger.d('AS1 ${selectedGender.value}');
   }
 
   Future<void> updateProfile(
@@ -84,7 +85,7 @@ class UpdateProfileController extends GetxController {
     String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
     String? phoneCode = await SharedPreferencesHelper.getData(AppConstants.phoneCode);
 
-    print("customerImg-> $customerImg");
+    AppLogger.d("customerImg-> $customerImg");
     try {
       final Map<String, dynamic> payload = {
         'api_key': apiKey,
@@ -112,7 +113,7 @@ class UpdateProfileController extends GetxController {
 
       FormData formData = FormData.fromMap(payload);
 
-      print("updateProfile Request-> ${formData.fields}");
+      AppLogger.d("updateProfile Request-> ${formData.fields}");
 
       final response = await _dio.post(AppConstants.updateProfileUri, data: formData);
 
@@ -131,14 +132,10 @@ class UpdateProfileController extends GetxController {
           CustomSnackBar.showBottom(updateProfileModel.msg.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
+      AppLogger.d('OnException==> $e');
     } finally {
       isLoading(false);
     }

@@ -22,6 +22,7 @@ import '../../../widget/custom_text_regular.dart';
 import '../../splash/controller/config_controller.dart';
 import '../model/astro_question_calculation_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AskAstrologerQuestionController extends GetxController {
   final TextEditingController messageController = TextEditingController();
 
@@ -110,15 +111,11 @@ class AskAstrologerQuestionController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isQueListSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isQueListLoading(false);
     }
@@ -158,23 +155,19 @@ class AskAstrologerQuestionController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
   }
 
   Future<void> questionPurchase(String question, String astroUniId, int walletCheck) async {
-    print("questionPurchase->$astroUniId");
+    AppLogger.d("questionPurchase->$astroUniId");
     CustomProgressDialog.showDialog();
     isPurchaseLoading(true);
     try {
@@ -203,16 +196,12 @@ class AskAstrologerQuestionController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }

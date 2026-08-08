@@ -16,6 +16,7 @@ import '../../searchPlace/search_place_screen.dart';
 import '../controller/kundli_controller.dart';
 import '../model/vedic_data.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class KundliSubmitScreen extends StatelessWidget {
   KundliSubmitScreen({super.key});
 
@@ -145,7 +146,7 @@ class KundliSubmitScreen extends StatelessWidget {
                           _kundliLatitude.text = result['latitude'].toString();
                           _kundliLongitude.text = result['longitude'].toString();
                           _kundliTimezone.text = result['offset'].toString();
-                          print(result['offset'].toString());
+                          AppLogger.d(result['offset'].toString());
                         }
                       },
                       validator: (value) {
@@ -168,9 +169,9 @@ class KundliSubmitScreen extends StatelessWidget {
                   textColor: ColorResources.toolbarText,
                   onPressed: () async {
                     if (title.contains(AppStrings.createKundli.tr)) {
-                      print("TimeZone->${_kundliTimezone.text}");
-                      print("lat->${_kundliLatitude.text}");
-                      print("long->${_kundliLongitude.text}");
+                      AppLogger.d("TimeZone->${_kundliTimezone.text}");
+                      AppLogger.d("lat->${_kundliLatitude.text}");
+                      AppLogger.d("long->${_kundliLongitude.text}");
                       _formKey.currentState!.validate();
                       if (_formKey.currentState!.validate()) {
                         String? appLanguage = await SharedPreferencesHelper.getData(AppConstants.appLanguage);
@@ -191,9 +192,9 @@ class KundliSubmitScreen extends StatelessWidget {
                         );
                       }
                     } else if (title.contains(AppStrings.editKundli.tr)) {
-                      print("TimeZone->${_kundliTimezone.text}");
-                      print("lat->${_kundliLatitude.text}");
-                      print("long->${_kundliLongitude.text}");
+                      AppLogger.d("TimeZone->${_kundliTimezone.text}");
+                      AppLogger.d("lat->${_kundliLatitude.text}");
+                      AppLogger.d("long->${_kundliLongitude.text}");
                       _formKey.currentState!.validate();
                       if (_formKey.currentState!.validate()) {
                         String? appLanguage = await SharedPreferencesHelper.getData(AppConstants.appLanguage);

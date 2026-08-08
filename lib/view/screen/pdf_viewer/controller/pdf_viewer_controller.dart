@@ -6,6 +6,7 @@ import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 import 'dart:io';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class PdfViewerController extends GetxController {
   final Dio _dio = Dio();
   late String path;
@@ -20,9 +21,9 @@ class PdfViewerController extends GetxController {
     final dir = await getTemporaryDirectory();
     final file = File('${dir.path}/$filename');
 
-    print("filename$filename");
-    print("dir$dir");
-    print("file$file");
+    AppLogger.d("filename$filename");
+    AppLogger.d("dir$dir");
+    AppLogger.d("file$file");
 
     final response = await _dio.get(
       url,
@@ -30,10 +31,10 @@ class PdfViewerController extends GetxController {
         responseType: ResponseType.bytes,
       ),
     );
-    print("response$response");
+    AppLogger.d("response$response");
     await file.writeAsBytes(response.data);
     path = file.path;
-    print("path$path");
+    AppLogger.d("path$path");
     return 1;
   }
 

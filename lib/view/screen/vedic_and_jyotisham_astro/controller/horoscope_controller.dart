@@ -13,6 +13,7 @@ import '../model/horoscope_weekly_vedic_astro_model.dart';
 import '../model/horoscope_yearly_model.dart';
 import '../model/horoscope_yearly_vedic_astro_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class HoroscopeController extends GetxController {
   final Dio _dio = Dio();
 
@@ -60,7 +61,7 @@ class HoroscopeController extends GetxController {
             isDailyHoroscopeSuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getDailyHoroscope->OnApiError');
+          AppLogger.d('[HoroscopeController] getDailyHoroscope->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         var showSame = true;
@@ -75,14 +76,12 @@ class HoroscopeController extends GetxController {
             isDailyHoroscopeSuccess(false);
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       }
     } catch (e) {
       isDailyHoroscopeSuccess(false);
-      debugPrint('[HoroscopeController] getDailyHoroscope->OnException:${e.toString()}');
+      AppLogger.d('[HoroscopeController] getDailyHoroscope->OnException:${e.toString()}');
     } finally {
       isDailyHoroscopeLoading(false);
     }
@@ -106,7 +105,7 @@ class HoroscopeController extends GetxController {
             isWeeklyHoroscopeSuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getWeeklyHoroscope->OnApiError');
+          AppLogger.d('[HoroscopeController] getWeeklyHoroscope->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         var showSame = true;
@@ -121,13 +120,12 @@ class HoroscopeController extends GetxController {
             isWeeklyHoroscopeSuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getWeeklyHoroscope->OnApiError');
+          AppLogger.d('[HoroscopeController] getWeeklyHoroscope->OnApiError');
         }
       }
     } catch (e) {
       isWeeklyHoroscopeSuccess(false);
-      debugPrint(
-          '[HoroscopeController] getWeeklyHoroscope->OnException:${e.toString()}');
+      AppLogger.d('[HoroscopeController] getWeeklyHoroscope->OnException:${e.toString()}');
     } finally {
       isWeeklyHoroscopeLoading(false);
     }
@@ -150,12 +148,11 @@ class HoroscopeController extends GetxController {
           isMonthlySuccess(false);
         }
       } else {
-        debugPrint('[HoroscopeController] getMonthlyHoroscope->OnApiError');
+        AppLogger.d('[HoroscopeController] getMonthlyHoroscope->OnApiError');
       }
     } catch (e) {
       isMonthlySuccess(false);
-      debugPrint(
-          '[HoroscopeController] getMonthlyHoroscope->OnException:${e.toString()}');
+      AppLogger.d('[HoroscopeController] getMonthlyHoroscope->OnException:${e.toString()}');
     } finally {
       isMonthlyLoading(false);
     }
@@ -184,7 +181,7 @@ class HoroscopeController extends GetxController {
             isYearlySuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getYearlyHoroscope->OnApiError');
+          AppLogger.d('[HoroscopeController] getYearlyHoroscope->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -198,13 +195,12 @@ class HoroscopeController extends GetxController {
             isYearlySuccess(false);
           }
         } else {
-          debugPrint('[HoroscopeController] getYearlyHoroscope->OnApiError');
+          AppLogger.d('[HoroscopeController] getYearlyHoroscope->OnApiError');
         }
       }
     } catch (e) {
       isYearlySuccess(false);
-      debugPrint(
-          '[HoroscopeController] getYearlyHoroscope->OnException:${e.toString()}');
+      AppLogger.d('[HoroscopeController] getYearlyHoroscope->OnException:${e.toString()}');
     } finally {
       isYearlyLoading(false);
     }

@@ -12,6 +12,7 @@ import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
 import '../../agora/videocall/model/service_start_video_call_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ArchitectOrdersController extends GetxController {
   final Dio _dio = Dio();
   num offsetCount = 0;
@@ -58,14 +59,10 @@ class ArchitectOrdersController extends GetxController {
           isInProgressSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isInProgressLoading(false);
     }
@@ -94,14 +91,10 @@ class ArchitectOrdersController extends GetxController {
           isCompletedSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCompletedLoading(false);
     }
@@ -152,15 +145,11 @@ class ArchitectOrdersController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
     }
   }

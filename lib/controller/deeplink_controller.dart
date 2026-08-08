@@ -6,6 +6,7 @@ import 'package:app_links/app_links.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class DeepLinkController extends GetxController {
   StreamSubscription<Uri>? _linkSubscription;
   var referrerCode = ''.obs;
@@ -36,7 +37,7 @@ class DeepLinkController extends GetxController {
         }
       });
     }catch(e){
-      debugPrint("DeepLinkController->Error initDeepLinks: $e");
+      AppLogger.d("DeepLinkController->Error initDeepLinks: $e");
     }
 
   }
@@ -51,9 +52,9 @@ class DeepLinkController extends GetxController {
       } else{
         referrerCode.value = "";
       }
-      debugPrint("DeepLinkController->Referral Code: ${referrerCode.value}");
+      AppLogger.d("DeepLinkController->Referral Code: ${referrerCode.value}");
     } catch (e) {
-      debugPrint("DeepLinkController->Error retrieving referrer: $e");
+      AppLogger.d("DeepLinkController->Error retrieving referrer: $e");
     }
   }
 }

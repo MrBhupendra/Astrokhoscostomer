@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 import '../utill/app_constants.dart';
 import '../view/screen/chat/controller/chat_intake_form_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 /// High-level categories sent in FCM / Awesome [payload]['type'].
 enum NotificationType {
   unknown,
@@ -151,9 +152,7 @@ class NotificationRouter {
   static String? _lastDedupeKey;
 
   static void _log(String message) {
-    if (kDebugMode) {
-      debugPrint('[NotificationRouter] $message');
-    }
+    AppLogger.d('[NotificationRouter] $message');
   }
 
   /// Clears dedupe state (e.g. tests); not required in production.

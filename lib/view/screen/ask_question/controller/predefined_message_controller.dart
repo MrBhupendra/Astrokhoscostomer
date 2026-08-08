@@ -20,6 +20,7 @@ import '../../../widget/custom_text_medium.dart';
 import '../model/predefined_category_model.dart';
 import '../model/predefined_message_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class PredefinedMessageController extends GetxController {
   final Dio _dio = Dio();
   final isMessageLoading = false.obs;
@@ -66,15 +67,11 @@ class PredefinedMessageController extends GetxController {
           isCategorySuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isCategorySuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCategoryLoading(false);
     }
@@ -109,7 +106,7 @@ class PredefinedMessageController extends GetxController {
           for (var element in (predefinedMessageModel.predefinedMessages ?? [])) {
             predefinedMessageList.add(element);
           }
-          print("Request length ${predefinedMessageList.length}");
+          AppLogger.d("Request length ${predefinedMessageList.length}");
         }
         else{
           if(offset == 0){
@@ -118,10 +115,10 @@ class PredefinedMessageController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        debugPrint('OnApiError');
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      debugPrint('OnException==> ${e.toString()}');
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isMessageLoading(false);
     }

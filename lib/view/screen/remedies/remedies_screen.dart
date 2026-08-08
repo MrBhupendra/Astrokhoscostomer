@@ -19,6 +19,7 @@ import '../../widget/custom_network_image.dart';
 import '../../widget/custom_text_medium.dart';
 import '../../widget/custom_text_regular.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class RemediesScreen extends StatelessWidget {
   const RemediesScreen({super.key});
 
@@ -30,7 +31,7 @@ class RemediesScreen extends StatelessWidget {
     if (arguments is Map<String, dynamic>) {
       astrologerUniId = arguments['astrologer_uni_id'] ?? '';
     }
-    print("astrologerUniId->$astrologerUniId");
+    AppLogger.d("astrologerUniId->$astrologerUniId");
     final RemediesController controller = Get.put(RemediesController());
 
     controller.getRemedies(controller.offsetCount,astrologerUniId);
@@ -71,7 +72,7 @@ class RemediesScreen extends StatelessWidget {
                                 productUrl =  messageMap['productUrl'].toString();
                               }
                             }catch(e){
-                              debugPrint("exception");
+                              AppLogger.d("exception");
                             }
                             return Padding(
                               padding: const EdgeInsets.only(top: Dimensions.paddingSizeExtraSmall,right: Dimensions.paddingSizeExtraOverSmall,left:Dimensions.paddingSizeExtraOverSmall,bottom: 2),

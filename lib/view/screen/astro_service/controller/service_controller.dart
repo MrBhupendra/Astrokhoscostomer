@@ -45,6 +45,7 @@ import '../../splash/controller/config_controller.dart';
 import '../../webview/ccavenue_webview_screen.dart';
 import '../../webview/payment_webview_screen.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ServiceController extends GetxController {
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -153,15 +154,11 @@ class ServiceController extends GetxController {
           isCategorySuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isCategorySuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCategoryLoading(false);
     }
@@ -178,7 +175,7 @@ class ServiceController extends GetxController {
         "slug": slug
       });
 
-      print("request $offset $categoryId $search $slug");
+      AppLogger.d("request $offset $categoryId $search $slug");
       if (response.statusCode == 200) {
         serviceModel = ServicesModel.fromJson(response.data);
         if (serviceModel.status == AppConstants.success) {
@@ -191,15 +188,11 @@ class ServiceController extends GetxController {
           isServiceSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isServiceSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isServiceLoading(false);
     }
@@ -223,11 +216,11 @@ class ServiceController extends GetxController {
         "astrologer_uni_id" : astrologerUniId
       });
 
-      print("Request $uniId $offset $serviceId");
+      AppLogger.d("Request $uniId $offset $serviceId");
 
       if (response.statusCode == 200) {
         astrologerModel = ServiceAstrologerListModel.fromJson(response.data);
-        print("Response-> ${response.data.toString()}");
+        AppLogger.d("Response-> ${response.data.toString()}");
         if (astrologerModel.status == AppConstants.success) {
           astrologerOffsetCount = astrologerModel.offset!;
 
@@ -243,15 +236,11 @@ class ServiceController extends GetxController {
           astrologerIsNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isAstrologerSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAstrologerLoading(false);
     }
@@ -280,7 +269,7 @@ class ServiceController extends GetxController {
       });
 
       if (response.statusCode == 200) {
-        print("getServiceCalculation Response ${response.data.toString()} \n $serviceAssignId, $astrologerId, $payMethod");
+        AppLogger.d("getServiceCalculation Response ${response.data.toString()} \n $serviceAssignId, $astrologerId, $payMethod");
         CustomProgressDialog.dismissDialog();
         serviceCalculationModel = ServiceCalculationModel.fromJson(response.data);
         if (serviceCalculationModel.status == AppConstants.success) {
@@ -313,16 +302,12 @@ class ServiceController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -989,7 +974,7 @@ class ServiceController extends GetxController {
         "payment_method": paymentMethod
       });
 
-      print("Req data $apiKey $uniId $serviceAssignId $astrologerId $uniId $date $time $walletCheck $paymentMethod");
+      AppLogger.d("Req data $apiKey $uniId $serviceAssignId $astrologerId $uniId $date $time $walletCheck $paymentMethod");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -1007,16 +992,12 @@ class ServiceController extends GetxController {
           isPurchaseSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -1058,7 +1039,7 @@ class ServiceController extends GetxController {
                 uniId.toString(),
                 AppConstants.serviceOrder);
           } catch (e) {
-            debugPrint("Error Event openCheckout: $e");
+            AppLogger.d("Error Event openCheckout: $e");
           }
 
           final CCAvenueController ccAvenueController = Get.put(CCAvenueController());
@@ -1096,16 +1077,12 @@ class ServiceController extends GetxController {
           isPurchaseSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -1130,7 +1107,7 @@ class ServiceController extends GetxController {
         "payment_method": paymentMethod,
       });
 
-      print("Req data $apiKey $uniId $serviceAssignId $astrologerId $uniId $date $time $walletCheck $paymentMethod");
+      AppLogger.d("Req data $apiKey $uniId $serviceAssignId $astrologerId $uniId $date $time $walletCheck $paymentMethod");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -1156,7 +1133,7 @@ class ServiceController extends GetxController {
               try {
                 AppEvents().sendInitCheckoutEvent(ccAvenueModel.data!.amount.toString(), ccAvenueModel.ccavenueData!.orderId.toString(), uniId.toString(), AppConstants.serviceOrder);
               } catch (e) {
-                debugPrint("Error Event openCheckout: $e");
+                AppLogger.d("Error Event openCheckout: $e");
               }
             }else{
               AppDialog().showPaymentSuccessDialog(AppConstants.serviceOrder);
@@ -1173,7 +1150,7 @@ class ServiceController extends GetxController {
               try {
                 AppEvents().sendInitCheckoutEvent(payuPaymentModel.paymentGateway!.amount.toString(), payuPaymentModel.orderId.toString(), uniId.toString(), AppConstants.serviceOrder);
               } catch (e) {
-                debugPrint("Error Event openCheckout: $e");
+                AppLogger.d("Error Event openCheckout: $e");
               }
             }else{
               AppDialog().showPaymentSuccessDialog(AppConstants.serviceOrder);
@@ -1244,11 +1221,11 @@ class ServiceController extends GetxController {
         //TODO Handle Phonepe
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {print('OnApiError');}
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {print('OnException==> ${e.toString()}');}
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 }

@@ -24,6 +24,7 @@ import '../../chat/model/chat_session_model.dart';
 import '../../splash/controller/config_controller.dart';
 import '../assistant_chat_delivery_helper.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AssistantChatController extends FullLifeCycleController
     with FullLifeCycleMixin {
   final ChatIntakeFormController chatIntakeFormController = Get.find();
@@ -178,9 +179,7 @@ class AssistantChatController extends FullLifeCycleController
       }
     });
 
-    if (kDebugMode) {
-      print('OnInit ChatScreen');
-    }
+    AppLogger.d('OnInit ChatScreen');
   }
 
 
@@ -203,9 +202,7 @@ class AssistantChatController extends FullLifeCycleController
       typingReference.child(customerTypingChild).set(false);
     }
     _markMessagesAsReadIfNeeded();
-    if (kDebugMode) {
-      print('OnResumed ChatScreen');
-    }
+    AppLogger.d('OnResumed ChatScreen');
   }
 
   @override
@@ -214,9 +211,7 @@ class AssistantChatController extends FullLifeCycleController
     dbReference.child(customerStatus).set(false);
     typingReference.child(customerTypingChild).set(false);
     configController.setCurrentScreen('');
-    if (kDebugMode) {
-      print('onPaused ChatScreen');
-    }
+    AppLogger.d('onPaused ChatScreen');
   }
 
   @override
@@ -227,9 +222,7 @@ class AssistantChatController extends FullLifeCycleController
     configController.setCurrentScreen('');
     _stopRecordingTimer();
     super.onClose();
-    if (kDebugMode) {
-      print('onClose ChatScreen');
-    }
+    AppLogger.d('onClose ChatScreen');
   }
 
   @override
@@ -288,33 +281,25 @@ class AssistantChatController extends FullLifeCycleController
     onMessageListener = messageReference.onChildAdded.listen((event) {
       _handleMessageSnapshot(event.snapshot);
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatScreenController] onMessageListener $error');
-      }
+      AppLogger.d('[ChatScreenController] onMessageListener $error');
     });
 
     onMessageChangedListener = messageReference.onChildChanged.listen((event) {
       _handleMessageSnapshot(event.snapshot);
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatScreenController] onMessageChangedListener $error');
-      }
+      AppLogger.d('[ChatScreenController] onMessageChangedListener $error');
     });
 
     onTypingListener = typingReference.child(astrologerTypingChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[ChatTab] onTypingListener:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[ChatTab] onTypingListener:onDataChange $dataSnapshot');
       if(dataSnapshot.value != null){
         isAstrologerTyping.value = dataSnapshot.value as bool;
       }
 
 
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatTab] onTypingListener:onCancelled $error');
-      }
+      AppLogger.d('[ChatTab] onTypingListener:onCancelled $error');
     });
   }
 
@@ -467,16 +452,15 @@ class AssistantChatController extends FullLifeCycleController
       if (readAt != null) data['read_at'] = readAt;
 
 
-
       // Backend expects form-data (per API docs / Postman).
       final formData = FormData.fromMap(data);
-      debugPrint("[ASSISTANT-CHAT] _updateChatMessageStatusApi request=> ${formData.fields}");
+      AppLogger.d("[ASSISTANT-CHAT] _updateChatMessageStatusApi request=> ${formData.fields}");
 
       final response = await _dio
           .post(AppConstants.updateChatMessageStatus, data: formData)
           .timeout(const Duration(seconds: 20));
 
-      debugPrint("[ASSISTANT-CHAT] _updateChatMessageStatusApi response=> ${response.data.toString()}");
+      AppLogger.d("[ASSISTANT-CHAT] _updateChatMessageStatusApi response=> ${response.data.toString()}");
 
     } catch (_) {
       // No-op: status sync is best-effort; RTDB remains source of truth for realtime.
@@ -541,7 +525,7 @@ class AssistantChatController extends FullLifeCycleController
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      debugPrint("[ASSISTANT-CHAT] getChatHistory request=> $apiKey $uniId $chatGroupChild/$channelName $firstMsgId $currentPage");
+      AppLogger.d("[ASSISTANT-CHAT] getChatHistory request=> $apiKey $uniId $chatGroupChild/$channelName $firstMsgId $currentPage");
       final response = await _dio.post(AppConstants.getChatHistory, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
@@ -550,7 +534,7 @@ class AssistantChatController extends FullLifeCycleController
         'page': currentPage,
         'is_assistant_chat': 1,
       });
-      debugPrint("[ASSISTANT-CHAT] getChatHistory response=> ${response.data.toString()}");
+      AppLogger.d("[ASSISTANT-CHAT] getChatHistory response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         chatHistoryModel = ChatHistoryModel.fromJson(response.data);
         if (chatHistoryModel.status == AppConstants.success) {
@@ -604,22 +588,18 @@ class AssistantChatController extends FullLifeCycleController
             registerListeners();
           }
         } else {
-          print('getChatHistory API Response else: ${response.data.toString()}');
+          AppLogger.d('getChatHistory API Response else: ${response.data.toString()}');
           if (currentPage == 1) {
             isChatHistorySuccess(false);
           }
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getChatHistory');
-        }
+        AppLogger.d('OnApiError getChatHistory');
       }
     } catch (e) {
       isChatHistorySuccess(false);
-      if (kDebugMode) {
-        print('OnException getChatHistory==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getChatHistory==> ${e.toString()}');
     } finally {
       isChatHistoryLoading(false);
     }
@@ -640,7 +620,7 @@ class AssistantChatController extends FullLifeCycleController
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
 
-      debugPrint("[ASSISTANT-CHAT] saveChatApi request=> $apiKey $uniId $uniqueId $chatGroupChild/$channelName $message $selectedText $selectedType $type 0 1");
+      AppLogger.d("[ASSISTANT-CHAT] saveChatApi request=> $apiKey $uniId $uniqueId $chatGroupChild/$channelName $message $selectedText $selectedType $type 0 1");
 
       FormData formData = FormData.fromMap({
         'api_key': apiKey,
@@ -662,7 +642,7 @@ class AssistantChatController extends FullLifeCycleController
       }
 
       final response = await _dio.post(AppConstants.saveChat, data: formData);
-      debugPrint("[ASSISTANT-CHAT] saveChatApi response=> ${response.data.toString()}");
+      AppLogger.d("[ASSISTANT-CHAT] saveChatApi response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         saveSuccessModel = SuccessModel.fromJson(response.data);
         if (saveSuccessModel.status == AppConstants.success) {
@@ -671,15 +651,11 @@ class AssistantChatController extends FullLifeCycleController
           isSaveChatSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError saveChatApi');
-        }
+        AppLogger.d('OnApiError saveChatApi');
       }
     } catch (e) {
       isSaveChatSuccess(false);
-      if (kDebugMode) {
-        print('OnException saveChatApi==> ${e.toString()}');
-      }
+      AppLogger.d('OnException saveChatApi==> ${e.toString()}');
     } finally {
       isSaveChatLoading(false);
     }
@@ -728,16 +704,16 @@ class AssistantChatController extends FullLifeCycleController
         case TaskState.running:
           final progress =
               100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-          print("Upload is $progress% complete.");
+          AppLogger.d("Upload is $progress% complete.");
           break;
         case TaskState.paused:
-          print("Upload is paused.");
+          AppLogger.d("Upload is paused.");
           break;
         case TaskState.canceled:
-          print("Upload canceled");
+          AppLogger.d("Upload canceled");
           break;
         case TaskState.error:
-          print("Upload error");
+          AppLogger.d("Upload error");
           break;
         case TaskState.success:
           String imageUrl = await taskSnapshot.ref.getDownloadURL();
@@ -787,7 +763,7 @@ class AssistantChatController extends FullLifeCycleController
       _startRecordingTimer(); // Start duration timer
     } catch (err) {
       isRecording.value = false;
-      debugPrint('[CHAT] Failed to start recording: $err');
+      AppLogger.d('[CHAT] Failed to start recording: $err');
     }
   }
 
@@ -796,23 +772,23 @@ class AssistantChatController extends FullLifeCycleController
     PermissionStatus status = await Permission.microphone.request();
 
     if (status.isGranted && isPermissionGrantedOnce.isGranted) {
-      debugPrint("[CHAT] requestMicrophonePermissions granted");
+      AppLogger.d("[CHAT] requestMicrophonePermissions granted");
       startRecording();
     } else {
       if (status.isDenied) {
         // Permission was denied, show a message to explain why it's required
         CustomSnackBar.showBottom("Microphone permission is denied. Please allow it to record.");
-        debugPrint("[CHAT] requestMicrophonePermissions denied");
+        AppLogger.d("[CHAT] requestMicrophonePermissions denied");
       } else if (status.isPermanentlyDenied) {
         // Permission was permanently denied, show a message to guide the user to settings
         CustomSnackBar.showBottom("Microphone permission is permanently denied. Please enable it in app settings.");
-        debugPrint("[CHAT] requestMicrophonePermissions permanently denied");
+        AppLogger.d("[CHAT] requestMicrophonePermissions permanently denied");
         // Optionally, you can direct the user to the app settings
         openAppSettings(); // This method opens app settings on most platforms
       } else if (status.isRestricted) {
         // Permission is restricted, typically on iOS, guide the user accordingly
         CustomSnackBar.showBottom("Microphone access is restricted. Check your settings.");
-        debugPrint("[CHAT] requestMicrophonePermissions restricted");
+        AppLogger.d("[CHAT] requestMicrophonePermissions restricted");
       }
     }
   }
@@ -828,7 +804,7 @@ class AssistantChatController extends FullLifeCycleController
       }
 
     }catch(e){
-      debugPrint('[CHAT] Failed to stop recording: $e');
+      AppLogger.d('[CHAT] Failed to stop recording: $e');
     }
   }
 
@@ -842,24 +818,24 @@ class AssistantChatController extends FullLifeCycleController
         switch (taskSnapshot.state) {
           case TaskState.running:
             final progress = 100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-            debugPrint("[CHAT] Upload is $progress% complete.");
+            AppLogger.d("[CHAT] Upload is $progress% complete.");
             break;
           case TaskState.paused:
             isRecordingUploading.value = false;
-            debugPrint("[CHAT] Upload is paused.");
+            AppLogger.d("[CHAT] Upload is paused.");
             break;
           case TaskState.canceled:
             isRecordingUploading.value = false;
-            debugPrint("[CHAT] Upload canceled");
+            AppLogger.d("[CHAT] Upload canceled");
             break;
           case TaskState.error:
             isRecordingUploading.value = false;
-            debugPrint("[CHAT] Upload error");
+            AppLogger.d("[CHAT] Upload error");
             break;
           case TaskState.success:
             isRecordingUploading.value = false;
             String voiceNoteUrl = await taskSnapshot.ref.getDownloadURL();
-            debugPrint("[CHAT] Upload Completed");
+            AppLogger.d("[CHAT] Upload Completed");
             var chatMessage = ChatMessageModel(
               senderUniId: uniId,
               date: getCurrentDateTime(),
@@ -877,7 +853,7 @@ class AssistantChatController extends FullLifeCycleController
       });
     }catch(e){
       isRecordingUploading.value = false;
-      debugPrint("[CHAT] Error uploading $e");
+      AppLogger.d("[CHAT] Error uploading $e");
       CustomSnackBar.showBottom("Something went wrong");
     }
   }

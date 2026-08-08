@@ -20,6 +20,7 @@ import '../../widget/custom_snack_bar.dart';
 import '../../widget/gallery_image_slider_widget.dart';
 import 'controller/architect_profile_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ArchitectProfileScreen extends GetView<ArchitectProfileController> {
   ArchitectProfileScreen({super.key});
   // final AstrologerData astrologer = Get.arguments;
@@ -247,7 +248,7 @@ class ArchitectProfileScreen extends GetView<ArchitectProfileController> {
         ),
         body: RefreshIndicator(
             onRefresh: () async {
-              print(astrologer.astrologerUniId.toString());
+              AppLogger.d(astrologer.astrologerUniId.toString());
               // controller.getAstrologerDetail(controller.astrologer.astrologerUniId.toString());
               controller.getAstrologerDetail(astrologer.astrologerUniId.toString());
             },

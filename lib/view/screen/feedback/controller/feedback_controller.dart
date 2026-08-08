@@ -8,6 +8,7 @@ import '../../../../utill/app_features.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_progress_dialog.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class FeedbackController extends GetxController{
 
   final Dio _dio = Dio();
@@ -48,16 +49,12 @@ class FeedbackController extends GetxController{
           CustomSnackBar.showBottom(successModel.msg.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }

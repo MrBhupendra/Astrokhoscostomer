@@ -79,10 +79,8 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            debugPrint('WebView is loading (progress : $progress%)');
           },
           onPageStarted: (String url) {
-            debugPrint('AS1 Page started loading: $url');
             if (_isPayuResponseUrl(url)) {
               _sawPayuResponsePage = true;
               _schedulePayuOutcomeCapture();
@@ -90,14 +88,10 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             _handlePaymentUrl(url);
           },
           onPageFinished: (String url) async {
-            debugPrint('AS1 Page finished loading: $url');
             await _capturePayuOutcomeFromPage(url);
             _handlePaymentUrl(url);
           },
           onWebResourceError: (WebResourceError error) {
-            debugPrint(
-              '''AS1 Page resource error: code: ${error.errorCode} description: ${error.description} errorType: ${error.errorType} isForMainFrame: ${error.isForMainFrame}''',
-            );
             if (_hasCompleted || !(error.isForMainFrame ?? false)) return;
             final failingUrl = error.url ?? '';
             if (_isPayuAppCallback(failingUrl)) {
@@ -107,17 +101,14 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
             }
           },
           onNavigationRequest: (NavigationRequest request) {
-            debugPrint('AS1 Navigating to ${request.url}');
 
             if (_handlePaymentUrl(request.url)) {
               return NavigationDecision.prevent;
             }
 
-            debugPrint('AS1 allowing navigation to ${request.url}');
             return handleUPIIntent(request.url);
           },
           onUrlChange: (UrlChange change) {
-            debugPrint('AS1 url change to ${change.url}');
             final url = change.url;
             if (url != null) {
               _handlePaymentUrl(url);
@@ -210,10 +201,9 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
       if (fromText != null) {
         _payuOutcome = fromText;
         paymentSuccess = fromText;
-        debugPrint('AS1 PayU page outcome: $fromText');
       }
-    } catch (e) {
-      debugPrint('AS1 Could not read PayU page: $e');
+    } catch (_) {
+      // Ignore PayU page parse failures.
     }
   }
 
@@ -358,7 +348,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
     if (_hasCompleted) return;
     _hasCompleted = true;
     paymentSuccess = success;
-    debugPrint('AS1 Payment complete: success=$success');
 
     Get.back();
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -375,7 +364,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
   }
 
   NavigationDecision handleUPIIntent(String url) {
-    debugPrint('AS1 Handle Intent $url');
     if (url.contains('phonepe://pay?') ||
         url.contains('tez://upi/pay?') ||
         url.contains('paytmmp://pay?') ||
@@ -383,7 +371,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         url.contains('cred://pay?pa') ||
         url.contains('upi://pay?pa') ||
         url.contains('intent://pay?pa')) {
-      debugPrint('AS1 Launching UPI intent $url');
       _launchUPIIntent(url);
       return NavigationDecision.prevent;
     }
@@ -419,7 +406,6 @@ class _PaymentWebViewScreenState extends State<PaymentWebViewScreen> {
         await launchUrl(uri, mode: LaunchMode.externalApplication);
       }
     } catch (e) {
-      debugPrint('AS1 UPI Error => $e');
       CustomSnackBar.showBottom(
         'No UPI application found or unable to open selected app.',
       );

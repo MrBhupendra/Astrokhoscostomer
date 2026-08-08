@@ -10,6 +10,7 @@ import '../../widget/custom_app_bar.dart';
 import '../../widget/custom_empty_screen.dart';
 import '../../widget/simmer_widget/simmer_astrologer.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ArchitectListScreen extends GetView<ArchitectController> {
   const ArchitectListScreen({super.key});
 
@@ -30,7 +31,7 @@ class ArchitectListScreen extends GetView<ArchitectController> {
           child: Obx(
                 () {
               if (controller.isAstrologerLoading.isTrue) {
-                print("isAstrologerLoading.isTrue");
+                AppLogger.d("isAstrologerLoading.isTrue");
                 return ListView.builder(
                   itemCount: 5,
                   itemBuilder: (context, index) {
@@ -39,7 +40,7 @@ class ArchitectListScreen extends GetView<ArchitectController> {
                 );
               }
               else if (controller.isAstrologerSuccess.isTrue) {
-                print("isAstrologerSuccess.isTrue");
+                AppLogger.d("isAstrologerSuccess.isTrue");
                 return SingleChildScrollView(
                   physics: const AlwaysScrollableScrollPhysics(),
                   child: Column(
@@ -62,7 +63,7 @@ class ArchitectListScreen extends GetView<ArchitectController> {
                           ),
                           child: TextField(
                             onChanged: (value) {
-                              print("Search Value-> $value");
+                              AppLogger.d("Search Value-> $value");
                               // Add search logic
                             },
                             decoration: InputDecoration(

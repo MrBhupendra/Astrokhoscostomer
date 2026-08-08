@@ -2,9 +2,11 @@ import 'package:astro_brahmand/utill/color_resources.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
+
 class CustomProgressDialog {
   static void showDialog() {
-    print("Show Dialog ${Get.isDialogOpen} ");
+    AppLogger.d("Show Dialog ${Get.isDialogOpen} ");
     if (Get.isDialogOpen == false) {
       Get.dialog(
         Column(
@@ -38,7 +40,7 @@ class CustomProgressDialog {
   }
 
   static void dismissDialog() {
-    print("Hide Dialog ${Get.isDialogOpen} ");
+    AppLogger.d("Hide Dialog ${Get.isDialogOpen} ");
     if (Get.isDialogOpen == true) {
       Get.back();
     }

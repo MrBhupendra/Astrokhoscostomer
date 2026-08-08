@@ -37,6 +37,7 @@ import '../wiget/live_request_widget.dart';
 import 'live_stream_init_controller.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class LiveStreamController extends FullLifeCycleController with FullLifeCycleMixin {
   final LiveStreamInitController liveDataController = Get.put(LiveStreamInitController());
   final LiveAstrologerController liveAstrologerController = Get.put(LiveAstrologerController());
@@ -222,16 +223,12 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
 
   @override
   void onResumed() {
-    if (kDebugMode) {
-      print('OnResumed');
-    }
+    AppLogger.d('OnResumed');
   }
 
   @override
   void onPaused() {
-    if (kDebugMode) {
-      print('onPaused');
-    }
+    AppLogger.d('onPaused');
   }
 
   @override
@@ -239,9 +236,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
     super.onClose();
     _dispose();
 
-    if (kDebugMode) {
-      print('onClose');
-    }
+    AppLogger.d('onClose');
   }
 
   @override
@@ -286,21 +281,15 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
       final message = ChatMessageModel.fromJson(json);
       addMessage(message);
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onMessageListener $error');
-      }
+      AppLogger.d('[LIVE] onMessageListener $error');
     });
 
     onUserCountListener = dbReference.child(userCountChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[LIVE] onUserCountListener:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[LIVE] onUserCountListener:onDataChange $dataSnapshot');
       liveUserCount.value = int.parse(dataSnapshot.value.toString());
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onUserCountListener:onError $error');
-      }
+      AppLogger.d('[LIVE] onUserCountListener:onError $error');
     });
 
     onGiftListener = dbReference.child(giftsChild).onChildAdded.listen((event) {
@@ -310,9 +299,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
         _displayNextGift();
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onGiftListListener $error');
-      }
+      AppLogger.d('[LIVE] onGiftListListener $error');
     });
 
     onRequestAddListener = dbReference.child(requestsChild).orderByChild('timestamp').onChildAdded.listen((event) {
@@ -320,9 +307,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
       final request = LiveRequestModel.fromJson(json);
       addRequest(request);
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onRequestAddListener $error');
-      }
+      AppLogger.d('[LIVE] onRequestAddListener $error');
     });
 
     onRequestRemovedListener = dbReference.child(requestsChild).onChildRemoved.listen((event) {
@@ -330,68 +315,48 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
       final request = LiveRequestModel.fromJson(json);
       removeRequest(request);
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onRequestRemovedListener $error');
-      }
+      AppLogger.d('[LIVE] onRequestRemovedListener $error');
     });
 
     //Public Voice Call
     onCallStatusListener = dbReference.child(publicVoiceCallStatusChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[LIVE] onCallStatusListener:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[LIVE] onCallStatusListener:onDataChange $dataSnapshot');
       callStatus.value = dataSnapshot.value as bool;
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onCallStatusListener:onError $error');
-      }
+      AppLogger.d('[LIVE] onCallStatusListener:onError $error');
     });
 
     //Private Voice Call
     onPrivateCallStatusListener = dbReference.child(privateVoiceCallStatusChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[LIVE] onPrivateCallStatusListener:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[LIVE] onPrivateCallStatusListener:onDataChange $dataSnapshot');
       privateCallStatus.value = dataSnapshot.value as bool;
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onPrivateCallStatusListener:onError $error');
-      }
+      AppLogger.d('[LIVE] onPrivateCallStatusListener:onError $error');
     });
 
     //Public Video Call
     onVideoCallStatusListener = dbReference.child(publicVideoCallStatusChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[LIVE] onVideoCallStatusListener:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[LIVE] onVideoCallStatusListener:onDataChange $dataSnapshot');
       videoCallStatus.value = dataSnapshot.value as bool;
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onVideoCallStatusListener:onError $error');
-      }
+      AppLogger.d('[LIVE] onVideoCallStatusListener:onError $error');
     });
 
     //Private Video Call
     onPrivateVideoCallStatusListener = dbReference.child(privateVideoCallStatusChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[LIVE] onPrivateVideoCallStatusListener:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[LIVE] onPrivateVideoCallStatusListener:onDataChange $dataSnapshot');
       privateVideoCallStatus.value = dataSnapshot.value as bool;
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onPrivateVideoCallStatusListener:onError $error');
-      }
+      AppLogger.d('[LIVE] onPrivateVideoCallStatusListener:onError $error');
     });
 
     liveEndListener = dbReference.child(liveEndChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[LIVE] ChatEnd:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[LIVE] ChatEnd:onDataChange $dataSnapshot');
       isLiveEnd.value = dataSnapshot.value as bool;
       if (isLiveEnd.value) {
         onMessageListener.cancel();
@@ -407,9 +372,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
         });
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] ChatEnd:onError $error');
-      }
+      AppLogger.d('[LIVE] ChatEnd:onError $error');
     });
   }
 
@@ -584,7 +547,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
                                 String uniqueId = liveAstrologerController.astrologerModel.data![index].liveChannel.toString();
                                 String astrologerUniId = liveAstrologerController.astrologerModel.data![index].astrologerUniId.toString();
                                 liveAstrologerController.joinLiveStream(astrologerUID, uniqueId, astrologerUniId);
-                                print("astrologerUID->$astrologerUID uniqueId->$uniqueId astrologerUniId->$astrologerUniId");
+                                AppLogger.d("astrologerUID->$astrologerUID uniqueId->$uniqueId astrologerUniId->$astrologerUniId");
                               }else{
                                 Get.toNamed('/login');
                               }
@@ -682,7 +645,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
                         padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
                         child: ElevatedButton(
                           onPressed: () {
-                            print("astrologerUniId->$astrologerUniId");
+                            AppLogger.d("astrologerUniId->$astrologerUniId");
                             // Action for "Follow & Leave" button
                             liveAstrologerController.astrologerFollow("1", astrologerUniId.toString());
                             CustomSnackBar.showTop(AppStrings.astroFollowMsg);
@@ -777,10 +740,10 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
             }
           }
         } else {
-          debugPrint("[LIVE] isAcceptedSnap not exists");
+          AppLogger.d("[LIVE] isAcceptedSnap not exists");
         }
       }, onError: (error) {
-        debugPrint('[LIVE] onMyRequestAcceptListener:onError $error');
+        AppLogger.d('[LIVE] onMyRequestAcceptListener:onError $error');
       });
 
 
@@ -807,17 +770,17 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
           }
 
         }else {
-          debugPrint("[LIVE] isEndedSnap not exists");
+          AppLogger.d("[LIVE] isEndedSnap not exists");
         }
 
       },onError: (error) {
-        debugPrint('[LIVE] onMyCallEndedListener:onError $error');
+        AppLogger.d('[LIVE] onMyCallEndedListener:onError $error');
       });
 
 
     } else {
       CustomSnackBar.showTop("No request found to register listener");
-      debugPrint('[LIVE] No request found to register listener');
+      AppLogger.d('[LIVE] No request found to register listener');
     }
 
     // onMyCallEndedListener = dbReference
@@ -941,15 +904,11 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
           isGiftSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isGiftSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isGiftLoading(false);
     }
@@ -987,15 +946,11 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -1012,7 +967,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
         "channel_name": uniqueId
       });
 
-      print("AS1 Req $apiKey  $uniId  $astrologerId  $callType  $uniqueId");
+      AppLogger.d("AS1 Req $apiKey  $uniId  $astrologerId  $callType  $uniqueId");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -1040,15 +995,11 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -1064,13 +1015,13 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
 
     engine.registerEventHandler(RtcEngineEventHandler(
       onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-        debugPrint("[LIVE] local user ${connection.localUid} joined");
+        AppLogger.d("[LIVE] local user ${connection.localUid} joined");
         localUserJoined.value = true;
         updateLiveCount(true);
         sendFirstMsg();
       },
       onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) async {
-        debugPrint("[LIVE] remote user $remoteUid joined");
+        AppLogger.d("[LIVE] remote user $remoteUid joined");
         this.remoteUid.value = remoteUid;
         if (remoteUid == astrologerUID) {
           remoteAstrologerUid.value = remoteUid;
@@ -1093,7 +1044,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
         }
       },
       onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
-        debugPrint("[LIVE] remote user $remoteUid left channel");
+        AppLogger.d("[LIVE] remote user $remoteUid left channel");
         engine.muteRemoteAudioStream(uid: remoteCustomerUid.value, mute: false); //Customer
         engine.muteRemoteVideoStream(uid: remoteCustomerUid.value, mute: false); //Customer
         engine.muteRemoteAudioStream(uid: remoteAstrologerUid.value, mute: false); //Astrologer
@@ -1109,19 +1060,18 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
         }
       },
       onUserMuteAudio: (RtcConnection connection, int uid, bool muted) {
-        debugPrint("Remote user $uid audio muted: $muted");
+        AppLogger.d("Remote user $uid audio muted: $muted");
         isRemoteUserMuted.value = muted;
       },
       onUserMuteVideo: (RtcConnection connection, int uid, bool muted) {
-        debugPrint("Remote user $uid video muted: $muted");
+        AppLogger.d("Remote user $uid video muted: $muted");
         isRemoteVideoMuted.value = muted;
       },
       onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-        debugPrint(
-            '[LIVE] [onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+        AppLogger.d('[LIVE] [onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
       },
       onLeaveChannel: (RtcConnection connection, stats) {
-        debugPrint("[LIVE] onLeaveChannel");
+        AppLogger.d("[LIVE] onLeaveChannel");
         //updateLiveCount(false);
       },
     ));
@@ -1858,14 +1808,10 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
         }
 
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isFollowLoading(false);
     }

@@ -157,6 +157,7 @@ import 'notification/notification_router.dart';
 import 'notification/notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -269,13 +270,13 @@ Future<void> requestImportantPermissions() async {
   ].request();
 
   statuses.forEach((permission, status) {
-    debugPrint('$permission: $status');
+    AppLogger.d('$permission: $status');
   });
 
   if (await Permission.phone.isDenied ||
       await Permission.notification.isDenied ||
       await Permission.microphone.isDenied) {
-    debugPrint('Some permissions were denied. App may not function properly.');
+    AppLogger.d('Some permissions were denied. App may not function properly.');
   }
 }
 

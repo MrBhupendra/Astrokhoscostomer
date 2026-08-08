@@ -1,9 +1,7 @@
 import 'package:astro_brahmand/model/success_model.dart';
 import 'package:astro_brahmand/utill/app_constants.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:share_plus/share_plus.dart';
 
 import '../utill/shared_preference.dart';
 import '../view/widget/custom_snack_bar.dart';
@@ -57,15 +55,10 @@ class AuthController extends GetxController {
           isSuccess(false);
           CustomSnackBar.showBottom(deleteAccModel.msg.toString());
         }
-      } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
       }
-    } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+    } catch (_) {
+      // Delete-account failure is surfaced via UI state.
+      isSuccess(false);
     } finally {
       isLoading(false);
     }

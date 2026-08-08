@@ -7,6 +7,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:astro_brahmand/utill/app_constants.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SharedPreferencesHelper {
 
   // Save data to SharedPreferences
@@ -93,7 +94,7 @@ class SharedPreferencesHelper {
         await FirebaseAuth.instance.signOut();
       }
     }catch(e){
-      debugPrint("error firebase logout");
+      AppLogger.d("error firebase logout");
     }
     Get.offAllNamed('/login');
   }

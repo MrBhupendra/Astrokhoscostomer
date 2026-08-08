@@ -34,6 +34,7 @@ import '../splash/controller/config_controller.dart';
 import '../tip/controller/gift_controller.dart';
 import '../wallet/wallet_screen.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
   AstrologerProfileScreen({super.key});
 
@@ -1865,7 +1866,7 @@ class AstrologerProfileScreen extends GetView<AstrologerProfileController> {
                                                 return Expanded(
                                                   child: GestureDetector(
                                                     onTap: () {
-                                                      print("${controller.astrologerData.value.astrologerUniId.toString()}, ${giftController.liveGiftListModel.data![giftController.selectedGiftIndex.value.toInt()].id.toString()}");
+                                                      AppLogger.d("${controller.astrologerData.value.astrologerUniId.toString()}, ${giftController.liveGiftListModel.data![giftController.selectedGiftIndex.value.toInt()].id.toString()}");
                                                       if (giftController.selectedGiftIndex.value != -1) {
                                                         giftController.sendGiftApi(
                                                           "0",

@@ -33,6 +33,7 @@ import '../model/subscription_calculation_model.dart';
 import '../model/subscription_list_model.dart';
 import '../model/subscription_purchase_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SubscriptionController extends GetxController{
   final Dio _dio = Dio();
 
@@ -95,15 +96,11 @@ class SubscriptionController extends GetxController{
           isSubscriptionSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isSubscriptionSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isSubscriptionLoading(false);
     }
@@ -146,16 +143,12 @@ class SubscriptionController extends GetxController{
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -461,9 +454,7 @@ class SubscriptionController extends GetxController{
         "payment_method": paymentMethod
       });
 
-      if (kDebugMode) {
-        print("Req data $apiKey $uniId $subscriptionId $paymentMethod");
-      }
+      AppLogger.d("Req data $apiKey $uniId $subscriptionId $paymentMethod");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -489,7 +480,7 @@ class SubscriptionController extends GetxController{
               try {
                 AppEvents().sendInitCheckoutEvent(ccAvenueModel.data!.amount.toString(), ccAvenueModel.ccavenueData!.orderId.toString(), uniId.toString(), AppConstants.groupPoojaOrder);
               } catch (e) {
-                debugPrint("Error Event openCheckout: $e");
+                AppLogger.d("Error Event openCheckout: $e");
               }
             }else{
               AppDialog().showPaymentSuccessDialog(AppConstants.subscriptionOrder);
@@ -543,11 +534,11 @@ class SubscriptionController extends GetxController{
         //TODO Handle Phonepe
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {print('OnApiError');}
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {print('OnException==> ${e.toString()}');}
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -565,8 +556,8 @@ class SubscriptionController extends GetxController{
             'payment_status': 1,
           });
 
-      print("apiKey => $apiKey");
-      print("uniId => $uniId");
+      AppLogger.d("apiKey => $apiKey");
+      AppLogger.d("uniId => $uniId");
 
 
       if (response.statusCode == 200) {
@@ -577,15 +568,11 @@ class SubscriptionController extends GetxController{
           isSubscriptionPurchaseListSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isSubscriptionPurchaseListSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isSubscriptionPurchaseListLoading(false);
     }

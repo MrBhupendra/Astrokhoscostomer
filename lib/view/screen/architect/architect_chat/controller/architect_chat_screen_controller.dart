@@ -26,6 +26,7 @@ import '../../../chat/model/chat_remaining_time_model.dart';
 import '../../../chat/model/chat_session_model.dart';
 
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ArchitectChatScreenController extends FullLifeCycleController
     with FullLifeCycleMixin {
   final ArchitectChatIntakeFormController chatIntakeFormController = Get.find();
@@ -131,11 +132,11 @@ class ArchitectChatScreenController extends FullLifeCycleController
     DataSnapshot chatEndSnapshot = await dbReference.child('chatEnd').get();
     bool chatEnd;
     if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
-      print('Old or running session'); //Remove initChatSession if not required Akash only make customerStatus true here
+      AppLogger.d('Old or running session'); //Remove initChatSession if not required Akash only make customerStatus true here
       chatEnd = false;
       getChatDuration(uniqueId);
     } else {
-      print('No data available or new session.');
+      AppLogger.d('No data available or new session.');
       chatEnd = true;
       initChatSession(
         ChatSessionModel(
@@ -162,25 +163,19 @@ class ArchitectChatScreenController extends FullLifeCycleController
       }
     });
 
-    if (kDebugMode) {
-      print('OnInit ChatScreen');
-    }
+    AppLogger.d('OnInit ChatScreen');
   }
 
   @override
   void onResumed() {
     dbReference.child(customerStatus).set(true);
-    if (kDebugMode) {
-      print('OnResumed ChatScreen');
-    }
+    AppLogger.d('OnResumed ChatScreen');
   }
 
   @override
   void onPaused() {
     dbReference.child(customerStatus).set(false);
-    if (kDebugMode) {
-      print('onPaused ChatScreen');
-    }
+    AppLogger.d('onPaused ChatScreen');
   }
 
   @override
@@ -188,9 +183,7 @@ class ArchitectChatScreenController extends FullLifeCycleController
     dbReference.child(customerStatus).set(false);
    // stopTimer();
     super.onClose();
-    if (kDebugMode) {
-      print('onClose ChatScreen');
-    }
+    AppLogger.d('onClose ChatScreen');
   }
 
   @override
@@ -233,46 +226,34 @@ class ArchitectChatScreenController extends FullLifeCycleController
     chatAcceptedListener =
         dbReference.child(chatAcceptedChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[ChatTab] ChatAccepted:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[ChatTab] ChatAccepted:onDataChange $dataSnapshot');
       isChatAccepted.value = dataSnapshot.value as bool;
 
       if (isChatAccepted.value == true) {
         getChatDuration(uniqueId);
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatTab] ChatAccepted:onCancelled $error');
-      }
+      AppLogger.d('[ChatTab] ChatAccepted:onCancelled $error');
     });
 
     astrologerStatusListener =
         dbReference.child(astrologerStatus).onValue.listen((event) {
           var dataSnapshot = event.snapshot;
-          if (kDebugMode) {
-            print('[ChatTab] AstrologerStatus:onDataChange $dataSnapshot');
-          }
+          AppLogger.d('[ChatTab] AstrologerStatus:onDataChange $dataSnapshot');
           isArchitectOnline.value = dataSnapshot.value as bool;
         }, onError: (error) {
-          if (kDebugMode) {
-            print('[ChatTab] AstrologerStatus:onCancelled $error');
-          }
+          AppLogger.d('[ChatTab] AstrologerStatus:onCancelled $error');
         });
 
     chatEndListener = dbReference.child(chatEnd).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[ChatTab] ChatEnd:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[ChatTab] ChatEnd:onDataChange $dataSnapshot');
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
         showDisconnectedDialog();
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatTab] ChatEnd:onCancelled $error');
-      }
+      AppLogger.d('[ChatTab] ChatEnd:onCancelled $error');
     });
 
     onMessageListener = messageReference.onChildAdded.listen((event) {
@@ -280,9 +261,7 @@ class ArchitectChatScreenController extends FullLifeCycleController
       final message = ChatMessageModel.fromJson(json);
       addMessage(message);
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatScreenController] onMessageListener $error');
-      }
+      AppLogger.d('[ChatScreenController] onMessageListener $error');
     });
   }
 
@@ -310,9 +289,7 @@ class ArchitectChatScreenController extends FullLifeCycleController
         'page': page
       });
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print('API Response getChatHistory: ${response.data.toString()}');
-        }
+        AppLogger.d('API Response getChatHistory: ${response.data.toString()}');
         chatHistoryModel = ChatHistoryModel.fromJson(response.data);
         if (chatHistoryModel.status == AppConstants.success) {
           offsetCount = chatHistoryModel.page!;
@@ -340,23 +317,18 @@ class ArchitectChatScreenController extends FullLifeCycleController
             registerListeners();
           }
         } else {
-          print(
-              'getChatHistory API Response else: ${response.data.toString()}');
+          AppLogger.d('getChatHistory API Response else: ${response.data.toString()}');
           if (page == 1) {
             isChatHistorySuccess(false);
           }
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getChatHistory');
-        }
+        AppLogger.d('OnApiError getChatHistory');
       }
     } catch (e) {
       isChatHistorySuccess(false);
-      if (kDebugMode) {
-        print('OnException getChatHistory==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getChatHistory==> ${e.toString()}');
     } finally {
       isChatHistoryLoading(false);
     }
@@ -371,7 +343,7 @@ class ArchitectChatScreenController extends FullLifeCycleController
       String type,
       File? imageFile,
       String fileName) async {
-    print('saveChatApi');
+    AppLogger.d('saveChatApi');
     isSaveChatLoading(true);
     try {
       String? apiKey =
@@ -397,24 +369,20 @@ class ArchitectChatScreenController extends FullLifeCycleController
 
       final response = await _dio.post(AppConstants.saveChat, data: formData);
       if (response.statusCode == 200) {
-        print('saveChatApi Api Response ${response.data.toString()}');
+        AppLogger.d('saveChatApi Api Response ${response.data.toString()}');
         saveSuccessModel = SuccessModel.fromJson(response.data);
         if (saveSuccessModel.status == AppConstants.success) {
-          print('saveChatApi Api Success ${response.data.toString()}');
+          AppLogger.d('saveChatApi Api Success ${response.data.toString()}');
           isSaveChatSuccess(true);
         } else {
           isSaveChatSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError saveChatApi');
-        }
+        AppLogger.d('OnApiError saveChatApi');
       }
     } catch (e) {
       isSaveChatSuccess(false);
-      if (kDebugMode) {
-        print('OnException saveChatApi==> ${e.toString()}');
-      }
+      AppLogger.d('OnException saveChatApi==> ${e.toString()}');
     } finally {
       isSaveChatLoading(false);
     }
@@ -440,15 +408,11 @@ class ArchitectChatScreenController extends FullLifeCycleController
           isGetTimeSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getChatDuration');
-        }
+        AppLogger.d('OnApiError getChatDuration');
       }
     } catch (e) {
       isGetTimeSuccess(false);
-      if (kDebugMode) {
-        print('OnException getChatDuration==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getChatDuration==> ${e.toString()}');
     } finally {
       isGetTimeLoading(false);
     }
@@ -519,16 +483,16 @@ class ArchitectChatScreenController extends FullLifeCycleController
         case TaskState.running:
           final progress =
               100.0 * (taskSnapshot.bytesTransferred / taskSnapshot.totalBytes);
-          print("Upload is $progress% complete.");
+          AppLogger.d("Upload is $progress% complete.");
           break;
         case TaskState.paused:
-          print("Upload is paused.");
+          AppLogger.d("Upload is paused.");
           break;
         case TaskState.canceled:
-          print("Upload canceled");
+          AppLogger.d("Upload canceled");
           break;
         case TaskState.error:
-          print("Upload error");
+          AppLogger.d("Upload error");
           break;
         case TaskState.success:
           String imageUrl = await taskSnapshot.ref.getDownloadURL();
@@ -594,7 +558,7 @@ class ArchitectChatScreenController extends FullLifeCycleController
 
   //Chat Tab Controller
   void startTimer() {
-    print('Timer start');
+    AppLogger.d('Timer start');
     if (!isTimerRunning.value) {
       isTimerRunning.toggle();
       _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
@@ -745,15 +709,11 @@ class ArchitectChatScreenController extends FullLifeCycleController
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
     }
   }

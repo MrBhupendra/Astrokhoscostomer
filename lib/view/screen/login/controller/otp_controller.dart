@@ -1,5 +1,4 @@
 import 'package:astro_brahmand/view/screen/login/controller/sample_strategy.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:otp_autofill/otp_autofill.dart';
@@ -17,8 +16,7 @@ class OTPController extends GetxController {
     _initInteractor();
     controller = OTPTextEditController(
       codeLength: 6,
-      //ignore: avoid_print
-      onCodeReceive: (code) => print('Your Application receive code - $code'),
+      onCodeReceive: (code) {},
       otpInteractor: _otpInteractor,
     )..startListenUserConsent(
           (code) {
@@ -33,12 +31,7 @@ class OTPController extends GetxController {
 
   Future<void> _initInteractor() async {
     _otpInteractor = OTPInteractor();
-
-    final appSignature = await _otpInteractor.getAppSignature();
-
-    if (kDebugMode) {
-      print('Your app signature: $appSignature');
-    }
+    await _otpInteractor.getAppSignature();
   }
 
   @override

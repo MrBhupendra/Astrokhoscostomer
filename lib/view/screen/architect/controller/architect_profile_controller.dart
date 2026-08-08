@@ -29,6 +29,7 @@ import '../../../widget/custom_text_regular.dart';
 import '../../splash/controller/config_controller.dart';
 import '../model/architect_calculation_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ArchitectProfileController extends FullLifeCycleController
     with FullLifeCycleMixin {
   final Dio _dio = Dio();
@@ -85,7 +86,7 @@ class ArchitectProfileController extends FullLifeCycleController
   }
 
   Future<void> getAstrologerDetail(String astrologerUniId) async {
-    print(astrologerUniId);
+    AppLogger.d(astrologerUniId);
     isAstrologerLoading(true);
     try {
       String? uniId =
@@ -103,15 +104,11 @@ class ArchitectProfileController extends FullLifeCycleController
           isAstrologerSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isAstrologerSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAstrologerLoading(false);
     }
@@ -119,7 +116,7 @@ class ArchitectProfileController extends FullLifeCycleController
 
   Future<void> getAllReviews(int offset, String astrologerUniId) async {
     isReviewLoading(true);
-    print(astrologerUniId);
+    AppLogger.d(astrologerUniId);
     try {
       final response = await _dio.post(AppConstants.getReviews,
           data: {'offset': offset, "astrologer_uni_id": astrologerUniId});
@@ -131,15 +128,11 @@ class ArchitectProfileController extends FullLifeCycleController
           isReviewSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isReviewSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isReviewLoading(false);
     }
@@ -168,14 +161,10 @@ class ArchitectProfileController extends FullLifeCycleController
           }
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isFollowLoading(false);
     }
@@ -413,16 +402,12 @@ class ArchitectProfileController extends FullLifeCycleController
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -648,7 +633,7 @@ class ArchitectProfileController extends FullLifeCycleController
                         textColor: ColorResources.toolbarText,
                         backgroundColor: ColorResources.colorPrimary,
                         onPressed: () async {
-                          print("AS1");
+                          AppLogger.d("AS1");
                           String? payMethod =
                           await SharedPreferencesHelper.getData(
                               AppConstants.paymentGateway);
@@ -701,7 +686,7 @@ class ArchitectProfileController extends FullLifeCycleController
         "wallet_check": walletCheck,
         "payment_method": paymentMethod
       });
-      print("Req -> $apiKey $uniId $astrologerUniId $type $walletCheck $paymentMethod");
+      AppLogger.d("Req -> $apiKey $uniId $astrologerUniId $type $walletCheck $paymentMethod");
 
 
       if (response.statusCode == 200) {
@@ -721,15 +706,11 @@ class ArchitectProfileController extends FullLifeCycleController
           isPurchaseSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }

@@ -29,6 +29,7 @@ import '../../model/report_order_list_model.dart';
 import '../../model/vedic_data.dart';
 import '../../vedic_astro_model/report_calculation_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ReportController extends GetxController {
   final Dio _dio = Dio();
   final isCalculationLoading = false.obs;
@@ -115,15 +116,11 @@ class ReportController extends GetxController {
           isOrderSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isOrderSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isOrderLoading(false);
     }
@@ -131,7 +128,7 @@ class ReportController extends GetxController {
 
   // Horoscope pdf
   Future<void> paidKundliCalculation(String orderType, int walletCheck, String action, KundliMatchData data) async {
-    print("Enter in");
+    AppLogger.d("Enter in");
     CustomProgressDialog.showDialog();
     isCalculationLoading(true);
     try {
@@ -146,13 +143,13 @@ class ReportController extends GetxController {
         "payment_method": payMethod,
         "pdf_type": pdfSize.value,
       });
-      print("order:::>$orderType");
-      print("wallet_check:::>$walletCheck");
-      print("payment_method:::>$payMethod");
+      AppLogger.d("order:::>$orderType");
+      AppLogger.d("wallet_check:::>$walletCheck");
+      AppLogger.d("payment_method:::>$payMethod");
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
-        print(response.data);
+        AppLogger.d(response.data);
         reportCalculationModel = ReportCalculationModel.fromJson(response.data);
         if (reportCalculationModel.status == AppConstants.success) {
           isCalculationSuccess(true);
@@ -177,16 +174,12 @@ class ReportController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -249,11 +242,11 @@ class ReportController extends GetxController {
         });
       }
 
-      print('Request Data: $requestData'); // Log request data
+      AppLogger.d('Request Data: $requestData'); // Log request data
 
       final response =
           await _dio.post(AppConstants.paidKundliPurchase, data: requestData);
-      print('Response Data: ${response.data}'); // Log response data
+      AppLogger.d('Response Data: ${response.data}'); // Log response data
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -275,16 +268,16 @@ class ReportController extends GetxController {
           }
         } else {
           isPurchaseSuccess(false);
-          print('Purchase failed: ${razorpayModel.msg}');
+          AppLogger.d('Purchase failed: ${razorpayModel.msg}');
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        print('OnApiError: ${response.statusCode} ${response.statusMessage}');
+        AppLogger.d('OnApiError: ${response.statusCode} ${response.statusMessage}');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      print('OnException==> ${e.toString()}');
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -347,11 +340,11 @@ class ReportController extends GetxController {
         });
       }
 
-      print('Request Data: $requestData'); // Log request data
+      AppLogger.d('Request Data: $requestData'); // Log request data
 
       final response =
           await _dio.post(AppConstants.paidKundliPurchase, data: requestData);
-      print('Response Data: ${response.data}'); // Log response data
+      AppLogger.d('Response Data: ${response.data}'); // Log response data
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -378,16 +371,16 @@ class ReportController extends GetxController {
           }
         } else {
           isPurchaseSuccess(false);
-          print('Purchase failed: ${cashfreePaymentModel.msg}');
+          AppLogger.d('Purchase failed: ${cashfreePaymentModel.msg}');
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        print('OnApiError: ${response.statusCode} ${response.statusMessage}');
+        AppLogger.d('OnApiError: ${response.statusCode} ${response.statusMessage}');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      print('OnException==> ${e.toString()}');
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -450,11 +443,11 @@ class ReportController extends GetxController {
         });
       }
 
-      print('Request Data: $requestData'); // Log request data
+      AppLogger.d('Request Data: $requestData'); // Log request data
 
       final response =
           await _dio.post(AppConstants.paidKundliPurchase, data: requestData);
-      print('Response Data: ${response.data}'); // Log response data
+      AppLogger.d('Response Data: ${response.data}'); // Log response data
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -482,16 +475,16 @@ class ReportController extends GetxController {
           }
         } else {
           isPurchaseSuccess(false);
-          print('Purchase failed: ${phonePeModel.msg}');
+          AppLogger.d('Purchase failed: ${phonePeModel.msg}');
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        print('OnApiError: ${response.statusCode} ${response.statusMessage}');
+        AppLogger.d('OnApiError: ${response.statusCode} ${response.statusMessage}');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isPurchaseSuccess(false);
-      print('OnException==> ${e.toString()}');
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }
@@ -719,7 +712,7 @@ class ReportController extends GetxController {
                                         value: "small",
                                         groupValue: pdfSize.value,
                                         onChanged: (value) {
-                                          print("${pdfSize.value}");
+                                          AppLogger.d("${pdfSize.value}");
         
                                           if (value != null) {
                                             pdfSize.value = value;
@@ -751,7 +744,7 @@ class ReportController extends GetxController {
                                         value: "medium",
                                         groupValue: pdfSize.value,
                                         onChanged: (value) {
-                                          print("${pdfSize.value}");
+                                          AppLogger.d("${pdfSize.value}");
                                           if (value != null) {
                                             pdfSize.value = value;
                                             paidKundliCalculation(orderType, 0, "", data);
@@ -782,7 +775,7 @@ class ReportController extends GetxController {
                                         value: "large",
                                         groupValue: pdfSize.value,
                                         onChanged: (value) {
-                                          print("${pdfSize.value}");
+                                          AppLogger.d("${pdfSize.value}");
         
                                           if (value != null) {
                                             pdfSize.value = value;
@@ -848,7 +841,7 @@ class ReportController extends GetxController {
                           String? payMethod =
                               await SharedPreferencesHelper.getData(
                                   AppConstants.paymentGateway);
-                          print(payMethod);
+                          AppLogger.d(payMethod);
                           if (payMethod == AppConstants.payRazorpay ||
                               payMethod == AppConstants.payCCAvenue) {
                             paidKundliPurchase(orderType, isWalletSelected.value,

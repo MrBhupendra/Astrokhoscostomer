@@ -9,6 +9,7 @@ import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_snack_bar.dart';
 import '../model/question_profile_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AskQuestionProfileController extends FullLifeCycleController
     with FullLifeCycleMixin {
   String? perQuestionPrice;
@@ -40,12 +41,12 @@ class AskQuestionProfileController extends FullLifeCycleController
 
   void setGender(String gender) {
     selectedGender.value = gender;
-    print('AS1 ${selectedGender.value}');
+    AppLogger.d('AS1 ${selectedGender.value}');
   }
 
   void setLanguage(String language) {
     selectedLanguage.value = language;
-    print('AS1 ${selectedLanguage.value}');
+    AppLogger.d('AS1 ${selectedLanguage.value}');
   }
 
   @override
@@ -61,10 +62,10 @@ class AskQuestionProfileController extends FullLifeCycleController
         await SharedPreferencesHelper.getData(AppConstants.userApiKey);
     String? uniId =
         await SharedPreferencesHelper.getData(AppConstants.userUniId);
-    print("AS1 Request $apiKey $uniId");
+    AppLogger.d("AS1 Request $apiKey $uniId");
     try {
       final response = await _dio.post(AppConstants.getOpenAiProfile, data: {'api_key': apiKey, "user_uni_id": uniId,"open_ai_profile_id" : profileId});
-      print("AS1 Response ${response.data.toString()}");
+      AppLogger.d("AS1 Response ${response.data.toString()}");
       if (response.statusCode == 200) {
         profileModel = QuestionProfileModel.fromJson(response.data);
 
@@ -82,15 +83,11 @@ class AskQuestionProfileController extends FullLifeCycleController
           isProfileSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isProfileSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
+      AppLogger.d('OnException==> $e');
     } finally {
       isProfileLoading(false);
     }
@@ -139,14 +136,10 @@ class AskQuestionProfileController extends FullLifeCycleController
           CustomSnackBar.showBottom(updateProfileSuccess.msg.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
+      AppLogger.d('OnException==> $e');
     } finally {
       isUpdateLoading(false);
     }
@@ -198,14 +191,10 @@ class AskQuestionProfileController extends FullLifeCycleController
           CustomSnackBar.showBottom(updateProfileSuccess.msg.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
+      AppLogger.d('OnException==> $e');
     } finally {
       isUpdateLoading(false);
     }
@@ -238,14 +227,10 @@ class AskQuestionProfileController extends FullLifeCycleController
           CustomSnackBar.showBottom(deleteProfileSuccess.msg.toString());
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
+      AppLogger.d('OnException==> $e');
     } finally {
       isDeleteLoading(false);
     }

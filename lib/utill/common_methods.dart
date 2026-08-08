@@ -27,6 +27,7 @@ import '../view/widget/custom_text_regular.dart';
 import '../view/widget/filter_item_list_widget.dart';
 import 'app_constants.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class CommonMethods {
 
   String formatDateString(String dateString) {
@@ -379,7 +380,7 @@ class CommonMethods {
       return formattedTime;
     } on FormatException {
       // If parsing fails, log the error or return the input time as-is
-      print("Error: Could not parse time string: $time");
+      AppLogger.d("Error: Could not parse time string: $time");
       return time; // or handle the error appropriately
     }
   }
@@ -418,7 +419,7 @@ class CommonMethods {
       await saveFcmToken(fcmToken);
     }).catchError((e) {
       fcmToken = 'catchGetToken$e';
-      debugPrint("Error getting FCM token: $e");
+      AppLogger.d("Error getting FCM token: $e");
     });
 
     FirebaseMessaging.instance.onTokenRefresh.listen((token) async {
@@ -426,8 +427,8 @@ class CommonMethods {
       await saveFcmToken(fcmToken);
     }).onError((e) {
       fcmToken = 'catchOnTokenRefresh$e';
-      debugPrint("Error getting FCM token: $e");
-      debugPrint("Error getting FCM token: $e");
+      AppLogger.d("Error getting FCM token: $e");
+      AppLogger.d("Error getting FCM token: $e");
     });
 
     return fcmToken;
@@ -661,7 +662,7 @@ class CommonMethods {
                     size: 20,
                   ),
                   onRatingUpdate: (rating) {
-                    print(rating);
+                    AppLogger.d(rating);
                   },
                 ),
               ),
@@ -887,7 +888,7 @@ class CommonMethods {
   Future<String?> getProfileName() async {
     String? email = '***';
     bool isLogin = await SharedPreferencesHelper.getIsLogin();
-    print("ISLogin $isLogin");
+    AppLogger.d("ISLogin $isLogin");
     if (isLogin) {
       email = await SharedPreferencesHelper.getData(AppConstants.name);
     }
@@ -1048,7 +1049,7 @@ class CommonMethods {
 
         return formattedDateTime;
       } catch (e) {
-        print("Error parsing dateTime: $e");
+        AppLogger.d("Error parsing dateTime: $e");
         return date;
       }
     }
@@ -1069,7 +1070,7 @@ class CommonMethods {
 
         return formattedDateTime;
       } catch (e) {
-        print("Error parsing dateTime: $e");
+        AppLogger.d("Error parsing dateTime: $e");
         return "Invalid Date/Time";
       }
     }

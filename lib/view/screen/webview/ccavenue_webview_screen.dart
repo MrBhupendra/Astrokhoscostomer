@@ -47,10 +47,8 @@ class _WebViewScreenState extends State<CCAvenueWebViewScreen> {
       ..setNavigationDelegate(
         NavigationDelegate(
           onProgress: (int progress) {
-            debugPrint('Page WebView is loading (progress : $progress%)');
           },
           onPageStarted: (String url) {
-            debugPrint('Page started loading: $url');
             if (url.contains("cancelTransaction")) {
               _handleCancelTransaction();
             }else if (url.contains("customerwalletapp/Success")) {
@@ -58,27 +56,16 @@ class _WebViewScreenState extends State<CCAvenueWebViewScreen> {
             }
           },
           onPageFinished: (String url) {
-            debugPrint('Page finished loading: $url');
           },
           onWebResourceError: (WebResourceError error) {
-            debugPrint('''
-Page resource error:
-  code: ${error.errorCode}
-  description: ${error.description}
-  errorType: ${error.errorType}
-  isForMainFrame: ${error.isForMainFrame}
-          ''');
           },
           onNavigationRequest: (NavigationRequest request) {
             if (request.url.startsWith('https://www.youtube.com/')) {
-              debugPrint('Page blocking navigation to ${request.url}');
               return NavigationDecision.prevent;
             }
-            debugPrint('Page allowing navigation to ${request.url}');
             return NavigationDecision.navigate;
           },
           onUrlChange: (UrlChange change) {
-            debugPrint('Page url change to ${change.url}');
           },
           onHttpAuthRequest: (HttpAuthRequest request) {
             openDialog(request);
@@ -107,21 +94,18 @@ Page resource error:
   }
 
   void _handleCancelTransaction() {
-    debugPrint("Transaction cancelled");
     Get.back(result: {
       'status': "Cancel",
     });
   }
 
   void _handleSuccessTransaction() {
-    debugPrint("Transaction successful");
     Get.back(result: {
       'status': "Success",
     });
   }
 
   void _handleErrorTransaction() {
-    debugPrint("Transaction successful");
     Get.back(result: {
       'status': "Error",
     });

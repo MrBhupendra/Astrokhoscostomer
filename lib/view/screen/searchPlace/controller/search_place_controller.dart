@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:get/get.dart';
 import 'package:geocoding/geocoding.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SearchPlaceController extends GetxController {
   final TextEditingController textEditingController = TextEditingController();
   final String sessionToken = "123456";
@@ -28,17 +29,17 @@ class SearchPlaceController extends GetxController {
         String baseURL = 'https://maps.googleapis.com/maps/api/place/autocomplete/json';
         String request = '$baseURL?input=$input&key=$apiKey&sessiontoken=$sessionToken';
         var response = await dio.get(request);
-        print("response--->$response");
+        AppLogger.d("response--->$response");
         if (response.statusCode == 200) {
           placeList.assignAll(response.data['predictions']);
           isSuccess(true);
         } else {
           isSuccess(false);
-          debugPrint("OnException");
+          AppLogger.d("OnException");
         }
       }catch(e){
         isSuccess(false);
-        debugPrint('OnException==> ${e.toString()}');
+        AppLogger.d('OnException==> ${e.toString()}');
       }finally{
         isLoading(false);
       }
@@ -74,7 +75,7 @@ class SearchPlaceController extends GetxController {
 
         // Fetch timezone details (name + offset)
         var timeZoneData = await getTimeZone(latitude, longitude);
-        print("timeZoneData=>$timeZoneData");
+        AppLogger.d("timeZoneData=>$timeZoneData");
         Get.back(result: {
           'name': place['description'],
           'latitude': latitude.toString(),
@@ -87,7 +88,7 @@ class SearchPlaceController extends GetxController {
         });
       }
     } catch (e) {
-      debugPrint('Error selecting place: ${e.toString()}');
+      AppLogger.d('Error selecting place: ${e.toString()}');
     }
   }
 
@@ -112,14 +113,14 @@ class SearchPlaceController extends GetxController {
           'offsetHours': totalOffsetHours,
         };
       } else {
-        debugPrint('Failed to get timezone: ${response.data}');
+        AppLogger.d('Failed to get timezone: ${response.data}');
         return {
           'timeZoneId': 'Asia/Kolkata',
           'offsetHours': 5.5,
         };
       }
     } catch (e) {
-      debugPrint('Timezone API Error: ${e.toString()}');
+      AppLogger.d('Timezone API Error: ${e.toString()}');
       return {
         'timeZoneId': 'Asia/Kolkata',
         'offsetHours': 5.5,

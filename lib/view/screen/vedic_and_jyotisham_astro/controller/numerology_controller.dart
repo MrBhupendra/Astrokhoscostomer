@@ -7,6 +7,7 @@ import '../../../../utill/shared_preference.dart';
 import '../../splash/controller/config_controller.dart';
 import '../model/numerology_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class NumerologyController extends GetxController {
   final Dio _dio = Dio();
 
@@ -48,7 +49,7 @@ class NumerologyController extends GetxController {
           }
         } else {
           isNumerologyLoading(false);
-          debugPrint('[KundliController] getAvakhada->OnApiError');
+          AppLogger.d('[KundliController] getAvakhada->OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -63,11 +64,11 @@ class NumerologyController extends GetxController {
           }
         } else {
           isNumerologyLoading(false);
-          debugPrint('[KundliController] getAvakhada->OnApiError');
+          AppLogger.d('[KundliController] getAvakhada->OnApiError');
         }
       }
     } catch (e) {
-      debugPrint('[KundliController] getCharts->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getCharts->OnException:${e.toString()}');
     } finally {
       isNumerologyLoading(false);
     }

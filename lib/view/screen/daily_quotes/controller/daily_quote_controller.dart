@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:astro_brahmand/model/daily_quote_model.dart';
 import '../../../../utill/app_constants.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class DailyQuoteController extends GetxController{
 
   final Dio _dio = Dio();
@@ -66,7 +67,7 @@ class DailyQuoteController extends GetxController{
 
 
   Future<void> getQuote(num offset, String categoryId) async {
-    print("Fetching quotes for categoryId: $categoryId");
+    AppLogger.d("Fetching quotes for categoryId: $categoryId");
     isLoading(true);
     try {
 
@@ -74,7 +75,7 @@ class DailyQuoteController extends GetxController{
          "offset": offset,
         "quote_category_id": categoryId
       });
-      print("API Response: ${response.data}");
+      AppLogger.d("API Response: ${response.data}");
       if (response.statusCode == 200) {
         dailyQuoteModel = DailyQuoteModel.fromJson(response.data);
         if (dailyQuoteModel.status == AppConstants.success) {
@@ -92,17 +93,13 @@ class DailyQuoteController extends GetxController{
         }
       }
       else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
 
 
     } catch (e) {
       isSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }
@@ -122,15 +119,11 @@ class DailyQuoteController extends GetxController{
           isCategorySuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isCategorySuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCategoryLoading(false);
     }

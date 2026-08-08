@@ -12,6 +12,7 @@ import '../../widget/custom_empty_screen.dart';
 import '../../widget/services_widget.dart';
 import 'controller/service_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ServiceListScreen extends GetView<ServiceController> {
   const ServiceListScreen({super.key});
 
@@ -30,7 +31,7 @@ class ServiceListScreen extends GetView<ServiceController> {
       categoryId = arguments.id.toString();
     }
 
-    print("controller.serviceOffsetCount-> ${controller.serviceOffsetCount}");
+    AppLogger.d("controller.serviceOffsetCount-> ${controller.serviceOffsetCount}");
     controller.getServices(controller.serviceOffsetCount, categoryId, "");
 
     void searchServices(String query) {

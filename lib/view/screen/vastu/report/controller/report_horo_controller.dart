@@ -28,6 +28,7 @@ import '../../../vedic_and_jyotisham_astro/model/report_horo_calculation.dart';
 import '../../../vedic_and_jyotisham_astro/model/report_kundli_list_model.dart';
 import '../../../vedic_and_jyotisham_astro/model/report_order_list_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ReportHoroController extends GetxController {
   final Dio _dio = Dio();
   final isCalculationLoading = false.obs;
@@ -123,15 +124,11 @@ class ReportHoroController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isReportSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isReportLoading(false);
     }
@@ -184,16 +181,12 @@ class ReportHoroController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -220,15 +213,11 @@ class ReportHoroController extends GetxController {
           isOrderSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isOrderSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isOrderLoading(false);
     }
@@ -236,7 +225,7 @@ class ReportHoroController extends GetxController {
 
   Future<void> horoscopeReportPurchase(String id,String orderType, int walletCheck,
       String paymentMethod, KundliMatchData data) async {
-    print('As11');
+    AppLogger.d('As11');
     isPurchaseLoading(true);
     try {
       String? apiKey =
@@ -285,7 +274,7 @@ class ReportHoroController extends GetxController {
       }
 
       final response = await _dio.post(AppConstants.reportHoroscopePurchase, data: requestData);
-      print('AS1 ${response.data}');
+      AppLogger.d('AS1 ${response.data}');
       if (response.statusCode == 200) {
         if(paymentMethod == AppConstants.payRazorpay) {
           razorpayModel = RazorpayModel.fromJson(response.data);
@@ -309,15 +298,11 @@ class ReportHoroController extends GetxController {
           CustomSnackBar.showBottom(AppStrings.noPaymentGatewayFound.tr);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }

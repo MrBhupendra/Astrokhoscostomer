@@ -7,6 +7,7 @@ import '../../../../utill/shared_preference.dart';
 import '../../splash/controller/config_controller.dart';
 import '../model/panchang_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class PanchangController extends GetxController {
   final Dio _dio = Dio();
 
@@ -46,9 +47,7 @@ class PanchangController extends GetxController {
             isPanchangSuccess(false);
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       } else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -65,16 +64,12 @@ class PanchangController extends GetxController {
             isPanchangSuccess(false);
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       }
     } catch (e) {
       isPanchangSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPanchangLoading(false);
     }

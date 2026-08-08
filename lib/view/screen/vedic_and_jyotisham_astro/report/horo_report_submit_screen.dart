@@ -15,6 +15,7 @@ import '../../searchPlace/search_place_screen.dart';
 import '../model/vedic_data.dart';
 import 'controller/report_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class HoroReportSubmitScreen extends StatelessWidget {
   HoroReportSubmitScreen({super.key});
 
@@ -122,7 +123,7 @@ class HoroReportSubmitScreen extends StatelessWidget {
                   backgroundColor: ColorResources.colorPrimaryVariant,
                   textColor: ColorResources.toolbarText,
                   onPressed: () {
-                    print("form data${_nameController.text},${_birthDateController.text},${_birthTimeController.text},${_kundliLatitude.text},${_kundliLongitude.text},${_birthPlaceController.text}");
+                    AppLogger.d("form data${_nameController.text},${_birthDateController.text},${_birthTimeController.text},${_kundliLatitude.text},${_kundliLongitude.text},${_birthPlaceController.text}");
                     if(_formKey.currentState!.validate()){
 
                       controller.paidKundliCalculation(AppConstants.reportHoroscope, 0, "Open",  KundliMatchData(

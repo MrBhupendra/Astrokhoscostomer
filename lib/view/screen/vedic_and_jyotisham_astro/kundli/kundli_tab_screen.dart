@@ -22,6 +22,7 @@ import 'kundli_chart_screen.dart';
 import 'kundli_dashas_screen.dart';
 import 'kundli_rudraksh_suggestion_screen.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class KundliTabScreen extends StatelessWidget {
   KundliTabScreen({super.key});
 
@@ -62,7 +63,7 @@ class KundliTabScreen extends StatelessWidget {
             icon: AppFeatures.downloadJyotishamPDF == true ? Icons.download : null,
             iconSize: 18,
             onActionPressed: () {
-              print("form data-> ${data.name} ${data.dob} ${data.tob} ${AppConstants.staticTimezone} ${data.latitude} ${data.longitude} ${data.place}");
+              AppLogger.d("form data-> ${data.name} ${data.dob} ${data.tob} ${AppConstants.staticTimezone} ${data.latitude} ${data.longitude} ${data.place}");
               reportController.paidKundliCalculation(AppConstants.reportHoroscope, 0, "Open",  KundliMatchData(
                   data.name,
                   data.dob,

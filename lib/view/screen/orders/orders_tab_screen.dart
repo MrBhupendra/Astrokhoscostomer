@@ -11,6 +11,7 @@ import '../../../utill/app_constants.dart';
 import '../../../utill/color_resources.dart';
 import '../slot_booking/slot_orders_screen.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class OrdersTabScreen extends GetView<OrderController> {
   OrdersTabScreen({super.key});
   final List<String> tabs = [];
@@ -22,9 +23,7 @@ class OrdersTabScreen extends GetView<OrderController> {
       Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
       initialIndexValue = arguments['index'] ?? 0;
     }catch(e){
-      if (kDebugMode) {
-        print('OnInitException==> ${e.toString()}');
-      }
+      AppLogger.d('OnInitException==> ${e.toString()}');
     }
 
     return PopScope(

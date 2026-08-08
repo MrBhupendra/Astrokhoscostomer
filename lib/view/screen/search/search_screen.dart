@@ -17,12 +17,13 @@ import '../../widget/custom_text_regular.dart';
 import '../../widget/simmer_widget/simmer_astrologer.dart';
 import 'model/astrologer_request_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SearchScreen extends StatelessWidget {
   SearchScreen({super.key});
   final AllAstrologerController controller = Get.put<AllAstrologerController>(AllAstrologerController());
   @override
   Widget build(BuildContext context) {
-    debugPrint("AS1 [SearchScreen] build");
+    AppLogger.d("AS1 [SearchScreen] build");
     controller.resetOffset();
     controller.resetSearch();
     controller.resetData();

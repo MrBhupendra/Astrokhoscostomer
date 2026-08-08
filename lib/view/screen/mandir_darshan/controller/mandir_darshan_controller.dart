@@ -30,6 +30,7 @@ import '../../splash/controller/config_controller.dart';
 import '../../webview/payment_webview_screen.dart';
 import '../model/mandir_assign_list_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class MandirDarshanController extends GetxController {
   final Dio _dio = Dio();
 
@@ -84,9 +85,7 @@ class MandirDarshanController extends GetxController {
         'is_live': 1,
         'customer_uni_id': uniId
       });
-      if (kDebugMode) {
-        print("responseGetLiveMandirDarshan:::$response");
-      }
+      AppLogger.d("responseGetLiveMandirDarshan:::$response");
       if (response.statusCode == 200) {
         mandirAssignModel = MandirAssignListModel.fromJson(response.data);
         if(mandirAssignModel.status == AppConstants.success){
@@ -102,15 +101,11 @@ class MandirDarshanController extends GetxController {
           }
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isMandirSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isMandirLoading(false);
     }
@@ -122,16 +117,14 @@ class MandirDarshanController extends GetxController {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? agoraAppId = await SharedPreferencesHelper.getData(AppConstants.agoraAppId);
-      print("$apiKey $uniId $assignId Customer");
+      AppLogger.d("$apiKey $uniId $assignId Customer");
       final response = await _dio.post(AppConstants.joinMandirDarshan, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
         'live_temple_darshan_assign_id' : assignId,
         'started_by' : "Customer"
       });
-      if (kDebugMode) {
-        print("responseTemple:::$response");
-      }
+      AppLogger.d("responseTemple:::$response");
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         liveJoinModel = SuccessModel.fromJson(response.data);
@@ -144,20 +137,16 @@ class MandirDarshanController extends GetxController {
             'astrologerId': astrologerUniId,
             'astrologerUID': astrologerUID
           });
-          print("As1 Req $token $uniqueId $agoraAppId $astrologerUniId $astrologerUID");
+          AppLogger.d("As1 Req $token $uniqueId $agoraAppId $astrologerUniId $astrologerUID");
         }else{
           CustomSnackBar.showBottom(liveJoinModel.msg.toString());
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -179,11 +168,9 @@ class MandirDarshanController extends GetxController {
         "live_temple_darshan_assign_id": liveMandirDarshanAssignId,
         "wallet_check": walletCheck,
       });
-      debugPrint(liveMandirDarshanAssignId);
-      debugPrint(walletCheck.toString());
-      if (kDebugMode) {
-        print("responseGetMandirDarshanCalculation:::$response");
-      }
+      AppLogger.d(liveMandirDarshanAssignId);
+      AppLogger.d(walletCheck.toString());
+      AppLogger.d("responseGetMandirDarshanCalculation:::$response");
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         liveTempleDarshanCalculationModel = LiveTempleDarshanCalculationModel.fromJson(response.data);
@@ -210,16 +197,12 @@ class MandirDarshanController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiErrorGetMandirDarshanCalculation');
-        }
+        AppLogger.d('OnApiErrorGetMandirDarshanCalculation');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnExceptionGetMandirDarshanCalculation==> ${e.toString()}');
-      }
+      AppLogger.d('OnExceptionGetMandirDarshanCalculation==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -241,12 +224,8 @@ class MandirDarshanController extends GetxController {
         "payment_method": paymentMethod
       });
 
-      if (kDebugMode) {
-        print("Req data $apiKey $uniId $liveMandirDarshanAssignId $astrologerId $uniId $walletCheck $paymentMethod");
-      }
-      if (kDebugMode) {
-        print("responsePurchaseMandirDarshanPooja:::$response");
-      }
+      AppLogger.d("Req data $apiKey $uniId $liveMandirDarshanAssignId $astrologerId $uniId $walletCheck $paymentMethod");
+      AppLogger.d("responsePurchaseMandirDarshanPooja:::$response");
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         if(paymentMethod == AppConstants.payRazorpay){
@@ -271,7 +250,7 @@ class MandirDarshanController extends GetxController {
               try {
                 AppEvents().sendInitCheckoutEvent(ccAvenueModel.data!.amount.toString(), ccAvenueModel.ccavenueData!.orderId.toString(), uniId.toString(), AppConstants.orderMandirDarshan);
               } catch (e) {
-                debugPrint("Error Event openCheckout: $e");
+                AppLogger.d("Error Event openCheckout: $e");
               }
             }else{
               AppDialog().showPaymentSuccessDialog(AppConstants.orderMandirDarshan);
@@ -325,11 +304,11 @@ class MandirDarshanController extends GetxController {
         //TODO Handle Phonepe
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {print('OnApiErrorPurchaseMandirDarshanPooja');}
+        AppLogger.d('OnApiErrorPurchaseMandirDarshanPooja');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {print('OnExceptionPurchaseMandirDarshanPooja==> ${e.toString()}');}
+      AppLogger.d('OnExceptionPurchaseMandirDarshanPooja==> ${e.toString()}');
     }
   }
 
@@ -692,7 +671,7 @@ class MandirDarshanController extends GetxController {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () async {
-                              debugPrint("liveMandirDarshanAssignId$liveMandirDarshanAssignId");
+                              AppLogger.d("liveMandirDarshanAssignId$liveMandirDarshanAssignId");
                               String? defaultPayMethod = configController.config.data?.payment?.defaultPaymentGateway.toString();
                               String? defaultPayMethodInternational = configController.config.data?.paymentForOtherCountry?.defaultPaymentGateway.toString();
                               if(configController.phoneCode == AppConstants.defaultPhoneCode){

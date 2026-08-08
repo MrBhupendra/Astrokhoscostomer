@@ -14,6 +14,7 @@ import '../../widget/custom_text_regular.dart';
 import '../../widget/simmer_widget/simmer_astrologer.dart';
 import '../agora/live_stream/controller/live_stream_init_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class LiveAstrologerScreen extends StatelessWidget {
   const LiveAstrologerScreen({super.key});
 
@@ -77,7 +78,7 @@ class LiveAstrologerScreen extends StatelessWidget {
                               String uniqueId = controller.astrologerModel.data![index].liveChannel.toString();
                               String astrologerUniId = controller.astrologerModel.data![index].astrologerUniId.toString();
                               controller.joinLiveStream(astrologerUID, uniqueId, astrologerUniId);
-                              print("astrologerUID->$astrologerUID uniqueId->$uniqueId astrologerUniId->$astrologerUniId");
+                              AppLogger.d("astrologerUID->$astrologerUID uniqueId->$uniqueId astrologerUniId->$astrologerUniId");
                             }else{
                               Get.toNamed('/login');
                             }

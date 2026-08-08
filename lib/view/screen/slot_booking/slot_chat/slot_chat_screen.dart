@@ -20,6 +20,7 @@ import '../../../widget/custom_text_regular.dart';
 import '../../chat/controller/image_picker_controller.dart';
 import '../../chat/model/chat_message_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SlotChatScreen extends StatelessWidget {
   SlotChatScreen({super.key});
 
@@ -246,8 +247,8 @@ class SlotChatScreen extends StatelessWidget {
                             () {
                           if (imagePickerController.isImagePicked.isTrue) {
                             // Send Image
-                            print("isCaptureImage.isTrue ${imagePickerController.isImagePicked.isTrue}");
-                            print("imageFile.value ${imagePickerController.imageFile.value}");
+                            AppLogger.d("isCaptureImage.isTrue ${imagePickerController.isImagePicked.isTrue}");
+                            AppLogger.d("imageFile.value ${imagePickerController.imageFile.value}");
                             return Visibility(
                                 visible: imagePickerController.isImagePicked.isTrue,
                                 child: Padding(

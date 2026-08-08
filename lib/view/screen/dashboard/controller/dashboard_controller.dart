@@ -17,6 +17,7 @@ import '../../agora/live_stream/controller/live_stream_init_controller.dart';
 import '../../search/model/astrologer_request_model.dart';
 import 'live_astrologer_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class DashboardController extends FullLifeCycleController with FullLifeCycleMixin {
   final Dio _dio = Dio();
 
@@ -49,7 +50,7 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
     }
 
     _appLinks.uriLinkStream.listen((uri) async {
-      debugPrint('Received deep link: $uri length ${uri.pathSegments.length}');
+      AppLogger.d('Received deep link: $uri length ${uri.pathSegments.length}');
       if (uri.pathSegments.isNotEmpty && uri.pathSegments.first == 'astrologers') {
         if(uri.pathSegments.length == 2){
           String type = uri.pathSegments[1].toString();
@@ -81,7 +82,7 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
                 allAstrologerController.selectedAstrologerData.value = allAstrologerController.astrologerListData[0];
                 Get.toNamed("/astroProfile");
               } else {
-                print('No astrologers found.');
+                AppLogger.d('No astrologers found.');
               }
             });
           }
@@ -174,9 +175,7 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
 
   @override
   Future<void> onResumed() async {
-    if (kDebugMode) {
-      print('OnResumed Dashboard');
-    }
+    AppLogger.d('OnResumed Dashboard');
 
     bool isLogin = await SharedPreferencesHelper.getIsLogin();
     if (isLogin) {
@@ -186,17 +185,13 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
 
   @override
   void onPaused() {
-    if (kDebugMode) {
-      print('onPaused Dashboard');
-    }
+    AppLogger.d('onPaused Dashboard');
   }
 
   @override
   void onClose() {
     super.onClose();
-    if (kDebugMode) {
-      print('onClose Dashboard');
-    }
+    AppLogger.d('onClose Dashboard');
   }
 
   @override
@@ -220,9 +215,7 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
           data: {"api_key": apiKey, "user_uni_id": uniId});
 
       // print("response => $response");
-      if (kDebugMode) {
-        print("key-> $uniId $apiKey");
-      }
+      AppLogger.d("key-> $uniId $apiKey");
       if (response.statusCode == 200) {
         walletBalanceModel = WalletBalanceModel.fromJson(response.data);
         if (walletBalanceModel.status == AppConstants.success) {
@@ -235,15 +228,11 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
           }
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isBalanceSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isBalanceLoading(false);
     }
@@ -262,15 +251,11 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
           isPopupSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isPopupSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPopupLoading(false);
     }

@@ -15,6 +15,7 @@ import '../../../chat/model/chat_session_model.dart';
 import '../../../feedback/feedback_screen.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ServiceVideoCallController extends FullLifeCycleController with FullLifeCycleMixin {
  final ChatIntakeFormController chatIntakeFormController = Get.find();
 
@@ -80,7 +81,7 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
     if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
       getRemainingDuration(uniqueId);
     } else {
-      print('No data available or new session.');
+      AppLogger.d('No data available or new session.');
       playSound();
       initChatSession(
         ChatSessionModel(
@@ -101,17 +102,13 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
   @override
   void onResumed() {
     dbReference.child(customerStatus).set(true);
-    if (kDebugMode) {
-      print('OnResumed VCScreen');
-    }
+    AppLogger.d('OnResumed VCScreen');
   }
 
   @override
   void onPaused() {
     dbReference.child(customerStatus).set(false);
-    if (kDebugMode) {
-      print('onPaused VCScreen');
-    }
+    AppLogger.d('onPaused VCScreen');
   }
 
   @override
@@ -119,9 +116,7 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
     dbReference.child(customerStatus).set(false);
     _dispose();
     super.onClose();
-    if (kDebugMode) {
-      print('onClose VCScreen');
-    }
+    AppLogger.d('onClose VCScreen');
   }
 
   @override
@@ -150,9 +145,7 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
   void registerListeners() {
     astrologerStatusListener = dbReference.child(astrologerStatus).onValue.listen((event) {
           var dataSnapshot = event.snapshot;
-          if (kDebugMode) {
-            print('[ChatTab] AstrologerStatus:onDataChange $dataSnapshot');
-          }
+          AppLogger.d('[ChatTab] AstrologerStatus:onDataChange $dataSnapshot');
           isAstrologerOnline.value = dataSnapshot.value as bool;
           if (isAstrologerOnline.value == true) {
             isAstrologerOnline(true);
@@ -163,16 +156,12 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
             isAstrologerOnline(false);
           }
         }, onError: (error) {
-          if (kDebugMode) {
-            print('[VideoCall] ChatAccepted:onCancelled $error');
-          }
+          AppLogger.d('[VideoCall] ChatAccepted:onCancelled $error');
         });
 
     chatEndListener = dbReference.child(chatEnd).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[VideoCall] ChatEnd:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[VideoCall] ChatEnd:onDataChange $dataSnapshot');
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
         chatEndListener.cancel();
@@ -189,9 +178,7 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
         }
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatTab] ChatEnd:onCancelled $error');
-      }
+      AppLogger.d('[ChatTab] ChatEnd:onCancelled $error');
     });
   }
 
@@ -220,7 +207,7 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
 
       final response = await _dio.post(AppConstants.getServiceRemainingTime, data: {'api_key': apiKey, 'user_uni_id': uniId, 'order_id': orderId});
       if (response.statusCode == 200) {
-        print('getServiceDuration Api Response ${response.data.toString()}');
+        AppLogger.d('getServiceDuration Api Response ${response.data.toString()}');
         chatRemainingTimeModel = ChatRemainingTimeModel.fromJson(response.data);
         if (chatRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
@@ -231,15 +218,11 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
           isGetTimeSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getVideoCallDuration');
-        }
+        AppLogger.d('OnApiError getVideoCallDuration');
       }
     } catch (e) {
       isGetTimeSuccess(false);
-      if (kDebugMode) {
-        print('OnException getVideoCallDuration==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getVideoCallDuration==> ${e.toString()}');
     } finally {
       isGetTimeLoading(false);
     }
@@ -294,20 +277,19 @@ class ServiceVideoCallController extends FullLifeCycleController with FullLifeCy
 
    engine.registerEventHandler(RtcEngineEventHandler(
      onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-       debugPrint("local user ${connection.localUid} joined");
+       AppLogger.d("local user ${connection.localUid} joined");
        localUserJoined.value = true;
      },
      onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-       debugPrint("remote user $remoteUid joined");
+       AppLogger.d("remote user $remoteUid joined");
        this.remoteUid.value = remoteUid;
      },
      onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
-       debugPrint("remote user $remoteUid left channel");
+       AppLogger.d("remote user $remoteUid left channel");
        this.remoteUid.value = 0;
      },
      onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-       debugPrint(
-           '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+       AppLogger.d('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
      },
      onLeaveChannel: (RtcConnection connection, stats) {
      },

@@ -9,6 +9,7 @@ import '../../../../utill/shared_preference.dart';
 import '../assistant_chat_delivery_helper.dart';
 import '../../chat/model/chat_channel_list_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SupportTabController extends FullLifeCycleController with FullLifeCycleMixin {
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -81,9 +82,7 @@ class SupportTabController extends FullLifeCycleController with FullLifeCycleMix
             myUniId: myId,
           );
         } catch (e) {
-          if (kDebugMode) {
-            debugPrint('[ASSISTANT-CHAT] unread badge RTDB error $channelName => $e');
-          }
+          AppLogger.d('[ASSISTANT-CHAT] unread badge RTDB error $channelName => $e');
           out[uniq] = 0;
         }
       }));
@@ -96,14 +95,14 @@ class SupportTabController extends FullLifeCycleController with FullLifeCycleMix
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      debugPrint("[ASSISTANT-CHAT] getChatChannelsList request=> $apiKey $uniId $isAssistantChannel");
+      AppLogger.d("[ASSISTANT-CHAT] getChatChannelsList request=> $apiKey $uniId $isAssistantChannel");
       final response = await _dio.post(AppConstants.getChatChannelsList, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
         'is_assistant_chat' : isAssistantChannel
       });
 
-      debugPrint("[ASSISTANT-CHAT] getChatChannelsList response=> ${response.data.toString()}");
+      AppLogger.d("[ASSISTANT-CHAT] getChatChannelsList response=> ${response.data.toString()}");
       if (response.statusCode == 200) {
         chatChannelListModel = ChatChannelListModel.fromJson(response.data);
         if (chatChannelListModel.status == AppConstants.success) {
@@ -116,14 +115,10 @@ class SupportTabController extends FullLifeCycleController with FullLifeCycleMix
           unreadByUniqeid.clear();
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }

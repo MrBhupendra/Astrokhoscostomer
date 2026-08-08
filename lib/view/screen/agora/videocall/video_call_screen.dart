@@ -13,6 +13,7 @@ import '../../../widget/custom_text_medium.dart';
 import '../../../widget/custom_text_regular.dart';
 import '../../wallet/controller/wallet_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class VideoCallScreen extends StatelessWidget {
   VideoCallScreen({super.key});
   final VideoCallController controller = Get.put(VideoCallController(), permanent: true);
@@ -204,7 +205,7 @@ class VideoCallScreen extends StatelessWidget {
                                    astroUniId: controller.chatIntakeFormController.astrologerUniId,
                                  );
                                } else {
-                                 debugPrint("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                                 AppLogger.d("⚠️ uniqueId is NULL or EMPTY in ChatController");
                                }
                                await Get.toNamed('/wallet');
 

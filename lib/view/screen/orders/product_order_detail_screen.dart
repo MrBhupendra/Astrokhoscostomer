@@ -14,6 +14,7 @@ import '../../../utill/dimensions.dart';
 import '../../widget/custom_network_image.dart';
 import '../splash/controller/config_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ProductOrderDetailScreen extends StatelessWidget {
   ProductOrderDetailScreen({super.key});
   final OrderController orderController = Get.find();
@@ -266,7 +267,7 @@ class ProductOrderDetailScreen extends StatelessWidget {
             Visibility(visible: orderController.productOrderData.invoiceUrl != null && orderController.productOrderData.invoiceUrl!.isNotEmpty,child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: CustomElevatedButton(text: "Download Invoice", backgroundColor: ColorResources.colorPrimary,textColor: ColorResources.white,onPressed: (){
-                print("orderController.productOrderData.invoiceUrl!${orderController.productOrderData.invoiceUrl.toString()}");
+                AppLogger.d("orderController.productOrderData.invoiceUrl!${orderController.productOrderData.invoiceUrl.toString()}");
                 Get.toNamed('/pdf_viewer',arguments: {
                   'title': "Invoice",
                   'url': orderController.productOrderData.invoiceUrl.toString()

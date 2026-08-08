@@ -15,6 +15,7 @@ import '../../searchPlace/search_place_screen.dart';
 import '../model/vedic_data.dart';
 import 'controller/report_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class MatchingReportSubmitScreen extends StatelessWidget {
   MatchingReportSubmitScreen({super.key});
 
@@ -231,7 +232,7 @@ class MatchingReportSubmitScreen extends StatelessWidget {
                         _femaleBirthPlaceController.text.toString(),
                         "en",
                       ));
-                    print("Sending request with payload: $KundliMatchData");
+                    AppLogger.d("Sending request with payload: $KundliMatchData");
                     }
                   },
                 ),

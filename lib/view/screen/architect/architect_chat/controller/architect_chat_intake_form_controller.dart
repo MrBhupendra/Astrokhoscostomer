@@ -13,6 +13,7 @@ import '../../../../../utill/shared_preference.dart';
 import '../../../../widget/custom_progress_dialog.dart';
 import '../../../../widget/custom_snack_bar.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ArchitectChatIntakeFormController extends GetxController {
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -156,15 +157,11 @@ class ArchitectChatIntakeFormController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }

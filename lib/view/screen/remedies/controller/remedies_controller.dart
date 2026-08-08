@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/shared_preference.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class RemediesController extends GetxController {
   final Dio _dio = Dio();
 
@@ -37,10 +38,10 @@ class RemediesController extends GetxController {
         "astrologer_uni_id" : astrologerUniId
       });
 
-      print("Request $apiKey $uniId $offset");
+      AppLogger.d("Request $apiKey $uniId $offset");
 
       if (response.statusCode == 200) {
-        print("Response ${response.data.toString()}");
+        AppLogger.d("Response ${response.data.toString()}");
         remediesModel = RemediesModel.fromJson(response.data);
         if(remediesModel.status == AppConstants.success){
           offsetCount = remediesModel.offset!;
@@ -57,11 +58,11 @@ class RemediesController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        debugPrint('OnApiError');
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isSuccess(false);
-      debugPrint('OnException==> ${e.toString()}');
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }

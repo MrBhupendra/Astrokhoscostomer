@@ -27,6 +27,7 @@ import '../../../widget/custom_text_medium.dart';
 import '../../../widget/custom_text_regular.dart';
 import '../../splash/controller/config_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class BookPdfController extends GetxController {
   final Dio _dio = Dio();
   final isCategoryLoading = false.obs;
@@ -76,15 +77,11 @@ class BookPdfController extends GetxController {
           isCategorySuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isCategorySuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCategoryLoading(false);
     }
@@ -127,16 +124,12 @@ class BookPdfController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
 
     } catch (e) {
       isProductsSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isProductsLoading(false);
     }
@@ -159,12 +152,12 @@ class BookPdfController extends GetxController {
         "payment_method": payMethod
       });
 
-      print('AS1 $payMethod  $walletCheck ');
+      AppLogger.d('AS1 $payMethod  $walletCheck ');
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         bookPdfCalculation = BookPdfCalculationModel.fromJson(response.data);
-        print('AS1 -> Data ${bookPdfCalculation.data}');
+        AppLogger.d('AS1 -> Data ${bookPdfCalculation.data}');
         if (bookPdfCalculation.status == AppConstants.success) {
           isCalculationSuccess(true);
 
@@ -185,16 +178,12 @@ class BookPdfController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isCalculationSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCalculationLoading(false);
     }
@@ -235,15 +224,11 @@ class BookPdfController extends GetxController {
           CustomSnackBar.showBottom(AppStrings.noPaymentGatewayFound.tr);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isPurchaseSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isPurchaseLoading(false);
     }

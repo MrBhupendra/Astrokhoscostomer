@@ -15,6 +15,7 @@ import '../../../../utill/color_resources.dart';
 import '../../../../utill/images.dart';
 import '../../../widget/custom_app_bar.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class TestScreen extends StatelessWidget {
   const TestScreen({super.key});
 
@@ -125,10 +126,10 @@ class _MyHomePageState extends State<MainCompassPage> {
           );
         });
       } catch (e) {
-        print('Error getting location: $e');
+        AppLogger.d('Error getting location: $e');
       }
     } else {
-      print('Location permission denied.');
+      AppLogger.d('Location permission denied.');
     }
   }
 
@@ -151,7 +152,7 @@ class _MyHomePageState extends State<MainCompassPage> {
         .then((capturedImage) async {
      // ShowCapturedWidget(context, capturedImage!);
     }).catchError((onError) {
-      print(onError);
+      AppLogger.d(onError);
     }).whenComplete(() {
       setState(() {
         _isTakingScreenshot =

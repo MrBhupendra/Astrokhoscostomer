@@ -14,6 +14,7 @@ import '../../../../utill/images.dart';
 import '../../../widget/custom_text_medium.dart';
 import '../../../widget/custom_text_show_more.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SanjeeviniListScreen extends GetView<SanjeeviniController> {
   const SanjeeviniListScreen({super.key});
 
@@ -84,7 +85,7 @@ class SanjeeviniListScreen extends GetView<SanjeeviniController> {
                       ),
                       child: TextField(
                         onChanged: (value) {
-                          print("Search Value-> $value");
+                          AppLogger.d("Search Value-> $value");
                           // Future.delayed(const Duration(seconds: 1), () {
                           //   controller.search(value);
                           // });

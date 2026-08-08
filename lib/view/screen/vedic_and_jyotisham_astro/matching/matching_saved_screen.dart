@@ -21,6 +21,7 @@ import '../controller/matching_controller.dart';
 import '../model/vedic_data.dart';
 
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class MatchingSavedScreen extends StatelessWidget {
   MatchingSavedScreen({super.key});
 
@@ -51,7 +52,7 @@ class MatchingSavedScreen extends StatelessWidget {
                 child: Obx(
                       () {
                         if(controller.isRefresh.isTrue){
-                          print("AS1 Refresh");
+                          AppLogger.d("AS1 Refresh");
                           controller.getSavedKundli(0,AppConstants.vedicAstro);
                         }
                     if (controller.isSavedSuccess.isTrue) {
@@ -146,7 +147,6 @@ class MatchingSavedScreen extends StatelessWidget {
                                                     });
 
                                                   },
-
 
 
                                                   child: Container(

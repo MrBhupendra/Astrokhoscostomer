@@ -19,6 +19,7 @@ import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
 import '../../agora/videocall/model/service_start_video_call_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class OrderController extends GetxController {
 
   final Dio _dio = Dio();
@@ -118,14 +119,10 @@ class OrderController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isCallLoading(false);
     }
@@ -164,14 +161,10 @@ class OrderController extends GetxController {
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isWalletLoading(false);
     }
@@ -196,14 +189,10 @@ class OrderController extends GetxController {
           isProductSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isProductLoading(false);
     }
@@ -220,9 +209,7 @@ class OrderController extends GetxController {
         'user_uni_id': uniId
       });
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print('API getServiceOrder Response: ${response.data}');
-        }
+        AppLogger.d('API getServiceOrder Response: ${response.data}');
         serviceOrderModel = ServiceOrderModel.fromJson(response.data);
         if(serviceOrderModel.status == AppConstants.success){
           isServiceSuccess(true);
@@ -231,14 +218,10 @@ class OrderController extends GetxController {
           isServiceSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isServiceLoading(false);
     }
@@ -291,15 +274,11 @@ class OrderController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
     }
   }
@@ -325,9 +304,7 @@ class OrderController extends GetxController {
           'user_uni_id': uniId,
           'offset': offset,
         });
-        if (kDebugMode) {
-          print('API getGroupPoojaOrder Response: ${response.data}');
-        }
+        AppLogger.d('API getGroupPoojaOrder Response: ${response.data}');
         if (response.statusCode == 200) {
           groupPoojaOrderModel = GroupPoojaOrderModel.fromJson(response.data);
           if (groupPoojaOrderModel.status == AppConstants.success) {
@@ -347,14 +324,10 @@ class OrderController extends GetxController {
             isNoMoreGroupPoojaData = true;
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiError');
-          }
+          AppLogger.d('OnApiError');
         }
       } catch (e) {
-        if (kDebugMode) {
-          print('OnException==> ${e.toString()}');
-        }
+        AppLogger.d('OnException==> ${e.toString()}');
       } finally {
         isGroupPoojaLoading(false);
       }
@@ -379,9 +352,7 @@ class OrderController extends GetxController {
         CustomProgressDialog.dismissDialog();
         groupPoojaLiveJoinModel = SuccessModel.fromJson(response.data);
         if(groupPoojaLiveJoinModel.status == AppConstants.success){
-          if (kDebugMode) {
-            print("GroupPoojaLiveSuccess -> ${response.data.toString()}");
-          }
+          AppLogger.d("GroupPoojaLiveSuccess -> ${response.data.toString()}");
           String? token = response.data["token"];
           Get.toNamed('/groupPoojaLiveStreamScreen',arguments: {
             'uniqueId': uniqueId,
@@ -397,15 +368,11 @@ class OrderController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       getCustomerMandirDarshanOrder(0);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -419,14 +386,10 @@ class OrderController extends GetxController {
         'customer_uni_id': uniId,
         'order_id': orderId,
       });
-      if (kDebugMode) {
-        print("orderId$orderId");
-      }
+      AppLogger.d("orderId$orderId");
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('Cancel Group Pooja Response: ${response.data}');
-        }
+        AppLogger.d('Cancel Group Pooja Response: ${response.data}');
         cancelGroupPoojaOrderModel = SuccessModel.fromJson(response.data);
         if(cancelGroupPoojaOrderModel.status == AppConstants.success){
           CustomSnackBar.showTop(cancelGroupPoojaOrderModel.msg.toString());
@@ -437,15 +400,11 @@ class OrderController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -469,9 +428,7 @@ class OrderController extends GetxController {
           'user_uni_id': uniId,
           'offset': offset,
         });
-        if (kDebugMode) {
-          print('API getCustomerMandirDarshanOrder Response: ${response.data}');
-        }
+        AppLogger.d('API getCustomerMandirDarshanOrder Response: ${response.data}');
         if (response.statusCode == 200) {
           liveMandirDarshanOrderModel =
               LiveMandirDarshanOrderModel.fromJson(response.data);
@@ -492,14 +449,10 @@ class OrderController extends GetxController {
             isNoMoreMandirDarshanData = true;
           }
         } else {
-          if (kDebugMode) {
-            print('OnApiErrorGetCustomerMandirDarshanOrder');
-          }
+          AppLogger.d('OnApiErrorGetCustomerMandirDarshanOrder');
         }
       } catch (e) {
-        if (kDebugMode) {
-          print('OnExceptionGetCustomerMandirDarshanOrder==> ${e.toString()}');
-        }
+        AppLogger.d('OnExceptionGetCustomerMandirDarshanOrder==> ${e.toString()}');
       } finally {
         isMandirDarshanOrderListLoading(false);
       }
@@ -512,16 +465,14 @@ class OrderController extends GetxController {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? agoraAppId = await SharedPreferencesHelper.getData(AppConstants.agoraAppId);
-      print("$apiKey $uniId $assignId Customer");
+      AppLogger.d("$apiKey $uniId $assignId Customer");
       final response = await _dio.post(AppConstants.joinMandirDarshan, data: {
         'api_key': apiKey,
         'user_uni_id': uniId,
         'live_temple_darshan_assign_id' : assignId,
         'started_by' : "Customer"
       });
-      if (kDebugMode) {
-        print("responseTemple:::$response");
-      }
+      AppLogger.d("responseTemple:::$response");
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         liveJoinModel = SuccessModel.fromJson(response.data);
@@ -534,20 +485,16 @@ class OrderController extends GetxController {
             'astrologerId': astrologerUniId,
             'astrologerUID': response.data["astrologer"]!["id"]!.toInt()
           });
-          print("As1 Req $token $uniqueId $agoraAppId $astrologerUniId ${response.data["astrologer"]!["id"]!.toInt()}");
+          AppLogger.d("As1 Req $token $uniqueId $agoraAppId $astrologerUniId ${response.data["astrologer"]!["id"]!.toInt()}");
         }else{
           CustomSnackBar.showBottom(liveJoinModel.msg.toString());
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiErrorJoinMandirDarshan');
-        }
+        AppLogger.d('OnApiErrorJoinMandirDarshan');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnExceptionJoinMandirDarshan==> ${e.toString()}');
-      }
+      AppLogger.d('OnExceptionJoinMandirDarshan==> ${e.toString()}');
     } finally {
       CustomProgressDialog.dismissDialog();
     }
@@ -565,9 +512,7 @@ class OrderController extends GetxController {
         'offset ': offset,
       });
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print('API liveOrderHistoryModel Response: ${response.data}');
-        }
+        AppLogger.d('API liveOrderHistoryModel Response: ${response.data}');
         liveOrderHistoryModel = LiveOrderHistoryModel.fromJson(response.data);
         if(liveOrderHistoryModel.status == AppConstants.success){
           isLiveHistorySuccess(true);
@@ -576,14 +521,10 @@ class OrderController extends GetxController {
           isLiveHistorySuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLiveHistoryLoading(false);
     }
@@ -626,14 +567,10 @@ class OrderController extends GetxController {
           isImageSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isImageLoading(false);
     }

@@ -7,6 +7,7 @@ import '../../../../model/astrologer_model.dart';
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/shared_preference.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ArchitectController extends FullLifeCycleController
     with FullLifeCycleMixin {
 
@@ -77,7 +78,7 @@ class ArchitectController extends FullLifeCycleController
     try {
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
       String? categoryId = await SharedPreferencesHelper.getData(AppConstants.architectCategoryId);
-      print('id-> $categoryId');
+      AppLogger.d('id-> $categoryId');
 
       final response = await _dio.post(AppConstants.getAllAstrologer,data: {
         "user_uni_id": uniId,
@@ -107,15 +108,11 @@ class ArchitectController extends FullLifeCycleController
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isAstrologerSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isAstrologerLoading(false);
     }

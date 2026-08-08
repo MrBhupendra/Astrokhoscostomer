@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import '../../../utill/app_constants.dart';
 import '../../../utill/shared_preference.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 /// Marks assistant chat messages as **delivered** when they reach this device
 /// (push notification, channel list RTDB sync, etc.) — not only when chat opens.
 class AssistantChatDeliveryHelper {
@@ -151,10 +152,7 @@ class AssistantChatDeliveryHelper {
         myUniId: myId,
       );
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint(
-            '[AssistantChatDelivery] markAllIncomingSent $channelName => $e');
-      }
+      AppLogger.d('[AssistantChatDelivery] markAllIncomingSent $channelName => $e');
     }
   }
 
@@ -207,10 +205,7 @@ class AssistantChatDeliveryHelper {
       );
     } catch (e) {
       _deliveredOnce.remove(dedupeKey);
-      if (kDebugMode) {
-        debugPrint(
-            '[AssistantChatDelivery] markMessageDelivered $dedupeKey => $e');
-      }
+      AppLogger.d('[AssistantChatDelivery] markMessageDelivered $dedupeKey => $e');
     }
   }
 
@@ -244,9 +239,7 @@ class AssistantChatDeliveryHelper {
           )
           .timeout(const Duration(seconds: 20));
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint('[AssistantChatDelivery] API $firebaseMessageId => $e');
-      }
+      AppLogger.d('[AssistantChatDelivery] API $firebaseMessageId => $e');
     }
   }
 }

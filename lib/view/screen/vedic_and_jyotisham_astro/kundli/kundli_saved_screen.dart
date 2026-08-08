@@ -18,6 +18,7 @@ import '../controller/kundli_controller.dart';
 import '../controller/kundli_intake_form_controller.dart';
 import '../model/vedic_data.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class KundliSavedScreen extends StatelessWidget {
   KundliSavedScreen({super.key});
 
@@ -47,7 +48,7 @@ class KundliSavedScreen extends StatelessWidget {
                 child: Obx(
                       () {
                         if(controller.isRefresh.isTrue){
-                          print("AS1 Refresh");
+                          AppLogger.d("AS1 Refresh");
                           controller.getSavedKundli(0,AppConstants.vedicAstro);
                         }
                     if (controller.isSavedSuccess.isTrue) {
@@ -101,7 +102,7 @@ class KundliSavedScreen extends StatelessWidget {
                                                     final tz = controller.savedKundliListData[index].requestBody!.timezone.toString();
                                                     final language = controller.savedKundliListData[index].requestBody!.language.toString();
                                                     final id = controller.savedKundliListData[index].id.toString();
-                                                    print("birthTime  => $birthTime");
+                                                    AppLogger.d("birthTime  => $birthTime");
                                                     controller.setKundliEditData(KundliData(name, birthDate, birthTime, tz, lat, lon, birthPlace, language.toString()),id);
 
                                                     Get.toNamed('/kundliSubmitScreen', arguments: {

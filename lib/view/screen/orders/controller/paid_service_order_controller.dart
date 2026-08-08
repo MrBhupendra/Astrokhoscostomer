@@ -9,6 +9,7 @@ import '../../../../utill/app_constants.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../vedic_and_jyotisham_astro/model/report_order_list_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class PaidServiceOrderController extends GetxController {
 
   final Dio _dio = Dio();
@@ -55,14 +56,10 @@ class PaidServiceOrderController extends GetxController {
           isSanjeeviniSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isSanjeeviniLoading(false);
     }
@@ -88,14 +85,10 @@ class PaidServiceOrderController extends GetxController {
           isDivineSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isDivineLoading(false);
     }
@@ -121,14 +114,10 @@ class PaidServiceOrderController extends GetxController {
           isEbookSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isEbookLoading(false);
     }
@@ -154,15 +143,11 @@ class PaidServiceOrderController extends GetxController {
           isReportSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isReportSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isReportLoading(false);
     }

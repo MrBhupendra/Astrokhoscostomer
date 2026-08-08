@@ -12,6 +12,7 @@ import 'package:get/get.dart';
 
 import '../controller/mobile_numerology_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class MobileNumerologyDetailScreen extends StatefulWidget {
   const MobileNumerologyDetailScreen({super.key});
 
@@ -97,7 +98,7 @@ class _NumerologyDetailState extends State<MobileNumerologyDetailScreen> {
         singleObject = jsonObject['SINGLE_NUMBERS'];
         multiNoObject = jsonObject['MULTIPLE_NUMBERS'];
         combinationObject = jsonObject['COMBINATION_NUMBERS'];
-        print(kingObject['1']['description'].toString());
+        AppLogger.d(kingObject['1']['description'].toString());
       });
 
       //King Prediction
@@ -188,11 +189,11 @@ class _NumerologyDetailState extends State<MobileNumerologyDetailScreen> {
         }
       }
       singleNoPrediction = builder.toString();
-      print('single no $singleNoPrediction');
+      AppLogger.d('single no $singleNoPrediction');
 
-      print("Your Result is: ${results.toString()}\nYour King Number is: ${results[1]}\nYour Queen Number is: ${results[0]}\nYour Multiple Number is: $numbersWithAtLeast2Frequency\nYour Single Number is: ${numbersWithinIndices.toString()}");
+      AppLogger.d("Your Result is: ${results.toString()}\nYour King Number is: ${results[1]}\nYour Queen Number is: ${results[0]}\nYour Multiple Number is: $numbersWithAtLeast2Frequency\nYour Single Number is: ${numbersWithinIndices.toString()}");
     } else {
-      print("Invalid mobile number. Please enter a 10-digit number.");
+      AppLogger.d("Invalid mobile number. Please enter a 10-digit number.");
     }
   }
 

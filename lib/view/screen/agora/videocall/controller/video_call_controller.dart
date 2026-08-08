@@ -27,6 +27,7 @@ import 'package:flutter/material.dart';
 
 import '../../../wallet/controller/wallet_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class VideoCallController extends FullLifeCycleController with FullLifeCycleMixin {
  final ChatIntakeFormController chatIntakeFormController = Get.find();
 
@@ -95,11 +96,11 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
           try {
             WakelockPlus.enable();
           } catch (e) {
-            debugPrint("[VCController] Failed to enable wakelock: $e");
+            AppLogger.d("[VCController] Failed to enable wakelock: $e");
           }
         });
       } catch (e) {
-        debugPrint("[VCController] Failed to enable wakelock: $e");
+        AppLogger.d("[VCController] Failed to enable wakelock: $e");
       }
     }
     Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
@@ -108,7 +109,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     agoraAppId = arguments['agoraAppId'] ?? '';
     agoraToken = arguments['token'] ?? '';
 
-    print("VCController Data-> channel:$channelName uniqueId:$uniqueId agoraAppId:$agoraAppId token:$agoraToken");
+    AppLogger.d("VCController Data-> channel:$channelName uniqueId:$uniqueId agoraAppId:$agoraAppId token:$agoraToken");
 
     db = FirebaseDatabase.instance;
     dbReference = db.ref(chatGroupChild).child(channelName);
@@ -124,7 +125,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
       getRemainingDuration(uniqueId);
       _ensureBirthDataWritten();
     } else {
-      print('No data available or new session.');
+      AppLogger.d('No data available or new session.');
       playSound();
       isChatEnd.value = false;
       await initChatSession(
@@ -165,9 +166,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
           partnerLongitude: chatIntakeFormController.partnerLongitude
       ));
     } catch (e) {
-      if (kDebugMode) {
-        debugPrint("[Customer VideoCallController] _ensureBirthDataWritten failed: $e");
-      }
+      AppLogger.d("[Customer VideoCallController] _ensureBirthDataWritten failed: $e");
     }
   }
 
@@ -178,18 +177,14 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     // if (chatEndSnapshot.exists && chatEndSnapshot.value == false) {
     //   getRemainingDuration(uniqueId);
     // }
-    if (kDebugMode) {
-      print('OnResumed VCScreen');
-    }
+    AppLogger.d('OnResumed VCScreen');
   }
 
   @override
   void onPaused() {
     startMicNotification();
     // dbReference.child(customerStatus).set(false);
-    if (kDebugMode) {
-      print('onPaused VCScreen');
-    }
+    AppLogger.d('onPaused VCScreen');
   }
 
  @override
@@ -199,9 +194,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
    _dispose();
    stopOngoingCallNotification();
    super.onClose();
-   if (kDebugMode) {
-     print('onClose VCScreen');
-   }
+   AppLogger.d('onClose VCScreen');
  }
 
   @override
@@ -264,9 +257,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     chatAcceptedListener =
         dbReference.child(chatAcceptedChild).onValue.listen((event) {
           var dataSnapshot = event.snapshot;
-          if (kDebugMode) {
-            print('[ChatTab] ChatAccepted:onDataChange $dataSnapshot');
-          }
+          AppLogger.d('[ChatTab] ChatAccepted:onDataChange $dataSnapshot');
           isChatAccepted.value = dataSnapshot.value as bool;
           if (isChatAccepted.value == true) {
             stopSound();
@@ -275,16 +266,12 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
             isReview = true;
           }
         }, onError: (error) {
-          if (kDebugMode) {
-            print('[VideoCall] ChatAccepted:onCancelled $error');
-          }
+          AppLogger.d('[VideoCall] ChatAccepted:onCancelled $error');
         });
 
     chatEndListener = dbReference.child(chatEnd).onValue.listen((event) async {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[VideoCall] ChatEnd:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[VideoCall] ChatEnd:onDataChange $dataSnapshot');
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
         stopTimer();
@@ -310,9 +297,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
         }
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatTab] ChatEnd:onCancelled $error');
-      }
+      AppLogger.d('[ChatTab] ChatEnd:onCancelled $error');
     });
 
     durationListener = dbReference.child('duration').onValue.listen((event) {
@@ -320,15 +305,11 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
         int newDuration = int.tryParse(event.snapshot.value.toString()) ?? seconds.value;
         if (newDuration != seconds.value) {
           seconds.value = newDuration; // UI auto update
-          if (kDebugMode) {
-            print('[VideoCall] Duration updated from Firebase: $newDuration');
-          }
+          AppLogger.d('[VideoCall] Duration updated from Firebase: $newDuration');
         }
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[VideoCall] Duration listener error: $error');
-      }
+      AppLogger.d('[VideoCall] Duration listener error: $error');
     });
   }
 
@@ -352,9 +333,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     try {
       await dbReference.update(updates);
     } catch (e) {
-      if (kDebugMode) {
-        print('[VideoCall] endCall Firebase update error: $e');
-      }
+      AppLogger.d('[VideoCall] endCall Firebase update error: $e');
     }
 
     if (Get.isRegistered<VideoCallController>()) {
@@ -381,13 +360,9 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
         'uniqeid': uniqeid,
         'status': "Declined(Customer)"
       });
-      if (kDebugMode) {
-        print('[VideoCall] declineCallRequest response: ${response.data}');
-      }
+      AppLogger.d('[VideoCall] declineCallRequest response: ${response.data}');
     } catch (e) {
-      if (kDebugMode) {
-        print('[VideoCall] declineCallRequest error: $e');
-      }
+      AppLogger.d('[VideoCall] declineCallRequest error: $e');
     }
   }
 
@@ -417,10 +392,10 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
       String? uniId = await SharedPreferencesHelper.getData(AppConstants.userUniId);
-      debugPrint("[VIDEO CALL] getRemainingDuration request=> $apiKey $uniId $uniqueId");
+      AppLogger.d("[VIDEO CALL] getRemainingDuration request=> $apiKey $uniId $uniqueId");
       final response = await _dio.post(AppConstants.getChatRemainingTime, data: {'api_key': apiKey, 'user_uni_id': uniId, 'uniqeid': uniqueId});
       if (response.statusCode == 200) {
-        debugPrint("[VIDEO CALL] getRemainingDuration response=> ${response.data.toString()}");
+        AppLogger.d("[VIDEO CALL] getRemainingDuration response=> ${response.data.toString()}");
         chatRemainingTimeModel = ChatRemainingTimeModel.fromJson(response.data);
         if (chatRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
@@ -435,15 +410,11 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
           isGetTimeSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getVideoCallDuration');
-        }
+        AppLogger.d('OnApiError getVideoCallDuration');
       }
     } catch (e) {
       isGetTimeSuccess(false);
-      if (kDebugMode) {
-        print('OnException getVideoCallDuration==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getVideoCallDuration==> ${e.toString()}');
     } finally {
       isGetTimeLoading(false);
     }
@@ -492,7 +463,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
                      astroUniId: chatIntakeFormController.astrologerUniId,
                    );
                  } else {
-                   print("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                   AppLogger.d("⚠️ uniqueId is NULL or EMPTY in ChatController");
                  }
 
                  await Get.toNamed('/wallet');
@@ -552,37 +523,36 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
    try {
      await engine.leaveChannel();
    } catch (e) {
-     print("Leave error (ignore): $e");
+     AppLogger.d("Leave error (ignore): $e");
    }
 
    engine.registerEventHandler(RtcEngineEventHandler(
      onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-       debugPrint("local user ${connection.localUid} joined");
+       AppLogger.d("local user ${connection.localUid} joined");
        localUserJoined.value = true;
      },
      onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-       debugPrint("remote user $remoteUid joined");
+       AppLogger.d("remote user $remoteUid joined");
        this.remoteUid.value = remoteUid;
      },
      onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
-       debugPrint("remote user $remoteUid left channel");
+       AppLogger.d("remote user $remoteUid left channel");
        this.remoteUid.value = 0;
      },
      onUserMuteAudio: (RtcConnection connection, int uid, bool muted) {
-       debugPrint("Remote user $uid audio muted: $muted");
+       AppLogger.d("Remote user $uid audio muted: $muted");
        if (remoteUid.value == uid) {
          isRemoteUserMuted.value = muted;
        }
      },
      onUserMuteVideo: (RtcConnection connection, int uid, bool muted) {
-       debugPrint("Remote user $uid video muted: $muted");
+       AppLogger.d("Remote user $uid video muted: $muted");
        if (remoteUid.value == uid) {
          isRemoteVideoMuted.value = muted;
        }
      },
      onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-       debugPrint(
-           '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+       AppLogger.d('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
      },
      onLeaveChannel: (RtcConnection connection, stats) {
      },
@@ -629,9 +599,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
        );
        await intent.sendBroadcast();
      } catch (e) {
-       if (kDebugMode) {
-         print("Error starting call notification: $e");
-       }
+       AppLogger.d("Error starting call notification: $e");
      }
    }
  }
@@ -647,14 +615,10 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
            Flag.FLAG_RECEIVER_FOREGROUND
          ],
        );
-       if (kDebugMode) {
-         print("Sending STARTMICNOTIFICATION broadcast...");
-       }
+       AppLogger.d("Sending STARTMICNOTIFICATION broadcast...");
        await intent.sendBroadcast();
      } catch (e) {
-       if (kDebugMode) {
-         print("Error starting mic notification: $e");
-       }
+       AppLogger.d("Error starting mic notification: $e");
      }
    }
  }
@@ -674,12 +638,10 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
            Flag.FLAG_RECEIVER_FOREGROUND
          ],
        );
-       if (kDebugMode) {
-         print("Sending UPDATECALLNOTIFICATION broadcast...");
-       }
+       AppLogger.d("Sending UPDATECALLNOTIFICATION broadcast...");
        await intent.sendBroadcast();
      } catch (e) {
-       debugPrint("Error triggering call notification: $e");
+       AppLogger.d("Error triggering call notification: $e");
      }
    }
  }
@@ -696,14 +658,10 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
            Flag.FLAG_RECEIVER_FOREGROUND
          ],
        );
-       if (kDebugMode) {
-         print("Sending STOP_CALL_NOTIFICATION broadcast...");
-       }
+       AppLogger.d("Sending STOP_CALL_NOTIFICATION broadcast...");
        await intent.sendBroadcast();
      } catch (e) {
-       if (kDebugMode) {
-         print("Error stopping call notification: $e");
-       }
+       AppLogger.d("Error stopping call notification: $e");
      }
    }
  }
@@ -719,14 +677,10 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
            Flag.FLAG_RECEIVER_FOREGROUND
          ],
        );
-       if (kDebugMode) {
-         print("Sending STOP_MIC_NOTIFICATION broadcast...");
-       }
+       AppLogger.d("Sending STOP_MIC_NOTIFICATION broadcast...");
        await intent.sendBroadcast();
      } catch (e) {
-       if (kDebugMode) {
-         print("Error stopping call notification: $e");
-       }
+       AppLogger.d("Error stopping call notification: $e");
      }
    }
  }

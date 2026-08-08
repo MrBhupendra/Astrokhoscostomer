@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:in_app_update/in_app_update.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AppUpdateController extends GetxController {
   Rx<AppUpdateInfo?> updateInfo = Rx<AppUpdateInfo?>(null);
   RxBool flexibleUpdateAvailable = false.obs;
@@ -21,7 +22,7 @@ class AppUpdateController extends GetxController {
         //startFlexibleUpdate();
       }
     } catch (e) {
-      debugPrint("checkForUpdate [Error] ${e.toString()}");
+      AppLogger.d("checkForUpdate [Error] ${e.toString()}");
       // Get.snackbar('Error', e.toString());
     }
   }
@@ -30,7 +31,7 @@ class AppUpdateController extends GetxController {
     try {
       await InAppUpdate.performImmediateUpdate();
     } catch (e) {
-      debugPrint("performImmediateUpdate [Error] ${e.toString()}");
+      AppLogger.d("performImmediateUpdate [Error] ${e.toString()}");
     }
   }
 
@@ -40,7 +41,7 @@ class AppUpdateController extends GetxController {
       flexibleUpdateAvailable.value = true;
       completeFlexibleUpdate();
     } catch (e) {
-      debugPrint("startFlexibleUpdate [Error] ${e.toString()}");
+      AppLogger.d("startFlexibleUpdate [Error] ${e.toString()}");
       //Get.snackbar('Error', e.toString());
     }
   }
@@ -50,7 +51,7 @@ class AppUpdateController extends GetxController {
       await InAppUpdate.completeFlexibleUpdate();
       Get.snackbar('Success', 'Update completed successfully!');
     } catch (e) {
-      debugPrint("completeFlexibleUpdate [Error] ${e.toString()}");
+      AppLogger.d("completeFlexibleUpdate [Error] ${e.toString()}");
       // Get.snackbar('Error', e.toString());
     }
   }

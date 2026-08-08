@@ -7,6 +7,7 @@ import 'package:image_picker/image_picker.dart';
 import '../../utill/color_resources.dart';
 import '../../utill/dimensions.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class CustomImagePicker extends StatefulWidget {
   final String uniqueKey;
   final String? defaultImagePath;
@@ -147,7 +148,7 @@ class _CustomImagePickerState extends State<CustomImagePicker> {
       if (fileSizeInBytes > maxSizeInBytes) {
         // Image size exceeds maximum allowed size
         CustomSnackBar.showBottom("Image size exceeds maximum allowed size of 5MB");
-        print('Image size exceeds maximum allowed size');
+        AppLogger.d('Image size exceeds maximum allowed size');
       } else {
         setState(() {
           _pickedImage = pickedImage;

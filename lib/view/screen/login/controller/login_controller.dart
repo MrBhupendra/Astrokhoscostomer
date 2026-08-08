@@ -4,7 +4,6 @@ import 'package:astro_brahmand/controller/deeplink_controller.dart';
 import 'package:country_code_picker/country_code_picker.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
@@ -16,8 +15,6 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:otp_autofill/otp_autofill.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:phonecodes/phonecodes.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
-
 import '../../../../notification/notification_router.dart';
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/app_events.dart';
@@ -91,17 +88,7 @@ class LoginController extends GetxController {
       _initOTPListener();
     }
 
-    // logger
-    _dio.interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      error: true,
-      compact: true,
-      maxWidth: 90,
-    ));
-  }
+}
 
   @override
   void onClose() {
@@ -203,17 +190,11 @@ class LoginController extends GetxController {
       } else {
         CustomSnackBar.showBottom(
             'Unable to send OTP (${response.statusCode}). Please try again.');
-        if (kDebugMode) {
-          print('OnApiError otpSend status=${response.statusCode}');
-        }
       }
     } on TimeoutException {
       CustomSnackBar.showBottom(
           'Request timed out. Check your connection and try again.');
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
       CustomSnackBar.showBottom("Network error. Please try again.");
     } finally {
       CustomProgressDialog.dismissDialog();
@@ -247,7 +228,6 @@ class LoginController extends GetxController {
   Future<void> verifyOtp(String mobile, String otp, String orderId) async {
     CustomProgressDialog.showDialog();
     try {
-      debugPrint("mobile$mobile");
       String fcmToken = await CommonMethods().getFCMToken();
       final response = await _dio
           .post(AppConstants.verifyOtpUri, data: {
@@ -299,19 +279,14 @@ class LoginController extends GetxController {
               case "invalid-custom-token":
                 CustomSnackBar.showBottom(
                     "Invalid token.Contact Support Team.");
-                debugPrint(
-                    "[AUTH0] The supplied token is not a Firebase custom auth token.");
                 break;
               case "custom-token-mismatch":
                 CustomSnackBar.showBottom(
                     "Token Mismatch.Contact Support Team.");
-                debugPrint(
-                    "[AUTH0] The supplied token is for a different Firebase project.");
                 break;
               default:
                 CustomSnackBar.showBottom(
                     "Something went wrong.Contact Support Team.");
-                debugPrint("[AUTH0] Unknown error.");
             }
           }
         } else {
@@ -319,18 +294,12 @@ class LoginController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
       }
     } on TimeoutException {
       CustomProgressDialog.dismissDialog();
       CustomSnackBar.showBottom("Network is slow. Please try again.");
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
       CustomSnackBar.showBottom("Something went wrong. Please try again.");
     } finally {
       CustomProgressDialog.dismissDialog();
@@ -343,7 +312,6 @@ class LoginController extends GetxController {
     otpTextEditController = OTPTextEditController(
       codeLength: 6,
       onCodeReceive: (code) {
-        debugPrint('code: $code');
         otpController.text = code;
         Future.delayed(Duration(seconds: 2), () {
           verifyClick(phoneNumber.value.toString());
@@ -358,9 +326,7 @@ class LoginController extends GetxController {
       return exp.stringMatch(message ?? '') ?? '';
     });
 
-    final appSignature = await _otpInteractor.getAppSignature();
-
-    debugPrint('App signature: $appSignature');
+    await _otpInteractor.getAppSignature();
   }
 
 
@@ -379,13 +345,10 @@ class LoginController extends GetxController {
     LocationPermission permission = await Geolocator.requestPermission();
 
     if (permission == LocationPermission.always || permission == LocationPermission.whileInUse) {
-      debugPrint("[Login] requestLocationPermissions granted");
       signInWithGoogle();
     } else if (permission == LocationPermission.deniedForever) {
-      debugPrint("[Login] requestLocationPermissions deniedForever");
       await openAppSettings();
     } else {
-      debugPrint("[Login] requestLocationPermissions denied");
 
       // Show dialog to inform the user
       CustomDefaultDialog.showOkDialog(
@@ -402,7 +365,6 @@ class LoginController extends GetxController {
 
   Future<dynamic> signInWithGoogle() async {
     try {
-      debugPrint("STEP 1 -> Google login started");
 
       isGoogleLoading.value = true;
 
@@ -415,51 +377,36 @@ class LoginController extends GetxController {
         ],
       );
 
-      debugPrint("STEP 2 -> GoogleSignIn instance created");
 
       await googleSignIn.signOut();
 
-      debugPrint("STEP 3 -> Previous account signOut success");
 
       final GoogleSignInAccount? googleUser =
       await googleSignIn.signIn();
 
-      debugPrint("STEP 4 -> Google account picker closed");
 
       if (googleUser == null) {
-        debugPrint("STEP 5 -> User cancelled login");
 
         isGoogleLoading.value = false;
         return;
       }
 
-      debugPrint(
-          "STEP 6 -> Selected Gmail => ${googleUser.email}");
 
       regionCode = await getCountryCode();
 
-      debugPrint("STEP 7 -> Region Code => $regionCode");
 
       Country country = Countries.findByCode(regionCode);
 
       countryCode.value = country.dialCode;
       countryName.value = country.name;
 
-      debugPrint(
-          "STEP 8 -> Country => ${country.name} ${country.dialCode}");
 
       final GoogleSignInAuthentication googleAuth =
       await googleUser.authentication;
 
-      debugPrint("STEP 9 -> Google authentication success");
-
-      debugPrint(
-          "STEP 10 -> ID TOKEN => ${googleAuth.idToken}");
 
       String? customerName = googleUser.displayName;
 
-      debugPrint(
-          "STEP 11 -> Calling loginWithGmail API");
 
       await loginWithGmail(
         googleAuth.idToken.toString(),
@@ -468,19 +415,11 @@ class LoginController extends GetxController {
         customerName.toString(),
       );
 
-      debugPrint("STEP 12 -> loginWithGmail completed");
 
       isGoogleLoading.value = false;
 
-      debugPrint("STEP 13 -> Loader stopped");
-    } catch (e, stackTrace) {
-      debugPrint("GOOGLE LOGIN ERROR => $e");
-
-      debugPrint("STACKTRACE => $stackTrace");
-
+    } catch (e) {
       isGoogleLoading.value = false;
-
-      debugPrint("Loader stopped from catch");
     }
   }
 
@@ -534,33 +473,20 @@ class LoginController extends GetxController {
 
   Future<String> getCountryCode() async {
     try {
-      debugPrint("LOCATION STEP 1");
       Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
       List<Placemark> placemarks = await placemarkFromCoordinates(position.latitude, position.longitude,);
-      debugPrint("LOCATION STEP 2");
 
       if (placemarks.isNotEmpty) {
         return placemarks.first.isoCountryCode ?? 'IN';
       } else {
-        debugPrint('Country not found');
         return 'IN';
       }
     } catch (e) {
-      debugPrint("LOCATION ERROR => $e");
       return 'IN';
     }
   }
 
-  void printLongString(String text) {
-    final pattern = RegExp('.{1,800}');
-    pattern.allMatches(text).forEach((match) {
-      debugPrint(match.group(0));
-    });
-  }
-
   Future<void> loginWithGmail(String idToken, String countryCode, String countryName,String customerName) async {
-    printLongString("idToken->$idToken SS");
-    debugPrint("DebugPrint->$idToken", wrapWidth: 1024);
     // CustomProgressDialog.showDialog();
     isGoogleLoading.value = true;
     try {
@@ -582,7 +508,6 @@ class LoginController extends GetxController {
             await FirebaseAuth.instance.signInWithCustomToken(
               verifyCustomerModel.data!.firebaseAuthToken.toString(),
             );
-            debugPrint("Sign-in successful.");
             await AppEvents().sendSignInEvent("gmail",verifyCustomerModel.data!.customerUniId.toString(), "");
             configController.setCurrency(
                 currencySymbol: verifyCustomerModel.data!.currencySymbol  ?? AppConstants.defaultCurrencySymbol,
@@ -610,15 +535,12 @@ class LoginController extends GetxController {
             switch (e.code) {
               case "invalid-custom-token":
                 CustomSnackBar.showBottom("Invalid token.Contact Support Team.");
-                debugPrint("[AUTH0] The supplied token is not a Firebase custom auth token.");
                 break;
               case "custom-token-mismatch":
                 CustomSnackBar.showBottom("Token Mismatch.Contact Support Team.");
-                debugPrint("[AUTH0] The supplied token is for a different Firebase project.");
                 break;
               default:
                 CustomSnackBar.showBottom("Something went wrong.Contact Support Team.");
-                debugPrint("[AUTH0] Unknown error.");
             }
           }
         } else {
@@ -627,19 +549,12 @@ class LoginController extends GetxController {
       } else {
         isGoogleLoading.value = false;
         // CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
       }
     } catch (e) {
       isGoogleLoading.value = false;
       // CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> $e');
-      }
     } finally {
       isGoogleLoading.value = false;
-      debugPrint("Loader stopped finally");
     }
   }
 

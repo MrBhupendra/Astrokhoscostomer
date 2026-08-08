@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import '../../../utill/app_constants.dart';
 import '../../../utill/color_resources.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class PaidServiceOrdersTabScreen extends GetView<PaidServiceOrderController> {
   const PaidServiceOrdersTabScreen({super.key});
 
@@ -18,9 +19,7 @@ class PaidServiceOrdersTabScreen extends GetView<PaidServiceOrderController> {
       Map<String, dynamic> arguments = Get.arguments as Map<String, dynamic>;
       initialIndexValue = arguments['index'] ?? 0;
     }catch(e){
-      if (kDebugMode) {
-        print('OnInitException==> ${e.toString()}');
-      }
+      AppLogger.d('OnInitException==> ${e.toString()}');
     }
 
     return PopScope(

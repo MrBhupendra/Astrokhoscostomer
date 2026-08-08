@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 
 import '../../../../utill/app_constants.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class VideoController extends GetxController{
   final Dio _dio = Dio();
   final isLoading = false.obs;
@@ -61,15 +62,11 @@ class VideoController extends GetxController{
           isNoMoreData = true;
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isLoading(false);
     }

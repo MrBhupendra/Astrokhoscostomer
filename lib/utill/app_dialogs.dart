@@ -12,6 +12,7 @@ import 'images.dart';
 import 'package:flutter/cupertino.dart';
 
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AppDialog {
   void showPaymentFailedDialog() {
 
@@ -24,15 +25,15 @@ class AppDialog {
     final astroImage = walletController.getAstroImageSafe();
     final astroUniId = walletController.getAstroUniIdSafe();
     final isVirtual = walletController.getIsVirtualSafe();
-    print("callDuration===>5");
-    print(uniqueId);
-    print(channelName);
-    print(AgoraTokenSafe);
-    print(AgoraAppIdSafe);
-    print(astroName);
-    print(astroImage);
-    print(astroUniId);
-    print(isVirtual);
+    AppLogger.d("callDuration===>5");
+    AppLogger.d(uniqueId);
+    AppLogger.d(channelName);
+    AppLogger.d(AgoraTokenSafe);
+    AppLogger.d(AgoraAppIdSafe);
+    AppLogger.d(astroName);
+    AppLogger.d(astroImage);
+    AppLogger.d(astroUniId);
+    AppLogger.d(isVirtual);
     Get.dialog(
         PopScope(
           canPop: false,
@@ -57,11 +58,11 @@ class AppDialog {
                     arguments: {"channelName": channelName, "uniqueId": uniqueId},
                   );
                 } else if (uniqueId.startsWith("CALL")) {
-                  print("callDuration===>6");
-                  print(uniqueId);
-                  print(channelName);
-                  print(AgoraTokenSafe);
-                  print(AgoraAppIdSafe);
+                  AppLogger.d("callDuration===>6");
+                  AppLogger.d(uniqueId);
+                  AppLogger.d(channelName);
+                  AppLogger.d(AgoraTokenSafe);
+                  AppLogger.d(AgoraAppIdSafe);
                   final ChatIntakeFormController
                   chatIntakeFormController =
                   Get.put(ChatIntakeFormController());

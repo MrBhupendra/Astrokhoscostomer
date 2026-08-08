@@ -220,7 +220,6 @@ class CheckoutScreen extends StatelessWidget {
                                               ),
                                               CustomCheckbox(
                                                 onChanged: (isChecked) {
-                                                  print('Checkbox is checked: $isChecked');
                                                   // Add your registration logic here
                                                 },
                                               ),

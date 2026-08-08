@@ -15,6 +15,7 @@ import '../view/screen/splash/controller/config_controller.dart';
 import '../view/screen/assistant_chat/assistant_chat_delivery_helper.dart';
 import 'notification_router.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 // --- Firebase background isolate (must be top-level) -------------------------
 
 @pragma('vm:entry-point')
@@ -22,10 +23,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  if (kDebugMode) {
-    debugPrint(
-        '[NotificationService] background isolate message: ${message.data}');
-  }
+  AppLogger.d('[NotificationService] background isolate message: ${message.data}');
   await NotificationService.showNotification(message);
 }
 
@@ -34,10 +32,7 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 @pragma('vm:entry-point')
 Future<void> awesomeNotificationsActionHandler(
     ReceivedAction receivedAction) async {
-  if (kDebugMode) {
-    debugPrint(
-        '[NotificationService] onActionReceived: ${receivedAction.payload} btn=${receivedAction.buttonKeyPressed}');
-  }
+  AppLogger.d('[NotificationService] onActionReceived: ${receivedAction.payload} btn=${receivedAction.buttonKeyPressed}');
   await NotificationRouter.handleAwesomeAction(receivedAction);
 }
 
@@ -66,10 +61,7 @@ class NotificationService {
     final payloadMap = fcmDataToPayloadMap(data);
     final type = notificationTypeFromString(payloadMap['type']);
 
-    if (kDebugMode) {
-      debugPrint(
-          '[NotificationService] showNotification type=$type id=${message.messageId} data=$data');
-    }
+    AppLogger.d('[NotificationService] showNotification type=$type id=${message.messageId} data=$data');
 
     switch (type) {
       case NotificationType.cancel:
@@ -143,9 +135,7 @@ class NotificationService {
   /// One-time FCM + Awesome wiring (call from [main] after Firebase init).
   Future<void> configureFirebaseMessaging() async {
     if (_firebaseConfigured) {
-      if (kDebugMode) {
-        debugPrint('[NotificationService] configureFirebaseMessaging: skipped');
-      }
+      AppLogger.d('[NotificationService] configureFirebaseMessaging: skipped');
       return;
     }
     _firebaseConfigured = true;
@@ -165,16 +155,12 @@ class NotificationService {
     _ensureAwesomeListenersRegistered();
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      if (kDebugMode) {
-        debugPrint('[NotificationService] onMessage: ${message.data}');
-      }
+      AppLogger.d('[NotificationService] onMessage: ${message.data}');
       showNotification(message);
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
-      if (kDebugMode) {
-        debugPrint('[NotificationService] onMessageOpenedApp: ${message.data}');
-      }
+      AppLogger.d('[NotificationService] onMessageOpenedApp: ${message.data}');
       NotificationRouter.onMessageOpenedApp(message);
     });
 
@@ -190,9 +176,7 @@ class NotificationService {
     AwesomeNotifications().setListeners(
       onActionReceivedMethod: awesomeNotificationsActionHandler,
     );
-    if (kDebugMode) {
-      debugPrint('[NotificationService] Awesome setListeners registered');
-    }
+    AppLogger.d('[NotificationService] Awesome setListeners registered');
   }
 
   Future<void> _showMessageNotification(
@@ -202,9 +186,7 @@ class NotificationService {
     if (Get.isRegistered<ConfigController>()) {
       final configController = Get.find<ConfigController>();
       if (configController.currentScreen.value == AppConstants.chat) {
-        if (kDebugMode) {
-          debugPrint('[NotificationService] skip message notif — on chat');
-        }
+        AppLogger.d('[NotificationService] skip message notif — on chat');
         return;
       }
     }
@@ -226,12 +208,8 @@ class NotificationService {
         Map<String, dynamic>.from(payloadMap),
         fcmMessageId: message.messageId,
       );
-      if (kDebugMode) {
-        debugPrint(
-          '[NotificationService] assistant_chat displayId=$notificationId '
-          'backend_nid=${payloadMap['notification_id']}',
-        );
-      }
+      AppLogger.d('[NotificationService] assistant_chat displayId=$notificationId '
+          'backend_nid=${payloadMap['notification_id']}',);
     }
 
     final payload = <String, String>{...payloadMap, 'url': url};

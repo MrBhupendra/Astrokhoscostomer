@@ -14,6 +14,7 @@ import '../../../widget/custom_empty_screen.dart';
 import '../../../widget/custom_text_medium.dart';
 import '../../../widget/custom_text_show_more.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SwitchListScreen extends GetView<SwitchWordController> {
   const SwitchListScreen({super.key});
 
@@ -88,7 +89,7 @@ class SwitchListScreen extends GetView<SwitchWordController> {
                       ),
                       child: TextField(
                         onChanged: (value) {
-                          print("Search Value-> $value");
+                          AppLogger.d("Search Value-> $value");
                           // Future.delayed(const Duration(seconds: 1), () {
                           //   controller.search(value);
                           // });

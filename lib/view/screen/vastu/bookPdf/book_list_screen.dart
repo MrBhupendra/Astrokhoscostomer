@@ -17,6 +17,7 @@ import '../../../widget/custom_text_regular.dart';
 import '../../../widget/custom_text_show_more.dart';
 import '../controller/book_pdf_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class BooksListScreen extends StatelessWidget {
   const BooksListScreen({super.key});
 
@@ -34,7 +35,7 @@ class BooksListScreen extends StatelessWidget {
     final BookPdfController controller = Get.put<BookPdfController>(BookPdfController());
     controller.offsetCount = 0;
     controller.isProductsSuccess(false);
-    print("categoryId Screen-> $categoryId");
+    AppLogger.d("categoryId Screen-> $categoryId");
     controller.getBooksList(categoryId, controller.offsetCount, "");
 
    controller.scrollController.addListener(() {
@@ -52,7 +53,7 @@ class BooksListScreen extends StatelessWidget {
         controller.offsetCount = 0;
         // isNoMoreData = false;
         // booksList.clear();
-        print("categoryId-> $categoryId");
+        AppLogger.d("categoryId-> $categoryId");
         controller.getBooksList(categoryId, controller.offsetCount, query);
       });
     }
@@ -119,7 +120,7 @@ class BooksListScreen extends StatelessWidget {
                       ),
                       child: TextField(
                         onChanged: (value) {
-                          print("Search Value-> $value");
+                          AppLogger.d("Search Value-> $value");
                           // Future.delayed(const Duration(seconds: 1), () {
                           //   controller.search(value);
                           // });

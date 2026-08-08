@@ -5,6 +5,7 @@ import '../../widget/custom_app_bar.dart';
 import '../../widget/simmer_widget/simmer_list_view.dart';
 import 'controller/search_place_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SearchPlaceScreen extends StatelessWidget {
   final String placeApiKey;
   const SearchPlaceScreen(this.placeApiKey, {super.key});
@@ -12,7 +13,7 @@ class SearchPlaceScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final SearchPlaceController controller = Get.put(SearchPlaceController(placeApiKey));
-    print("placeApiKey-> $placeApiKey");
+    AppLogger.d("placeApiKey-> $placeApiKey");
     return SafeArea(
       child: Scaffold(
         appBar: const CustomAppBar(title: "Search Place"),
@@ -59,8 +60,6 @@ class SearchPlaceScreen extends StatelessWidget {
                 ),
               ),
             ),
-
-
 
 
             Expanded(

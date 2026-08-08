@@ -10,6 +10,7 @@ import '../../../../utill/app_constants.dart';
 import '../../../../utill/shared_preference.dart';
 import '../model/queue_list_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class QueueController extends FullLifeCycleController
     with FullLifeCycleMixin {
 
@@ -57,7 +58,7 @@ class QueueController extends FullLifeCycleController
   }
 
   Future<void> getQueueList() async {
-    print("QueueList");
+    AppLogger.d("QueueList");
     isQueueLoading(true);
     try {
       String? apiKey = await SharedPreferencesHelper.getData(AppConstants.userApiKey);
@@ -69,7 +70,7 @@ class QueueController extends FullLifeCycleController
       });
 
       if (response.statusCode == 200) {
-        print("QueueList Response ${response.data}");
+        AppLogger.d("QueueList Response ${response.data}");
         queueListModel = QueueListModel.fromJson(response.data);
         queueListData.clear();
         if (queueListModel.status == AppConstants.success) {
@@ -82,14 +83,10 @@ class QueueController extends FullLifeCycleController
         }
       } else {
         isQueueSuccess(false);
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isQueueLoading(false);
     }
@@ -122,14 +119,10 @@ class QueueController extends FullLifeCycleController
         }
       } else {
         isQueueSuccess(false);
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isQueueLoading(false);
     }

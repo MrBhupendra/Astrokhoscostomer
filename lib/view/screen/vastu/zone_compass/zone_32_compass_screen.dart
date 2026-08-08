@@ -25,6 +25,7 @@ import '../../../widget/custom_elevated_button.dart';
 import '../../architect/architect_chat/controller/architect_chat_screen_controller.dart';
 import '../../architect/architect_chat/controller/architect_image_picker_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class Zone32CompassScreen extends StatefulWidget {
   const Zone32CompassScreen({super.key});
 
@@ -96,12 +97,12 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
     // Check if both permissions are granted
     if (statuses[Permission.location]!.isGranted &&
         statuses[Permission.camera]!.isGranted) {
-      print("All Permissions granted");
+      AppLogger.d("All Permissions granted");
       initLocation();
       initCamera();
     } else {
       CustomSnackBar.showBottom("Permission Required");
-      print("Permissions not granted");
+      AppLogger.d("Permissions not granted");
       // Handle the case when permissions are not granted
       requestPermissions();
     }
@@ -143,11 +144,11 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
           );
         });
       } catch (e) {
-        print('Error getting location: $e');
+        AppLogger.d('Error getting location: $e');
       }
     } else {
       requestPermissions();
-      print('Location permission denied.');
+      AppLogger.d('Location permission denied.');
     }
   }
 
@@ -444,7 +445,7 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
         .then((capturedImage) async {
       showCapturedWidget(context, capturedImage!);
     }).catchError((onError) {
-      print(onError);
+      AppLogger.d(onError);
     }).whenComplete(() {
       setState(() {
         isTakingScreenshot = false; // Revert flag back to false after capturing
@@ -510,7 +511,7 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                                   duration: const Duration(seconds: 15)
                               ));
                             } catch (e) {
-                              print('Error: $e');
+                              AppLogger.d('Error: $e');
                               ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                                 content: Text('Failed to image Save.'),
                               ));

@@ -31,6 +31,7 @@ import '../model/live_request_model.dart';
 import 'group_pooja_live_stream_init_controller.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class GroupPoojaLiveStreamController extends FullLifeCycleController
     with FullLifeCycleMixin {
   final GroupPoojaLiveStreamInitController liveDataController = Get.put(GroupPoojaLiveStreamInitController());
@@ -206,16 +207,12 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
 
   @override
   void onResumed() {
-    if (kDebugMode) {
-      print('OnResumed');
-    }
+    AppLogger.d('OnResumed');
   }
 
   @override
   void onPaused() {
-    if (kDebugMode) {
-      print('onPaused');
-    }
+    AppLogger.d('onPaused');
   }
 
   @override
@@ -223,9 +220,7 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
     super.onClose();
     _dispose();
 
-    if (kDebugMode) {
-      print('onClose');
-    }
+    AppLogger.d('onClose');
   }
 
   @override
@@ -269,22 +264,16 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
       final message = ChatMessageModel.fromJson(json);
       addMessage(message);
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onMessageListener $error');
-      }
+      AppLogger.d('[LIVE] onMessageListener $error');
     });
 
     onUserCountListener =
         dbReference.child(userCountChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[LIVE] onUserCountListener:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[LIVE] onUserCountListener:onDataChange $dataSnapshot');
       liveUserCount.value = int.parse(dataSnapshot.value.toString());
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onUserCountListener:onError $error');
-      }
+      AppLogger.d('[LIVE] onUserCountListener:onError $error');
     });
 
     onGiftListener = dbReference.child(giftsChild).onChildAdded.listen((event) {
@@ -294,16 +283,12 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
         _displayNextGift();
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] onGiftListListener $error');
-      }
+      AppLogger.d('[LIVE] onGiftListListener $error');
     });
 
     liveEndListener = dbReference.child(liveEndChild).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[LIVE] ChatEnd:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[LIVE] ChatEnd:onDataChange $dataSnapshot');
       isLiveEnd.value = dataSnapshot.value as bool;
       if (isLiveEnd.value) {
         onMessageListener.cancel();
@@ -315,9 +300,7 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
         });
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[LIVE] ChatEnd:onError $error');
-      }
+      AppLogger.d('[LIVE] ChatEnd:onError $error');
     });
   }
 
@@ -467,9 +450,7 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
                         padding: const EdgeInsets.symmetric(vertical: 6.0,horizontal: 8),
                         child: ElevatedButton(
                           onPressed: () {
-                            if (kDebugMode) {
-                              print("astrologerUniId->$astrologerUniId");
-                            }
+                            AppLogger.d("astrologerUniId->$astrologerUniId");
                             // Action for "Follow & Leave" button
                             liveAstrologerController.astrologerFollow("1", astrologerUniId.toString());
                             CustomSnackBar.showTop(AppStrings.astroFollowMsg);
@@ -517,15 +498,11 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
           isGiftSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       isGiftSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isGiftLoading(false);
     }
@@ -563,15 +540,11 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -587,7 +560,7 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
 
     engine.registerEventHandler(RtcEngineEventHandler(
       onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-        debugPrint("[LIVE] local user ${connection.localUid} joined");
+        AppLogger.d("[LIVE] local user ${connection.localUid} joined");
         localUserJoined.value = true;
         updateLiveCount(true);
         sendFirstMsg();
@@ -595,11 +568,11 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
       },
       onUserJoined:
           (RtcConnection connection, int remoteUid, int elapsed) async {
-        debugPrint("[LIVE] remote user $remoteUid joined");
+        AppLogger.d("[LIVE] remote user $remoteUid joined");
         this.remoteUid.value = remoteUid;
         if (remoteUid == astrologerUID) {
           remoteAstrologerUid.value = remoteUid;
-          debugPrint("remoteAstrologerUid.value${remoteAstrologerUid.value}");
+          AppLogger.d("remoteAstrologerUid.value${remoteAstrologerUid.value}");
         }
         else {
           remoteCustomerUid.value = remoteUid;
@@ -607,7 +580,7 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
       },
       onUserOffline: (RtcConnection connection, int remoteUid,
           UserOfflineReasonType reason) {
-        debugPrint("[LIVE] remote user $remoteUid left channel");
+        AppLogger.d("[LIVE] remote user $remoteUid left channel");
         this.remoteUid.value = 0;
         if (remoteUid == astrologerUID) {
           remoteAstrologerUid.value = 0;
@@ -618,23 +591,22 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
         }
       },
       onUserMuteAudio: (RtcConnection connection, int uid, bool muted) {
-        debugPrint("Remote user $uid audio muted: $muted");
+        AppLogger.d("Remote user $uid audio muted: $muted");
         if (remoteUid.value == uid) {
           isRemoteUserMuted.value = muted;
         }
       },
       onUserMuteVideo: (RtcConnection connection, int uid, bool muted) {
-        debugPrint("Remote user $uid video muted: $muted");
+        AppLogger.d("Remote user $uid video muted: $muted");
         if (remoteUid.value == uid) {
           isRemoteVideoMuted.value = muted;
         }
       },
       onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-        debugPrint(
-            '[LIVE] [onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+        AppLogger.d('[LIVE] [onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
       },
       onLeaveChannel: (RtcConnection connection, stats) {
-        debugPrint("[LIVE] onLeaveChannel");
+        AppLogger.d("[LIVE] onLeaveChannel");
         //updateLiveCount(false);
       },
     ));
@@ -919,14 +891,10 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
         }
 
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isFollowLoading(false);
     }
@@ -940,9 +908,7 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
 
       final response = await _dio.post(AppConstants.getRemainingGroupPujaTime, data: {'api_key': apiKey, 'user_uni_id': uniId, 'order_id': orderId, 'group_puja_assign_id': groupPoojaAssignId, 'started_by':'Customer'});
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print('getGroupPoojaLiveDuration Api Response ${response.data.toString()}');
-        }
+        AppLogger.d('getGroupPoojaLiveDuration Api Response ${response.data.toString()}');
         groupPujaRemainingTimeModel = GroupPujaRemainingTimeModel.fromJson(response.data);
         if (groupPujaRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
@@ -953,15 +919,11 @@ class GroupPoojaLiveStreamController extends FullLifeCycleController
           isGetTimeSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getVideoCallDuration');
-        }
+        AppLogger.d('OnApiError getVideoCallDuration');
       }
     } catch (e) {
       isGetTimeSuccess(false);
-      if (kDebugMode) {
-        print('OnException getVideoCallDuration==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getVideoCallDuration==> ${e.toString()}');
     } finally {
       isGetTimeLoading(false);
     }

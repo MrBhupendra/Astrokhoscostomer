@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'dart:developer' as developer;
 
 import 'package:app_settings/app_settings.dart';
+import 'package:astro_brahmand/utill/app_logger.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +49,7 @@ class ConnectivityController extends FullLifeCycleController
     try {
       result = await connectivity.checkConnectivity();
     } on PlatformException catch (e) {
-      developer.log('Couldn\'t check connectivity status', error: e);
+      AppLogger.e('Couldn\'t check connectivity status', error: e);
       return;
     }
     return updateConnectionStatus(result);
@@ -161,11 +161,11 @@ class ConnectivityController extends FullLifeCycleController
       // checkForSlowConnection();
     }
     // ignore: avoid_print
-    print('Connectivity changed: $connectionStatus');
+    AppLogger.d('Connectivity changed: $connectionStatus');
   }
 
   Future<void> onNetworkReconnect() async {
-    debugPrint("Internet is back. Refreshing app state...");
+    AppLogger.d("Internet is back. Refreshing app state...");
     Get.offAllNamed('/splash');
   }
 

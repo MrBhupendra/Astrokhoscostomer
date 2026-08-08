@@ -7,6 +7,7 @@ import '../../splash/controller/config_controller.dart';
 import '../model/love_comaptibility_model.dart';
 
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class LoveCompatibilityController extends GetxController {
   final Dio _dio = Dio();
 
@@ -46,7 +47,7 @@ class LoveCompatibilityController extends GetxController {
           }
         } else {
           isLoading(false);
-          debugPrint('[KundliController] getAvakhada->OnApiError');
+          AppLogger.d('[KundliController] getAvakhada->OnApiError');
         }
       }else if(activeKundliApi == AppConstants.vedicastro){
         String? vedicApiKey = await SharedPreferencesHelper.getData(AppConstants.vedicApiKey);
@@ -61,12 +62,12 @@ class LoveCompatibilityController extends GetxController {
           }
         } else {
           isLoading(false);
-          debugPrint('[KundliController] getAvakhada->OnApiError');
+          AppLogger.d('[KundliController] getAvakhada->OnApiError');
         }
       }
     }catch (e) {
       isSuccess(false);
-      debugPrint('[KundliController] getAvakhada->OnException:${e.toString()}');
+      AppLogger.d('[KundliController] getAvakhada->OnException:${e.toString()}');
     } finally {
       isLoading(false);
     }

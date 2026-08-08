@@ -12,6 +12,7 @@ import '../../../widget/custom_text_regular.dart';
 import '../../chat/controller/image_picker_controller.dart';
 import '../../wallet/controller/wallet_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class VoiceCallScreen extends StatelessWidget {
   VoiceCallScreen({super.key});
   final VoiceCallController controller = Get.put(VoiceCallController(), permanent: true);
@@ -83,7 +84,7 @@ class VoiceCallScreen extends StatelessWidget {
                                               astroUniId: controller.chatIntakeFormController.astrologerUniId,
                                             );
                                           } else {
-                                            debugPrint("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                                            AppLogger.d("⚠️ uniqueId is NULL or EMPTY in ChatController");
                                           }
                                           await Get.toNamed('/wallet');
 

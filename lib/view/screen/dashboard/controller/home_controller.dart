@@ -20,6 +20,7 @@ import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
 import '../../feedback/feedback_screen.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class HomeController extends GetxController {
   final Dio _dio = Dio();
 
@@ -144,16 +145,12 @@ class HomeController extends GetxController {
           });
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         isDashboardSuccess(false);
-        if (kDebugMode) {
-          print('OnException==> ${e.toString()}');
-        }
+        AppLogger.d('OnException==> ${e.toString()}');
       });
     } finally {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -179,7 +176,7 @@ class HomeController extends GetxController {
       final response = await _dio.post(AppConstants.getAllAstrologer,
           data: {"user_uni_id": uniId, "offset": 0});
 
-      print("Request-> Id $uniId");
+      AppLogger.d("Request-> Id $uniId");
 
       if (response.statusCode == 200) {
         astrologerModel = AstrologerModel.fromJson(response.data);
@@ -196,16 +193,12 @@ class HomeController extends GetxController {
           });
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         isAstrologerSuccess(false);
-        if (kDebugMode) {
-          print('OnException==> ${e.toString()}');
-        }
+        AppLogger.d('OnException==> ${e.toString()}');
       });
     } finally {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -243,16 +236,12 @@ class HomeController extends GetxController {
           });
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         isAIAstrologerSuccess(false);
-        if (kDebugMode) {
-          print('OnException==> ${e.toString()}');
-        }
+        AppLogger.d('OnException==> ${e.toString()}');
       });
     } finally {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -292,16 +281,12 @@ class HomeController extends GetxController {
           });
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         isElectroSuccess(false);
-        if (kDebugMode) {
-          print('OnException==> ${e.toString()}');
-        }
+        AppLogger.d('OnException==> ${e.toString()}');
       });
     } finally {
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -326,7 +311,7 @@ class HomeController extends GetxController {
         CustomProgressDialog.dismissDialog();
         liveJoinModel = SuccessModel.fromJson(response.data);
         if (liveJoinModel.status == AppConstants.success) {
-          print("Success -> ${response.data.toString()}");
+          AppLogger.d("Success -> ${response.data.toString()}");
           String? token = response.data["data"]["token"];
           Get.toNamed('/liveStreamScreen', arguments: {
             'uniqueId': uniqueId,
@@ -335,21 +320,16 @@ class HomeController extends GetxController {
             'astrologerId': astrologerUniId,
             'astrologerUID': astrologerUID
           });
-          print(
-              "As1 Req $token $uniqueId $agoraAppId $astrologerUniId $astrologerUID");
+          AppLogger.d("As1 Req $token $uniqueId $agoraAppId $astrologerUniId $astrologerUID");
         } else {
           CustomSnackBar.showBottom(liveJoinModel.msg.toString());
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     }
   }
 
@@ -398,15 +378,11 @@ class HomeController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
+        AppLogger.d('OnApiError');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-      }
+      AppLogger.d('OnException==> ${e.toString()}');
     } finally {
       isFeedbackLoading(false);
     }

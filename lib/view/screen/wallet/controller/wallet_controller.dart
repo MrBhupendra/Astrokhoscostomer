@@ -3,7 +3,6 @@ import 'package:astro_brahmand/model/payu_wallet_recharge_model.dart';
 import 'package:astro_brahmand/model/razorpay_wallet_recharge_model.dart';
 import 'package:astro_brahmand/view/screen/webview/payment_webview_screen.dart';
 import 'package:astro_brahmand/view/widget/custom_snack_bar.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpaymentgateway/cfpaymentgatewayservice.dart';
 import 'package:get/get.dart';
 import 'package:dio/dio.dart';
@@ -111,7 +110,6 @@ class WalletController extends GetxController {
         "api_key": apiKey,
         "user_uni_id": uniId,
       });
-      debugPrint("Response$response");
       if (response.statusCode == 200) {
         walletModel = RechargeVoucherModel.fromJson(response.data);
         if (walletModel.status == AppConstants.success) {
@@ -131,16 +129,9 @@ class WalletController extends GetxController {
           CommonMethods().showSessionExpiredDialog();
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError');
-        }
       }
-    } catch (e, stackTrace) {
+    } catch (e) {
       isVoucherSuccess(false);
-      if (kDebugMode) {
-        print('OnException==> ${e.toString()}');
-        print('OnException==> ${stackTrace.toString()}');
-      }
     } finally {
       isVoucherLoading(false);
     }
@@ -162,21 +153,8 @@ class WalletController extends GetxController {
         "uniqeid": _uniqueId ?? "",
       };
 
-      if (kDebugMode && paymentMethod == AppConstants.payRazorpayQr) {
-        debugPrint(
-            '[QR_PAYMENT] proceedPaymentRequest URL: ${AppConstants.proceedRechargeRequest}');
-        debugPrint('[QR_PAYMENT] proceedPaymentRequest REQUEST: $requestData');
-      }
-
       final response =
           await _dio.post(AppConstants.proceedRechargeRequest, data: requestData);
-
-      if (kDebugMode && paymentMethod == AppConstants.payRazorpayQr) {
-        debugPrint(
-            '[QR_PAYMENT] proceedPaymentRequest RESPONSE status: ${response.statusCode}');
-        debugPrint(
-            '[QR_PAYMENT] proceedPaymentRequest RESPONSE body: ${response.data}');
-      }
 
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
@@ -246,8 +224,8 @@ class WalletController extends GetxController {
                   ccAvenueModel.ccavenueData!.orderId.toString(),
                   uniId.toString(),
                   AppConstants.wallet);
-            } catch (e) {
-              debugPrint("Error Event openCheckout: $e");
+            } catch (_) {
+              // Analytics must not block checkout.
             }
           } else {
             CustomSnackBar.showBottom(ccAvenueModel.msg.toString());
@@ -268,8 +246,8 @@ class WalletController extends GetxController {
                   payuWalletRechargeModel.payuData!.orderId.toString(),
                   uniId.toString(),
                   AppConstants.wallet);
-            } catch (e) {
-              debugPrint("Error Event openCheckout: $e");
+            } catch (_) {
+              // Analytics must not block checkout.
             }
           } else {
             CustomSnackBar.showBottom(payuWalletRechargeModel.msg.toString());
@@ -304,8 +282,8 @@ class WalletController extends GetxController {
                   paypalModel.paypalData!.orderId.toString(),
                   uniId.toString(),
                   AppConstants.wallet);
-            } catch (e) {
-              debugPrint("Error Event openCheckout: $e");
+            } catch (_) {
+              // Analytics must not block checkout.
             }
           } else {
             CustomSnackBar.showBottom(razorpayModel.msg.toString());
@@ -349,19 +327,9 @@ class WalletController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        if (kDebugMode) {
-          print('OnApiError');
-        }
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
-      if (kDebugMode) {
-        if (paymentMethod == AppConstants.payRazorpayQr) {
-          debugPrint('[QR_PAYMENT] proceedPaymentRequest ERROR: $e');
-        } else {
-          print('OnException==> ${e.toString()}');
-        }
-      }
     }
   }
 

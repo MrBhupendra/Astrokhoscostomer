@@ -14,6 +14,7 @@ import '../../widget/custom_elevated_button.dart';
 import '../../widget/custom_icon_textfield.dart';
 import '../searchPlace/search_place_screen.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class AddAddressScreen extends GetView<ProductsController> {
   AddAddressScreen({super.key});
 
@@ -177,7 +178,7 @@ class AddAddressScreen extends GetView<ProductsController> {
                             ColorResources.colorPrimary,
                             textColor: ColorResources.toolbarText,
                             onPressed: () {
-                              print(_pinCodeController.text);
+                              AppLogger.d(_pinCodeController.text);
                               if (_formKey.currentState!.validate()) {
                                 controller.saveUserAddress(
                                     _billingNameController.text,

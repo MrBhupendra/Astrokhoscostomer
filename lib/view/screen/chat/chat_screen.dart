@@ -28,6 +28,7 @@ import 'controller/chat_intake_form_controller.dart';
 import 'controller/chat_screen_controller.dart';
 import 'model/chat_message_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class ChatScreen extends StatelessWidget {
   ChatScreen({super.key}){
     controller.scrollController.addListener(_scrollListener);
@@ -235,7 +236,7 @@ class ChatScreen extends StatelessWidget {
                                 isVirtual: chatIntakeFormController.isVirtualAstrologer
                             );
                           } else {
-                            debugPrint("⚠️ uniqueId is NULL or EMPTY in ChatController");
+                            AppLogger.d("⚠️ uniqueId is NULL or EMPTY in ChatController");
                           }
                           await Get.toNamed('/wallet');
 

@@ -13,6 +13,7 @@ import '../../chat/controller/chat_intake_form_controller.dart';
 import '../../chat/model/chat_remaining_time_model.dart';
 import '../../chat/model/chat_session_model.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class SlotVideoCallController extends FullLifeCycleController with FullLifeCycleMixin {
  final ChatIntakeFormController chatIntakeFormController = Get.find();
 
@@ -78,7 +79,7 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
       getRemainingDuration(uniqueId);
     }
     else {
-      print('No data available or new session.');
+      AppLogger.d('No data available or new session.');
       playSound();
       initChatSession(
         ChatSessionModel(
@@ -99,17 +100,13 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
   @override
   void onResumed() {
     dbReference.child(customerStatus).set(true);
-    if (kDebugMode) {
-      print('OnResumed VCScreen');
-    }
+    AppLogger.d('OnResumed VCScreen');
   }
 
   @override
   void onPaused() {
     dbReference.child(customerStatus).set(false);
-    if (kDebugMode) {
-      print('onPaused VCScreen');
-    }
+    AppLogger.d('onPaused VCScreen');
   }
 
   @override
@@ -117,9 +114,7 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
     dbReference.child(customerStatus).set(false);
     _dispose();
     super.onClose();
-    if (kDebugMode) {
-      print('onClose VCScreen');
-    }
+    AppLogger.d('onClose VCScreen');
   }
 
   @override
@@ -148,9 +143,7 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
   void registerListeners() {
     astrologerStatusListener = dbReference.child(astrologerStatus).onValue.listen((event) {
           var dataSnapshot = event.snapshot;
-          if (kDebugMode) {
-            print('[ChatTab] AstrologerStatus:onDataChange $dataSnapshot');
-          }
+          AppLogger.d('[ChatTab] AstrologerStatus:onDataChange $dataSnapshot');
           isAstrologerOnline.value = dataSnapshot.value as bool;
           if (isAstrologerOnline.value == true) {
             isAstrologerOnline(true);
@@ -162,16 +155,12 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
             isAstrologerOnline(false);
           }
         }, onError: (error) {
-          if (kDebugMode) {
-            print('[VideoCall] ChatAccepted:onCancelled $error');
-          }
+          AppLogger.d('[VideoCall] ChatAccepted:onCancelled $error');
         });
 
     chatEndListener = dbReference.child(chatEnd).onValue.listen((event) {
       var dataSnapshot = event.snapshot;
-      if (kDebugMode) {
-        print('[VideoCall] ChatEnd:onDataChange $dataSnapshot');
-      }
+      AppLogger.d('[VideoCall] ChatEnd:onDataChange $dataSnapshot');
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
         chatEndListener.cancel();
@@ -180,9 +169,7 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
         Get.back();
       }
     }, onError: (error) {
-      if (kDebugMode) {
-        print('[ChatTab] ChatEnd:onCancelled $error');
-      }
+      AppLogger.d('[ChatTab] ChatEnd:onCancelled $error');
     });
   }
 
@@ -210,7 +197,7 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
 
       final response = await _dio.post(AppConstants.getSlotRemainingTime, data: {'api_key': apiKey, 'user_uni_id': uniId, 'order_id': uniqueId});
       if (response.statusCode == 200) {
-        print('getServiceDuration Api Response ${response.data.toString()}');
+        AppLogger.d('getServiceDuration Api Response ${response.data.toString()}');
         chatRemainingTimeModel = ChatRemainingTimeModel.fromJson(response.data);
         if (chatRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
@@ -221,15 +208,11 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
           isGetTimeSuccess(false);
         }
       } else {
-        if (kDebugMode) {
-          print('OnApiError getVideoCallDuration');
-        }
+        AppLogger.d('OnApiError getVideoCallDuration');
       }
     } catch (e) {
       isGetTimeSuccess(false);
-      if (kDebugMode) {
-        print('OnException getVideoCallDuration==> ${e.toString()}');
-      }
+      AppLogger.d('OnException getVideoCallDuration==> ${e.toString()}');
     } finally {
       isGetTimeLoading(false);
     }
@@ -284,20 +267,19 @@ class SlotVideoCallController extends FullLifeCycleController with FullLifeCycle
 
    engine.registerEventHandler(RtcEngineEventHandler(
      onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
-       debugPrint("local user ${connection.localUid} joined");
+       AppLogger.d("local user ${connection.localUid} joined");
        localUserJoined.value = true;
      },
      onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-       debugPrint("remote user $remoteUid joined");
+       AppLogger.d("remote user $remoteUid joined");
        this.remoteUid.value = remoteUid;
      },
      onUserOffline: (RtcConnection connection, int remoteUid, UserOfflineReasonType reason) {
-       debugPrint("remote user $remoteUid left channel");
+       AppLogger.d("remote user $remoteUid left channel");
        this.remoteUid.value = 0;
      },
      onTokenPrivilegeWillExpire: (RtcConnection connection, String token) {
-       debugPrint(
-           '[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
+       AppLogger.d('[onTokenPrivilegeWillExpire] connection: ${connection.toJson()}, token: $token');
      },
      onLeaveChannel: (RtcConnection connection, stats) {
      },

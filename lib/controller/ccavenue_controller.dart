@@ -18,8 +18,8 @@ class CCAvenueController extends GetxController {
   Future<void> updateOnlinePayment(String amount,String orderId, String paymentId,String userId, String type) async {
     try {
       AppEvents().sendPaymentSuccessEvent(amount.toString(), orderId.toString(), userId.toString(),  type);
-    } catch (e) {
-      debugPrint("Error Event _handlePaymentSuccess: $e");
+    } catch (_) {
+      // Analytics failure must not block payment update.
     }
     CustomProgressDialog.showDialog();
     isUpdateLoading(true);
@@ -40,7 +40,6 @@ class CCAvenueController extends GetxController {
         "payment_id": paymentId
       });
       if (response.statusCode == 200) {
-        debugPrint('OnApiSuccess updateOnlinePayment ${response.data.toString()}');
         CustomProgressDialog.dismissDialog();
         successModel = SuccessModel.fromJson(response.data);
         if (successModel.status == AppConstants.success) {
@@ -50,12 +49,10 @@ class CCAvenueController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        debugPrint('OnApiError updateOnlinePayment');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isUpdateSuccess(false);
-      debugPrint('OnException updateOnlinePayment==> ${e.toString()}');
     } finally {
       isUpdateLoading(false);
       AppDialog().showPaymentSuccessDialog(type);

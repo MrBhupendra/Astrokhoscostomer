@@ -3,9 +3,7 @@ import 'package:astro_brahmand/utill/app_dialogs.dart';
 import 'package:astro_brahmand/utill/app_events.dart';
 import 'package:astro_brahmand/view/widget/custom_snack_bar.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:get/get.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import 'package:astro_brahmand/utill/app_constants.dart';
 import 'dart:async';
@@ -59,16 +57,7 @@ class RazorpayController extends GetxController {
     _razorpay.on(Razorpay.EVENT_PAYMENT_ERROR, _handlePaymentError);
     _razorpay.on(Razorpay.EVENT_EXTERNAL_WALLET, _handleExternalWallet);
 
-    _dio.interceptors.add(PrettyDioLogger(
-      requestHeader: true,
-      requestBody: true,
-      responseBody: true,
-      responseHeader: false,
-      error: true,
-      compact: true,
-      maxWidth: 90,
-    ));
-  }
+}
 
   @override
   void onClose() {
@@ -78,7 +67,6 @@ class RazorpayController extends GetxController {
   }
 
   void _handlePaymentSuccess(PaymentSuccessResponse response) {
-    debugPrint("Razorpay Payment Success");
     try {
       AppEvents().sendPaymentSuccessEvent(
         _amount.toString(),
@@ -86,22 +74,20 @@ class RazorpayController extends GetxController {
         _userId.toString(),
         _type,
       );
-    } catch (e) {
-      debugPrint("Error Event _handlePaymentSuccess: $e");
+    } catch (_) {
+      // Logging removed for production safety.
     }
     updateOnlinePayment(
         response.orderId.toString(), response.paymentId.toString());
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
-    debugPrint("Razorpay Payment Error: ${response.code}, ${response.message}");
     Future.delayed(const Duration(milliseconds: 500), () {
       AppDialog().showPaymentFailedDialog();
     });
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
-    debugPrint("External Wallet: ${response.walletName}");
   }
 
   void openCheckout(
@@ -132,7 +118,6 @@ class RazorpayController extends GetxController {
       _razorpay.open(options);
     } catch (e) {
       CustomSnackBar.showBottom("Something went wrong.Please try again.");
-      debugPrint("RazorpayController (onException) $e");
     }
 
     try {
@@ -142,8 +127,8 @@ class RazorpayController extends GetxController {
         userUniId.toString(),
         type,
       );
-    } catch (e) {
-      debugPrint("Error Event openCheckout: $e");
+    } catch (_) {
+      // Logging removed for production safety.
     }
   }
 
@@ -194,8 +179,8 @@ class RazorpayController extends GetxController {
         userUniId.toString(),
         type,
       );
-    } catch (e) {
-      debugPrint("Error Event startQrPaymentFromProceedResponse: $e");
+    } catch (_) {
+      // Logging removed for production safety.
     }
   }
 
@@ -309,23 +294,12 @@ class RazorpayController extends GetxController {
         'qr_id': qrId.value,
       };
 
-      if (kDebugMode) {
-        debugPrint(
-            '[QR_PAYMENT] razorpayQrVerify URL: ${AppConstants.razorpayQrVerify}');
-        debugPrint('[QR_PAYMENT] razorpayQrVerify REQUEST: $requestData');
-      }
 
       final response = await _dio.post(
         AppConstants.razorpayQrVerify,
         data: requestData,
       );
 
-      if (kDebugMode) {
-        debugPrint(
-            '[QR_PAYMENT] razorpayQrVerify RESPONSE status: ${response.statusCode}');
-        debugPrint(
-            '[QR_PAYMENT] razorpayQrVerify RESPONSE body: ${response.data}');
-      }
 
       if (response.statusCode == 200) {
         final verifyResp = RazorpayQrVerifyResponse.fromJson(response.data);
@@ -350,9 +324,6 @@ class RazorpayController extends GetxController {
       }
     } catch (e) {
       qrStatusText('Still waiting... (network issue, retrying)');
-      if (kDebugMode) {
-        debugPrint('[QR_PAYMENT] razorpayQrVerify ERROR: $e');
-      }
     }
   }
 
@@ -379,8 +350,8 @@ class RazorpayController extends GetxController {
         _userId,
         _type,
       );
-    } catch (e) {
-      debugPrint("Error Event _openSuccessScreen: $e");
+    } catch (_) {
+      // Logging removed for production safety.
     }
 
     Get.off(
@@ -435,51 +406,16 @@ class RazorpayController extends GetxController {
         "payment_id": paymentId,
       };
 
-      if (kDebugMode && paymentMethod == AppConstants.payRazorpayQr) {
-        debugPrint(
-            '[QR_PAYMENT] updateOnlinePayment URL: ${AppConstants.updatePaymentRequest}');
-        debugPrint('[QR_PAYMENT] updateOnlinePayment REQUEST: $requestData');
-      }
-
       final response =
           await _dio.post(AppConstants.updatePaymentRequest, data: requestData);
 
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          if (paymentMethod == AppConstants.payRazorpayQr) {
-            debugPrint(
-                '[QR_PAYMENT] updateOnlinePayment RESPONSE status: ${response.statusCode}');
-            debugPrint(
-                '[QR_PAYMENT] updateOnlinePayment RESPONSE body: ${response.data}');
-          } else {
-            print(
-                'OnApiSuccess updateOnlinePayment ${response.data.toString()}');
-          }
-        }
         successModel = SuccessModel.fromJson(response.data);
         success = successModel.status == AppConstants.success;
         isUpdateSuccess(success);
-      } else {
-        if (kDebugMode && paymentMethod == AppConstants.payRazorpayQr) {
-          debugPrint(
-              '[QR_PAYMENT] updateOnlinePayment ERROR status: ${response.statusCode}');
-          debugPrint(
-              '[QR_PAYMENT] updateOnlinePayment ERROR body: ${response.data}');
-        } else {
-          debugPrint('OnApiError updateOnlinePayment');
-        }
       }
     } catch (e) {
       isUpdateSuccess(false);
-      if (kDebugMode) {
-        final paymentMethod =
-            await SharedPreferencesHelper.getData(AppConstants.paymentGateway);
-        if (paymentMethod == AppConstants.payRazorpayQr) {
-          debugPrint('[QR_PAYMENT] updateOnlinePayment ERROR: $e');
-        } else {
-          debugPrint('OnException updateOnlinePayment==> ${e.toString()}');
-        }
-      }
     } finally {
       if (showProgressDialog) {
         CustomProgressDialog.dismissDialog();

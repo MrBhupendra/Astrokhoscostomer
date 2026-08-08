@@ -18,6 +18,7 @@ import '../../searchPlace/search_place_screen.dart';
 import '../widget/custom_table_two_row_widget.dart';
 import '../controller/panchang_controller.dart';
 
+import 'package:astro_brahmand/utill/app_logger.dart';
 class PanchangDetailScreen extends StatelessWidget {
   PanchangDetailScreen({super.key});
 
@@ -91,7 +92,7 @@ class PanchangDetailScreen extends StatelessWidget {
                     );
                   }).toList(),
                   onChanged: (String? newLanguage) {
-                    print(newLanguage);
+                    AppLogger.d(newLanguage);
                     if (newLanguage != null) {
                       controller.selectedLanguage.value = newLanguage;
                       controller.getPanchang(language: newLanguage);

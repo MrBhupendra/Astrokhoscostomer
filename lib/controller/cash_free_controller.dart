@@ -1,6 +1,5 @@
 import 'package:astro_brahmand/view/widget/custom_progress_dialog.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cferrorresponse/cferrorresponse.dart';
 import 'package:flutter_cashfree_pg_sdk/api/cfpayment/cfwebcheckoutpayment.dart';
@@ -35,16 +34,14 @@ class CashFreeController extends GetxController {
 
   CFSession? createSession() {
     try {
-      print("orderId:::${orderId.value}");
-      print("sessionId:::${sessionId.value}");
           var session = CFSessionBuilder()
           .setEnvironment(CFEnvironment.PRODUCTION)
           .setOrderId(orderId.value)
           .setPaymentSessionId(sessionId.value)
           .build();
       return session;
-    } on CFException catch (e) {
-      print(e.message);
+    } on CFException catch (_) {
+      // Session build failed; caller handles null.
     }
     return null;
   }
@@ -63,20 +60,18 @@ class CashFreeController extends GetxController {
       var cfWebCheckout =
           CFWebCheckoutPaymentBuilder().setSession(session!).build();
       CFPaymentGatewayService().doPayment(cfWebCheckout);
-    } on CFException catch (e) {
-      print(e.message);
+    } on CFException catch (_) {
+      // Payment start failed; UI handles via gateway callbacks.
     }
   }
 
   void onVerify(String orderId) {
-    print('success:::');
     updateOnlinePayment(
         orderId, orderId);
   }
 
   void onError(CFErrorResponse errorResponse, String orderId) {
 
-    print('error:::${errorResponse.getMessage()}, $orderId');
     Future.delayed(const Duration(milliseconds: 500), () {
       AppDialog().showPaymentFailedDialog();
     });
@@ -115,9 +110,6 @@ class CashFreeController extends GetxController {
         "payment_id": paymentId
       });
       if (response.statusCode == 200) {
-        if (kDebugMode) {
-          print('OnApiSuccess updateOnlinePayment ${response.data.toString()}');
-        }
         CustomProgressDialog.dismissDialog();
         var successModel = SuccessModel.fromJson(response.data);
         if (successModel.status == AppConstants.success) {
@@ -127,12 +119,10 @@ class CashFreeController extends GetxController {
         }
       } else {
         CustomProgressDialog.dismissDialog();
-        debugPrint('OnApiError updateOnlinePayment');
       }
     } catch (e) {
       CustomProgressDialog.dismissDialog();
       isUpdateSuccess(false);
-      debugPrint('OnException updateOnlinePayment==> ${e.toString()}');
     } finally {
       isUpdateLoading(false);
       AppDialog().showPaymentSuccessDialog(_type);
@@ -188,8 +178,6 @@ class CashFreeController extends GetxController {
   }
 
   void showSuccessDialog(String paymentId, String type) {
-    print(paymentId);
-    print(type);
     Get.dialog(
       AlertDialog(
         title: const Text('Payment Successful'),
