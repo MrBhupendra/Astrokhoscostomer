@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/view/widget/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -569,6 +570,8 @@ class ArchitectProfileScreen extends GetView<ArchitectProfileController> {
                                       astrologer.longBiography.toString(),
                                       textStyle: const TextStyle(
                                         color: ColorResources.black4,
+                                        fontFamily: AppFonts.euclidRegular,
+                                        fontFamilyFallback: AppFonts.fallback,
                                         // fontSize: Dimensions.fontSizeSmall
                                       ),
                                     ),

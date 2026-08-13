@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:astro_brahmand/utill/images.dart';
 import 'package:astro_brahmand/view/screen/astrologer_detail/controller/astrologer_profile_controller.dart';
@@ -877,7 +878,8 @@ class CallChatAstrologerWidget extends StatelessWidget {
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 14,
-                                            fontFamily: "Poppins")),
+                                            fontFamily: AppFonts.poppins,
+                                            fontFamilyFallback: AppFonts.fallback)),
                                   ],
                                 ),
                               ),
@@ -1008,7 +1010,8 @@ class CallChatAstrologerWidget extends StatelessWidget {
                                         style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 14,
-                                            fontFamily: "Poppins")),
+                                            fontFamily: AppFonts.poppins,
+                                            fontFamilyFallback: AppFonts.fallback)),
                                   ],
                                 ),
                               ),

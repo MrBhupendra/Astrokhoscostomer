@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utill/app_fonts.dart';
 import '../../utill/dimensions.dart';
 
 class CustomTextBold extends StatelessWidget {
@@ -15,7 +16,8 @@ class CustomTextBold extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontFamily: 'EuclidMedium',
+        fontFamily: AppFonts.euclidMedium,
+        fontFamilyFallback: AppFonts.fallback,
         fontWeight: FontWeight.bold,
         fontSize: fontSize ?? Dimensions.fontSizeDefault,
         color: color ?? Colors.black,

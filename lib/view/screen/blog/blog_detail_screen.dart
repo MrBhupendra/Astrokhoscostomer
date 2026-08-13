@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:astro_brahmand/view/screen/blog/controller/blog_controller.dart';
 import 'package:astro_brahmand/view/widget/custom_app_bar.dart';
@@ -69,6 +70,8 @@ class BlogDetailScreen extends StatelessWidget {
                   controller.blogsData.content.toString(),
                   textStyle: const TextStyle(
                     fontSize: Dimensions.fontSizeDefault,
+                    fontFamily: AppFonts.euclidRegular,
+                    fontFamilyFallback: AppFonts.fallback,
                   ),
                 ),
 

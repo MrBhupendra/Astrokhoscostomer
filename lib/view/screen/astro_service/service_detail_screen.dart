@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:gap/gap.dart';
@@ -58,6 +59,8 @@ class ServiceDetailScreen extends GetView<ServiceController> {
                         controller.serviceData.serviceDescription.toString(),
                         textStyle: const TextStyle(
                           color: ColorResources.black2,
+                          fontFamily: AppFonts.euclidRegular,
+                          fontFamilyFallback: AppFonts.fallback,
                         ),
                       ),
                     ],

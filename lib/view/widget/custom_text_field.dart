@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -57,7 +58,8 @@ class CustomTextField extends StatelessWidget {
           controller: controller,
           style: const TextStyle(
               color: ColorResources.black,
-              fontSize: Dimensions.fontSizeDefault),
+              fontSize: Dimensions.fontSizeDefault,
+              fontFamilyFallback: AppFonts.fallback),
           decoration: InputDecoration(
             hintText: hintText,
             hintStyle: const TextStyle(
@@ -112,13 +114,16 @@ class CustomText extends StatelessWidget {
         style: const TextStyle(
             fontSize: Dimensions.fontSizeDefault,
             color: ColorResources.black,
-            fontFamily: "EuclidRegular"),
+            fontFamily: AppFonts.euclidRegular,
+            fontFamilyFallback: AppFonts.fallback),
         children: [
           TextSpan(text: hintText),
           const TextSpan(
             text: ' *',
             style: TextStyle(
-                color: ColorResources.red, fontFamily: "EuclidRegular"),
+                color: ColorResources.red,
+                fontFamily: AppFonts.euclidRegular,
+                fontFamilyFallback: AppFonts.fallback),
           ),
         ],
       ),
@@ -168,6 +173,7 @@ class CustomFormTextField extends StatelessWidget {
           const TextStyle(
             color: ColorResources.black1,
             fontSize: Dimensions.fontSizeDefault,
+            fontFamilyFallback: AppFonts.fallback,
           ),
       decoration: InputDecoration(
         contentPadding: contentPadding ?? const EdgeInsets.all(0.0),

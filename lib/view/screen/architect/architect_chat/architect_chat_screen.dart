@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/dimensions.dart';
 import 'package:astro_brahmand/view/screen/architect/architect_chat/controller/architect_image_picker_controller.dart';
 import 'package:astro_brahmand/view/screen/chat/widget/chat_image_widget.dart';
@@ -451,7 +452,9 @@ class ArchitectChatScreen extends StatelessWidget {
                                   controller: _messageController,
                                   style: const TextStyle(
                                       fontSize: 16,
-                                      color: ColorResources.black),
+                                      color: ColorResources.black,
+                                      fontFamily: AppFonts.euclidRegular,
+                                      fontFamilyFallback: AppFonts.fallback),
                                   decoration: const InputDecoration(
                                       border: InputBorder.none,
                                       hintText: 'Enter Message...'),

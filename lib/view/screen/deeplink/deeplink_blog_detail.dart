@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/app_strings.dart';
 import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:astro_brahmand/view/screen/blog/controller/blog_controller.dart';
@@ -72,6 +73,8 @@ class DeeplinkBlogDetail extends StatelessWidget {
                         controller.blogsData.content.toString(),
                         textStyle: const TextStyle(
                           fontSize: Dimensions.fontSizeDefault,
+                          fontFamily: AppFonts.euclidRegular,
+                          fontFamilyFallback: AppFonts.fallback,
                         ),
                       ),
                       const Gap(10),

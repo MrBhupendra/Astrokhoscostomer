@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -75,7 +76,8 @@ class MatchingAsthakootScreen extends StatelessWidget {
                                 fontSize: 48,
                                 color: ColorResources.black2,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'EuclidMedium',
+                                fontFamily: AppFonts.euclidMedium,
+                                fontFamilyFallback: AppFonts.fallback,
                               ),
                             ),
                             CustomTextRegular(
@@ -125,7 +127,8 @@ class MatchingAsthakootScreen extends StatelessWidget {
                               fontSize: Dimensions.fontSizeLarge,
                               color: ColorResources.black,
                               fontWeight: FontWeight.w500,
-                              fontFamily: 'EuclidMedium',
+                              fontFamily: AppFonts.euclidMedium,
+                              fontFamilyFallback: AppFonts.fallback,
                             ),
                           ),
                         ],

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../utill/app_fonts.dart';
 import '../../utill/dimensions.dart';
 
 class CustomTextPoppins extends StatelessWidget {
@@ -15,7 +16,8 @@ class CustomTextPoppins extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-          fontFamily: 'Poppins',
+          fontFamily: AppFonts.poppins,
+          fontFamilyFallback: AppFonts.fallback,
         fontSize: fontSize ?? Dimensions.fontSizeDefault,
         color: color ?? Colors.black),
       overflow: maxLines != null ? TextOverflow.ellipsis : null,

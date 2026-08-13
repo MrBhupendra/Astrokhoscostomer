@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/app_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -243,6 +244,8 @@ class DailyQuoteScreen extends GetView<DailyQuoteController> {
                                       controller.dailyQuoteListData[index].content.toString(),
                                       textStyle: const TextStyle(
                                         fontSize: Dimensions.fontSizeLarge,
+                                        fontFamily: AppFonts.euclidRegular,
+                                        fontFamilyFallback: AppFonts.fallback,
                                       ),
                                       // fontSize: Dimensions.fontSizeLarge,
                                       // textAlign: TextAlign.center,

@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/color_resources.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,8 @@ class CustomButton extends StatelessWidget {
       child:Text(
         text,
         style: TextStyle(
-          fontFamily: 'EuclidRegular',
+          fontFamily: AppFonts.euclidRegular,
+          fontFamilyFallback: AppFonts.fallback,
           fontSize: fontSize ?? Dimensions.fontSizeDefault,
           color: color ?? Colors.black,),
         overflow: maxLines != null ? TextOverflow.ellipsis : null,

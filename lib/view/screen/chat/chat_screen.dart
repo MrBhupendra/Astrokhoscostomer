@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/app_strings.dart';
 import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:astro_brahmand/utill/dimensions.dart';
@@ -626,7 +627,9 @@ class ChatScreen extends StatelessWidget {
                                     controller: controller.messageController,
                                     style: const TextStyle(
                                         fontSize: 16,
-                                        color: ColorResources.black),
+                                        color: ColorResources.black,
+                                        fontFamily: AppFonts.euclidRegular,
+                                        fontFamilyFallback: AppFonts.fallback),
                                     decoration: const InputDecoration(
                                         border: InputBorder.none,
                                         hintText: 'Enter Message...'),

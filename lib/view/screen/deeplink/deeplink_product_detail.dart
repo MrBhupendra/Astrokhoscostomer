@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/app_strings.dart';
 import 'package:astro_brahmand/view/screen/astro_shop/controller/products_controller.dart';
 import 'package:flutter/material.dart';
@@ -136,6 +137,8 @@ class DeeplinkProductDetail extends StatelessWidget {
                               textStyle: const TextStyle(
                                 color: ColorResources.black2,
                                 fontSize: Dimensions.fontSizeSmall,
+                                fontFamily: AppFonts.euclidRegular,
+                                fontFamilyFallback: AppFonts.fallback,
                               ),
 
                             ),

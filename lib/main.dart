@@ -157,6 +157,7 @@ import 'notification/notification_router.dart';
 import 'notification/notification_service.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/app_logger.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -247,6 +248,10 @@ void main() async {
           Brightness.dark, // Dark style = light content (white icons) for iOS
     ));
   }
+  // Register the platform color-emoji font so custom Euclid/Poppins faces
+  // can fall back to real emoji glyphs (😊🙏🔥❤️🎉🌙✨).
+  await AppFonts.loadEmojiFont();
+
   // Start UI immediately (important for first install).
   runApp(const MyApp());
 
@@ -320,7 +325,8 @@ class MyApp extends StatelessWidget {
           colorScheme:
               ColorScheme.fromSeed(seedColor: ColorResources.colorPrimary),
           useMaterial3: true,
-          fontFamily: 'EuclidRegular',
+          fontFamily: AppFonts.euclidRegular,
+          fontFamilyFallback: AppFonts.fallback,
         ),
         initialRoute: '/splash',
         getPages: [

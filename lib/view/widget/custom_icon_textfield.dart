@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -40,7 +41,10 @@ class CustomIconTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      style: const TextStyle(color: ColorResources.black,fontSize: Dimensions.fontSizeDefault),
+      style: const TextStyle(
+          color: ColorResources.black,
+          fontSize: Dimensions.fontSizeDefault,
+          fontFamilyFallback: AppFonts.fallback),
       decoration: InputDecoration(
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.0),

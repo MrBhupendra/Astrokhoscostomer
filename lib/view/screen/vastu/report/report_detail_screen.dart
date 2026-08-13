@@ -1,4 +1,5 @@
 
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/view/widget/custom_app_bar.dart';
 import 'package:astro_brahmand/view/widget/custom_text_medium.dart';
 import 'package:flutter/material.dart';
@@ -65,6 +66,8 @@ class ReportDetailScreen extends StatelessWidget {
                       reportData.description.toString(),
                       textStyle: const TextStyle(
                         color: ColorResources.black,
+                        fontFamily: AppFonts.euclidRegular,
+                        fontFamilyFallback: AppFonts.fallback,
                       ),
                     ),
                     const Gap(5),

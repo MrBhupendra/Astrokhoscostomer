@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/color_resources.dart';
 import 'package:astro_brahmand/utill/dimensions.dart';
 import 'package:astro_brahmand/view/widget/custom_icon_elevated_button.dart';
@@ -236,7 +237,8 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                                 Text(
                                   '$_readout Degree',
                                   style: TextStyle(
-                                    fontFamily: 'EuclidRegular',
+                                    fontFamily: AppFonts.euclidRegular,
+                                    fontFamilyFallback: AppFonts.fallback,
                                     color: (isCameraOn || isMapOn)
                                         ? Colors.white
                                         : ColorResources.colorPrimaryMedium,
@@ -287,7 +289,8 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                                     Text(
                                       'Google Map',
                                       style: TextStyle(
-                                          fontFamily: 'EuclidMedium',
+                                          fontFamily: AppFonts.euclidMedium,
+                                          fontFamilyFallback: AppFonts.fallback,
                                           fontSize: Dimensions.fontSizeSmall,
                                           color: (isCameraOn || isMapOn)
                                               ? Colors.white
@@ -329,7 +332,8 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                                     Text(
                                       'Rear Camera',
                                       style: TextStyle(
-                                          fontFamily: 'EuclidMedium',
+                                          fontFamily: AppFonts.euclidMedium,
+                                          fontFamilyFallback: AppFonts.fallback,
                                           fontSize: Dimensions.fontSizeSmall,
                                           color: (isCameraOn || isMapOn)
                                               ? Colors.white
@@ -349,7 +353,8 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                           Text(
                             'Geo-Coordinates:',
                             style: TextStyle(
-                              fontFamily: 'EuclidRegular',
+                              fontFamily: AppFonts.euclidRegular,
+                              fontFamilyFallback: AppFonts.fallback,
                               fontSize: Dimensions.fontSizeDefault,
                               fontWeight: FontWeight.w900,
                               color: (isCameraOn || isMapOn)
@@ -360,7 +365,8 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                           Text(
                             'Latitude: $currentLatitude',
                             style: TextStyle(
-                              fontFamily: 'EuclidRegular',
+                              fontFamily: AppFonts.euclidRegular,
+                              fontFamilyFallback: AppFonts.fallback,
                               fontSize: Dimensions.fontSizeSmall,
                               fontWeight: FontWeight.w600,
                               color: (isCameraOn || isMapOn)
@@ -371,7 +377,8 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                           Text(
                             'Longitude: $currentLongitude',
                             style: TextStyle(
-                              fontFamily: 'EuclidRegular',
+                              fontFamily: AppFonts.euclidRegular,
+                              fontFamilyFallback: AppFonts.fallback,
                               fontSize: Dimensions.fontSizeSmall,
                               fontWeight: FontWeight.w600,
                               color: (isCameraOn || isMapOn)
@@ -402,7 +409,8 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                                 Text(
                                   'Capture',
                                   style: TextStyle(
-                                      fontFamily: 'EuclidMedium',
+                                      fontFamily: AppFonts.euclidMedium,
+                                      fontFamilyFallback: AppFonts.fallback,
                                       fontSize: Dimensions.fontSizeSmall,
                                       color: (isCameraOn || isMapOn)
                                           ? Colors.white

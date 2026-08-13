@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/app_strings.dart';
 import 'package:astro_brahmand/view/widget/custom_box_decoration.dart';
 import 'package:flutter/material.dart';
@@ -152,7 +153,8 @@ class ArchitectWidget extends StatelessWidget {
                                     AppStrings.connect.tr,
                                     style: const TextStyle(
                                         color: ColorResources.colorPrimary,
-                                    fontFamily: "Poppins"
+                                    fontFamily: AppFonts.poppins,
+                                    fontFamilyFallback: AppFonts.fallback,
                                   )),
                                 )
                               ],

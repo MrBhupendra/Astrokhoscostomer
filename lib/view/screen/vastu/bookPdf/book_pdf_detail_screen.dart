@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:gap/gap.dart';
@@ -69,6 +70,8 @@ class BookPdfDetailScreen extends StatelessWidget {
                       textStyle: const TextStyle(
                         fontSize: Dimensions.fontSizeSmall,
                         color: ColorResources.black2,
+                        fontFamily: AppFonts.euclidRegular,
+                        fontFamilyFallback: AppFonts.fallback,
                       ),
                     ),
                     const Gap(80),

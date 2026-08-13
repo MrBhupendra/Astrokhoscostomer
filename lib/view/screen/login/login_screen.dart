@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:country_code_picker/country_code_picker.dart';
@@ -234,7 +235,8 @@ class LoginScreen extends GetView<LoginController> {
                                 style: const TextStyle(
                                   fontSize: Dimensions.fontSizeDefault,
                                   color: ColorResources.black,
-                                  fontFamily: "EuclidRegular",
+                                  fontFamily: AppFonts.euclidRegular,
+                                  fontFamilyFallback: AppFonts.fallback,
                                 ),
                                 children: [
                                   TextSpan(
@@ -364,7 +366,10 @@ class LoginScreen extends GetView<LoginController> {
   TextSpan _buildClickableTerms({required String text, required Function onTap}) {
     return TextSpan(
       text: text,
-      style: const TextStyle(color: ColorResources.orange, fontFamily: "EuclidRegular"),
+      style: const TextStyle(
+          color: ColorResources.orange,
+          fontFamily: AppFonts.euclidRegular,
+          fontFamilyFallback: AppFonts.fallback),
       recognizer: TapGestureRecognizer()..onTap = onTap as void Function(),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -648,6 +649,7 @@ class AssistantChatScreen extends StatelessWidget {
                                         color: color,
                                         fontSize: 12,
                                         fontWeight: FontWeight.w600,
+                                        fontFamilyFallback: AppFonts.fallback,
                                       ),
                                     ),
                                   ),
@@ -686,7 +688,9 @@ class AssistantChatScreen extends StatelessWidget {
                                   controller: controller.messageController,
                                   style: const TextStyle(
                                       fontSize: 16,
-                                      color: ColorResources.black),
+                                      color: ColorResources.black,
+                                      fontFamily: AppFonts.euclidRegular,
+                                      fontFamilyFallback: AppFonts.fallback),
                                   enabled: remaining > 0,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,

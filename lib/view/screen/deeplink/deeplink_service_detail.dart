@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/view/widget/simmer_widget/simmer_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
@@ -65,6 +66,8 @@ class DeeplinkServiceDetail extends StatelessWidget {
                               controller.serviceData.serviceDescription.toString(),
                               textStyle: const TextStyle(
                                 color: ColorResources.black2,
+                                fontFamily: AppFonts.euclidRegular,
+                                fontFamilyFallback: AppFonts.fallback,
                               ),
 
                             ),

@@ -1,3 +1,4 @@
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:app_links/app_links.dart';
 import 'package:astro_brahmand/utill/images.dart';
 import 'package:astro_brahmand/view/widget/custom_network_image.dart';
@@ -280,7 +281,11 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
                 padding: const EdgeInsets.only(
                     right: 30.0, top: 5.0, bottom: 5.0, left: 5.0),
                 child: HtmlWidget(
-                    dashPopupBannerModel.data!.description.toString()),
+                    dashPopupBannerModel.data!.description.toString(),
+                    textStyle: const TextStyle(
+                      fontFamily: AppFonts.euclidRegular,
+                      fontFamilyFallback: AppFonts.fallback,
+                    )),
               ),
             Positioned(
               top: 0,

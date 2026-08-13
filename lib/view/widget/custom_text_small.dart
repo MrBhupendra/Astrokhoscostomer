@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../utill/app_fonts.dart';
 import '../../utill/dimensions.dart';
 
 class CustomTextSmall extends StatelessWidget {
@@ -15,7 +16,8 @@ class CustomTextSmall extends StatelessWidget {
     return Text(
       text,
       style: TextStyle(
-        fontFamily: 'EuclidSmall',
+        fontFamily: AppFonts.euclidSmall,
+        fontFamilyFallback: AppFonts.fallback,
         fontSize: fontSize ?? Dimensions.fontSizeSmall,
       ),
       overflow: maxLines != null ? TextOverflow.ellipsis : null,

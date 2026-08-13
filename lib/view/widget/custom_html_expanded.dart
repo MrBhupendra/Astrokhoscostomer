@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'package:gap/gap.dart';
+import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/color_resources.dart';
 
 class CustomHtmlTextExpanded extends StatefulWidget {
@@ -30,10 +31,15 @@ class CustomHtmlTextExpandedState extends State<CustomHtmlTextExpanded> {
         Html(
           data: widget.fullText,
           style: {
+            '*': Style(
+              fontFamilyFallback: AppFonts.fallback,
+            ),
             'body': Style(
               maxLines: isExpanded ? null : 2,
               color: ColorResources.black1,
               fontSize: FontSize.medium,
+              fontFamily: AppFonts.euclidRegular,
+              fontFamilyFallback: AppFonts.fallback,
             ),
           },
         ),
