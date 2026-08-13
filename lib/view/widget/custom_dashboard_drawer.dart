@@ -1,7 +1,9 @@
 import 'package:astro_brahmand/utill/app_constants.dart';
 import 'package:astro_brahmand/utill/app_features.dart';
 import 'package:astro_brahmand/utill/images.dart';
+import 'package:astro_brahmand/utill/common_methods.dart';
 import 'package:astro_brahmand/view/screen/dashboard/controller/dashboard_controller.dart';
+import 'package:astro_brahmand/view/screen/notification/controller/notification_controller.dart';
 import 'package:astro_brahmand/view/widget/custom_default_dialog.dart';
 import 'package:astro_brahmand/view/widget/custom_round_network_image.dart';
 import 'package:astro_brahmand/view/widget/custom_snack_bar.dart';
@@ -21,7 +23,6 @@ import 'custom_dialog_widget.dart';
 import 'custom_drawer_item.dart';
 import 'custom_progress_indicator.dart';
 import 'custom_text_regular.dart';
-import 'package:astro_brahmand/utill/common_methods.dart';
 
 class CustomDashboardDrawer extends StatelessWidget {
   CustomDashboardDrawer({super.key});
@@ -165,16 +166,56 @@ class CustomDashboardDrawer extends StatelessWidget {
                               ),
                             ),
                             GestureDetector(
-                                onTap: (){
-                                  Get.toNamed('/notificationScreen');
+                                onTap: () async {
+                                  await Get.toNamed('/notificationScreen');
+                                  NotificationController.to.refreshUnreadCount();
                                 },
-                                child: Container(
-                                    padding: const EdgeInsets.all(5),
-                                    decoration: const BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        color: ColorResources.colorPrimaryMedium
-                                    ),
-                                    child: const Icon(Icons.notifications_none_outlined,color: ColorResources.toolbarText,size: 20,))),
+                                child: Obx(() {
+                                  final count =
+                                      NotificationController.to.unreadCount.value;
+                                  final label = count > 99 ? '99+' : '$count';
+                                  return Stack(
+                                    clipBehavior: Clip.none,
+                                    children: [
+                                      Container(
+                                          padding: const EdgeInsets.all(5),
+                                          decoration: const BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: ColorResources
+                                                  .colorPrimaryMedium),
+                                          child: const Icon(
+                                              Icons.notifications_none_outlined,
+                                              color: ColorResources.toolbarText,
+                                              size: 20)),
+                                      if (count > 0)
+                                        Positioned(
+                                          top: -4,
+                                          right: -4,
+                                          child: Container(
+                                            constraints: const BoxConstraints(
+                                                minWidth: 16, minHeight: 16),
+                                            padding: EdgeInsets.symmetric(
+                                              horizontal: count > 9 ? 4 : 0,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: ColorResources.red,
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                            ),
+                                            alignment: Alignment.center,
+                                            child: Text(
+                                              label,
+                                              style: const TextStyle(
+                                                color: ColorResources.white,
+                                                fontSize: 10,
+                                                fontWeight: FontWeight.bold,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                    ],
+                                  );
+                                })),
                           ],
                         ),
                       ),

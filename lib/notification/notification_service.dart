@@ -13,6 +13,7 @@ import '../firebase_options.dart';
 import '../utill/color_resources.dart';
 import '../view/screen/splash/controller/config_controller.dart';
 import '../view/screen/assistant_chat/assistant_chat_delivery_helper.dart';
+import '../view/screen/notification/controller/notification_controller.dart';
 import 'notification_router.dart';
 
 import 'package:astro_brahmand/utill/app_logger.dart';
@@ -157,6 +158,9 @@ class NotificationService {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       AppLogger.d('[NotificationService] onMessage: ${message.data}');
       showNotification(message);
+      if (Get.isRegistered<NotificationController>()) {
+        NotificationController.to.refreshUnreadCount();
+      }
     });
 
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {

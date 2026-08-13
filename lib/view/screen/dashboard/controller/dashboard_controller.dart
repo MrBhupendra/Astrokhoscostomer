@@ -15,6 +15,7 @@ import '../../../../utill/color_resources.dart';
 import '../../../../utill/common_methods.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../agora/live_stream/controller/live_stream_init_controller.dart';
+import '../../notification/controller/notification_controller.dart';
 import '../../search/model/astrologer_request_model.dart';
 import 'live_astrologer_controller.dart';
 
@@ -181,6 +182,7 @@ class DashboardController extends FullLifeCycleController with FullLifeCycleMixi
     bool isLogin = await SharedPreferencesHelper.getIsLogin();
     if (isLogin) {
       getWalletBalance();
+      NotificationController.to.refreshUnreadCount();
     }
   }
 

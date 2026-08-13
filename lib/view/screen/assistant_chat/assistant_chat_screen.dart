@@ -692,6 +692,10 @@ class AssistantChatScreen extends StatelessWidget {
                                       fontFamily: AppFonts.euclidRegular,
                                       fontFamilyFallback: AppFonts.fallback),
                                   enabled: remaining > 0,
+                                  minLines: 1,
+                                  maxLines: 5,
+                                  // keyboardType: TextInputType.multiline,
+                                  // textInputAction: TextInputAction.newline,
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
                                     hintText: remaining > 0

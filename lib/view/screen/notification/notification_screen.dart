@@ -15,12 +15,33 @@ import '../../widget/custom_text_regular.dart';
 import '../../widget/simmer_widget/simmer_list_view.dart';
 import 'controller/notification_controller.dart';
 
-class NotificationScreen extends StatelessWidget {
+class NotificationScreen extends StatefulWidget {
   const NotificationScreen({super.key});
 
   @override
+  State<NotificationScreen> createState() => _NotificationScreenState();
+}
+
+class _NotificationScreenState extends State<NotificationScreen> {
+  late final NotificationController controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = NotificationController.to;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      controller.onNotificationScreenOpened();
+    });
+  }
+
+  @override
+  void dispose() {
+    controller.onNotificationScreenClosed();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final NotificationController controller = Get.put(NotificationController());
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (didPop, result) {

@@ -623,6 +623,9 @@ class AppConstants {
   static const String lastProcessedAlertNotificationId =
       'lastProcessedAlertNotificationId';
 
+  /// Highest notification row `id` the user has already opened/read (badge).
+  static const String lastReadNotificationId = 'lastReadNotificationId';
+
   // vedic pdf
   static const String paidKundliCalculation =
       '$baseUrl/api/paidKundliCalculation';
