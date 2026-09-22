@@ -24,6 +24,7 @@ import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_dialog_widget.dart';
 import '../../ask_question/controller/typing_controller.dart';
 import '../../dashboard/controller/dashboard_controller.dart';
+import '../../dashboard/controller/home_controller.dart';
 import '../../feedback/feedback_screen.dart';
 import '../../splash/controller/config_controller.dart';
 import '../../wallet/controller/wallet_controller.dart';
@@ -343,6 +344,9 @@ class ChatScreenController extends FullLifeCycleController
       }
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
+        // Backend closes the order asynchronously; tell the dashboard the
+        // session is over so it doesn't show a stale "in progress" card.
+        HomeController.notifySessionEnded(uniqueId);
         stopTimer();
         showDisconnectedDialog();
 
@@ -999,6 +1003,8 @@ class ChatScreenController extends FullLifeCycleController
   }
 
   void endChat() {
+    HomeController.notifySessionEnded(uniqueId);
+
     /// Active session end (already accepted)
     final updates = {
       chatDeclinedByChild: "Customer",
@@ -1017,6 +1023,8 @@ class ChatScreenController extends FullLifeCycleController
       endChat();
       return;
     }
+
+    HomeController.notifySessionEnded(uniqueId);
 
     if (uniqueId.isNotEmpty) {
       await _declineChatRequest(uniqueId);

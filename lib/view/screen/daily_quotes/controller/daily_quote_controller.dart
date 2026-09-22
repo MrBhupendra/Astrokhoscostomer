@@ -96,7 +96,6 @@ class DailyQuoteController extends GetxController{
         AppLogger.d('OnApiError');
       }
 
-
     } catch (e) {
       isSuccess(false);
       AppLogger.d('OnException==> ${e.toString()}');

@@ -6,29 +6,28 @@ import '../../utill/color_resources.dart';
 
 class CustomSnackBar {
   static void showBottom(String msg) {
+    Get.closeAllSnackbars();
+
     Get.snackbar(
       AppStrings.alert.tr,
-      // icon: const Icon(Icons.error_outline,color: ColorResources.red,),
       msg,
       snackPosition: SnackPosition.BOTTOM,
       backgroundColor: ColorResources.black.withOpacity(0.8),
       colorText: ColorResources.white,
+      duration: const Duration(seconds: 2),
     );
   }
 
   static void showTop(String msg) {
+    Get.closeAllSnackbars();
+
     Get.snackbar(
       AppStrings.title.tr,
       msg,
       snackPosition: SnackPosition.TOP,
       backgroundColor: Colors.white,
       colorText: Colors.black,
+      duration: const Duration(seconds: 2),
     );
   }
-
-  // static void showBottomTwo(String msg,BuildContext context){
-  //   ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-  //       content: Text(msg)
-  //   ));
-  // }
 }

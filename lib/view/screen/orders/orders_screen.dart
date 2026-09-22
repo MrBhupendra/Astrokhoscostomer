@@ -10,7 +10,6 @@ import '../../../utill/app_strings.dart';
 import '../../../utill/color_resources.dart';
 import '../../../utill/dimensions.dart';
 import '../../../utill/images.dart';
-import '../../widget/custom_default_dialog.dart';
 import '../../widget/custom_dialog_widget.dart';
 import '../../widget/custom_empty_screen.dart';
 import '../../widget/custom_network_image.dart';
@@ -155,7 +154,7 @@ class OrdersScreen extends GetView<OrderController> {
                                                                     'Order Detail',
                                                                     maxLines: 1),
                                                               ),
-                                                              GestureDetector(
+                                                              InkWell(
                                                                 onTap: () {
                                                                   Get.back();
                                                                 },
@@ -416,39 +415,174 @@ class OrdersScreen extends GetView<OrderController> {
                                                     ),
 
 
+                                                  // Row(
+                                                  //   mainAxisAlignment: MainAxisAlignment.end,
+                                                  //   children: [
+                                                  //     if(controller.orderHistoryData[index].callHistoryImagesExists == 1)
+                                                  //     GestureDetector(
+                                                  //       onTap: () async {
+                                                  //         ///ToDo
+                                                  //         Get.toNamed("/call_image_list_screen",arguments: {
+                                                  //           "uniqueId": controller.orderHistoryData[index].uniqeid.toString()
+                                                  //         });
+                                                  //       },
+                                                  //       child: Container(
+                                                  //         padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
+                                                  //         decoration: BoxDecoration(
+                                                  //           borderRadius: BorderRadius.circular(5),
+                                                  //           border: Border.all(
+                                                  //               color: ColorResources.colorPrimary,
+                                                  //               width: 1.5
+                                                  //           ),
+                                                  //         ),
+                                                  //         child: CustomTextRegular(
+                                                  //           "View Images",
+                                                  //           fontSize: Dimensions.fontSizeSmall,
+                                                  //           maxLines: 1,
+                                                  //           color: ColorResources.colorPrimaryDark,
+                                                  //         ),
+                                                  //       ),
+                                                  //     ),
+                                                  //     const Gap(5),
+                                                  //     const Icon(
+                                                  //         Icons.arrow_forward_ios_rounded,
+                                                  //         size: 16,
+                                                  //         color: ColorResources.colorPrimaryDark),
+                                                  //   ],
+                                                  // )
+
                                                   Row(
                                                     mainAxisAlignment: MainAxisAlignment.end,
                                                     children: [
-                                                      if(controller.orderHistoryData[index].callHistoryImagesExists == 1)
-                                                      GestureDetector(
-                                                        onTap: () async {
-                                                          ///ToDo
-                                                          Get.toNamed("/call_image_list_screen",arguments: {
-                                                            "uniqueId": controller.orderHistoryData[index].uniqeid.toString()
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 4),
-                                                          decoration: BoxDecoration(
-                                                            borderRadius: BorderRadius.circular(5),
-                                                            border: Border.all(
-                                                                color: ColorResources.colorPrimary,
-                                                                width: 1.5
+                                                      // ==================== PLAY RECORDING ====================
+                                                      // Voice calls and video calls both have a recording.
+                                                      if (controller.canPlayRecording(
+                                                          controller.orderHistoryData[index].callType))
+                                                        Obx(() {
+                                                          final String uniqueId = controller
+                                                              .orderHistoryData[index].uniqeid
+                                                              .toString()
+                                                              .trim();
+
+                                                          final bool isVideo = controller.isVideoRecording(
+                                                              controller.orderHistoryData[index].callType);
+
+                                                          final bool isLoading =
+                                                          controller.isRecordingLoadingFor(uniqueId);
+
+                                                          final bool isPlaying =
+                                                          controller.isRecordingPlayingFor(uniqueId);
+
+                                                          return GestureDetector(
+                                                            onTap: () => controller.toggleRecording(
+                                                                uniqueId,
+                                                                isVideo: isVideo),
+                                                            child: Container(
+                                                              padding: const EdgeInsets.symmetric(
+                                                                vertical: 5,
+                                                                horizontal: 8,
+                                                              ),
+                                                              decoration: BoxDecoration(
+                                                                color: ColorResources.colorPrimary.withOpacity(0.08),
+                                                                borderRadius: BorderRadius.circular(6),
+                                                                border: Border.all(
+                                                                  color: ColorResources.colorPrimary,
+                                                                  width: 1.2,
+                                                                ),
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: [
+
+                                                                  // ==========================================
+                                                                  // ICON
+                                                                  // ==========================================
+                                                                  if (isLoading)
+                                                                    const SizedBox(
+                                                                      height: 14,
+                                                                      width: 14,
+                                                                      child: CircularProgressIndicator(
+                                                                        strokeWidth: 1.8,
+                                                                      ),
+                                                                    )
+                                                                  else
+                                                                    Icon(
+                                                                      isPlaying
+                                                                          ? Icons.stop_circle_rounded
+                                                                          : isVideo
+                                                                              ? Icons.play_circle_outline_rounded
+                                                                              : Icons.play_circle_fill_rounded,
+                                                                      size: 18,
+                                                                      color: ColorResources.colorPrimary,
+                                                                    ),
+
+                                                                  const SizedBox(width: 4),
+
+                                                                  // ==========================================
+                                                                  // TEXT
+                                                                  // ==========================================
+                                                                  CustomTextRegular(
+                                                                    isLoading
+                                                                        ? "Loading..."
+                                                                        : isPlaying
+                                                                        ? "Stop"
+                                                                        : "Recording",
+                                                                    fontSize: Dimensions.fontSizeSmall,
+                                                                    maxLines: 1,
+                                                                    color: ColorResources.colorPrimaryDark,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                          );
+                                                        }),
+
+                                                      // ==================== VIEW IMAGES ====================
+                                                      if (controller.orderHistoryData[index].callHistoryImagesExists == 1)
+                                                        ...[
+                                                          const Gap(5),
+
+                                                          GestureDetector(
+                                                            onTap: () async {
+                                                              Get.toNamed(
+                                                                "/call_image_list_screen",
+                                                                arguments: {
+                                                                  "uniqueId": controller
+                                                                      .orderHistoryData[index]
+                                                                      .uniqeid
+                                                                      .toString(),
+                                                                },
+                                                              );
+                                                            },
+                                                            child: Container(
+                                                              padding: const EdgeInsets.symmetric(
+                                                                vertical: 2,
+                                                                horizontal: 4,
+                                                              ),
+                                                              decoration: BoxDecoration(
+                                                                borderRadius: BorderRadius.circular(5),
+                                                                border: Border.all(
+                                                                  color: ColorResources.colorPrimary,
+                                                                  width: 1.5,
+                                                                ),
+                                                              ),
+                                                              child: CustomTextRegular(
+                                                                "View Images",
+                                                                fontSize: Dimensions.fontSizeSmall,
+                                                                maxLines: 1,
+                                                                color: ColorResources.colorPrimaryDark,
+                                                              ),
                                                             ),
                                                           ),
-                                                          child: CustomTextRegular(
-                                                            "View Images",
-                                                            fontSize: Dimensions.fontSizeSmall,
-                                                            maxLines: 1,
-                                                            color: ColorResources.colorPrimaryDark,
-                                                          ),
-                                                        ),
-                                                      ),
+                                                        ],
+
                                                       const Gap(5),
+
                                                       const Icon(
-                                                          Icons.arrow_forward_ios_rounded,
-                                                          size: 16,
-                                                          color: ColorResources.colorPrimaryDark),
+                                                        Icons.arrow_forward_ios_rounded,
+                                                        size: 16,
+                                                        color: ColorResources.colorPrimaryDark,
+                                                      ),
                                                     ],
                                                   )
                                                 ],

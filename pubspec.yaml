@@ -147,6 +147,7 @@ dependencies:
   pretty_dio_logger: ^1.4.0
   google_sign_in: ^6.2.1
   phonecodes: ^0.0.4
+  just_audio: ^0.10.6
 
 
   xml: any

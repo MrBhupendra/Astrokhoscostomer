@@ -159,6 +159,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import 'package:astro_brahmand/utill/app_fonts.dart';
 import 'package:astro_brahmand/utill/app_logger.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(

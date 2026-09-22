@@ -296,6 +296,8 @@ class AppConstants {
   static const String getServiceOrder = '$baseUrl/api/customerServiceOrder';
   static const String getLiveGiftHistory = '$baseUrl/api/userGiftHistory';
 
+  static const String getAgoraRecordingUrl = '$baseUrl/api/getAgoraRecordingUrl';
+
   //LIVE
   static const String joinLiveStream = '$baseUrl/api/joinLiveStream';
   static const String getLiveGifts = '$baseUrl/api/giftItem';

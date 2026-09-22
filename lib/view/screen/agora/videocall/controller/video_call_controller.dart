@@ -21,6 +21,7 @@ import '../../../chat/model/chat_birth_model.dart';
 import '../../../chat/model/chat_remaining_time_model.dart';
 import '../../../chat/model/chat_session_model.dart';
 import '../../../dashboard/controller/dashboard_controller.dart';
+import '../../../dashboard/controller/home_controller.dart';
 import '../../../feedback/feedback_screen.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter/material.dart';
@@ -274,6 +275,9 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
       AppLogger.d('[VideoCall] ChatEnd:onDataChange $dataSnapshot');
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
+        // Backend closes the order asynchronously; tell the dashboard the
+        // session is over so it doesn't show a stale "in progress" card.
+        HomeController.notifySessionEnded(uniqueId);
         stopTimer();
         chatAcceptedListener.cancel();
         chatEndListener.cancel();
@@ -322,6 +326,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
 
     stopTimer();
     stopSound();
+    HomeController.notifySessionEnded(uniqueId);
     _cancelListeners();
 
     final updates = {

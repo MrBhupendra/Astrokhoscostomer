@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:astro_brahmand/model/group_puja_category_model.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +16,7 @@ import '../../../../model/success_model.dart';
 import '../../../../utill/app_constants.dart';
 import '../../../../utill/app_strings.dart';
 import '../../../../notification/notification_router.dart';
+import '../../../../utill/session_end_tracker.dart';
 import '../../../../utill/shared_preference.dart';
 import '../../../widget/custom_default_dialog.dart';
 import '../../../widget/custom_progress_dialog.dart';
@@ -76,6 +79,12 @@ class HomeController extends GetxController {
   var inProgressStatus = 0.obs;
   var callType = ''.obs;
 
+  /// Re-fetch schedule used while the backend still reports a session we
+  /// already ended locally (see [SessionEndTracker]).
+  Timer? _inProgressRecheckTimer;
+  int _inProgressRecheckAttempt = 0;
+  static const int _maxInProgressRechecks = 5;
+
   @override
   void onInit() {
     super.onInit();
@@ -112,10 +121,7 @@ class HomeController extends GetxController {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             isDashboardSuccess(true);
 
-            inProgressStatus.value =
-                dashboardModel.data!.inProgressOrder!.status!.toInt();
-            callType.value =
-                dashboardModel.data?.inProgressOrder!.callType ?? '';
+            _applyInProgressOrder(dashboardModel.data?.inProgressOrder);
 
             bannerList = dashboardModel.data?.banners;
             //Live
@@ -128,7 +134,11 @@ class HomeController extends GetxController {
             productCategoryList = dashboardModel.data?.productCategories;
             blogList = dashboardModel.data?.blogs;
             videoList = dashboardModel.data?.videosection;
-            chatChannels = dashboardModel.data?.chatChannels;
+            //Only chat channels (skip ASSISTANT/ and CALL/)
+            chatChannels = dashboardModel.data?.chatChannels
+                ?.where((channel) =>
+                    channel.channelName.toString().startsWith('CHAT/'))
+                .toList();
 
             if (dashboardModel.data?.inReview?.isReview == 1) {
               Get.off(FeedbackScreen(
@@ -160,6 +170,74 @@ class HomeController extends GetxController {
         }
       });
     }
+  }
+
+  /// Applies the dashboard's in-progress order to the home screen state.
+  ///
+  /// A session ended on this device can still come back as `status == 1`
+  /// because the backend closes the order asynchronously. Keeping the card
+  /// visible would leave the user "stuck" on a consultation that is already
+  /// over, so the stale order is ignored and the dashboard is re-fetched until
+  /// the backend agrees.
+  void _applyInProgressOrder(InProgressOrder? order) {
+    final status = order?.status?.toInt() ?? 0;
+
+    if (status == 1 && SessionEndTracker.isEnded(order?.uniqeid)) {
+      AppLogger.d(
+          'Ignoring stale in-progress order ${order?.uniqeid}; session already ended locally');
+      inProgressStatus.value = 0;
+      callType.value = '';
+      _scheduleInProgressRecheck();
+      return;
+    }
+
+    _cancelInProgressRecheck();
+    SessionEndTracker.clear(order?.uniqeid);
+    inProgressStatus.value = status;
+    callType.value = order?.callType ?? '';
+  }
+
+  void _scheduleInProgressRecheck() {
+    if (_inProgressRecheckAttempt >= _maxInProgressRechecks) return;
+    _inProgressRecheckAttempt++;
+    _inProgressRecheckTimer?.cancel();
+    _inProgressRecheckTimer = Timer(
+      Duration(seconds: 3 * _inProgressRecheckAttempt),
+      () => getDashboard(false),
+    );
+  }
+
+  void _cancelInProgressRecheck() {
+    _inProgressRecheckTimer?.cancel();
+    _inProgressRecheckTimer = null;
+    _inProgressRecheckAttempt = 0;
+  }
+
+  /// Drops the "in progress" card as soon as a chat/call/video session ends and
+  /// re-syncs the dashboard.
+  ///
+  /// Safe to call from anywhere: it records the ended session even when the
+  /// dashboard has not been built yet, so a freshly created [HomeController]
+  /// will not resurrect the card either.
+  static void notifySessionEnded(String? uniqeid) {
+    SessionEndTracker.markEnded(uniqeid);
+    if (Get.isRegistered<HomeController>()) {
+      Get.find<HomeController>().onSessionEnded(uniqeid);
+    }
+  }
+
+  void onSessionEnded(String? uniqeid) {
+    SessionEndTracker.markEnded(uniqeid);
+    _cancelInProgressRecheck();
+    inProgressStatus.value = 0;
+    callType.value = '';
+    getDashboard(false);
+  }
+
+  @override
+  void onClose() {
+    _inProgressRecheckTimer?.cancel();
+    super.onClose();
   }
 
   Future<void> getAllAstrologer() async {

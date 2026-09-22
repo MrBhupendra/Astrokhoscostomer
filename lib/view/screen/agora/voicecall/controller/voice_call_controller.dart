@@ -28,6 +28,7 @@ import '../../../chat/model/chat_session_model.dart';
 import 'package:wakelock_plus/wakelock_plus.dart';
 import 'package:flutter/material.dart';
 import '../../../dashboard/controller/dashboard_controller.dart';
+import '../../../dashboard/controller/home_controller.dart';
 import '../../../wallet/controller/wallet_controller.dart';
 
 import 'package:astro_brahmand/utill/app_logger.dart';
@@ -378,6 +379,9 @@ class VoiceCallController extends FullLifeCycleController
       }
       isChatEnd.value = dataSnapshot.value as bool;
       if (isChatEnd.value) {
+        // Backend closes the order asynchronously; tell the dashboard the
+        // session is over so it doesn't show a stale "in progress" card.
+        HomeController.notifySessionEnded(uniqueId);
         // Ensure nothing (timer/dialog) fires after end.
         stopTimer();
         stopOngoingCallNotification();
@@ -444,6 +448,7 @@ class VoiceCallController extends FullLifeCycleController
 
     stopTimer();
     stopSound();
+    HomeController.notifySessionEnded(uniqueId);
     // Cancel before Firebase write so local hang-up isn't handled twice by chatEndListener
     _cancelListeners();
 

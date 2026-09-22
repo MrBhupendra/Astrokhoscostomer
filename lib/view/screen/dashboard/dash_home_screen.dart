@@ -1214,8 +1214,9 @@ class HomeScreen extends StatelessWidget {
               if (controller.isDashboardSuccess.isTrue) {
                 return Visibility(
                   visible: controller.inProgressStatus.value == 1 &&
-                          controller.callType.value == AppConstants.chat ||
-                      controller.callType.value == AppConstants.emergencyChat,
+                      (controller.callType.value == AppConstants.chat ||
+                          controller.callType.value ==
+                              AppConstants.emergencyChat),
                   child: Container(
                     color: ColorResources.colorPrimaryLight,
                     child: Padding(
@@ -1317,9 +1318,9 @@ class HomeScreen extends StatelessWidget {
               if (controller.isDashboardSuccess.isTrue) {
                 return Visibility(
                   visible: controller.inProgressStatus.value == 1 &&
-                          controller.callType.value == AppConstants.video ||
-                      controller.callType.value ==
-                          AppConstants.emergencyVideoCall,
+                      (controller.callType.value == AppConstants.video ||
+                          controller.callType.value ==
+                              AppConstants.emergencyVideoCall),
                   child: Container(
                     color: ColorResources.colorPrimaryLight,
                     child: Padding(
@@ -1424,8 +1425,9 @@ class HomeScreen extends StatelessWidget {
               if (controller.isDashboardSuccess.isTrue) {
                 return Visibility(
                   visible: controller.inProgressStatus.value == 1 &&
-                          controller.callType.value == AppConstants.call ||
-                      controller.callType.value == AppConstants.emergencyCall,
+                      (controller.callType.value == AppConstants.call ||
+                          controller.callType.value ==
+                              AppConstants.emergencyCall),
                   child: Container(
                     color: ColorResources.colorPrimaryLight,
                     child: Padding(
