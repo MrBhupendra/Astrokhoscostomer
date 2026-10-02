@@ -19,6 +19,7 @@ import '../../../widget/custom_call_connect_widget.dart';
 import '../../../widget/custom_okdialog_widget.dart';
 import '../../../widget/custom_progress_dialog.dart';
 import '../../../widget/custom_snack_bar.dart';
+import 'chat_screen_controller.dart';
 
 import 'package:astro_brahmand/utill/app_logger.dart';
 class ChatIntakeFormController extends GetxController {
@@ -203,6 +204,9 @@ class ChatIntakeFormController extends GetxController {
           } else if (chatSuccessModel.joinStatus == 1 || chatSuccessModel.joinStatus == 2) {
             String? customerUniUd = await SharedPreferencesHelper.getData(AppConstants.userUniId);
             String channelName = '$customerUniUd-$astrologerUniId';
+            if (Get.isRegistered<ChatScreenController>()) {
+              await Get.delete<ChatScreenController>(force: true);
+            }
             Get.toNamed('/chat_screen', arguments: {
               'channelName': channelName,
               'uniqueId': chatSuccessModel.data?.uniqeid.toString()
@@ -264,6 +268,9 @@ class ChatIntakeFormController extends GetxController {
           } else if (chatEmergencySuccessModel.joinStatus == 1 || chatEmergencySuccessModel.joinStatus == 2) {
             String? customerUniUd = await SharedPreferencesHelper.getData(AppConstants.userUniId);
             String channelName = '$customerUniUd-$astrologerUniId';
+            if (Get.isRegistered<ChatScreenController>()) {
+              await Get.delete<ChatScreenController>(force: true);
+            }
             Get.toNamed('/chat_screen', arguments: {
               'channelName': channelName,
               'uniqueId': chatEmergencySuccessModel.data?.uniqeid.toString()

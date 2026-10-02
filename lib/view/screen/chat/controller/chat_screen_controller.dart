@@ -528,8 +528,11 @@ class ChatScreenController extends FullLifeCycleController
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
           popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
-          updateDurationInDb();
-          startTimer();
+          // updateDurationInDb();
+          // startTimer();
+          Future.delayed(const Duration(seconds: 1), () {
+            startTimer();
+          });
         } else {
           isGetTimeSuccess(false);
         }
