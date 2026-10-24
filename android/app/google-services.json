@@ -1,41 +1,49 @@
 {
   "project_info": {
-    "project_number": "464748727346",
-    "firebase_url": "https://astrobrahmand-760c9-default-rtdb.asia-southeast1.firebasedatabase.app",
-    "project_id": "astrobrahmand-760c9",
-    "storage_bucket": "astrobrahmand-760c9.firebasestorage.app"
+    "project_number": "945494063494",
+    "firebase_url": "https://astrokhosh-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "astrokhosh-app",
+    "storage_bucket": "astrokhosh-app.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:464748727346:android:b7db208c7e3ed7b9bf802b",
+        "mobilesdk_app_id": "1:945494063494:android:95e21a9207e5ee51309407",
         "android_client_info": {
-          "package_name": "com.astrobrahmand.astrologer"
+          "package_name": "com.astrokhosh.customer"
         }
       },
       "oauth_client": [
         {
-          "client_id": "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com",
+          "client_id": "945494063494-j2bt8u89eh9lo14fdvs6c1hkeeps16g8.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.astrokhosh.customer",
+            "certificate_hash": "b80ab5236294e6e08b45a1395a8a4aac61ca2ac5"
+          }
+        },
+        {
+          "client_id": "945494063494-tfe5vd6hp3cvln0gjo2t5sgfnuvg1v9c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBQ9R4pPxIw7W0NztwIoX7iqiFGZD4pOGg"
+          "current_key": "AIzaSyD0g8YgTmWxamh0Xioqry1uSn7bob3L4UE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com",
+              "client_id": "945494063494-tfe5vd6hp3cvln0gjo2t5sgfnuvg1v9c.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "464748727346-dmgbe00pd33rb2om8tncjpfj13mv7sqh.apps.googleusercontent.com",
+              "client_id": "945494063494-lkd55rodl4771cs3222vrmpcnedgbkff.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.astrobrahmand.customer"
+                "bundle_id": "com.astrokhosh.expert.ios"
               }
             }
           ]
@@ -44,42 +52,42 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:464748727346:android:3ba7711d97cca7c8bf802b",
+        "mobilesdk_app_id": "1:945494063494:android:35e110f23ce9e43e309407",
         "android_client_info": {
-          "package_name": "com.astrobrahmand.customer"
+          "package_name": "com.astrokhosh.expert"
         }
       },
       "oauth_client": [
         {
-          "client_id": "464748727346-qlk4k02qu38cn4p50vjrrb1d1u3foops.apps.googleusercontent.com",
+          "client_id": "945494063494-hjra0m01g8svml03p227hd8lf1u4iefr.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.astrobrahmand.customer",
-            "certificate_hash": "9452cf1f2acb50fe94c435342ca528f5eafbd816"
+            "package_name": "com.astrokhosh.expert",
+            "certificate_hash": "b80ab5236294e6e08b45a1395a8a4aac61ca2ac5"
           }
         },
         {
-          "client_id": "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com",
+          "client_id": "945494063494-tfe5vd6hp3cvln0gjo2t5sgfnuvg1v9c.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBQ9R4pPxIw7W0NztwIoX7iqiFGZD4pOGg"
+          "current_key": "AIzaSyD0g8YgTmWxamh0Xioqry1uSn7bob3L4UE"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com",
+              "client_id": "945494063494-tfe5vd6hp3cvln0gjo2t5sgfnuvg1v9c.apps.googleusercontent.com",
               "client_type": 3
             },
             {
-              "client_id": "464748727346-dmgbe00pd33rb2om8tncjpfj13mv7sqh.apps.googleusercontent.com",
+              "client_id": "945494063494-lkd55rodl4771cs3222vrmpcnedgbkff.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.astrobrahmand.customer"
+                "bundle_id": "com.astrokhosh.expert.ios"
               }
             }
           ]

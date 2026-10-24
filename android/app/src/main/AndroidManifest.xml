@@ -25,12 +25,13 @@
 
     <application
         android:name="${applicationName}"
+        android:usesCleartextTraffic="true"
         android:icon="@mipmap/ic_launcher"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:enableOnBackInvokedCallback="true"
         tools:replace="android:label"
         android:allowBackup="false"
-        android:label="Astro Brahmand">
+        android:label="AstroKhosh">
 
         <activity
             android:name=".MainActivity"
@@ -61,7 +62,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="https" android:host="astrobrahmand.com" />
+                <data android:scheme="https" android:host="astrokhosh.com" />
                 <data android:scheme="http" />
             </intent-filter>
         </activity>
@@ -93,11 +94,11 @@
             android:name=".CallOngoingTimeNotificationReceiver"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.astrobrahmand.customer.START_CALL_NOTIFICATION" />
-                <action android:name="com.astrobrahmand.customer.START_MICROPHONE_NOTIFICATION" />
-                <action android:name="com.astrobrahmand.customer.UPDATE_CALL_NOTIFICATION" />
-                <action android:name="com.astrobrahmand.customer.STOP_CALL_NOTIFICATION" />
-                <action android:name="com.astrobrahmand.customer.STOP_MIC_NOTIFICATION" />
+                <action android:name="com.astrokhosh.customer.START_CALL_NOTIFICATION" />
+                <action android:name="com.astrokhosh.customer.START_MICROPHONE_NOTIFICATION" />
+                <action android:name="com.astrokhosh.customer.UPDATE_CALL_NOTIFICATION" />
+                <action android:name="com.astrokhosh.customer.STOP_CALL_NOTIFICATION" />
+                <action android:name="com.astrokhosh.customer.STOP_MIC_NOTIFICATION" />
             </intent-filter>
         </receiver>
 

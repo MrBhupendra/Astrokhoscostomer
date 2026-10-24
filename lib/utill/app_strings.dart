@@ -304,6 +304,8 @@ class AppStrings {
   static const String paymentSuccessDesc = "Congratulations! Your transaction was completed successfully.";
   static const String paymentFailed = "Payment Failed";
   static const String paymentFailedDesc = "It seems we have not received money.";
+  static const String paymentPending = "Payment Processing";
+  static const String paymentPendingDesc = "We are confirming your payment with the bank. Your wallet will update shortly. If money was deducted and the wallet is not updated within 30 minutes, please contact support.";
   static const String continueBtn = "Continue";
   static const String tryAgain = "Try Again";
 
@@ -766,6 +768,7 @@ class AppStrings {
   static const String checkSlotAvailability = "Check Slot Availability";
   static const String slotAvailability = "Slot Availability";
   static const String slotBookings = "Bookings";
+  static const String slotBookingOrders = "Slot Booking";
 
   // Multiple PG title
   static const String razorpay = 'Razorpay';
@@ -805,6 +808,10 @@ class AppStrings {
 
   //Mandir Darshan
   static const String liveMandirDarshan = "Mandir Darshan";
+  static const String darshanBy = "By";
+  static const String noMandirDarshan = "No darshan scheduled right now. Please check back later.";
+  static const String bookDarshan = "Book Darshan";
+  static const String joinDarshan = "Join Darshan";
 
 
   //Subscription

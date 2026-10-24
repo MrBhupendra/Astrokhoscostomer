@@ -111,7 +111,14 @@ class HomeScreen extends StatelessWidget {
                                     bool isLogin = await SharedPreferencesHelper
                                         .getIsLogin();
                                     if (isLogin) {
-                                      if (freeServicesList[index].title ==
+                                      final title = freeServicesList[index].title;
+                                      if (title == AppStrings.liveMandirDarshan.tr) {
+                                        Get.toNamed('/mandir_darshan_list');
+                                      } else if (title == AppStrings.groupPooja.tr) {
+                                        Get.toNamed('/group_pooja_category');
+                                      } else if (title == AppStrings.vastuArchitect.tr) {
+                                        Get.toNamed('/architect_new_old_screen');
+                                      } else if (freeServicesList[index].title ==
                                           AppStrings.dashHomeVastu.tr) {
                                         Get.toNamed('/vastu_zones');
                                       } else if (freeServicesList[index]
@@ -1588,6 +1595,16 @@ class HomeScreen extends StatelessWidget {
     String? activeKundliApi =
         configController.config.data?.activeKundliApi.toString();
     freeServicesList.clear();
+    // Paid live services first: these screens had no entry point in the app.
+    if (AppFeatures.mandirDarshan) {
+      freeServicesList.add(HomeMenuModel(AppStrings.liveMandirDarshan.tr, Images.dashMandirDarshan));
+    }
+    if (AppFeatures.groupPooja) {
+      freeServicesList.add(HomeMenuModel(AppStrings.groupPooja.tr, Images.dashGroupPooja));
+    }
+    if (AppFeatures.vastuArchitect) {
+      freeServicesList.add(HomeMenuModel(AppStrings.vastuArchitect.tr, Images.dashVastuArchitect));
+    }
     freeServicesList
         .add(HomeMenuModel(AppStrings.dashHoroscope.tr, Images.dashHoroscope));
     freeServicesList

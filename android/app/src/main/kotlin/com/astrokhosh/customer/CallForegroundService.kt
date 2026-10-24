@@ -1,4 +1,4 @@
-package com.astrobrahmand.customer
+package com.astrokhosh.customer
 
 import android.app.Notification
 import android.app.NotificationChannel

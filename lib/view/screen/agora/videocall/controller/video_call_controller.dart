@@ -405,7 +405,7 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
         if (chatRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
-          popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
+          popupAfterDuration.value = int.tryParse(chatRemainingTimeModel.popupAfterDuration?.toString() ?? '') ?? 0;
           // updateDurationInDb();
           // startTimer();
           Future.delayed(const Duration(seconds: 1), () {
@@ -592,8 +592,8 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
    if (Platform.isAndroid) {
      try {
        var intent = AndroidIntent(
-         action: "com.astrobrahmand.customer.START_CALL_NOTIFICATION",
-         package: "com.astrobrahmand.customer",
+         action: "com.astrokhosh.customer.START_CALL_NOTIFICATION",
+         package: "com.astrokhosh.customer",
          arguments: <String, dynamic>{
            "call_duration_seconds": seconds,
          },
@@ -613,8 +613,8 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
    if (Platform.isAndroid) {
      try {
        var intent = const AndroidIntent(
-         action: "com.astrobrahmand.customer.START_MICROPHONE_NOTIFICATION",
-         package: "com.astrobrahmand.customer",
+         action: "com.astrokhosh.customer.START_MICROPHONE_NOTIFICATION",
+         package: "com.astrokhosh.customer",
          flags: <int>[
            Flag.FLAG_INCLUDE_STOPPED_PACKAGES,
            Flag.FLAG_RECEIVER_FOREGROUND
@@ -633,8 +633,8 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
      await Future.delayed(const Duration(milliseconds: 300));
      try {
        var intent = AndroidIntent(
-         action: "com.astrobrahmand.customer.UPDATE_CALL_NOTIFICATION",
-         package: "com.astrobrahmand.customer",
+         action: "com.astrokhosh.customer.UPDATE_CALL_NOTIFICATION",
+         package: "com.astrokhosh.customer",
          arguments: <String, dynamic>{
            "call_duration_seconds": seconds, // Pass call duration in intent
          },
@@ -656,8 +656,8 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
    if (Platform.isAndroid) {
      try {
        var intent = const AndroidIntent(
-         action: "com.astrobrahmand.customer.STOP_CALL_NOTIFICATION",
-         package: "com.astrobrahmand.customer",
+         action: "com.astrokhosh.customer.STOP_CALL_NOTIFICATION",
+         package: "com.astrokhosh.customer",
          flags: <int>[
            Flag.FLAG_INCLUDE_STOPPED_PACKAGES,
            Flag.FLAG_RECEIVER_FOREGROUND
@@ -675,8 +675,8 @@ class VideoCallController extends FullLifeCycleController with FullLifeCycleMixi
    if (Platform.isAndroid) {
      try {
        var intent = const AndroidIntent(
-         action: "com.astrobrahmand.customer.STOP_MIC_NOTIFICATION",
-         package: "com.astrobrahmand.customer",
+         action: "com.astrokhosh.customer.STOP_MIC_NOTIFICATION",
+         package: "com.astrokhosh.customer",
          flags: <int>[
            Flag.FLAG_INCLUDE_STOPPED_PACKAGES,
            Flag.FLAG_RECEIVER_FOREGROUND

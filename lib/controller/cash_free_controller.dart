@@ -93,6 +93,9 @@ class CashFreeController extends GetxController {
   Future<void> updateOnlinePayment(String orderId, String paymentId) async {
     CustomProgressDialog.showDialog();
     isUpdateLoading(true);
+    var confirmed = false;
+    var reachedServer = false;
+    String? serverMsg;
 
     try {
       String? apiKey =
@@ -112,7 +115,10 @@ class CashFreeController extends GetxController {
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         var successModel = SuccessModel.fromJson(response.data);
+        reachedServer = true;
+        serverMsg = successModel.msg?.toString();
         if (successModel.status == AppConstants.success) {
+          confirmed = true;
           isUpdateSuccess(true);
         } else {
           isUpdateSuccess(false);
@@ -125,7 +131,9 @@ class CashFreeController extends GetxController {
       isUpdateSuccess(false);
     } finally {
       isUpdateLoading(false);
-      AppDialog().showPaymentSuccessDialog(_type);
+      // Only claim success when the server confirmed it with the gateway.
+      AppDialog().showPaymentResult(_type,
+          confirmed: confirmed, reachedServer: reachedServer, serverMsg: serverMsg);
       // Get.dialog(
       //   AlertDialog(
       //     title: const Text('Payment Successful'),
@@ -212,8 +220,8 @@ class CashFreeController extends GetxController {
                 //Service
                 Get.offAllNamed('/architect_orders_tab_screen');
               } else if (type == "Manual Service") {
-                //Service
-                Get.offAllNamed('/orders_tab_screen', arguments: {'index': 3});
+                //Service (index 3 is the Group Pooja tab)
+                Get.offAllNamed('/orders_tab_screen', arguments: {'index': 2});
               } else {
                 Get.offAllNamed('/dashboard');
               }

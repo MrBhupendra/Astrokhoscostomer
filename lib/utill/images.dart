@@ -135,6 +135,8 @@ class Images {
   static const String dashReport = 'assets/images/dash_report.png';
   static const String dashElectroHomeopathy = 'assets/images/dash_electro_homeopathy.png';
   static const String dashVastuArchitect = 'assets/images/dash_vastu_architecht.png';
+  static const String dashGroupPooja = 'assets/images/dash_group_pooja.png';
+  static const String dashMandirDarshan = 'assets/images/ic_mandir_darshan.png';
   static const String dashAstroShop = 'assets/images/dash_astro_shop.png';
 
   //32 zone compass

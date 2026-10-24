@@ -1,4 +1,4 @@
-package com.astrobrahmand.customer
+package com.astrokhosh.customer
 
 import android.content.Intent
 import android.os.Bundle

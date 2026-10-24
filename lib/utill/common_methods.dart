@@ -30,6 +30,26 @@ import 'app_constants.dart';
 import 'package:astro_brahmand/utill/app_logger.dart';
 class CommonMethods {
 
+  /// Display name of an architect package (architect_service_orders.order_type).
+  /// Must match the purchase sheet: *_layout = Floor Plan, *_complete = Layout
+  /// With Complete Elevation, *_old = floor plan for an old map.
+  String architectOrderTypeLabel(String? orderType) {
+    const places = {'home': 'Home', 'office': 'Office', 'industry': 'Industry'};
+    final parts = (orderType ?? '').split('_');
+    if (parts.length != 2 || !places.containsKey(parts[0])) return orderType ?? '';
+    final place = places[parts[0]];
+    switch (parts[1]) {
+      case 'layout':
+        return '$place Floor Plan';
+      case 'complete':
+        return '$place Layout With Complete Elevation';
+      case 'old':
+        return '$place Floor Plan (Old Map)';
+      default:
+        return orderType ?? '';
+    }
+  }
+
   String formatDateString(String dateString) {
     DateTime dateTime = DateTime.parse(dateString);
     return "${dateTime.day.toString().padLeft(2, '0')}/${dateTime.month

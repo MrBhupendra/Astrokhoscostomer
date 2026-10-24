@@ -18,6 +18,7 @@ import '../../widget/simmer_widget/simmer_list_view.dart';
 import '../chat/controller/chat_intake_form_controller.dart';
 import '../splash/controller/config_controller.dart';
 
+import 'package:astro_brahmand/utill/common_methods.dart';
 class ArchitectOrdersScreen extends GetView<ArchitectOrdersController> {
   final String type;
 
@@ -235,18 +236,7 @@ class ArchitectOrdersScreen extends GetView<ArchitectOrdersController> {
                 itemBuilder: (context, index) {
                   String? orderType = controller.completedOrderData[index].orderType;
 
-                  Map<String, String> orderTypeText = {
-                    "home_complete": "Home Floor Plan",
-                    "office_complete": "Office Floor Plan",
-                    "industry_complete": "Industry Floor Plan",
-                    "home_layout": "Home Layout With Complete Elevation",
-                    "office_layout": "Office Layout With Complete Elevation",
-                    "industry_layout": "Industry Layout With Complete Elevation",
-                    "home_old": "Home Floor Plan",
-                    "office_old": "Office Floor Plan",
-                    "industry_old": "Industry Floor Plan",
-                  };
-                  String? displayText = orderTypeText[orderType] ?? controller.completedOrderData[index].orderType;
+                  String? displayText = CommonMethods().architectOrderTypeLabel(orderType);
                   return GestureDetector(
                     onTap: (){
                       // controller.astrologerName = controller.completedOrderData[index]

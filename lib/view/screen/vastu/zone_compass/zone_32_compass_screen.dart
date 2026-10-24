@@ -505,7 +505,7 @@ class _Zone32CompassScreenState extends State<Zone32CompassScreen> {
                           onPressed: () async {
                             Directory? downloadsDirectory = await getExternalStorageDirectory();
                             if (downloadsDirectory == null) {return;}
-                            String synilogicDirectoryPath = '${downloadsDirectory.path}/Synilogic';
+                            String synilogicDirectoryPath = '${downloadsDirectory.path}/AstroKhosh';
                             Directory synilogicDirectory = Directory(synilogicDirectoryPath);
                             if (!await synilogicDirectory.exists()) {
                               await synilogicDirectory.create(recursive: true);

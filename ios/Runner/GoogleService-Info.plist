@@ -3,23 +3,21 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>464748727346-dmgbe00pd33rb2om8tncjpfj13mv7sqh.apps.googleusercontent.com</string>
+	<string>945494063494-n34vn62us150nv7odmvnpb85k2f0dnf9.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.464748727346-dmgbe00pd33rb2om8tncjpfj13mv7sqh</string>
-	<key>ANDROID_CLIENT_ID</key>
-	<string>464748727346-qlk4k02qu38cn4p50vjrrb1d1u3foops.apps.googleusercontent.com</string>
+	<string>com.googleusercontent.apps.945494063494-n34vn62us150nv7odmvnpb85k2f0dnf9</string>
 	<key>API_KEY</key>
-	<string>AIzaSyDlJ8hyV1MU791Zjkph-p0_KlAOpIaVA2w</string>
+	<string>AIzaSyC3PYqx3-GAQNwBw_pdUX6PoY408ZYKfso</string>
 	<key>GCM_SENDER_ID</key>
-	<string>464748727346</string>
+	<string>945494063494</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.astrobrahmand.customer</string>
+	<string>com.astrokhosh.customer.ios</string>
 	<key>PROJECT_ID</key>
-	<string>astrobrahmand-760c9</string>
+	<string>astrokhosh-app</string>
 	<key>STORAGE_BUCKET</key>
-	<string>astrobrahmand-760c9.firebasestorage.app</string>
+	<string>astrokhosh-app.firebasestorage.app</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -31,8 +29,8 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:464748727346:ios:316b0be66b057df3bf802b</string>
+	<string>1:945494063494:ios:4e7e4162a2b1c99f309407</string>
 	<key>DATABASE_URL</key>
-	<string>https://astrobrahmand-760c9-default-rtdb.asia-southeast1.firebasedatabase.app</string>
+	<string>https://astrokhosh-app-default-rtdb.asia-southeast1.firebasedatabase.app</string>
 </dict>
 </plist>

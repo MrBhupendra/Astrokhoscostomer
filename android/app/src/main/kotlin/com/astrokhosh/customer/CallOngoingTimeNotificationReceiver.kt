@@ -1,4 +1,4 @@
-package com.astrobrahmand.customer
+package com.astrokhosh.customer
 
 import android.content.BroadcastReceiver
 import android.content.Context
@@ -18,7 +18,7 @@ class CallOngoingTimeNotificationReceiver : BroadcastReceiver() {
         if (context == null || intent == null) return
 
         when (intent.action) {
-            "com.astrobrahmand.customer.START_CALL_NOTIFICATION" -> {
+            "com.astrokhosh.customer.START_CALL_NOTIFICATION" -> {
                 if (CallTimerService.instance?.isRunning != true) {
                     val serviceIntent = Intent(context, CallTimerService::class.java)
                     serviceIntent.putExtra("initial_seconds", intent.getIntExtra("call_duration_seconds", 0))
@@ -32,7 +32,7 @@ class CallOngoingTimeNotificationReceiver : BroadcastReceiver() {
                 }
             }
 
-            "com.astrobrahmand.customer.START_MICROPHONE_NOTIFICATION" -> {
+            "com.astrokhosh.customer.START_MICROPHONE_NOTIFICATION" -> {
                 val isForeground = isAppInForeground(context)
 
         val hasRecordAudioPermission =
@@ -60,7 +60,7 @@ class CallOngoingTimeNotificationReceiver : BroadcastReceiver() {
                 }, 500)
             }
 
-            "com.astrobrahmand.customer.UPDATE_CALL_NOTIFICATION" -> {
+            "com.astrokhosh.customer.UPDATE_CALL_NOTIFICATION" -> {
                 val duration = intent.getIntExtra("call_duration_seconds", 0)
                 Log.d("CallNotificationReceiver", "Updating call notification: $duration seconds")
                 if (CallTimerService.instance != null && CallTimerService.instance?.isRunning == true) {
@@ -74,7 +74,7 @@ class CallOngoingTimeNotificationReceiver : BroadcastReceiver() {
                 }
             }
 
-            "com.astrobrahmand.customer.STOP_CALL_NOTIFICATION" -> {
+            "com.astrokhosh.customer.STOP_CALL_NOTIFICATION" -> {
                 Log.d("CallNotificationReceiver", "STOP_CALL_NOTIFICATION received in BroadcastReceiver")
 
                 val stopIntent = Intent(context, CallTimerService::class.java).apply {
@@ -107,7 +107,7 @@ class CallOngoingTimeNotificationReceiver : BroadcastReceiver() {
 //                }
             }
 
-            "com.astrobrahmand.customer.STOP_MIC_NOTIFICATION" -> {
+            "com.astrokhosh.customer.STOP_MIC_NOTIFICATION" -> {
                 val micServiceIntent = Intent(context, CallForegroundService::class.java)
                 context.stopService(micServiceIntent)
             }

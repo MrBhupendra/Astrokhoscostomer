@@ -96,6 +96,7 @@ import 'package:astro_brahmand/view/screen/queue_list/queue_list_screen.dart';
 import 'package:astro_brahmand/view/screen/search/search_screen.dart';
 import 'package:astro_brahmand/view/screen/orders/binding/order_binding.dart';
 import 'package:astro_brahmand/view/screen/orders/orders_tab_screen.dart';
+import 'package:astro_brahmand/view/screen/mandir_darshan/mandir_darshan_list_screen.dart';
 import 'package:astro_brahmand/view/screen/vedic_and_jyotisham_astro/daily_tarot/daily_tarot_detail.dart';
 import 'package:astro_brahmand/view/screen/vedic_and_jyotisham_astro/daily_tarot/daily_tarot_reading.dart';
 import 'package:astro_brahmand/view/screen/vedic_and_jyotisham_astro/horoscope/horoscope_daily_screen.dart';
@@ -796,6 +797,9 @@ class MyApp extends StatelessWidget {
               name: '/tipScreen',
               page: () => TipScreen()),
           //GroupPooja
+          GetPage(
+              name: '/mandir_darshan_list',
+              page: () => MandirDarshanListScreen()),
           GetPage(
               name: '/group_pooja_category',
               page: () => const GroupPoojaCategoryListScreen(),

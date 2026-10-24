@@ -1,21 +1,26 @@
 class AppConstants {
-  static const String appName = 'Astro Brahmand';
-  static const String appNameHindi = 'एस्ट्रो ब्रह्माण्ड';
-  static const String appNameMarathi = 'एस्ट्रो ब्रह्माण्ड';
-  static const String appNameGujarati = 'એસ્ટ્રો બ્રહ્માંડ';
-  static const String appNameTelugu = 'ఆస్ట్రో విశ్వం';
-  static const String appNameBengali = 'অ্যাস্ট্রো মহাবিশ্ব';
-  static const String appNameTamil = 'ஆஸ்ட்ரோ பிரபஞ்சம்';
-  static const String appNameKannada = 'ಆಸ್ಟ್ರೋ ವಿಶ್ವ';
-  static const String appNameMalayalam = 'ആസ്ട്രോ പ്രപഞ്ചം';
-  static const String androidPackageName = 'com.astrobrahmand.customer';
+  static const String appName = 'AstroKhosh';
+  static const String appNameHindi = 'एस्ट्रोखोश';
+  static const String appNameMarathi = 'एस्ट्रोखोश';
+  static const String appNameGujarati = 'એસ્ટ્રો ખોશ';
+  static const String appNameTelugu = 'ఆస్ట్రో ఖోష్';
+  static const String appNameBengali = 'অ্যাস্ট্রো খোশ';
+  static const String appNameTamil = 'ஆஸ்ட்ரோ கோஷ்';
+  static const String appNameKannada = 'ಆಸ್ಟ್ರೋ ಖೋಶ್';
+  static const String appNameMalayalam = 'ആസ്ട്രോ ഖോഷ്';
+  static const String androidPackageName = 'com.astrokhosh.customer';
   static const String androidAstrologerPackageName =
-      'com.astrobrahmand.astrologer';
+      'com.astrokhosh.expert';
   static const String appVersion = '1.0.14';
   static const String defaultCurrencyCode = 'INR';
   static const String defaultCurrencySymbol = '\u20B9';
   static const String defaultPhoneCode = '+91';
-  static const String baseUrl = 'https://astrobrahmand.com';
+  // Local: flutter run --dart-define=BASE_URL=http://10.0.2.2:8080
+  // Release builds without the flag keep using production.
+  static const String baseUrl = String.fromEnvironment(
+    'BASE_URL',
+    defaultValue: 'https://astronode-admin-mu.vercel.app',
+  );
   static const String vedicAstroUrl = 'https://api.vedicastroapi.com/v3-json';
   static const String jyotishamAstroUrl =
       'https://api.jyotishamastroapi.com/api';
@@ -641,8 +646,7 @@ class AppConstants {
   static const String kundliMatchingPrice = 'kundliMatchingPrice';
 
   // Gmail login
-  static const String defaultWebClientId =
-      "464748727346-5rrnnv72262g423i379pon04145nbukp.apps.googleusercontent.com";
+  static const String defaultWebClientId = "YOUR_GOOGLE_WEB_CLIENT_ID.apps.googleusercontent.com";
   static const String gmailLoginUri = '$baseUrl/api/customerLoginWithGmail';
   static const String isGoogleLogin = 'isGoogleLogin';
 }

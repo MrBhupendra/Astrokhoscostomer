@@ -130,12 +130,15 @@ class MandirDarshanController extends GetxController {
         liveJoinModel = SuccessModel.fromJson(response.data);
         if(liveJoinModel.status == AppConstants.success){
           String? token = response.data["token"];
+          // The host's Agora uid comes from the server (the astrologer's users.id);
+          // the value passed in is only a fallback.
+          final hostUid = (response.data["astrologer"]?["id"] as num?)?.toInt() ?? astrologerUID;
           Get.toNamed('/liveStreamScreen',arguments: {
             'uniqueId': uniqueId,
             'agoraAppId': agoraAppId,
             'token': token,
             'astrologerId': astrologerUniId,
-            'astrologerUID': astrologerUID
+            'astrologerUID': hostUid
           });
           AppLogger.d("As1 Req $token $uniqueId $agoraAppId $astrologerUniId $astrologerUID");
         }else{
@@ -575,8 +578,8 @@ class MandirDarshanController extends GetxController {
                                   astrologerId,
                                   1,
                                   liveTempleDarshanData,
-                                  duration,
                                   "Wallet",
+                                  duration,
                                   mContext!);
                             } else {
                               getMandirDarshanCalculation(
@@ -584,8 +587,8 @@ class MandirDarshanController extends GetxController {
                                   astrologerId,
                                   0,
                                   liveTempleDarshanData,
-                                  duration,
                                   "Wallet",
+                                  duration,
                                   mContext!);
                             }
                           },

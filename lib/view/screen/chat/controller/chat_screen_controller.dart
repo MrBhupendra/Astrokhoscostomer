@@ -527,7 +527,7 @@ class ChatScreenController extends FullLifeCycleController
         if (chatRemainingTimeModel.status == AppConstants.success) {
           isGetTimeSuccess(true);
           seconds.value = int.parse(chatRemainingTimeModel.second.toString());
-          popupAfterDuration.value = int.parse(chatRemainingTimeModel.popupAfterDuration.toString());
+          popupAfterDuration.value = int.tryParse(chatRemainingTimeModel.popupAfterDuration?.toString() ?? '') ?? 0;
           // updateDurationInDb();
           // startTimer();
           Future.delayed(const Duration(seconds: 1), () {

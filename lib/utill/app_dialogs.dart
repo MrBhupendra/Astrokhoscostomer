@@ -14,17 +14,56 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:astro_brahmand/utill/app_logger.dart';
 class AppDialog {
+  /// Shows the dialog that matches what the server confirmed.
+  /// [confirmed]: server returned status 1 (gateway verified the payment).
+  /// [reachedServer]: false when the request failed (network, 5xx); the money
+  /// may already be taken, so that is "pending", never "failed".
+  /// [serverMsg]: msg from updateOnlinePayment; "verif"/"pending" means the
+  /// server is still waiting for the gateway.
+  void showPaymentResult(
+    String type, {
+    required bool confirmed,
+    required bool reachedServer,
+    String? serverMsg,
+  }) {
+    if (confirmed) {
+      showPaymentSuccessDialog(type);
+      return;
+    }
+    final msg = (serverMsg ?? '').toLowerCase();
+    if (!reachedServer || msg.contains('verif') || msg.contains('pending')) {
+      showPaymentPendingDialog();
+      return;
+    }
+    showPaymentFailedDialog();
+  }
+
+  void showPaymentPendingDialog() {
+    Get.dialog(
+        PopScope(
+          canPop: false,
+          child: CustomOkdialogWidget(
+            imagePath: Images.icCoin,
+            title: AppStrings.paymentPending,
+            description: AppStrings.paymentPendingDesc,
+            btnText: AppStrings.continueBtn,
+            onPressed: () => Get.back(),
+          ),
+        ),
+        barrierDismissible: false);
+  }
+
   void showPaymentFailedDialog() {
 
-    final walletController = Get.find<WalletController>();
-    final uniqueId = walletController.getUniqueIdSafe();
-    final channelName = walletController.getChannelNameSafe();
-    final AgoraTokenSafe = walletController.getAgoraTokenSafe();
-    final AgoraAppIdSafe = walletController.getAgoraAppIdSafe();
-    final astroName = walletController.getAstroNameSafe();
-    final astroImage = walletController.getAstroImageSafe();
-    final astroUniId = walletController.getAstroUniIdSafe();
-    final isVirtual = walletController.getIsVirtualSafe();
+    final walletController = Get.isRegistered<WalletController>() ? Get.find<WalletController>() : null;
+    final uniqueId = walletController?.getUniqueIdSafe() ?? '';
+    final channelName = walletController?.getChannelNameSafe() ?? '';
+    final AgoraTokenSafe = walletController?.getAgoraTokenSafe() ?? '';
+    final AgoraAppIdSafe = walletController?.getAgoraAppIdSafe() ?? '';
+    final astroName = walletController?.getAstroNameSafe() ?? '';
+    final astroImage = walletController?.getAstroImageSafe() ?? '';
+    final astroUniId = walletController?.getAstroUniIdSafe() ?? '';
+    final isVirtual = walletController?.getIsVirtualSafe() ?? 0;
     AppLogger.d("callDuration===>5");
     AppLogger.d(uniqueId);
     AppLogger.d(channelName);

@@ -78,7 +78,8 @@ class RazorpayController extends GetxController {
       // Logging removed for production safety.
     }
     updateOnlinePayment(
-        response.orderId.toString(), response.paymentId.toString());
+        response.orderId.toString(), response.paymentId.toString(),
+        signature: response.signature);
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
@@ -381,6 +382,7 @@ class RazorpayController extends GetxController {
   Future<bool> updateOnlinePayment(
     String orderId,
     String paymentId, {
+    String? signature,
     bool showSuccessDialog = true,
     bool showProgressDialog = true,
   }) async {
@@ -389,6 +391,8 @@ class RazorpayController extends GetxController {
     }
     isUpdateLoading(true);
     var success = false;
+    var reachedServer = false;
+    String? serverMsg;
 
     try {
       final apiKey =
@@ -404,13 +408,17 @@ class RazorpayController extends GetxController {
         "payment_method": paymentMethod,
         "order_id": orderId,
         "payment_id": paymentId,
+        if (signature != null && signature.isNotEmpty)
+          "razorpay_signature": signature,
       };
 
       final response =
           await _dio.post(AppConstants.updatePaymentRequest, data: requestData);
 
       if (response.statusCode == 200) {
+        reachedServer = true;
         successModel = SuccessModel.fromJson(response.data);
+        serverMsg = successModel.msg?.toString();
         success = successModel.status == AppConstants.success;
         isUpdateSuccess(success);
       }
@@ -421,8 +429,10 @@ class RazorpayController extends GetxController {
         CustomProgressDialog.dismissDialog();
       }
       isUpdateLoading(false);
+      // Only claim success when the server confirmed it with the gateway.
       if (showSuccessDialog) {
-        AppDialog().showPaymentSuccessDialog(_type);
+        AppDialog().showPaymentResult(_type,
+            confirmed: success, reachedServer: reachedServer, serverMsg: serverMsg);
       }
     }
     return success;

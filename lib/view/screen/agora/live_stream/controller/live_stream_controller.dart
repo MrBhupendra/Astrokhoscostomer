@@ -571,7 +571,7 @@ class LiveStreamController extends FullLifeCycleController with FullLifeCycleMix
                                     // const CircleAvatar(
                                     //   radius: 30,
                                     //   backgroundImage: NetworkImage(
-                                    //     'https://astro.synilogictech.com/uploads/astrologer/1722519399-astro_img.png', // Replace with actual image URLs
+                                    //     'https://astrokhosh.com/uploads/astrologer/1722519399-astro_img.png', // Replace with actual image URLs
                                     //   ),
                                     // ),
                                     // Positioned(

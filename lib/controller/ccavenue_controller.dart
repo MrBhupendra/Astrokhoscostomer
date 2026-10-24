@@ -23,6 +23,9 @@ class CCAvenueController extends GetxController {
     }
     CustomProgressDialog.showDialog();
     isUpdateLoading(true);
+    var confirmed = false;
+    var reachedServer = false;
+    String? serverMsg;
 
     try {
       String? apiKey =
@@ -42,7 +45,10 @@ class CCAvenueController extends GetxController {
       if (response.statusCode == 200) {
         CustomProgressDialog.dismissDialog();
         successModel = SuccessModel.fromJson(response.data);
+        reachedServer = true;
+        serverMsg = successModel.msg?.toString();
         if (successModel.status == AppConstants.success) {
+          confirmed = true;
           isUpdateSuccess(true);
         } else {
           isUpdateSuccess(false);
@@ -55,7 +61,9 @@ class CCAvenueController extends GetxController {
       isUpdateSuccess(false);
     } finally {
       isUpdateLoading(false);
-      AppDialog().showPaymentSuccessDialog(type);
+      // Only claim success when the server confirmed it with the gateway.
+      AppDialog().showPaymentResult(type,
+          confirmed: confirmed, reachedServer: reachedServer, serverMsg: serverMsg);
     }
   }
 }

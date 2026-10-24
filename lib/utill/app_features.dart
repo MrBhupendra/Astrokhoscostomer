@@ -25,7 +25,7 @@ class AppFeatures {
   static const bool dailyQuote = true;
 
   // Architect
-  static const bool vastuArchitect = false;
+  static const bool vastuArchitect = true;
 
   //AstroShop
   static const bool shopWallet = false;
@@ -34,7 +34,7 @@ class AppFeatures {
   static const bool minimumBalanceRequired = false;
 
   //SlotBooking
-  static const bool slotBooking = false;
+  static const bool slotBooking = true;
 
   //tipScreenAfterFeedBack
   static const bool tipScreenAfterFeedBack = false;
@@ -43,7 +43,7 @@ class AppFeatures {
   static const bool offerCode = true;
 
   //Group Pooja
-  static const bool groupPooja = false;
+  static const bool groupPooja = true;
 
   //Profile Booster
   static const bool profileBooster = false;
@@ -61,16 +61,16 @@ class AppFeatures {
   static const bool aiAstrologer = false;
 
   //Emergency Chat
-  static const bool emergencyChat = false;
+  static const bool emergencyChat = true;
 
   //Emergency Call
-  static const bool emergencyCall = false;
+  static const bool emergencyCall = true;
 
   //Emergency Video Call
-  static const bool emergencyVideoCall = false;
+  static const bool emergencyVideoCall = true;
 
   //Mandir Darshan
-  static const bool mandirDarshan = false;
+  static const bool mandirDarshan = true;
 
   //OtpAutoFill
   static const bool otpAutoFill = true;
